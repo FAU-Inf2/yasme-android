@@ -1,4 +1,5 @@
 syntax: glob
-/bin
-/gen
+bin/
+gen/
 .metadata
+.project
