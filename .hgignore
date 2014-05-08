@@ -1,0 +1,5 @@
+syntax:glob
+android/simpleChatApp/gen
+android/simpleChatApp/bin
+android/simpleChatApp/.metadata
+
