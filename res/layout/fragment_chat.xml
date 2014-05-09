@@ -36,8 +36,7 @@
         android:layout_above="@+id/text_message"
         android:layout_alignLeft="@+id/text_message"
         android:layout_alignRight="@+id/button_send"
-        android:layout_marginBottom="30dp"
-        android:text="TextView" />
+        android:layout_marginBottom="30dp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -46,8 +45,7 @@
         android:layout_above="@+id/textView1"
         android:layout_alignLeft="@+id/textView1"
         android:layout_alignRight="@+id/textView1"
-        android:layout_marginBottom="30dp"
-        android:text="TextView" />
+        android:layout_marginBottom="30dp" />
 
     <TextView
         android:id="@+id/textView3"
@@ -56,8 +54,7 @@
         android:layout_above="@+id/textView2"
         android:layout_alignLeft="@+id/textView2"
         android:layout_alignRight="@+id/textView2"
-        android:layout_marginBottom="30dp"
-        android:text="TextView" />
+        android:layout_marginBottom="30dp" />
 
     <TextView
         android:id="@+id/textView4"
@@ -66,8 +63,7 @@
         android:layout_above="@+id/textView3"
         android:layout_alignLeft="@+id/textView3"
         android:layout_alignRight="@+id/textView3"
-        android:layout_marginBottom="30dp"
-        android:text="TextView" />
+        android:layout_marginBottom="30dp" />
 
     <TextView
         android:id="@+id/textView5"
@@ -76,8 +72,7 @@
         android:layout_above="@+id/textView4"
         android:layout_alignLeft="@+id/textView4"
         android:layout_alignRight="@+id/textView4"
-        android:layout_marginBottom="30dp"
-        android:text="TextView" />
+        android:layout_marginBottom="30dp" />
 
     <TextView
         android:id="@+id/textView6"
@@ -86,8 +81,7 @@
         android:layout_above="@+id/textView5"
         android:layout_alignLeft="@+id/textView5"
         android:layout_alignRight="@+id/textView5"
-        android:layout_marginBottom="30dp"
-        android:text="TextView" />
+        android:layout_marginBottom="30dp" />
 
     <TextView
         android:id="@+id/textView7"
@@ -96,8 +90,7 @@
         android:layout_above="@+id/textView6"
         android:layout_alignLeft="@+id/textView6"
         android:layout_alignRight="@+id/textView6"
-        android:layout_marginBottom="30dp"
-        android:text="TextView" />
+        android:layout_marginBottom="30dp" />
 
     <TextView
         android:id="@+id/text_status"

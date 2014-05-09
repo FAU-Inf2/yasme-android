@@ -16,18 +16,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 public class ChatActivity extends Activity {
 	
 	BoundService mService;
 	boolean mBound = false;
+	
 	EditText message;
-	//TextView status = (TextView) findViewById(R.id.text_status);
 	TextView status;
-	//TextView textView1 = (TextView) findViewById(R.id.textView1);
 	TextView textView1;
+	TextView textView2;
+	TextView textView3;
+	TextView textView4;
+	TextView textView5;
+	TextView textView6;
+	TextView textView7;
 
 
 	@Override
@@ -40,11 +43,6 @@ public class ChatActivity extends Activity {
 				.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		
-		EditText message = (EditText) findViewById(R.id.text_message);
-		
-		TextView textView1 = (TextView) findViewById(R.id.textView1);
-		TextView status = (TextView) findViewById(R.id.text_status);
-		//status.setText("start");
 	}
 	
 	@Override
@@ -65,13 +63,22 @@ public class ChatActivity extends Activity {
         }
     }
 
-		
+	private void initializeViews() {
+		message = (EditText) findViewById(R.id.text_message);
+		status = (TextView) findViewById(R.id.text_status);
+		textView1 = (TextView) findViewById(R.id.textView1);
+		textView2 = (TextView) findViewById(R.id.textView2);
+		textView3 = (TextView) findViewById(R.id.textView3);
+		textView4 = (TextView) findViewById(R.id.textView4);
+		textView5 = (TextView) findViewById(R.id.textView5);
+		textView6 = (TextView) findViewById(R.id.textView6);
+		textView7 = (TextView) findViewById(R.id.textView7);
+	}
 	
 	public void send(View view) {
+		initializeViews();
 		
-
 		String msg = message.getText().toString();
-		
 		textView1.setText(msg);
 		status.setText("gesendet" + msg);
 		
