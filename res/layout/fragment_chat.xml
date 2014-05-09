@@ -6,7 +6,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="de.fau.cs.mad.simplechatapp.ChatActivity$PlaceholderFragment" >
+    tools:context="de.fau.cs
+		status = (TextView) findViewById(R.id.text_status);.mad.simplechatapp.ChatActivity$PlaceholderFragment" >
 
     <EditText
         android:id="@+id/text_message"
@@ -25,16 +26,79 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="@string/button_send" />
+        android:text="@string/button_send"
+        android:onClick="send" />
 
-    <ListView
-        android:id="@+id/listView1"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/text_message"
         android:layout_alignLeft="@+id/text_message"
-        android:layout_alignParentTop="true" >
+        android:layout_alignRight="@+id/button_send"
+        android:layout_marginBottom="30dp" />
 
-    </ListView>
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView1"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignRight="@+id/textView1"
+        android:layout_marginBottom="30dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView2"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_marginBottom="30dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView3"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_marginBottom="30dp" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView4"
+        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignRight="@+id/textView4"
+        android:layout_marginBottom="30dp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView5"
+        android:layout_alignLeft="@+id/textView5"
+        android:layout_alignRight="@+id/textView5"
+        android:layout_marginBottom="30dp" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView6"
+        android:layout_alignLeft="@+id/textView6"
+        android:layout_alignRight="@+id/textView6"
+        android:layout_marginBottom="30dp" />
+
+    <TextView
+        android:id="@+id/text_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/textView7"
+        android:text="default"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

@@ -46,10 +46,11 @@ public class MainActivity extends Activity {
 	
 	
 	public void showChat(View view) {
-		
 		Intent intent = new Intent(this, ChatActivity.class);
 		startActivity(intent);
 	}
+	
+	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
