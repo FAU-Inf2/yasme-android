@@ -27,6 +27,13 @@ public class BoundService extends Service{
 		return mBinder;
 	}
 	
+	@Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        // Allows the system to shut down the service
+		return START_NOT_STICKY;
+    }
+
+	
 	/**
 	 * TODO: implement public methods the client can call
 	 * - returns the current Service instance, which has public 
