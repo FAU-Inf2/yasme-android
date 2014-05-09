@@ -1,15 +1,27 @@
 package de.fau.cs.mad.simplechatapp;
 
+import de.fau.cs.mad.simplechatapp.BoundService.LocalBinder;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 
 public class ChatActivity extends Activity {
+	
+	BoundService mService;
+	boolean mBound = false;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +32,39 @@ public class ChatActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		//onServiceConnected();
+
+	}
+	
+	@Override
+    protected void onStart() {
+        super.onStart();
+        // Bind to LocalService
+        Intent service = new Intent(this, BoundService.class);
+        bindService(service, mConnection, Context.BIND_AUTO_CREATE);
+    }
+	
+	@Override
+    protected void onStop() {
+        super.onStop();
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+    }
+
+
+	
+	public void send() {
+		EditText message = (EditText) findViewById(R.id.text_message);
+		String name = message.getText().toString();
+		if(mBound) {
+			
+		}
+		
+		//TODO: Senden zum Server
 	}
 
 	@Override
@@ -41,6 +86,24 @@ public class ChatActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	 private ServiceConnection mConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName arg0, IBinder service) {
+			 // We've bound to BoundService, cast the IBinder and get LocalService instance
+            LocalBinder binder = (LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+			mBound = false;
+		}
+
+	 };
 
 	/**
 	 * A placeholder fragment containing a simple view.
