@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class ChatActivity extends Activity {
+public class YasmeChat extends Activity {
 	
 	BoundService mService;
 	boolean mBound = false;
@@ -51,6 +51,7 @@ public class ChatActivity extends Activity {
         // Bind to LocalService
         Intent service = new Intent(this, BoundService.class);
         bindService(service, mConnection, Context.BIND_AUTO_CREATE);
+        initializeViews();
     }
 	
 	@Override
@@ -76,20 +77,33 @@ public class ChatActivity extends Activity {
 	}
 	
 	public void send(View view) {
-		initializeViews();
+		
 		
 		String msg = message.getText().toString();
-		textView1.setText(msg);
-		status.setText("gesendet" + msg);
-		
-		if(mBound) {
-			textView1.setText(msg);
-			status.setText("gesendet" + msg);
-		} else {
+		if(msg == null) {
+			status.setText("nichts eingegeben");
+			return;
+		}		
+		//if(mBound) {
 			
-		}
+			textView7.setText(textView6.getText().toString());
+			textView6.setText(textView5.getText().toString());
+			textView5.setText(textView4.getText().toString());
+			textView4.setText(textView3.getText().toString());
+			textView3.setText(textView2.getText().toString());
+			textView2.setText(textView1.getText().toString());
+			textView1.setText(msg);
+			
+			status.setText("gesendet :" + msg);
+			msg = null;
+			message.setText("");
+			
+			//TODO: Senden zum Server
+		//} else {
+		//	status.setText("service not bound");
+		//	return;
+		//}
 		
-		//TODO: Senden zum Server
 	}
 
 	@Override

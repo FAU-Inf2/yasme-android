@@ -10,9 +10,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
-public class MainActivity extends Activity {
-
+public class YasmeHome extends Activity {
+	
+	EditText name;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,6 +24,8 @@ public class MainActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		name = (EditText) findViewById(R.id.editText_name);
+
 	}
 
 	@Override
@@ -46,7 +50,13 @@ public class MainActivity extends Activity {
 	
 	
 	public void showChat(View view) {
-		Intent intent = new Intent(this, ChatActivity.class);
+		String usr_name;
+		if(name != null) {
+			usr_name = name.getText().toString();
+		} else {
+			usr_name = "anonym";
+		}
+		Intent intent = new Intent(this, YasmeChat.class);
 		startActivity(intent);
 	}
 	
