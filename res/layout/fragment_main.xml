@@ -22,4 +22,15 @@
         android:text="@string/button_showChat"
         android:onClick="showChat" />
 
+    <EditText
+        android:id="@+id/editText_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+
 </RelativeLayout>
