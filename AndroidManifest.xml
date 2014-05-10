@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="de.fau.cs.mad.simplechatapp.MainActivity"
+            android:name="de.fau.cs.mad.simplechatapp.YasmeHome"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.fau.cs.mad.simplechatapp.ChatActivity"
+            android:name="de.fau.cs.mad.simplechatapp.YasmeChat"
             android:label="@string/title_activity_chat" >
         </activity>
     </application>
