@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -24,7 +23,7 @@ public class YasmeChat extends Activity {
 	private TextView status;
 	private TextView chatView[];
 	private String usr_name;
-	private URL url;
+	private String url;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +43,7 @@ public class YasmeChat extends Activity {
 	protected void onStart() {
 		super.onStart();
 		initializeViews();
-		url = null;
-		try {
-			url = new URL(getResources().getString(R.string.server_url));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-		}
+		url = getResources().getString(R.string.server_url);
 	}
 
 	@Override
@@ -83,16 +75,16 @@ public class YasmeChat extends Activity {
 			chatView[0].setText(usr_name + ": " + msg);
 						
 			//sending to server
-			//new SendMessageTask(url, usr_name).execute(msg);
-try {
-			new SendMessageTask("https://84.146.7.51:8080", 001).execute(msg);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+			
+			try {
+				new SendMessageTask(url, 001).execute(msg); //URL as String in strings.xml
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
 
 			status.setText("Gesendet: " + msg);
-		msg = null;
-		message.setText("");
+			msg = null;
+			message.setText("");
 
 		} else {
 			status.setText("Nichts eingegeben");
@@ -104,7 +96,8 @@ try {
 	
 	public void update(View view) {
 		ArrayList<String> messages= new ArrayList<String>();
-		new GetMessageTask(url, messages).execute();
+		//new GetMessageTask(url, messages).execute();
+		//TODO: Konstruktor wie in SendMessageTask anpassen
 		
 		if(messages.isEmpty()) {
 			status.setText("Keine neuen Nachrichten");
