@@ -1,5 +1,7 @@
 package de.fau.cs.mad.simplechatapp;
 
+import java.net.MalformedURLException;
+
 import de.fau.cs.mad.simplechatapp.BoundService.LocalBinder;
 import android.app.Activity;
 import android.app.Fragment;
@@ -18,10 +20,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class YasmeChat extends Activity {
-	
+
 	BoundService mService;
 	boolean mBound = false;
-	
+
 	EditText message;
 	TextView status;
 	TextView textView1;
@@ -32,7 +34,6 @@ public class YasmeChat extends Activity {
 	TextView textView6;
 	TextView textView7;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,29 +41,29 @@ public class YasmeChat extends Activity {
 
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
-				.add(R.id.container, new PlaceholderFragment()).commit();
+					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-		
+
 	}
-	
+
 	@Override
-    protected void onStart() {
-        super.onStart();
-        // Bind to LocalService
-        Intent service = new Intent(this, BoundService.class);
-        bindService(service, mConnection, Context.BIND_AUTO_CREATE);
-        initializeViews();
-    }
-	
+	protected void onStart() {
+		super.onStart();
+		// Bind to LocalService
+		Intent service = new Intent(this, BoundService.class);
+		bindService(service, mConnection, Context.BIND_AUTO_CREATE);
+		initializeViews();
+	}
+
 	@Override
-    protected void onStop() {
-        super.onStop();
-        // Unbind from the service
-        if (mBound) {
-            unbindService(mConnection);
-            mBound = false;
-        }
-    }
+	protected void onStop() {
+		super.onStop();
+		// Unbind from the service
+		if (mBound) {
+			unbindService(mConnection);
+			mBound = false;
+		}
+	}
 
 	private void initializeViews() {
 		message = (EditText) findViewById(R.id.text_message);
@@ -75,35 +76,38 @@ public class YasmeChat extends Activity {
 		textView6 = (TextView) findViewById(R.id.textView6);
 		textView7 = (TextView) findViewById(R.id.textView7);
 	}
-	
+
 	public void send(View view) {
-		
-		
+
 		String msg = message.getText().toString();
-		if(msg == null) {
+		if (msg == null) {
 			status.setText("nichts eingegeben");
 			return;
-		}		
-		//if(mBound) {
-			
-			textView7.setText(textView6.getText().toString());
-			textView6.setText(textView5.getText().toString());
-			textView5.setText(textView4.getText().toString());
-			textView4.setText(textView3.getText().toString());
-			textView3.setText(textView2.getText().toString());
-			textView2.setText(textView1.getText().toString());
-			textView1.setText(msg);
-			
-			status.setText("gesendet :" + msg);
-			msg = null;
-			message.setText("");
-			
-			//TODO: Senden zum Server
-		//} else {
-		//	status.setText("service not bound");
-		//	return;
-		//}
-		
+		}
+		// if(mBound) {
+
+		textView7.setText(textView6.getText().toString());
+		textView6.setText(textView5.getText().toString());
+		textView5.setText(textView4.getText().toString());
+		textView4.setText(textView3.getText().toString());
+		textView3.setText(textView2.getText().toString());
+		textView2.setText(textView1.getText().toString());
+		textView1.setText(msg);
+
+		status.setText("gesendet :" + msg);
+		msg = null;
+		message.setText("");
+
+		try {
+			new SendMessageTask("https://84.146.7.51:8080", 001).execute(msg);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+
+		// } else {
+		// status.setText("service not bound");
+		// return;
+		// }
 	}
 
 	@Override
@@ -125,15 +129,15 @@ public class YasmeChat extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	
+
 	private ServiceConnection mConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName arg0, IBinder service) {
-			// We've bound to BoundService, cast the IBinder and get LocalService instance
-            LocalBinder binder = (LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
+			// We've bound to BoundService, cast the IBinder and get
+			// LocalService instance
+			LocalBinder binder = (LocalBinder) service;
+			mService = binder.getService();
+			mBound = true;
 		}
 
 		@Override
@@ -141,9 +145,8 @@ public class YasmeChat extends Activity {
 			mService = null;
 			mBound = false;
 		}
-	 };
+	};
 
-	 
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
