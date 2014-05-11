@@ -74,9 +74,10 @@ public class GetMessageTask extends AsyncTask<String, Void, String> {
 		//	lastMessageID = id;
 		}
 
-		// To Do:
-		/*
-		 * Nachrichten auf View ausgeben Serverspezifikation betrachten für
+		// TODO:
+		/* done - Nachrichten auf View ausgeben
+		 * 
+		 * Serverspezifikation betrachten für
 		 * genaue Syntax des JSON Objects
 		 */
 	}

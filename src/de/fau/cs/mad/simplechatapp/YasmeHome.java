@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 public class YasmeHome extends Activity {
+	public final static String USER_NAME = "de.fau.cs.mad.simplechatapp.USER_NAME";
 	
-	EditText name;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -24,8 +24,7 @@ public class YasmeHome extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-		name = (EditText) findViewById(R.id.editText_name);
-
+		
 	}
 
 	@Override
@@ -50,13 +49,14 @@ public class YasmeHome extends Activity {
 	
 	
 	public void showChat(View view) {
-		String usr_name;
-		if(name != null) {
-			usr_name = name.getText().toString();
-		} else {
+		EditText name = (EditText) findViewById(R.id.editText_name);
+		String usr_name = name.getText().toString();
+		if(usr_name.isEmpty()) {
 			usr_name = "anonym";
 		}
+		
 		Intent intent = new Intent(this, YasmeChat.class);
+		intent.putExtra(USER_NAME, usr_name);
 		startActivity(intent);
 	}
 	

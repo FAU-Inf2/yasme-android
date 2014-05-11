@@ -1,14 +1,12 @@
 package de.fau.cs.mad.simplechatapp;
 
-import de.fau.cs.mad.simplechatapp.BoundService.LocalBinder;
+import java.net.MalformedURLException;
+import java.net.URL;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,19 +16,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class YasmeChat extends Activity {
-	
-	BoundService mService;
-	boolean mBound = false;
-	
-	EditText message;
-	TextView status;
-	TextView textView1;
-	TextView textView2;
-	TextView textView3;
-	TextView textView4;
-	TextView textView5;
-	TextView textView6;
-	TextView textView7;
+		
+	private EditText message;
+	private TextView status;
+	private TextView textView1;
+	private TextView textView2;
+	private TextView textView3;
+	private TextView textView4;
+	private TextView textView5;
+	private TextView textView6;
+	private TextView textView7;
+	private String usr_name;
 
 
 	@Override
@@ -42,26 +38,20 @@ public class YasmeChat extends Activity {
 			getFragmentManager().beginTransaction()
 				.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		Intent intent = getIntent();
+		usr_name = intent.getStringExtra(YasmeHome.USER_NAME);
 		
 	}
 	
 	@Override
     protected void onStart() {
         super.onStart();
-        // Bind to LocalService
-        Intent service = new Intent(this, BoundService.class);
-        bindService(service, mConnection, Context.BIND_AUTO_CREATE);
         initializeViews();
     }
 	
 	@Override
     protected void onStop() {
         super.onStop();
-        // Unbind from the service
-        if (mBound) {
-            unbindService(mConnection);
-            mBound = false;
-        }
     }
 
 	private void initializeViews() {
@@ -74,17 +64,14 @@ public class YasmeChat extends Activity {
 		textView5 = (TextView) findViewById(R.id.textView5);
 		textView6 = (TextView) findViewById(R.id.textView6);
 		textView7 = (TextView) findViewById(R.id.textView7);
+		status.setText("Eingeloggt: " + usr_name);
 	}
 	
 	public void send(View view) {
 		
 		
 		String msg = message.getText().toString();
-		if(msg == null) {
-			status.setText("nichts eingegeben");
-			return;
-		}		
-		//if(mBound) {
+		if(!msg.isEmpty()) {
 			
 			textView7.setText(textView6.getText().toString());
 			textView6.setText(textView5.getText().toString());
@@ -92,17 +79,27 @@ public class YasmeChat extends Activity {
 			textView4.setText(textView3.getText().toString());
 			textView3.setText(textView2.getText().toString());
 			textView2.setText(textView1.getText().toString());
-			textView1.setText(msg);
+			textView1.setText(usr_name + ": " + msg);
 			
-			status.setText("gesendet :" + msg);
+			//sending to server
+			URL url = null;
+			try {
+				url = new URL(getResources().getString(R.string.server_url));
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (NotFoundException e) {
+				e.printStackTrace();
+			}
+			//new SendMessageTask(url, usr_name).execute(msg);
+			
+			status.setText("Gesendet: " + msg);
 			msg = null;
 			message.setText("");
 			
-			//TODO: Senden zum Server
-		//} else {
-		//	status.setText("service not bound");
-		//	return;
-		//}
+		} else {
+			status.setText("Nichts eingegeben");
+			return;
+		}
 		
 	}
 
@@ -125,24 +122,6 @@ public class YasmeChat extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	
-	private ServiceConnection mConnection = new ServiceConnection() {
-		@Override
-		public void onServiceConnected(ComponentName arg0, IBinder service) {
-			// We've bound to BoundService, cast the IBinder and get LocalService instance
-            LocalBinder binder = (LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName arg0) {
-			mService = null;
-			mBound = false;
-		}
-	 };
-
 	 
 	/**
 	 * A placeholder fragment containing a simple view.
