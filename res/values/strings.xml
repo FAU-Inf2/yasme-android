@@ -3,12 +3,19 @@
 
     <string name="app_name">Yasme Prototyp</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_chat">ChatActivity</string>
-    <string name="button_send">Sende</string>
-    <string name="button_showChat">Chat!</string>
-    <string name="type_text">Hier Nachricht eingeben</string>
     <string name="server_url">http://</string>
-        
+    
+    <!-- Home -->
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="button_showChat">Chat!</string>
+    <string name="usr_name_hint">Benutzername</string>
+    
+    <!-- Chat -->
+    <string name="button_send">Sende</string>
+    <string name="button_update">Update</string>
+    <string name="type_text">Hier Nachricht eingeben</string>
+    
+    
     
 
 </resources>

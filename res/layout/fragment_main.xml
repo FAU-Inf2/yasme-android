@@ -30,7 +30,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:hint="@string/usr_name_hint" />
 
 
 </RelativeLayout>

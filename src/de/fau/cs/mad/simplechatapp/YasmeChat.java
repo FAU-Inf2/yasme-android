@@ -2,6 +2,9 @@ package de.fau.cs.mad.simplechatapp;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -19,14 +22,9 @@ public class YasmeChat extends Activity {
 		
 	private EditText message;
 	private TextView status;
-	private TextView textView1;
-	private TextView textView2;
-	private TextView textView3;
-	private TextView textView4;
-	private TextView textView5;
-	private TextView textView6;
-	private TextView textView7;
+	private TextView chatView[];
 	private String usr_name;
+	private URL url;
 
 
 	@Override
@@ -47,6 +45,14 @@ public class YasmeChat extends Activity {
     protected void onStart() {
         super.onStart();
         initializeViews();
+		url = null;
+		try {
+			url = new URL(getResources().getString(R.string.server_url));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+		}
     }
 	
 	@Override
@@ -55,41 +61,30 @@ public class YasmeChat extends Activity {
     }
 
 	private void initializeViews() {
+		chatView = new TextView[7];
 		message = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
-		textView1 = (TextView) findViewById(R.id.textView1);
-		textView2 = (TextView) findViewById(R.id.textView2);
-		textView3 = (TextView) findViewById(R.id.textView3);
-		textView4 = (TextView) findViewById(R.id.textView4);
-		textView5 = (TextView) findViewById(R.id.textView5);
-		textView6 = (TextView) findViewById(R.id.textView6);
-		textView7 = (TextView) findViewById(R.id.textView7);
+		chatView[0] = (TextView) findViewById(R.id.textView1);
+		chatView[1] = (TextView) findViewById(R.id.textView2);
+		chatView[2] = (TextView) findViewById(R.id.textView3);
+		chatView[3] = (TextView) findViewById(R.id.textView4);
+		chatView[4] = (TextView) findViewById(R.id.textView5);
+		chatView[5] = (TextView) findViewById(R.id.textView6);
+		chatView[6] = (TextView) findViewById(R.id.textView7);
 		status.setText("Eingeloggt: " + usr_name);
 	}
 	
+	
 	public void send(View view) {
-		
 		
 		String msg = message.getText().toString();
 		if(!msg.isEmpty()) {
-			
-			textView7.setText(textView6.getText().toString());
-			textView6.setText(textView5.getText().toString());
-			textView5.setText(textView4.getText().toString());
-			textView4.setText(textView3.getText().toString());
-			textView3.setText(textView2.getText().toString());
-			textView2.setText(textView1.getText().toString());
-			textView1.setText(usr_name + ": " + msg);
-			
-			//sending to server
-			URL url = null;
-			try {
-				url = new URL(getResources().getString(R.string.server_url));
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (NotFoundException e) {
-				e.printStackTrace();
+			for(int i = chatView.length-1; i > 0; i--) {
+				chatView[i].setText(chatView[i-1].getText().toString());
 			}
+			chatView[0].setText(usr_name + ": " + msg);
+						
+			//sending to server
 			//new SendMessageTask(url, usr_name).execute(msg);
 			
 			status.setText("Gesendet: " + msg);
@@ -101,6 +96,32 @@ public class YasmeChat extends Activity {
 			return;
 		}
 		
+	}
+	
+	
+	public void update(View view) {
+		ArrayList<String> messages= new ArrayList<String>();
+		new GetMessageTask(url, messages).execute();
+		
+		if(messages.isEmpty()) {
+			status.setText("Keine neuen Nachrichten");
+			return;
+		}
+		
+		Iterator<String> iterator = messages.iterator();
+		int size = messages.size();
+		if(size >= chatView.length) {
+			for(int i = chatView.length-1; i >= 0; i--) {
+				chatView[i].setText(iterator.next());
+			}
+		} else {
+			for(int i = chatView.length-1; i >= size; i--) {
+				chatView[i].setText(chatView[i-size].getText().toString());
+			}
+			for(int i = size-1; i >= 0; i--) {
+				chatView[i].setText(iterator.next());
+			}
+		}
 	}
 
 	@Override

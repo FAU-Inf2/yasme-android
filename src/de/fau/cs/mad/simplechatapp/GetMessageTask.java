@@ -14,10 +14,13 @@ import android.os.AsyncTask;
 public class GetMessageTask extends AsyncTask<String, Void, String> {
 
 	private URL url;
+	private ArrayList<String> messages;
 
-	public GetMessageTask(URL url) {
+	public GetMessageTask(URL url, ArrayList<String> messages) {
 		this.url = url;
+		this.messages = messages;
 	}
+	
 
 	protected String doInBackground(String... lastMessageID) {
 
@@ -45,7 +48,7 @@ public class GetMessageTask extends AsyncTask<String, Void, String> {
 	@SuppressLint("NewApi")
 	protected void onPostExecute(Boolean result) {
 
-		ArrayList<String> messages = new ArrayList<String>(); // temporärer
+		messages = new ArrayList<String>(); // temporärer
 																// Zwischenspeicher
 
 		JSONArray lang = null;
@@ -73,9 +76,10 @@ public class GetMessageTask extends AsyncTask<String, Void, String> {
 			messages.add(msg);
 		//	lastMessageID = id;
 		}
+		
 
 		// TODO:
-		/* done - Nachrichten auf View ausgeben
+		/* Nachrichten auf View ausgeben
 		 * 
 		 * Serverspezifikation betrachten für
 		 * genaue Syntax des JSON Objects
