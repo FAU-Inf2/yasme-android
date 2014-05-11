@@ -26,7 +26,6 @@ public class YasmeChat extends Activity {
 	private String usr_name;
 	private URL url;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,17 +33,17 @@ public class YasmeChat extends Activity {
 
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
-				.add(R.id.container, new PlaceholderFragment()).commit();
+					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		Intent intent = getIntent();
 		usr_name = intent.getStringExtra(YasmeHome.USER_NAME);
-		
+
 	}
-	
+
 	@Override
-    protected void onStart() {
-        super.onStart();
-        initializeViews();
+	protected void onStart() {
+		super.onStart();
+		initializeViews();
 		url = null;
 		try {
 			url = new URL(getResources().getString(R.string.server_url));
@@ -53,12 +52,12 @@ public class YasmeChat extends Activity {
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 		}
-    }
-	
+	}
+
 	@Override
-    protected void onStop() {
-        super.onStop();
-    }
+	protected void onStop() {
+		super.onStop();
+	}
 
 	private void initializeViews() {
 		chatView = new TextView[7];
@@ -73,10 +72,9 @@ public class YasmeChat extends Activity {
 		chatView[6] = (TextView) findViewById(R.id.textView7);
 		status.setText("Eingeloggt: " + usr_name);
 	}
-	
+
 	
 	public void send(View view) {
-		
 		String msg = message.getText().toString();
 		if(!msg.isEmpty()) {
 			for(int i = chatView.length-1; i > 0; i--) {
@@ -86,11 +84,16 @@ public class YasmeChat extends Activity {
 						
 			//sending to server
 			//new SendMessageTask(url, usr_name).execute(msg);
-			
+try {
+			new SendMessageTask("https://84.146.7.51:8080", 001).execute(msg);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+
 			status.setText("Gesendet: " + msg);
-			msg = null;
-			message.setText("");
-			
+		msg = null;
+		message.setText("");
+
 		} else {
 			status.setText("Nichts eingegeben");
 			return;
@@ -107,7 +110,6 @@ public class YasmeChat extends Activity {
 			status.setText("Keine neuen Nachrichten");
 			return;
 		}
-		
 		Iterator<String> iterator = messages.iterator();
 		int size = messages.size();
 		if(size >= chatView.length) {
@@ -144,6 +146,7 @@ public class YasmeChat extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	 
+			// LocalService instance
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
