@@ -1,13 +1,11 @@
-package de.fau.cs.mad.simplechatapp;
+package net.yasme.android;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,7 +17,7 @@ import android.widget.TextView;
 
 public class YasmeChat extends Activity {
 		
-	private EditText message;
+	private EditText EditMessage;
 	private TextView status;
 	private TextView chatView[];
 	private String usr_name;
@@ -53,7 +51,7 @@ public class YasmeChat extends Activity {
 
 	private void initializeViews() {
 		chatView = new TextView[7];
-		message = (EditText) findViewById(R.id.text_message);
+		EditMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
 		chatView[0] = (TextView) findViewById(R.id.textView1);
 		chatView[1] = (TextView) findViewById(R.id.textView2);
@@ -67,15 +65,20 @@ public class YasmeChat extends Activity {
 
 	
 	public void send(View view) {
-		String msg = message.getText().toString();
+		String msg = EditMessage.getText().toString();
 		if(!msg.isEmpty()) {
 			for(int i = chatView.length-1; i > 0; i--) {
 				chatView[i].setText(chatView[i-1].getText().toString());
 			}
 			chatView[0].setText(usr_name + ": " + msg);
-						
-			//sending to server
 			
+			//creating message object
+			//TODO: get uid from usr_name
+			long uid = 001;
+			Message message = new Message(uid, 0, msg);
+			
+			
+			//sending to server
 			try {
 				new SendMessageTask(url, 001).execute(msg); //URL as String in strings.xml
 			} catch (MalformedURLException e) {
@@ -84,7 +87,7 @@ public class YasmeChat extends Activity {
 
 			status.setText("Gesendet: " + msg);
 			msg = null;
-			message.setText("");
+			EditMessage.setText("");
 
 		} else {
 			status.setText("Nichts eingegeben");

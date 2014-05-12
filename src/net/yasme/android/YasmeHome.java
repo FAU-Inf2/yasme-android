@@ -1,4 +1,4 @@
-package de.fau.cs.mad.simplechatapp;
+package net.yasme.android;
 
 
 import android.app.Activity;
@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 public class YasmeHome extends Activity {
-	public final static String USER_NAME = "de.fau.cs.mad.simplechatapp.USER_NAME";
+	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

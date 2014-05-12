@@ -1,4 +1,4 @@
-package de.fau.cs.mad.simplechatapp;
+package net.yasme.android;
 
 import android.os.AsyncTask;
 
