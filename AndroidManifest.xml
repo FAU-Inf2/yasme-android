@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.fau.cs.mad.simplechatapp"
+    package="net.yasme.android"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="de.fau.cs.mad.simplechatapp.YasmeHome"
+            android:name="net.yasme.android.YasmeHome"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.fau.cs.mad.simplechatapp.YasmeChat"
+            android:name="net.yasme.android.YasmeChat"
             android:label="@string/title_activity_chat" >
         </activity>
     </application>
