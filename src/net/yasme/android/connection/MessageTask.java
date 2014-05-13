@@ -1,16 +1,17 @@
 package net.yasme.android.connection;
 
+import android.annotation.SuppressLint;
 import java.io.IOException;
-import java.net.URL;
-
+import java.util.ArrayList;
 import net.yasme.android.entities.Message;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -56,9 +57,36 @@ public class MessageTask {
 		return false;
 	}
 
-	public Message[] getMessage() {
+	@SuppressLint("NewApi")
+	// To Do: Prüfen
+	public ArrayList<Message> getMessage(String lastMessageID) {
 
-		// To Do: getMessage()
-		return null;
+		ArrayList<Message> messages = new ArrayList<Message>();
+
+		try {
+
+			HttpClient client = new DefaultHttpClient();
+			HttpGet request = new HttpGet(url + "/get/" + lastMessageID);
+
+			HttpResponse response = client.execute(request);
+			JSONArray jArray = new JSONArray(response.getEntity().getContent());
+
+			for (int i = 0; i < jArray.length(); i++) {
+
+				JSONObject obj = jArray.getJSONObject(i);
+				messages.add(new Message(Long.parseLong((String) obj
+						.get("sender")), Long.parseLong((String) obj
+						.get("recipient")), (String) obj.get("message")));
+			}
+			
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return messages;
 	}
 }
