@@ -70,70 +70,93 @@ public class YasmeChat extends Activity {
 	}
 
 	public void send(View view) {
-
+		
 		String msg = EditMessage.getText().toString();
 
-		if (!msg.isEmpty()) {
-			for (int i = chatView.length - 1; i > 0; i--) {
-				chatView[i].setText(chatView[i - 1].getText().toString());
-			}
-			chatView[0].setText(usr_name + ": " + msg);
-
-			// creating message object
-			// TODO: get uid from usr_name
-			long uid = 001;
-			Message message = new Message(uid, 0, msg);
-
-			new SendMessageTask().execute(msg); // URL as String in
-												// strings.xml
-
-			status.setText("Gesendet: " + msg);
-			msg = null;
-			EditMessage.setText("");
-
-		} else {
-			status.setText("Nichts eingegeben");
-			return;
-		}
+		new SendMessageTask().execute(msg, usr_name); 
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
-		protected Boolean doInBackground(String... parmas) {
-			// To Do: Create Message Object with params
+		String msg;
+		protected Boolean doInBackground(String... params) {
+			// Create Message Object with params
 			// messageTask.sendMessage(message); <-- REST Server Call
 			// Return Value: true = success false = failed
 
-			return true;
+			msg = params[0];
+			if (!msg.isEmpty()) {
+
+				// creating message object
+				// TODO: get uid from usr_name, usr_name = params[1]
+				long uid = 001;
+				Message message = new Message(uid, 0, msg);
+			
+				messageTask.sendMessage(message);
+
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		protected void onPostExecute(Boolean result) {
-			// To Do: if doInBackground returned true
+			// if doInBackground returned true
 			// set Message to textViews
+			if(result) {
+				for (int i = chatView.length - 1; i > 0; i--) {
+					chatView[i].setText(chatView[i - 1].getText().toString());
+				}
+				chatView[0].setText(usr_name + ": " + msg);
+				
+				status.setText("Gesendet: " + msg);
+				msg = null;
+				EditMessage.setText("");
+				
+			} else {
+				status.setText("Nichts eingegeben");
+			}
 		}
 	}
 
 	public void update(View view) {
-		ArrayList<String> messages = new ArrayList<String>();
-		// new GetMessageTask(url, messages).execute();
-		// TODO: Konstruktor wie in SendMessageTask anpassen
+		String lastMessageID = "";
+		new GetMessageTask().execute(lastMessageID);
+		
+	}
+	
+	private class GetMessageTask extends AsyncTask<String, Void, Boolean> {
 
-		if (messages.isEmpty()) {
-			status.setText("Keine neuen Nachrichten");
-			return;
+		ArrayList<Message> messages;
+		protected Boolean doInBackground(String... params) {
+			// messageTask.getMessage(String lastMessageID); <-- REST Server Call
+			// Return Value: true = success false = failed
+			
+			messages = messageTask.getMessage(params[0]);
+			if (messages.isEmpty()) {
+				status.setText("Keine neuen Nachrichten");
+				return false;
+			}
+			return true;
 		}
-		Iterator<String> iterator = messages.iterator();
-		int size = messages.size();
-		if (size >= chatView.length) {
-			for (int i = chatView.length - 1; i >= 0; i--) {
-				chatView[i].setText(iterator.next());
-			}
-		} else {
-			for (int i = chatView.length - 1; i >= size; i--) {
-				chatView[i].setText(chatView[i - size].getText().toString());
-			}
-			for (int i = size - 1; i >= 0; i--) {
-				chatView[i].setText(iterator.next());
+
+		protected void onPostExecute(Boolean result) {
+			// if doInBackground returned true
+			// set Message to textViews
+			
+			Iterator<Message> iterator = messages.iterator();
+			int size = messages.size();
+			if (size >= chatView.length) {
+				for (int i = chatView.length - 1; i >= 0; i--) {
+					chatView[i].setText(iterator.next().getMessage());
+				}
+			} else {
+				for (int i = chatView.length - 1; i >= size; i--) {
+					chatView[i].setText(chatView[i - size].getText().toString());
+				}
+				for (int i = size - 1; i >= 0; i--) {
+					chatView[i].setText(iterator.next().getMessage());
+				}
 			}
 		}
 	}

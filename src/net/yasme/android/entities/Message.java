@@ -46,6 +46,10 @@ public class Message {
 	public Date getDateSent() {
 		return dateSent;
 	}
+	
+	public int getID() {
+		return id;
+	}
 
 	/** Setters **/
 	public void setMessage(String message) {

@@ -7,6 +7,7 @@ public class User {
 
     private String id;
     private String pw;
+    private String name;
 
     public User(String id, String pw) {
         this.id = id;
@@ -26,6 +27,14 @@ public class User {
     public void setPw(String pw) {
         this.pw = pw;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
     // no setter for the id!!
 }
