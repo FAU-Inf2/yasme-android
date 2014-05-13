@@ -1,14 +1,14 @@
 package net.yasme.android;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.yasme.android.connection.SendMessageTask;
+import net.yasme.android.connection.MessageTask;
 import net.yasme.android.entities.Message;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,12 +19,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class YasmeChat extends Activity {
-		
+
 	private EditText EditMessage;
 	private TextView status;
 	private TextView chatView[];
 	private String usr_name;
 	private String url;
+
+	private MessageTask messageTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class YasmeChat extends Activity {
 		super.onStart();
 		initializeViews();
 		url = getResources().getString(R.string.server_url);
+		messageTask = new MessageTask(url);
 	}
 
 	@Override
@@ -66,27 +69,23 @@ public class YasmeChat extends Activity {
 		status.setText("Eingeloggt: " + usr_name);
 	}
 
-	
 	public void send(View view) {
+
 		String msg = EditMessage.getText().toString();
-		if(!msg.isEmpty()) {
-			for(int i = chatView.length-1; i > 0; i--) {
-				chatView[i].setText(chatView[i-1].getText().toString());
+
+		if (!msg.isEmpty()) {
+			for (int i = chatView.length - 1; i > 0; i--) {
+				chatView[i].setText(chatView[i - 1].getText().toString());
 			}
 			chatView[0].setText(usr_name + ": " + msg);
-			
-			//creating message object
-			//TODO: get uid from usr_name
+
+			// creating message object
+			// TODO: get uid from usr_name
 			long uid = 001;
 			Message message = new Message(uid, 0, msg);
-			
-			
-			//sending to server
-			try {
-				new SendMessageTask(url, 001).execute(msg); //URL as String in strings.xml
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
+
+			new SendMessageTask().execute(msg); // URL as String in
+												// strings.xml
 
 			status.setText("Gesendet: " + msg);
 			msg = null;
@@ -96,30 +95,44 @@ public class YasmeChat extends Activity {
 			status.setText("Nichts eingegeben");
 			return;
 		}
-		
 	}
-	
-	
+
+	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
+
+		protected Boolean doInBackground(String... parmas) {
+			// To Do: Create Message Object with params
+			// messageTask.sendMessage(message); <-- REST Server Call
+			// Return Value: true = success false = failed
+
+			return true;
+		}
+
+		protected void onPostExecute(Boolean result) {
+			// To Do: if doInBackground returned true
+			// set Message to textViews
+		}
+	}
+
 	public void update(View view) {
-		ArrayList<String> messages= new ArrayList<String>();
-		//new GetMessageTask(url, messages).execute();
-		//TODO: Konstruktor wie in SendMessageTask anpassen
-		
-		if(messages.isEmpty()) {
+		ArrayList<String> messages = new ArrayList<String>();
+		// new GetMessageTask(url, messages).execute();
+		// TODO: Konstruktor wie in SendMessageTask anpassen
+
+		if (messages.isEmpty()) {
 			status.setText("Keine neuen Nachrichten");
 			return;
 		}
 		Iterator<String> iterator = messages.iterator();
 		int size = messages.size();
-		if(size >= chatView.length) {
-			for(int i = chatView.length-1; i >= 0; i--) {
+		if (size >= chatView.length) {
+			for (int i = chatView.length - 1; i >= 0; i--) {
 				chatView[i].setText(iterator.next());
 			}
 		} else {
-			for(int i = chatView.length-1; i >= size; i--) {
-				chatView[i].setText(chatView[i-size].getText().toString());
+			for (int i = chatView.length - 1; i >= size; i--) {
+				chatView[i].setText(chatView[i - size].getText().toString());
 			}
-			for(int i = size-1; i >= 0; i--) {
+			for (int i = size - 1; i >= 0; i--) {
 				chatView[i].setText(iterator.next());
 			}
 		}
@@ -144,8 +157,8 @@ public class YasmeChat extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	 
-			// LocalService instance
+
+	// LocalService instance
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */

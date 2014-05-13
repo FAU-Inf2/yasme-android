@@ -5,6 +5,7 @@ import java.util.Date;
 /**
  * Created by bene on 06.05.14.
  */
+
 public class Message {
 
 	private long sender;
