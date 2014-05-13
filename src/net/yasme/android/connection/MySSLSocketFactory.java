@@ -1,4 +1,4 @@
-package net.yasme.android;
+package net.yasme.android.connection;
 
 import java.io.IOException;
 import java.net.Socket;

@@ -3,6 +3,9 @@ package net.yasme.android;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import net.yasme.android.connection.SendMessageTask;
+import net.yasme.android.entities.Message;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;

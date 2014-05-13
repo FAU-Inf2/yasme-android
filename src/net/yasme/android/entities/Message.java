@@ -1,4 +1,4 @@
-package net.yasme.android;
+package net.yasme.android.entities;
 
 import java.util.Date;
 
