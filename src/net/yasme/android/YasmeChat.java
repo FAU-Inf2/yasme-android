@@ -117,7 +117,7 @@ public class YasmeChat extends Activity {
 	}
 
 	public void update(View view) {
-		String lastMessageID = "";
+		String lastMessageID = "1"; //Debug WERT
 		new GetMessageTask().execute(lastMessageID);
 
 	}
@@ -132,6 +132,7 @@ public class YasmeChat extends Activity {
 			// Return Value: true = success false = failed
 
 			messages = messageTask.getMessage(params[0]);
+
 			if (messages.isEmpty()) {
 				status.setText("Keine neuen Nachrichten");
 				return false;

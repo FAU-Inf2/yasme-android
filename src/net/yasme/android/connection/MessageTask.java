@@ -25,8 +25,8 @@ public class MessageTask {
 	private String url;
 
 	public MessageTask(String url) {
-		// this.url = url;
-		this.url = "http://devel.yasme.net"; // Debug
+		this.url = url;
+		// this.url = "http://devel.yasme.net"; // Debug
 	}
 
 	public boolean sendMessage(Message message) {
@@ -91,18 +91,24 @@ public class MessageTask {
 
 			HttpClient client = new DefaultHttpClient();
 			HttpGet request = new HttpGet(url + "/msg/" + lastMessageID);
+			request.addHeader("accept", "application/json");
 
 			HttpResponse response = client.execute(request);
-			JSONArray jArray = new JSONArray(response.getEntity().getContent());
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+
+			String json = reader.readLine();
+
+			JSONArray jArray = new JSONArray(json);
 
 			for (int i = 0; i < jArray.length(); i++) {
 
 				JSONObject obj = jArray.getJSONObject(i);
-				messages.add(new Message(Long.parseLong((String) obj
-						.get("sender")), Long.parseLong((String) obj
-						.get("recipient")), (String) obj.get("message")));
-
-				System.out.println((String) obj.get("message"));
+				messages.add(new Message(
+						Long.parseLong(obj.getString("sender")), Long
+								.parseLong(obj.getString("recipient")), obj
+								.getString("message")));
 			}
 
 		} catch (IllegalStateException e) {
