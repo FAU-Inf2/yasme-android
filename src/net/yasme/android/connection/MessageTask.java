@@ -25,8 +25,8 @@ public class MessageTask {
 	private String url;
 
 	public MessageTask(String url) {
-		//this.url = url;
-		 this.url = "http://devel.yasme.net"; // Debug
+		// this.url = url;
+		this.url = "http://devel.yasme.net"; // Debug
 	}
 
 	public boolean sendMessage(Message message) {
@@ -41,9 +41,12 @@ public class MessageTask {
 			// String json = mapper.writeValueAsString(message);
 
 			JSONObject obj = new JSONObject();
-			obj.put("Sender", message.getSender());
-			obj.put("Message", message.getMessage());
+			obj.put("sender", message.getSender());
+			obj.put("recipient", message.getRecipient());
+			obj.put("message", message.getMessage());
 			String json = obj.toString();
+
+			// System.out.println(json);
 
 			StringEntity se = new StringEntity(json);
 
@@ -87,7 +90,7 @@ public class MessageTask {
 		try {
 
 			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(url + "/get/" + lastMessageID);
+			HttpGet request = new HttpGet(url + "/msg/" + lastMessageID);
 
 			HttpResponse response = client.execute(request);
 			JSONArray jArray = new JSONArray(response.getEntity().getContent());
@@ -98,6 +101,8 @@ public class MessageTask {
 				messages.add(new Message(Long.parseLong((String) obj
 						.get("sender")), Long.parseLong((String) obj
 						.get("recipient")), (String) obj.get("message")));
+
+				System.out.println((String) obj.get("message"));
 			}
 
 		} catch (IllegalStateException e) {
