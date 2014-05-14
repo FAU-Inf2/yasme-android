@@ -25,8 +25,8 @@ public class MessageTask {
 	private String url;
 
 	public MessageTask(String url) {
-		this.url = url;
-		// this.url = "http://devel.yasme.net"; // Debug
+		//this.url = url;
+		 this.url = "http://devel.yasme.net"; // Debug
 	}
 
 	public boolean sendMessage(Message message) {
@@ -37,6 +37,8 @@ public class MessageTask {
 			HttpPost httpPost = new HttpPost(url + "/msg");
 
 			// To Do: Complete Message as JSon
+			// ObjectMapper mapper = new ObjectMapper();
+			// String json = mapper.writeValueAsString(message);
 
 			JSONObject obj = new JSONObject();
 			obj.put("Sender", message.getSender());
