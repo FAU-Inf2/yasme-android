@@ -1,9 +1,14 @@
 package net.yasme.android.connection;
 
 import android.annotation.SuppressLint;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+
 import net.yasme.android.entities.Message;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -21,6 +26,7 @@ public class MessageTask {
 
 	public MessageTask(String url) {
 		this.url = url;
+		// this.url = "http://devel.yasme.net"; // Debug
 	}
 
 	public boolean sendMessage(Message message) {
@@ -31,19 +37,37 @@ public class MessageTask {
 			HttpPost httpPost = new HttpPost(url + "/msg");
 
 			// To Do: Complete Message as JSon
+			// ObjectMapper mapper = new ObjectMapper();
+			// String json = mapper.writeValueAsString(message);
 
 			JSONObject obj = new JSONObject();
-			obj.put("Sender", message.getSender());
-			obj.put("Message", message.getMessage());
+			obj.put("sender", message.getSender());
+			obj.put("recipient", message.getRecipient());
+			obj.put("message", message.getMessage());
 			String json = obj.toString();
+
+			// System.out.println(json);
 
 			StringEntity se = new StringEntity(json);
 
 			httpPost.setEntity(se);
 
+			httpPost.setHeader("Content-type", "application/json");
+			httpPost.setHeader("Accept", "application/json");
+
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 
 			if (httpResponse.getStatusLine().getStatusCode() == 201) {
+
+				/****************** Debug*Output ********************************/
+				BufferedReader rd = new BufferedReader(new InputStreamReader(
+						httpResponse.getEntity().getContent()));
+				String line = "";
+				while ((line = rd.readLine()) != null) {
+					System.out.println(line);
+				}
+				/****************** Debug*END ***********************************/
+
 				return true;
 			}
 
@@ -66,19 +90,27 @@ public class MessageTask {
 		try {
 
 			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(url + "/get/" + lastMessageID);
+			HttpGet request = new HttpGet(url + "/msg/" + lastMessageID);
+			request.addHeader("accept", "application/json");
 
 			HttpResponse response = client.execute(request);
-			JSONArray jArray = new JSONArray(response.getEntity().getContent());
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+
+			String json = reader.readLine();
+
+			JSONArray jArray = new JSONArray(json);
 
 			for (int i = 0; i < jArray.length(); i++) {
 
 				JSONObject obj = jArray.getJSONObject(i);
-				messages.add(new Message(Long.parseLong((String) obj
-						.get("sender")), Long.parseLong((String) obj
-						.get("recipient")), (String) obj.get("message")));
+				messages.add(new Message(
+						Long.parseLong(obj.getString("sender")), Long
+								.parseLong(obj.getString("recipient")), obj
+								.getString("message")));
 			}
-			
+
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {

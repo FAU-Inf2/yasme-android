@@ -70,69 +70,69 @@ public class YasmeChat extends Activity {
 	}
 
 	public void send(View view) {
-		
+
 		String msg = EditMessage.getText().toString();
 
-		new SendMessageTask().execute(msg, usr_name); 
+		if (msg.isEmpty()) {
+			status.setText("Nichts eingegeben");
+			return;
+		}
+
+		new SendMessageTask().execute(msg, usr_name);
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
 		String msg;
+
 		protected Boolean doInBackground(String... params) {
-			// Create Message Object with params
-			// messageTask.sendMessage(message); <-- REST Server Call
-			// Return Value: true = success false = failed
 
 			msg = params[0];
-			if (!msg.isEmpty()) {
 
-				// creating message object
-				// TODO: get uid from usr_name, usr_name = params[1]
-				long uid = 001;
-				Message message = new Message(uid, 0, msg);
-			
-				messageTask.sendMessage(message);
+			// creating message object
+			// TODO: get uid from usr_name, usr_name = params[1]
+			long uid = 001;
+			Message message = new Message(uid, 002, msg);
 
-				return true;
-			} else {
-				return false;
-			}
+			return messageTask.sendMessage(message);
 		}
 
 		protected void onPostExecute(Boolean result) {
 			// if doInBackground returned true
 			// set Message to textViews
-			if(result) {
+			if (result) {
 				for (int i = chatView.length - 1; i > 0; i--) {
 					chatView[i].setText(chatView[i - 1].getText().toString());
 				}
 				chatView[0].setText(usr_name + ": " + msg);
-				
+
 				status.setText("Gesendet: " + msg);
 				msg = null;
 				EditMessage.setText("");
-				
+
 			} else {
-				status.setText("Nichts eingegeben");
+				status.setText("Senden fehlgeschlagen");
 			}
 		}
 	}
 
 	public void update(View view) {
-		String lastMessageID = "";
+		String lastMessageID = "1"; //Debug WERT
 		new GetMessageTask().execute(lastMessageID);
-		
+
 	}
-	
+
 	private class GetMessageTask extends AsyncTask<String, Void, Boolean> {
 
 		ArrayList<Message> messages;
+
 		protected Boolean doInBackground(String... params) {
-			// messageTask.getMessage(String lastMessageID); <-- REST Server Call
+			// messageTask.getMessage(String lastMessageID); <-- REST Server
+			// Call
 			// Return Value: true = success false = failed
-			
+
 			messages = messageTask.getMessage(params[0]);
+
 			if (messages.isEmpty()) {
 				status.setText("Keine neuen Nachrichten");
 				return false;
@@ -143,7 +143,7 @@ public class YasmeChat extends Activity {
 		protected void onPostExecute(Boolean result) {
 			// if doInBackground returned true
 			// set Message to textViews
-			
+
 			Iterator<Message> iterator = messages.iterator();
 			int size = messages.size();
 			if (size >= chatView.length) {
@@ -152,7 +152,8 @@ public class YasmeChat extends Activity {
 				}
 			} else {
 				for (int i = chatView.length - 1; i >= size; i--) {
-					chatView[i].setText(chatView[i - size].getText().toString());
+					chatView[i]
+							.setText(chatView[i - size].getText().toString());
 				}
 				for (int i = size - 1; i >= 0; i--) {
 					chatView[i].setText(iterator.next().getMessage());
