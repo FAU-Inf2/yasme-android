@@ -3,8 +3,11 @@ package net.yasme.android;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.crypto.SecretKey;
+
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.entities.Message;
+import net.yasme.android.encryption.AESEncryption;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -27,6 +30,8 @@ public class YasmeChat extends Activity {
 	private String url;
 
 	private MessageTask messageTask;
+	private AESEncryption aes = new AESEncryption("geheim");	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +44,7 @@ public class YasmeChat extends Activity {
 		}
 		Intent intent = getIntent();
 		usr_name = intent.getStringExtra(YasmeHome.USER_NAME);
-
+		
 	}
 
 	@Override
@@ -77,8 +82,10 @@ public class YasmeChat extends Activity {
 			status.setText("Nichts eingegeben");
 			return;
 		}
-
-		new SendMessageTask().execute(msg, usr_name);
+		//encrypt message
+		String msg_encrypted = aes.encrypt(msg);
+		
+		new SendMessageTask().execute(msg_encrypted, usr_name);
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -137,6 +144,12 @@ public class YasmeChat extends Activity {
 				status.setText("Keine neuen Nachrichten");
 				return false;
 			}
+			
+			//decrypt Messages
+			for (Message msg : messages){
+				msg.setMessage(new String(aes.decrypt(msg.getMessage())));
+			}
+			
 			return true;
 		}
 
