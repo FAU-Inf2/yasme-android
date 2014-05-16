@@ -30,7 +30,7 @@ public class YasmeChat extends Activity {
 	private String url;
 
 	private MessageTask messageTask;
-	private AESEncryption aes = new AESEncryption("geheim");	
+	private AESEncryption aes;	
 
 
 	@Override
@@ -44,6 +44,7 @@ public class YasmeChat extends Activity {
 		}
 		Intent intent = getIntent();
 		usr_name = intent.getStringExtra(YasmeHome.USER_NAME);
+		aes = new AESEncryption("geheim");
 		
 	}
 
