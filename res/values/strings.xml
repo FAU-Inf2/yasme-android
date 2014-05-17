@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Yasme Prototyp</string>
+    <string name="app_name">YASME Prototyp</string>
     <string name="action_settings">Settings</string>
     <string name="server_url">"https://84.146.7.51:8080"</string>
 
     <!-- Home -->
-    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_home">Yasme Home</string>
     <string name="button_showChat">Chat!</string>
     <string name="usr_name_hint">Benutzername</string>
 
     <!-- Chat -->
+    <string name="title_activity_chat">ChatActivity</string>
     <string name="button_send">Sende</string>
     <string name="button_update">Update</string>
     <string name="type_text">Hier Nachricht eingeben</string>
+    
+    
     
 </resources>

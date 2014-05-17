@@ -37,7 +37,8 @@ public class AESEncryption {
 	public IvParameterSpec generateIV(){
 		//random IV
 		//SecureRandom random = new SecureRandom();
-        //byte INITIAL_IV[] = new byte[16];//generate random 16 byte IV, AES is always 16bytes
+        //byte INITIAL_IV[] = new byte[16];
+		//generate random 16 byte IV, AES is always 16bytes
         //random.nextBytes(INITIAL_IV);
 		
         //static IV 

@@ -87,6 +87,7 @@ public class YasmeChat extends Activity {
 		String msg_encrypted = aes.encrypt(msg);
 		
 		new SendMessageTask().execute(msg_encrypted, usr_name);
+		update(view);
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -99,7 +100,8 @@ public class YasmeChat extends Activity {
 
 			// creating message object
 			// TODO: get uid from usr_name, usr_name = params[1]
-			long uid = 001;
+			long uid = 001; //DEBUG WERT
+			//Message(sender, reciever, msg)
 			Message message = new Message(uid, 002, msg);
 
 			return messageTask.sendMessage(message);
@@ -125,9 +127,12 @@ public class YasmeChat extends Activity {
 	}
 
 	public void update(View view) {
+		status.setText("GET messages");
 		String lastMessageID = "1"; //Debug WERT
 		new GetMessageTask().execute(lastMessageID);
 
+		
+		
 	}
 
 	private class GetMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -135,14 +140,13 @@ public class YasmeChat extends Activity {
 		ArrayList<Message> messages;
 
 		protected Boolean doInBackground(String... params) {
-			// messageTask.getMessage(String lastMessageID); <-- REST Server
-			// Call
+			// messageTask.getMessage(String lastMessageID);
+			// ^-- REST Server Call
 			// Return Value: true = success false = failed
 
 			messages = messageTask.getMessage(params[0]);
 
 			if (messages.isEmpty()) {
-				status.setText("Keine neuen Nachrichten");
 				return false;
 			}
 			
@@ -157,22 +161,26 @@ public class YasmeChat extends Activity {
 		protected void onPostExecute(Boolean result) {
 			// if doInBackground returned true
 			// set Message to textViews
-
-			Iterator<Message> iterator = messages.iterator();
-			int size = messages.size();
-			if (size >= chatView.length) {
-				for (int i = chatView.length - 1; i >= 0; i--) {
-					chatView[i].setText(iterator.next().getMessage());
+			
+			if(result) {
+				Iterator<Message> iterator = messages.iterator();
+				int size = messages.size();
+				if (size >= chatView.length) {
+					for (int i = chatView.length - 1; i >= 0; i--) {
+						chatView[i].setText(iterator.next().getMessage());
+					}
+				} else {
+					for (int i = chatView.length - 1; i >= size; i--) {
+						chatView[i]
+								.setText(chatView[i - size].getText().toString());
+					}
+					for (int i = size - 1; i >= 0; i--) {
+						chatView[i].setText(iterator.next().getMessage());
+					}
 				}
 			} else {
-				for (int i = chatView.length - 1; i >= size; i--) {
-					chatView[i]
-							.setText(chatView[i - size].getText().toString());
-				}
-				for (int i = size - 1; i >= 0; i--) {
-					chatView[i].setText(iterator.next().getMessage());
-				}
-			}
+				status.setText("Keine neuen Nachrichten");
+			}			
 		}
 	}
 
@@ -196,7 +204,6 @@ public class YasmeChat extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	// LocalService instance
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
