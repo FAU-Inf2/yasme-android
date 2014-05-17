@@ -5,41 +5,57 @@ package net.yasme.android.entities;
  */
 public class User {
 
-    private String id;
-    private String pw;
-    private String name;
+	private String id;
+	private String pw;
+	private String email;
+	private String name;
 
-    public User(String id) {
-        this.id = id;
-        //removed pw
+	public User(String pw, String name, String email) {
+        this.name = name;
+        this.email = email;
+        this.pw = pw;
     }
     
     public User(String name, String pw) {
     	this.name = name;
-    	this.pw = pw;
-    }
+		this.pw = pw;
+	
 
-    public User(){}
+	}
 
-    public String getPw() {
-        return pw;
-    }
+	public User() {
 
-    public String getId() {
-        return id;
-    }
+	}
 
-    public void setPw(String pw) {
-        this.pw = pw;
-    }
+	public String getEmail() {
+		return email;
+	}
 
 	public String getName() {
 		return name;
+	}
+
+	public String getPw() {
+		return pw;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-    // no setter for the id!!
+	public void setId(String id) {
+		this.id = id;
+	}
 }

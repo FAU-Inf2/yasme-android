@@ -36,8 +36,9 @@ public class UserTask {
 			// To Do: UserDaten to JSon
 			// Edit UserObject from Server
 
-			// obj.put("Sender", message.getSender());
-			// obj.put("Message", message.getMessage());
+			obj.put("pw", user.getPw());
+			obj.put("email", user.getEmail());
+			obj.put("name", user.getName());
 
 			String json = obj.toString();
 
@@ -45,19 +46,26 @@ public class UserTask {
 
 			httpPost.setEntity(se);
 
+			httpPost.setHeader("Content-type", "application/json");
+			httpPost.setHeader("Accept", "application/json");
+
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 
 			if (httpResponse.getStatusLine().getStatusCode() == 201) {
-				// To Do: return created UserID from Server
+
+				BufferedReader rd = new BufferedReader(new InputStreamReader(
+						httpResponse.getEntity().getContent()));
+				String id = rd.readLine();
+				return id;
 			}
 
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} // catch (JSONException e) {
-			// e.printStackTrace();
-			// }
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -69,6 +77,7 @@ public class UserTask {
 
 			HttpClient client = new DefaultHttpClient();
 			HttpGet request = new HttpGet(url + "/usr/" + userID);
+			request.addHeader("accept", "application/json");
 
 			HttpResponse response = client.execute(request);
 
@@ -78,10 +87,12 @@ public class UserTask {
 
 			JSONObject jObject = new JSONObject(json);
 
-			user = new User();
+			user = new User(null, jObject.getString("name"),
+					jObject.getString("email"));
 
-			// To Do: Create UserObject with Data from returned JSONObject
-			//
+			/******** DEBUG ***********/
+			System.out.println(user.getEmail() + " " + user.getName());
+			/******** DEBUG*END *******/
 
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
@@ -91,7 +102,6 @@ public class UserTask {
 			e.printStackTrace();
 		}
 
-		// return UserObject
 		return user;
 	}
 }

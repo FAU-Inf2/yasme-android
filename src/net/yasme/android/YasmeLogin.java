@@ -227,6 +227,16 @@ public class YasmeLogin extends Activity {
 
 			User new_user = new User(name, password);
 			return registerUser(new_user);
+			/*
+			 * registerUser() get as return value an ID which should be saved on
+			 * the client to use it for all user requests
+			 * 
+			 * Please edit the Method Call as you like
+			 */
+
+			String createdID = new UserTask(getResources().getString(
+					R.string.server_url)).registerUser(new User(password,
+					"Florian", name));
 		}
 
 		@Override
