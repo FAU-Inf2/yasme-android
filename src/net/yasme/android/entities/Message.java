@@ -12,7 +12,8 @@ public class Message {
 	private long recipient;
 	private Date dateSent;
 	private String message;
-	private int id;
+	private long id;
+	private long keyId;
 
 	/** Constructors **/
 	public Message(long sender, long recipient, String message) {
@@ -46,9 +47,9 @@ public class Message {
 	public Date getDateSent() {
 		return dateSent;
 	}
-	
-	public int getID() {
-		return id;
+
+	public long getKeyID() {
+		return keyId;
 	}
 
 	/** Setters **/
@@ -62,5 +63,9 @@ public class Message {
 
 	public void setSender(long sender) {
 		this.sender = sender;
+	}
+
+	public void setKeyID(long keyId) {
+		this.keyId = keyId;
 	}
 }
