@@ -1,5 +1,7 @@
 package net.yasme.android;
 
+import net.yasme.android.connection.UserTask;
+import net.yasme.android.entities.User;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -215,7 +217,14 @@ public class YasmeLogin extends Activity {
 				}
 			}
 
-			// TODO: register the new account here.
+			/*
+			 * registerUser() get as return value an ID which should be saved on
+			 * the client to use it for all user requests
+			 */
+
+			String createdID = new UserTask().registerUser(new User(mPassword,
+					"Florian", mName));
+
 			return true;
 		}
 

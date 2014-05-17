@@ -24,6 +24,10 @@ public class UserTask {
 		this.url = url;
 	}
 
+	public UserTask() {
+		this.url = "http://devel.yasme.net";
+	}
+
 	public String registerUser(User user) {
 		try {
 
@@ -37,8 +41,9 @@ public class UserTask {
 			// To Do: UserDaten to JSon
 			// Edit UserObject from Server
 
-			// obj.put("Sender", message.getSender());
-			// obj.put("Message", message.getMessage());
+			obj.put("pw", user.getPw());
+			obj.put("email", user.getEmail());
+			obj.put("name", user.getName());
 
 			String json = obj.toString();
 
@@ -46,19 +51,26 @@ public class UserTask {
 
 			httpPost.setEntity(se);
 
+			httpPost.setHeader("Content-type", "application/json");
+			httpPost.setHeader("Accept", "application/json");
+
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 
 			if (httpResponse.getStatusLine().getStatusCode() == 201) {
-				// To Do: return created UserID from Server
+
+				BufferedReader rd = new BufferedReader(new InputStreamReader(
+						httpResponse.getEntity().getContent()));
+				String id = rd.readLine();
+				return id;
 			}
 
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} // catch (JSONException e) {
-			// e.printStackTrace();
-			// }
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
