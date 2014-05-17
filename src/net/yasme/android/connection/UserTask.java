@@ -24,10 +24,6 @@ public class UserTask {
 		this.url = url;
 	}
 
-	public UserTask() {
-		this.url = "http://devel.yasme.net";
-	}
-
 	public String registerUser(User user) {
 		try {
 
@@ -82,6 +78,7 @@ public class UserTask {
 
 			HttpClient client = new DefaultHttpClient();
 			HttpGet request = new HttpGet(url + "/usr/" + userID);
+			request.addHeader("accept", "application/json");
 
 			HttpResponse response = client.execute(request);
 
@@ -91,10 +88,12 @@ public class UserTask {
 
 			JSONObject jObject = new JSONObject(json);
 
-			user = new User();
+			user = new User(null, jObject.getString("name"),
+					jObject.getString("email"));
 
-			// To Do: Create UserObject with Data from returned JSONObject
-			//
+			/******** DEBUG ***********/
+			System.out.println(user.getEmail() + " " + user.getName());
+			/******** DEBUG*END *******/
 
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
@@ -104,7 +103,6 @@ public class UserTask {
 			e.printStackTrace();
 		}
 
-		// return UserObject
 		return user;
 	}
 }

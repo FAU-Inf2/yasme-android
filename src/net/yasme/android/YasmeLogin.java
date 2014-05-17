@@ -220,9 +220,12 @@ public class YasmeLogin extends Activity {
 			/*
 			 * registerUser() get as return value an ID which should be saved on
 			 * the client to use it for all user requests
+			 * 
+			 * Please edit the Method Call as you like
 			 */
 
-			String createdID = new UserTask().registerUser(new User(mPassword,
+			String createdID = new UserTask(getResources().getString(
+					R.string.server_url)).registerUser(new User(mPassword,
 					"Florian", mName));
 
 			return true;
