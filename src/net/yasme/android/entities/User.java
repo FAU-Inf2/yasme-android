@@ -9,9 +9,14 @@ public class User {
     private String pw;
     private String name;
 
-    public User(String id, String pw) {
+    public User(String id) {
         this.id = id;
-        this.pw = pw;
+        //removed pw
+    }
+    
+    public User(String name, String pw) {
+    	this.name = name;
+    	this.pw = pw;
     }
 
     public User(){}

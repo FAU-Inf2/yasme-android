@@ -46,13 +46,14 @@ public class YasmeChat extends Activity {
 		usr_name = intent.getStringExtra(YasmeHome.USER_NAME);
 		aes = new AESEncryption("geheim");
 		
+		url = getResources().getString(R.string.server_url);
+		
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 		initializeViews();
-		url = getResources().getString(R.string.server_url);
 		messageTask = new MessageTask(url);
 	}
 
@@ -83,11 +84,14 @@ public class YasmeChat extends Activity {
 			status.setText("Nichts eingegeben");
 			return;
 		}
-		//encrypt message
-		String msg_encrypted = aes.encrypt(msg);
+	
+		EditMessage.setText("");
 		
-		new SendMessageTask().execute(msg_encrypted, usr_name);
+		new SendMessageTask().execute(msg, usr_name);
 		update(view);
+		status.setText("Gesendet: " + msg);
+		msg = null;
+
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -97,12 +101,14 @@ public class YasmeChat extends Activity {
 		protected Boolean doInBackground(String... params) {
 
 			msg = params[0];
+			//encrypt message
+			String msg_encrypted = aes.encrypt(msg);
 
 			// creating message object
 			// TODO: get uid from usr_name, usr_name = params[1]
 			long uid = 001; //DEBUG WERT
 			//Message(sender, reciever, msg)
-			Message message = new Message(uid, 002, msg);
+			Message message = new Message(uid, 001, msg_encrypted);
 
 			return messageTask.sendMessage(message);
 		}
@@ -115,10 +121,7 @@ public class YasmeChat extends Activity {
 					chatView[i].setText(chatView[i - 1].getText().toString());
 				}
 				chatView[0].setText(usr_name + ": " + msg);
-
-				status.setText("Gesendet: " + msg);
-				msg = null;
-				EditMessage.setText("");
+				
 
 			} else {
 				status.setText("Senden fehlgeschlagen");

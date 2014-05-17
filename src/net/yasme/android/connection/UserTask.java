@@ -1,11 +1,10 @@
 package net.yasme.android.connection;
 
+import net.yasme.android.entities.User;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import net.yasme.android.entities.User;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
