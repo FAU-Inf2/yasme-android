@@ -46,8 +46,6 @@ public class MessageTask {
 			obj.put("message", message.getMessage());
 			String json = obj.toString();
 
-			// System.out.println(json);
-
 			StringEntity se = new StringEntity(json);
 
 			httpPost.setEntity(se);
@@ -71,6 +69,7 @@ public class MessageTask {
 				return true;
 			}
 
+			System.out.println(false);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -30,8 +30,7 @@ public class YasmeChat extends Activity {
 	private String url;
 
 	private MessageTask messageTask;
-	private AESEncryption aes;	
-
+	private AESEncryption aes;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +44,9 @@ public class YasmeChat extends Activity {
 		Intent intent = getIntent();
 		usr_name = intent.getStringExtra(YasmeHome.USER_NAME);
 		aes = new AESEncryption("geheim");
-		
+
 		url = getResources().getString(R.string.server_url);
-		
+
 	}
 
 	@Override
@@ -84,9 +83,9 @@ public class YasmeChat extends Activity {
 			status.setText("Nichts eingegeben");
 			return;
 		}
-	
+
 		EditMessage.setText("");
-		
+
 		new SendMessageTask().execute(msg, usr_name);
 		update(view);
 		status.setText("Gesendet: " + msg);
@@ -101,13 +100,13 @@ public class YasmeChat extends Activity {
 		protected Boolean doInBackground(String... params) {
 
 			msg = params[0];
-			//encrypt message
+			// encrypt message
 			String msg_encrypted = aes.encrypt(msg);
 
 			// creating message object
 			// TODO: get uid from usr_name, usr_name = params[1]
-			long uid = 001; //DEBUG WERT
-			//Message(sender, reciever, msg)
+			long uid = 001; // DEBUG WERT
+			// Message(sender, reciever, msg)
 			Message message = new Message(uid, 001, msg_encrypted);
 
 			return messageTask.sendMessage(message);
@@ -121,7 +120,6 @@ public class YasmeChat extends Activity {
 					chatView[i].setText(chatView[i - 1].getText().toString());
 				}
 				chatView[0].setText(usr_name + ": " + msg);
-				
 
 			} else {
 				status.setText("Senden fehlgeschlagen");
@@ -131,11 +129,9 @@ public class YasmeChat extends Activity {
 
 	public void update(View view) {
 		status.setText("GET messages");
-		String lastMessageID = "1"; //Debug WERT
+		String lastMessageID = "1"; // Debug WERT
 		new GetMessageTask().execute(lastMessageID);
 
-		
-		
 	}
 
 	private class GetMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -152,20 +148,20 @@ public class YasmeChat extends Activity {
 			if (messages.isEmpty()) {
 				return false;
 			}
-			
-			//decrypt Messages
-			for (Message msg : messages){
+
+			// decrypt Messages
+			for (Message msg : messages) {
 				msg.setMessage(new String(aes.decrypt(msg.getMessage())));
 			}
-			
+
 			return true;
 		}
 
 		protected void onPostExecute(Boolean result) {
 			// if doInBackground returned true
 			// set Message to textViews
-			
-			if(result) {
+
+			if (result) {
 				Iterator<Message> iterator = messages.iterator();
 				int size = messages.size();
 				if (size >= chatView.length) {
@@ -174,8 +170,8 @@ public class YasmeChat extends Activity {
 					}
 				} else {
 					for (int i = chatView.length - 1; i >= size; i--) {
-						chatView[i]
-								.setText(chatView[i - size].getText().toString());
+						chatView[i].setText(chatView[i - size].getText()
+								.toString());
 					}
 					for (int i = size - 1; i >= 0; i--) {
 						chatView[i].setText(iterator.next().getMessage());
@@ -183,7 +179,7 @@ public class YasmeChat extends Activity {
 				}
 			} else {
 				status.setText("Keine neuen Nachrichten");
-			}			
+			}
 		}
 	}
 
