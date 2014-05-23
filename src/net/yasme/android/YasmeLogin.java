@@ -24,10 +24,9 @@ import android.widget.TextView;
  */
 public class YasmeLogin extends Activity {
 	
-	/**
-	 * The default email to populate the email field with.
-	 */
 	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
+	public final static String USER_ID = "net.yasme.andriod.USER_ID";
+
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -36,6 +35,7 @@ public class YasmeLogin extends Activity {
 	UserTask userTask = null;
 	
 	String url = null;
+	String id;
 
 	// Values for email and password at the time of the login attempt.
 	private String name;
@@ -196,48 +196,33 @@ public class YasmeLogin extends Activity {
 		}
 	}
 	
-	public boolean registerUser(User user) {
-		// register the new account
-		String response = new UserTask(url).registerUser(user);
-		//TODO: response String auswerten
-		return true; //DEBUG
-	}
-	
 	public void start() {
 		Intent intent = new Intent(this, YasmeHome.class);
+		id = name;
+		intent.putExtra(USER_ID, id);
 		intent.putExtra(USER_NAME, name);
 		startActivity(intent);
 	}
 
 	/**
-	 * Represents an asynchronous registration task used to authenticate
+	 * Represents an asynchronous task used to register
 	 * the user.
 	 */
 	public class UserRegistrationTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
-
-			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				return false;
-			}
+			// TODO: ueberpruefen, ob user schon existiert
 
 			/*
 			 * registerUser() get as return value an ID which should be saved on
 			 * the client to use it for all user requests
-			 * 
-			 * Please edit the Method Call as you like
 			 */
 
-			String createdID = new UserTask(
-					getResources().getString(
-					R.string.server_url)).registerUser(new User(password,
-					"Florian", name));
-			User new_user = new User(name, password);
-			return registerUser(new_user);
+			id = new UserTask(url).registerUser(new User(password, "Florian", name));
+			if(id == null) {
+				return false;
+			}
+			return true;
 		}
 
 		@Override
@@ -245,6 +230,7 @@ public class YasmeLogin extends Activity {
 			authTask = null;
 			showProgress(false);
 			
+			//TODO: komplette Eingabe der Anmeldedaten eines neuen Users
 			/*Intent intent = new Intent();
 			intent.putExtra(USER_NAME, name);
 			startActivity(intent);*/
@@ -252,8 +238,7 @@ public class YasmeLogin extends Activity {
 			if (success) {
 				finish();
 			} else {
-				passwordView.setError(getString(R.string.error_incorrect_password));
-				passwordView.requestFocus();
+				finish();
 			}
 		}
 
@@ -266,20 +251,13 @@ public class YasmeLogin extends Activity {
 	
 	
 	/**
-	 * Represents an asynchronous registration task used to authenticate
+	 * Represents an asynchronous login task used to authenticate
 	 * the user.
 	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// TODO: attempt authentication against a network service.
-
-			try {
-				// Simulate network access.
-				Thread.sleep(2);
-			} catch (InterruptedException e) {
-				return false;
-			}
 
 			return true;
 		}

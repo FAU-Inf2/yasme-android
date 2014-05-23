@@ -13,7 +13,10 @@ import android.view.ViewGroup;
 
 public class YasmeHome extends Activity {
 	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
-	String usr_name = "anonym";
+	public final static String USER_ID = "net.yasme.andriod.USER_ID";
+
+	String usr_name;
+	String usr_id;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +28,8 @@ public class YasmeHome extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		Intent intent = getIntent();
-		usr_name = intent.getStringExtra(YasmeHome.USER_NAME);
+		usr_name = intent.getStringExtra(USER_NAME);
+		usr_id = intent.getStringExtra(USER_ID);
 	}
 
 	@Override
@@ -53,6 +57,7 @@ public class YasmeHome extends Activity {
 		
 		Intent intent = new Intent(this, YasmeChat.class);
 		intent.putExtra(USER_NAME, usr_name);
+		intent.putExtra(USER_ID, usr_id);
 		startActivity(intent);
 	}
 	

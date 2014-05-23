@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,16 +90,29 @@ public class MessageTask {
 		try {
 
 			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(url + "/msg/" + lastMessageID);
+		//	HttpGet request = new HttpGet(url + "/msg/" + lastMessageID);
+			HttpGet request = new HttpGet(url + "/msg/");
+
 			request.addHeader("accept", "application/json");
 
 			HttpResponse response = client.execute(request);
+			
+			String json = EntityUtils.toString(response.getEntity(), "UTF-8");
+			
+			//BufferedReader reader = new BufferedReader(new InputStreamReader(
+			//		response.getEntity().getContent()));
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent()));
-
-			String json = reader.readLine();
-
+			//String json = reader.readLine();
+						
+			
+			/****************** Debug*Output ********************************/
+			
+			//messages.add(new Message(1, 1, json));
+			//messages.add(new Message(1, 1, responseString));
+			//messages.add(new Message(1, 1, "Debug: HalloTest"));
+			
+			/****************** Debug*END ***********************************/
+			
 			JSONArray jArray = new JSONArray(json);
 
 			for (int i = 0; i < jArray.length(); i++) {

@@ -22,14 +22,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class YasmeChat extends Activity {
+	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
+	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 
 	private EditText EditMessage;
 	private TextView status;
 	private TextView chatView[];
+	
 	private String usr_name;
+	private String usr_id;
 	private String url;
 
 	private MessageTask messageTask;
+	
 	private AESEncryption aes;
 
 	@Override
@@ -42,9 +47,10 @@ public class YasmeChat extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		Intent intent = getIntent();
-		usr_name = intent.getStringExtra(YasmeHome.USER_NAME);
-		aes = new AESEncryption("geheim");
+		usr_name = intent.getStringExtra(USER_NAME);
+		usr_id = intent.getStringExtra(USER_ID);
 
+		aes = new AESEncryption("geheim");
 		url = getResources().getString(R.string.server_url);
 
 	}
@@ -62,7 +68,7 @@ public class YasmeChat extends Activity {
 	}
 
 	private void initializeViews() {
-		chatView = new TextView[7];
+		chatView = new TextView[10];
 		EditMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
 		chatView[0] = (TextView) findViewById(R.id.textView1);
@@ -72,6 +78,9 @@ public class YasmeChat extends Activity {
 		chatView[4] = (TextView) findViewById(R.id.textView5);
 		chatView[5] = (TextView) findViewById(R.id.textView6);
 		chatView[6] = (TextView) findViewById(R.id.textView7);
+		chatView[7] = (TextView) findViewById(R.id.textView8);
+		chatView[8] = (TextView) findViewById(R.id.textView9);
+		chatView[9] = (TextView) findViewById(R.id.textView10);
 		status.setText("Eingeloggt: " + usr_name);
 	}
 
@@ -105,7 +114,8 @@ public class YasmeChat extends Activity {
 
 			// creating message object
 			// TODO: get uid from usr_name, usr_name = params[1]
-			long uid = 001; // DEBUG WERT
+			
+			long uid = 002; // DEBUG WERT
 			// Message(sender, reciever, msg)
 			Message message = new Message(uid, 001, msg_encrypted);
 
@@ -131,7 +141,7 @@ public class YasmeChat extends Activity {
 		status.setText("GET messages");
 		String lastMessageID = "1"; // Debug WERT
 		new GetMessageTask().execute(lastMessageID);
-
+		status.setText("GET messages done");
 	}
 
 	private class GetMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -140,7 +150,6 @@ public class YasmeChat extends Activity {
 
 		protected Boolean doInBackground(String... params) {
 			// messageTask.getMessage(String lastMessageID);
-			// ^-- REST Server Call
 			// Return Value: true = success false = failed
 
 			messages = messageTask.getMessage(params[0]);
