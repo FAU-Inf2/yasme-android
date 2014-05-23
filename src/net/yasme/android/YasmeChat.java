@@ -115,7 +115,7 @@ public class YasmeChat extends Activity {
 			// creating message object
 			// TODO: get uid from usr_name, usr_name = params[1]
 			
-			long uid = 002; // DEBUG WERT
+			long uid = 001; // DEBUG WERT
 			// Message(sender, reciever, msg)
 			Message message = new Message(uid, 001, msg_encrypted);
 
@@ -147,10 +147,12 @@ public class YasmeChat extends Activity {
 	private class GetMessageTask extends AsyncTask<String, Void, Boolean> {
 
 		ArrayList<Message> messages;
-
+		
+		/**
+		 * @return Returns true if it was successful, otherwise false
+		 * @param params[0] is lastMessageID
+		 */
 		protected Boolean doInBackground(String... params) {
-			// messageTask.getMessage(String lastMessageID);
-			// Return Value: true = success false = failed
 
 			messages = messageTask.getMessage(params[0]);
 
@@ -165,11 +167,14 @@ public class YasmeChat extends Activity {
 
 			return true;
 		}
-
+		
+		/**
+		 * Fills the TextVies with the messages
+		 * 
+		 * @param Gets the result of doInBackground
+		 * 
+		 */
 		protected void onPostExecute(Boolean result) {
-			// if doInBackground returned true
-			// set Message to textViews
-
 			if (result) {
 				Iterator<Message> iterator = messages.iterator();
 				int size = messages.size();
