@@ -1,10 +1,12 @@
 package net.yasme.android.connection;
 
+import net.yasme.android.entities.LoginUser;
 import net.yasme.android.entities.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -67,6 +69,53 @@ public class UserTask {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public String loginUser(LoginUser user) {
+
+		try {
+
+			DefaultHttpClient httpclient = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost(url + "/sign/in");
+
+			// To Do: Complete UserObject as JSon
+
+			JSONObject obj = new JSONObject();
+
+			// To Do: UserDaten to JSon
+			// Edit UserObject from Server
+
+			obj.put("userID", user.getUserID());
+			obj.put("pw", user.getPw());
+
+			String json = obj.toString();
+
+			StringEntity se = new StringEntity(json);
+
+			httpPost.setEntity(se);
+
+			httpPost.setHeader("Content-type", "application/json");
+			httpPost.setHeader("Accept", "application/json");
+
+			HttpResponse httpResponse = httpclient.execute(httpPost);
+
+			if (httpResponse.getStatusLine().getStatusCode() == 200) {
+
+				BufferedReader rd = new BufferedReader(new InputStreamReader(
+						httpResponse.getEntity().getContent()));
+				String id = rd.readLine();
+				return id;
+			}
+
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 
 	public User getUserData(String userID) {
