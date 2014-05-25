@@ -54,7 +54,6 @@ public class YasmeLogin extends Activity {
 	private View loginFormView;
 	private View loginStatusView;
 	private TextView loginStatusMessageView;
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +134,8 @@ public class YasmeLogin extends Activity {
 		}
 
 		boolean cancel = validate();
-		focusView = null;
+
+		// focusView = null; //Edit by Flo
 
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
@@ -287,8 +287,8 @@ public class YasmeLogin extends Activity {
 
 				// Debug: static Data
 				// To Do: Safe Token during the whole session
-				String token = new UserTask(url)
-						.loginUser(new LoginUser(12582L, "test"));
+				String token = new UserTask(url).loginUser(new LoginUser(
+						12582L, "test"));
 
 			} catch (RestServiceException e) {
 				return false;
