@@ -287,8 +287,11 @@ public class YasmeLogin extends Activity {
 
 				// Debug: static Data
 				// To Do: Safe Token during the whole session
+
 				String token = new UserTask(url).loginUser(new LoginUser(
 						12582L, "test"));
+
+				// To Do: Replace with new uniform entity when it is finished
 
 			} catch (RestServiceException e) {
 				return false;

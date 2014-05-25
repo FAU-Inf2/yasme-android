@@ -2,6 +2,7 @@ package net.yasme.android.connection;
 
 import net.yasme.android.entities.LoginUser;
 import net.yasme.android.entities.User;
+import net.yasme.android.exception.ErrorCode;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.UserError;
 
@@ -42,7 +43,6 @@ public class UserTask {
 
 			// To Do: Complete UserObject as JSon
 
-			
 			JSONObject obj = new JSONObject();
 
 			// To Do: UserDaten to JSon
@@ -117,10 +117,9 @@ public class UserTask {
 			case 200:
 				return id;
 			case 401:
-				throw new RestServiceException(UserError.USER_NOT_FOUND); 
-			case 402:
-				throw new RestServiceException(UserError.PASSWORD_INCORRECT); 
-
+				throw new RestServiceException(UserError.LOGIN_FAILED);
+			default:
+				new RestServiceException(UserError.ERROR);
 			}
 
 		} catch (ClientProtocolException e) {
@@ -131,7 +130,6 @@ public class UserTask {
 			e.printStackTrace();
 		}
 		return null;
-
 	}
 
 	public User getUserData(String userID) {

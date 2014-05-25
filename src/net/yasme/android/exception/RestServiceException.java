@@ -5,9 +5,9 @@ public class RestServiceException extends Exception {
 	private static final long serialVersionUID = 1L;
 	int statusCode;
 
-	public RestServiceException(UserError error) {
+	public RestServiceException(ErrorCode error) {
 
-		this(error.name(), error.getNumber());
+		this(error.getDescription(), error.getNumber());
 
 	}
 
@@ -15,7 +15,7 @@ public class RestServiceException extends Exception {
 		super(error);
 		this.statusCode = statusCode;
 
-		System.out.println(this.statusCode);
+		System.out.println(this.statusCode + this.getMessage());
 	}
 
 }
