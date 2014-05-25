@@ -1,6 +1,8 @@
 package net.yasme.android;
 
+import net.yasme.android.entities.LoginUser;
 import net.yasme.android.entities.User;
+import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.connection.UserTask;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -61,6 +63,7 @@ public class YasmeLogin extends Activity {
 
 		// get URL
 		url = getResources().getString(R.string.server_url);
+		userTask = new UserTask(url);
 
 		// Set up the login form.
 		name = getIntent().getStringExtra(USER_NAME);
@@ -99,19 +102,19 @@ public class YasmeLogin extends Activity {
 					public void onClick(View view) {
 						// TODO: register-Methode
 						// zusätzliche email-View erzeugen
-						//newView();
+						// newView();
 						attemptLogin();
 					}
 				});
 	}
-	
+
 	private void newView() {
 		LinearLayout neu = new LinearLayout(this);
 		LinearLayout currentLayout = (LinearLayout) findViewById(R.layout.activity_login);
-        
-        TextView emailView = new TextView(this);
-        neu.addView(emailView);
-        currentLayout.addView(neu);
+
+		TextView emailView = new TextView(this);
+		neu.addView(emailView);
+		currentLayout.addView(neu);
 	}
 
 	@Override
@@ -277,9 +280,19 @@ public class YasmeLogin extends Activity {
 	 * Represents an asynchronous login task used to authenticate the user.
 	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-		@Override
+
 		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
+
+			try {
+
+				// Debug: static Data
+				// To Do: Safe Token during the whole session
+				String token = userTask
+						.loginUser(new LoginUser(12582L, "test"));
+
+			} catch (RestServiceException e) {
+				return false;
+			}
 
 			return true;
 		}

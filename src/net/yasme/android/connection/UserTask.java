@@ -2,6 +2,7 @@ package net.yasme.android.connection;
 
 import net.yasme.android.entities.LoginUser;
 import net.yasme.android.entities.User;
+import net.yasme.android.exception.RestServiceException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,8 +27,9 @@ public class UserTask {
 	}
 
 	/**
-	 * registerUser() get as return value an ID which should be saved on
-	 * the client to use it for all user requests
+	 * registerUser() get as return value an ID which should be saved on the
+	 * client to use it for all user requests
+	 * 
 	 * @param user
 	 * @return userID, which should be stored on the device
 	 */
@@ -77,7 +79,7 @@ public class UserTask {
 		return null;
 	}
 
-	public String loginUser(LoginUser user) {
+	public String loginUser(LoginUser user) throws RestServiceException {
 
 		try {
 
@@ -105,12 +107,18 @@ public class UserTask {
 
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 
-			if (httpResponse.getStatusLine().getStatusCode() == 200) {
+			BufferedReader rd = new BufferedReader(new InputStreamReader(
+					httpResponse.getEntity().getContent()));
+			String id = rd.readLine();
 
-				BufferedReader rd = new BufferedReader(new InputStreamReader(
-						httpResponse.getEntity().getContent()));
-				String id = rd.readLine();
+			switch (httpResponse.getStatusLine().getStatusCode()) {
+			case 200:
 				return id;
+			case 401:
+				throw new RestServiceException(id, 01); // Debug values
+			case 402:
+				throw new RestServiceException(id, 02); // Debug values
+
 			}
 
 		} catch (ClientProtocolException e) {
