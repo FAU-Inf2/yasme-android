@@ -16,7 +16,7 @@ public class User {
         this.pw = pw;
     }
     
-    public User(String name, String pw) {
+    public User(String pw, String name) {
     	this.name = name;
 		this.pw = pw;
 	
