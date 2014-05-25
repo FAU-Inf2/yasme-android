@@ -25,6 +25,12 @@ public class UserTask {
 		this.url = url;
 	}
 
+	/**
+	 * registerUser() get as return value an ID which should be saved on
+	 * the client to use it for all user requests
+	 * @param user
+	 * @return userID, which should be stored on the device
+	 */
 	public String registerUser(User user) {
 		try {
 

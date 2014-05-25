@@ -27,7 +27,7 @@ public class MessageTask {
 
 	public MessageTask(String url) {
 		this.url = url;
-		// Debug in strings.xml
+		// url in strings.xml
 	}
 
 	public boolean sendMessage(Message message) {
