@@ -35,7 +35,7 @@ public class YasmeChat extends Activity {
 	private String usr_id;
 	private String url;
 
-	protected Message lastMessage = new Message();
+	int index = 0;
 
 	private MessageTask messageTask;
 
@@ -143,7 +143,7 @@ public class YasmeChat extends Activity {
 						LinearLayout.LayoutParams.WRAP_CONTENT,
 						LinearLayout.LayoutParams.WRAP_CONTENT));
 
-				textView.setText(usr_name + ": " + msg);
+				//textView.setText(usr_name + ": " + msg);
 				row.addView(textView);
 				layout.addView(row, layoutParams);
 			} else {
@@ -174,19 +174,20 @@ public class YasmeChat extends Activity {
 			if (messages.isEmpty()) {
 				return false;
 			}
-			int index = 0;
+			if(messages.size() -1 == index) {
+				return false;
+			}
+			int new_index = messages.size()-1;
 
+			for (int i = 0; i <= index; i++) {
+				messages.remove(0);
+			}
+			
 			// decrypt Messages
 			for (Message msg : messages) {
 				msg.setMessage(new String(aes.decrypt(msg.getMessage())));
 			}
-
-			for (int i = 0; i < index; i++) {
-				messages.remove(i);
-			}
-
-			lastMessage = messages.get(messages.size() - 1);
-
+			index = new_index;
 			return true;
 		}
 
@@ -227,7 +228,6 @@ public class YasmeChat extends Activity {
 			} else {
 				status.setText("Keine neuen Nachrichten");
 			}
-			messages = null;
 		}
 	}
 
