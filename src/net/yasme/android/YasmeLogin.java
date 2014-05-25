@@ -64,7 +64,6 @@ public class YasmeLogin extends Activity {
 
 		// get URL
 		url = getResources().getString(R.string.server_url);
-		userTask = new UserTask(url);
 
 		// Set up the login form.
 		name = getIntent().getStringExtra(USER_NAME);
@@ -288,7 +287,7 @@ public class YasmeLogin extends Activity {
 
 				// Debug: static Data
 				// To Do: Safe Token during the whole session
-				String token = userTask
+				String token = new UserTask(url)
 						.loginUser(new LoginUser(12582L, "test"));
 
 			} catch (RestServiceException e) {
