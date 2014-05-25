@@ -35,10 +35,10 @@ public class YasmeLogin extends Activity {
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
 	private UserLoginTask authTask = null;
-	UserTask userTask = null;
 
-	String url = null;
-	String id;
+	protected String url = null;
+	protected String id;
+	protected String accessToken;
 
 	// Values for name, email and password at the time of the login attempt.
 	private String name;
@@ -54,6 +54,7 @@ public class YasmeLogin extends Activity {
 	private View loginFormView;
 	private View loginStatusView;
 	private TextView loginStatusMessageView;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
