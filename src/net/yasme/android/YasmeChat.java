@@ -33,8 +33,8 @@ public class YasmeChat extends Activity {
 	private TextView status;
 	// private TextView chatView[];
 
-	private String usr_name;
-	private String usr_id;
+	private String user_name;
+	private String user_id;
 	private String url;
 
 	int index = 0;
@@ -53,8 +53,8 @@ public class YasmeChat extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		Intent intent = getIntent();
-		usr_name = intent.getStringExtra(USER_NAME);
-		usr_id = intent.getStringExtra(USER_ID);
+		user_name = intent.getStringExtra(USER_NAME);
+		user_id = intent.getStringExtra(USER_ID);
 
 		aes = new AESEncryption("geheim");
 		url = getResources().getString(R.string.server_url);
@@ -88,7 +88,7 @@ public class YasmeChat extends Activity {
 		 * findViewById(R.id.textView8); chatView[8] = (TextView)
 		 * findViewById(R.id.textView9); chatView[9] = (TextView)
 		 * findViewById(R.id.textView10);
-		 */status.setText("Eingeloggt: " + usr_name);
+		 */status.setText("Eingeloggt: " + user_name);
 	}
 
 	public void send(View view) {
@@ -102,7 +102,7 @@ public class YasmeChat extends Activity {
 
 		EditMessage.setText("");
 
-		new SendMessageTask().execute(msg, usr_name);
+		new SendMessageTask().execute(msg, user_name);
 		update(view);
 		status.setText("Gesendet: " + msg);
 		msg = null;
@@ -120,7 +120,7 @@ public class YasmeChat extends Activity {
 			String msg_encrypted = aes.encrypt(msg);
 
 			// creating message object
-			// TODO: get uid from usr_name, usr_name = params[1]
+			// TODO: get uid from user_name, user_name = params[1]
 
 			long uid = 001; // DEBUG WERT
 			// Message(sender, reciever, msg)
@@ -155,7 +155,6 @@ public class YasmeChat extends Activity {
 						LinearLayout.LayoutParams.WRAP_CONTENT,
 						LinearLayout.LayoutParams.WRAP_CONTENT));
 
-				// textView.setText(usr_name + ": " + msg);
 				row.addView(textView);
 				layout.addView(row, layoutParams);
 			} else {
@@ -208,7 +207,6 @@ public class YasmeChat extends Activity {
 		 * Fills the TextViews with the messages
 		 * 
 		 * @param Gets the result of doInBackground
-		 * 
 		 */
 		protected void onPostExecute(Boolean result) {
 			if (result) {
@@ -232,7 +230,7 @@ public class YasmeChat extends Activity {
 							LinearLayout.LayoutParams.WRAP_CONTENT,
 							LinearLayout.LayoutParams.WRAP_CONTENT));
 
-					textView.setText(msg.getSender() + ":");
+					textView.setText(msg.getSender().getName() + ":");
 					textView2.setText(msg.getMessage());
 					row.addView(textView);
 					row.addView(textView2);
@@ -283,5 +281,4 @@ public class YasmeChat extends Activity {
 			return rootView;
 		}
 	}
-
 }

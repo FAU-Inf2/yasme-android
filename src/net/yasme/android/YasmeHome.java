@@ -17,9 +17,8 @@ public class YasmeHome extends Activity {
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 
-
-	String usr_name;
-	String usr_id;
+	String user_name;
+	String user_id;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +30,8 @@ public class YasmeHome extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
-		usr_name = storage.getString("user_name", "anonym");
-		usr_id = storage.getString("user_name", "001");
-		
-		/*Intent intent = getIntent();
-		usr_name = intent.getStringExtra(USER_NAME);
-		usr_id = intent.getStringExtra(USER_ID);*/
+		user_name = storage.getString(USER_NAME, "anonym");
+		user_id = storage.getString(USER_ID, "001");
 	}
 
 	@Override
@@ -63,8 +58,8 @@ public class YasmeHome extends Activity {
 	public void showChat(View view) {
 		
 		Intent intent = new Intent(this, YasmeChat.class);
-		intent.putExtra(USER_NAME, usr_name);
-		intent.putExtra(USER_ID, usr_id);
+		intent.putExtra(USER_NAME, user_name);
+		intent.putExtra(USER_ID, user_id);
 		startActivity(intent);
 	}
 	

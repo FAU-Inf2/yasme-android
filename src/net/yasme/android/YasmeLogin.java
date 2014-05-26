@@ -29,6 +29,8 @@ import android.widget.Toast;
 public class YasmeLogin extends Activity {
 
 	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
+	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
+	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -37,7 +39,7 @@ public class YasmeLogin extends Activity {
 
 	protected String url = null;
 	protected String id;
-	protected String[] accessToken;
+	protected String[] accessToken = new String[2];
 
 	// Values for name, email and password at the time of the login attempt.
 	private String name;
@@ -65,9 +67,9 @@ public class YasmeLogin extends Activity {
 
 		// open storagePreferences
 		// Restore preferences
-		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
-		name = storage.getString("user_name", "anonym");
-		email = storage.getString("user_email", "anonym@yasme.net");
+		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
+		name = storage.getString(USER_NAME, "");
+		id = storage.getString(USER_ID, "001");
 		accessToken[1] = storage.getString("accesToken1", null);
 
 		// Set up the login form.
@@ -294,9 +296,11 @@ public class YasmeLogin extends Activity {
 			try {
 				accessToken = new UserTask(url).loginUser(new User(email,
 						password));
-				SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
+				//accessToken storage
+				SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
 				SharedPreferences.Editor editor = storage.edit();
 				editor.putString("accesToken", accessToken[1]);
+				editor.commit();
 
 			} catch (RestServiceException e) {
 				return false;
@@ -332,11 +336,11 @@ public class YasmeLogin extends Activity {
 	protected void onStop() {
 		super.onStop();
 
-		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
+		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
 		SharedPreferences.Editor editor = storage.edit();
-		editor.putString("user_name", name);
-		editor.putString("user_email", email);
-		editor.putString("accesToken", accessToken[1]);
+		editor.putString(USER_NAME, name);
+		editor.putString(USER_ID, id);
+		editor.putString("accesToken1", accessToken[1]);
 
 		// Commit the edits!
 		editor.commit();
