@@ -125,14 +125,10 @@ public class YasmeChat extends Activity {
 			long uid = 001; // DEBUG WERT
 			// Message(sender, reciever, msg)
 
-			// Debug values
-			Message message = new Message(new User(null, "flo", "flo@win"),
-					new User(null, "empfaenger", "flo@empfaenger"),
-					msg_encrypted);
-
 			boolean result = false;
 			try {
-				result = messageTask.sendMessage(message);
+				result = messageTask.sendMessage(new Message(uid, 002,
+						msg_encrypted));
 			} catch (RestServiceException e) {
 				System.out.println(e.getMessage());
 			}
@@ -190,7 +186,7 @@ public class YasmeChat extends Activity {
 				return false;
 			}
 			int new_index = messages.size() - 1;
-			
+
 			for (int i = 0; i <= index; i++) {
 				messages.remove(0);
 			}
@@ -206,7 +202,8 @@ public class YasmeChat extends Activity {
 		/**
 		 * Fills the TextViews with the messages
 		 * 
-		 * @param Gets the result of doInBackground
+		 * @param Gets
+		 *            the result of doInBackground
 		 */
 		protected void onPostExecute(Boolean result) {
 			if (result) {
@@ -230,7 +227,7 @@ public class YasmeChat extends Activity {
 							LinearLayout.LayoutParams.WRAP_CONTENT,
 							LinearLayout.LayoutParams.WRAP_CONTENT));
 
-					textView.setText(msg.getSender().getName() + ":");
+					textView.setText(msg.getSender() + ":");
 					textView2.setText(msg.getMessage());
 					row.addView(textView);
 					row.addView(textView2);

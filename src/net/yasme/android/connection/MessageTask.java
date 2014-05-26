@@ -1,7 +1,5 @@
 package net.yasme.android.connection;
 
-import android.annotation.SuppressLint;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -36,23 +34,13 @@ public class MessageTask {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(url + "/msg");
 
-			
-			JSONObject sender = new JSONObject();
-			sender.put("pw", "");
-			sender.put("name", message.getSender().getName());
-			sender.put("email", message.getSender().getEmail());
+			JSONObject msg = new JSONObject();
 
-			JSONObject recipient = new JSONObject();
-			recipient.put("pw", "");
-			recipient.put("name", message.getRecipient().getName());
-			recipient.put("email", message.getRecipient().getEmail());
+			msg.put("sender", message.getSender());
+			msg.put("recipient", message.getRecipient());
+			msg.put("message", message.getMessage());
 
-			JSONObject mes = new JSONObject();
-			mes.put("sender", sender);
-			mes.put("recipient", recipient);
-			mes.put("message", message.getMessage());
-
-			String json = mes.toString();
+			String json = msg.toString();
 
 			StringEntity se = new StringEntity(json);
 
@@ -62,6 +50,8 @@ public class MessageTask {
 			httpPost.setHeader("Accept", "application/json");
 
 			HttpResponse httpResponse = httpclient.execute(httpPost);
+
+			System.out.println(httpResponse.getStatusLine().getStatusCode());
 
 			switch (httpResponse.getStatusLine().getStatusCode()) {
 			case 201:
@@ -82,8 +72,6 @@ public class MessageTask {
 		return false;
 	}
 
-	@SuppressLint("NewApi")
-	// To Do: Prüfen
 	public ArrayList<Message> getMessage(String lastMessageID) {
 
 		ArrayList<Message> messages = new ArrayList<Message>();
@@ -117,12 +105,11 @@ public class MessageTask {
 
 			for (int i = 0; i < jArray.length(); i++) {
 
-				/*
-				 * JSONObject obj = jArray.getJSONObject(i); messages.add(new
-				 * Message( Long.parseLong(obj.getString("sender")), Long
-				 * .parseLong(obj.getString("recipient")), obj
-				 * .getString("message")));
-				 */
+				JSONObject obj = jArray.getJSONObject(i);
+				messages.add(new Message(
+						Long.parseLong(obj.getString("sender")), Long
+								.parseLong(obj.getString("recipient")), obj
+								.getString("message")));
 
 			}
 

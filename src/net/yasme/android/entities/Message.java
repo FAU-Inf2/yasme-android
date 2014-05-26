@@ -11,8 +11,8 @@ public class Message implements Serializable {
 
 	private static final long serialVersionUID = -3614868307563665399L;
 	private long id;
-	private User sender;
-	private User recipient;
+	private long sender;
+	private long recipient;
 	private Date dateSent;
 	private String message;
 	private long keyId;
@@ -23,11 +23,11 @@ public class Message implements Serializable {
 	public Message() {
 	}
 
-	public Message(User sender, User recipient, String message) {
+	public Message(long sender, long recipient, String message) {
 		this(sender, recipient, message, new Date());
 	}
 
-	public Message(User sender, User recipient, String message, Date dateSent) {
+	public Message(long sender, long recipient, String message, Date dateSent) {
 		this.sender = sender;
 		this.recipient = recipient;
 		this.message = message;
@@ -35,11 +35,11 @@ public class Message implements Serializable {
 	}
 
 	/** Getters **/
-	public User getSender() {
+	public long getSender() {
 		return sender;
 	}
 
-	public User getRecipient() {
+	public long getRecipient() {
 		return recipient;
 	}
 
@@ -77,11 +77,11 @@ public class Message implements Serializable {
 		this.dateSent = dateSent;
 	}
 
-	public void setSender(User sender) {
+	public void setSender(long sender) {
 		this.sender = sender;
 	}
 
-	public void setRecipient(User recipient) {
+	public void setRecipient(long recipient) {
 		this.recipient = recipient;
 	}
 
