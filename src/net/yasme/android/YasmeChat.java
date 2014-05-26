@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.User;
 import net.yasme.android.encryption.AESEncryption;
 import android.app.Activity;
 import android.app.Fragment;
@@ -122,7 +123,10 @@ public class YasmeChat extends Activity {
 
 			long uid = 001; // DEBUG WERT
 			// Message(sender, reciever, msg)
-			Message message = new Message(uid, 001, msg_encrypted);
+
+			// Debug values
+			Message message = new Message(new User(null, usr_name, "flo@win"),
+					new User(null, "empfänger", "flo@win"), msg_encrypted);
 
 			return messageTask.sendMessage(message);
 		}
@@ -143,7 +147,7 @@ public class YasmeChat extends Activity {
 						LinearLayout.LayoutParams.WRAP_CONTENT,
 						LinearLayout.LayoutParams.WRAP_CONTENT));
 
-				//textView.setText(usr_name + ": " + msg);
+				// textView.setText(usr_name + ": " + msg);
 				row.addView(textView);
 				layout.addView(row, layoutParams);
 			} else {
@@ -165,7 +169,8 @@ public class YasmeChat extends Activity {
 
 		/**
 		 * @return Returns true if it was successful, otherwise false
-		 * @param params[0] is lastMessageID
+		 * @param params
+		 *            [0] is lastMessageID
 		 */
 		protected Boolean doInBackground(String... params) {
 
@@ -174,15 +179,15 @@ public class YasmeChat extends Activity {
 			if (messages.isEmpty()) {
 				return false;
 			}
-			if(messages.size() -1 == index) {
+			if (messages.size() - 1 == index) {
 				return false;
 			}
-			int new_index = messages.size()-1;
+			int new_index = messages.size() - 1;
 
 			for (int i = 0; i <= index; i++) {
 				messages.remove(0);
 			}
-			
+
 			// decrypt Messages
 			for (Message msg : messages) {
 				msg.setMessage(new String(aes.decrypt(msg.getMessage())));
@@ -194,12 +199,13 @@ public class YasmeChat extends Activity {
 		/**
 		 * Fills the TextViews with the messages
 		 * 
-		 * @param Gets the result of doInBackground
+		 * @param Gets
+		 *            the result of doInBackground
 		 * 
 		 */
 		protected void onPostExecute(Boolean result) {
 			if (result) {
-				if(messages.isEmpty()) {
+				if (messages.isEmpty()) {
 					status.setText("Keine neuen Nachrichten");
 					return;
 				}

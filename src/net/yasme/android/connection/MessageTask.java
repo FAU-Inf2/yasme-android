@@ -27,7 +27,6 @@ public class MessageTask {
 
 	public MessageTask(String url) {
 		this.url = url;
-		// url in strings.xml
 	}
 
 	public boolean sendMessage(Message message) {
@@ -37,15 +36,24 @@ public class MessageTask {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(url + "/msg");
 
-			// To Do: Complete Message as JSon
-			// ObjectMapper mapper = new ObjectMapper();
-			// String json = mapper.writeValueAsString(message);
+			JSONObject sender = new JSONObject();
+			sender.put("pw", "");
+			sender.put("name", message.getSender().getName());
+			sender.put("email", message.getSender().getEmail());
 
-			JSONObject obj = new JSONObject();
-			obj.put("sender", message.getSender());
-			obj.put("recipient", message.getRecipient());
-			obj.put("message", message.getMessage());
-			String json = obj.toString();
+			JSONObject recipient = new JSONObject();
+			recipient.put("pw", "");
+			recipient.put("name", message.getRecipient().getName());
+			recipient.put("email", message.getRecipient().getEmail());
+
+			JSONObject mes = new JSONObject();
+			mes.put("sender", sender);
+			mes.put("recipient", recipient);
+			mes.put("message", message.getMessage());
+
+			String json = mes.toString();
+
+			System.out.println(json);
 
 			StringEntity se = new StringEntity(json);
 
@@ -90,38 +98,37 @@ public class MessageTask {
 		try {
 
 			HttpClient client = new DefaultHttpClient();
-		//	HttpGet request = new HttpGet(url + "/msg/" + lastMessageID);
+			// HttpGet request = new HttpGet(url + "/msg/" + lastMessageID);
 			HttpGet request = new HttpGet(url + "/msg/");
 
 			request.addHeader("accept", "application/json");
 
 			HttpResponse response = client.execute(request);
-			
-			String json = EntityUtils.toString(response.getEntity(), "UTF-8");
-			
-			//BufferedReader reader = new BufferedReader(new InputStreamReader(
-			//		response.getEntity().getContent()));
 
-			//String json = reader.readLine();
-						
-			
+			String json = EntityUtils.toString(response.getEntity(), "UTF-8");
+
+			// BufferedReader reader = new BufferedReader(new InputStreamReader(
+			// response.getEntity().getContent()));
+
+			// String json = reader.readLine();
+
 			/****************** Debug*Output ********************************/
-			
-			//messages.add(new Message(1, 1, json));
-			//messages.add(new Message(1, 1, responseString));
-			//messages.add(new Message(1, 1, "Debug: HalloTest"));
-			
+
+			// messages.add(new Message(1, 1, json));
+			// messages.add(new Message(1, 1, responseString));
+			// messages.add(new Message(1, 1, "Debug: HalloTest"));
+
 			/****************** Debug*END ***********************************/
-			
+
 			JSONArray jArray = new JSONArray(json);
 
 			for (int i = 0; i < jArray.length(); i++) {
-
-				JSONObject obj = jArray.getJSONObject(i);
-				messages.add(new Message(
-						Long.parseLong(obj.getString("sender")), Long
-								.parseLong(obj.getString("recipient")), obj
-								.getString("message")));
+				/*
+				 * JSONObject obj = jArray.getJSONObject(i); messages.add(new
+				 * Message( Long.parseLong(obj.getString("sender")), Long
+				 * .parseLong(obj.getString("recipient")), obj
+				 * .getString("message")));
+				 */
 			}
 
 		} catch (IllegalStateException e) {
