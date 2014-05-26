@@ -4,6 +4,7 @@ package net.yasme.android;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 public class YasmeHome extends Activity {
 	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
+	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
+
 
 	String usr_name;
 	String usr_id;
@@ -27,9 +30,13 @@ public class YasmeHome extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-		Intent intent = getIntent();
+		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
+		usr_name = storage.getString("user_name", "anonym");
+		usr_id = storage.getString("user_name", "001");
+		
+		/*Intent intent = getIntent();
 		usr_name = intent.getStringExtra(USER_NAME);
-		usr_id = intent.getStringExtra(USER_ID);
+		usr_id = intent.getStringExtra(USER_ID);*/
 	}
 
 	@Override

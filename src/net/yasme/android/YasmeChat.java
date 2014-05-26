@@ -191,7 +191,7 @@ public class YasmeChat extends Activity {
 				return false;
 			}
 			int new_index = messages.size() - 1;
-
+			
 			for (int i = 0; i <= index; i++) {
 				messages.remove(0);
 			}
@@ -207,8 +207,7 @@ public class YasmeChat extends Activity {
 		/**
 		 * Fills the TextViews with the messages
 		 * 
-		 * @param Gets
-		 *            the result of doInBackground
+		 * @param Gets the result of doInBackground
 		 * 
 		 */
 		protected void onPostExecute(Boolean result) {
@@ -221,6 +220,7 @@ public class YasmeChat extends Activity {
 				Message msg = iterator.next();
 				for (int i = 0; i < messages.size(); i++) {
 					TextView textView = new TextView((getApplicationContext()));
+					TextView textView2 = new TextView((getApplicationContext()));
 
 					LinearLayout layout = (LinearLayout) findViewById(R.id.scrollLayout);
 					LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -232,8 +232,10 @@ public class YasmeChat extends Activity {
 							LinearLayout.LayoutParams.WRAP_CONTENT,
 							LinearLayout.LayoutParams.WRAP_CONTENT));
 
-					textView.setText(msg.getMessage());
+					textView.setText(msg.getSender() + ":");
+					textView2.setText(msg.getMessage());
 					row.addView(textView);
+					row.addView(textView2);
 					layout.addView(row, layoutParams);
 					if (iterator.hasNext()) {
 						msg = iterator.next();

@@ -8,6 +8,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,8 +28,7 @@ import android.widget.Toast;
  */
 public class YasmeLogin extends Activity {
 
-	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
-	public final static String USER_ID = "net.yasme.andriod.USER_ID";
+	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -37,7 +37,7 @@ public class YasmeLogin extends Activity {
 
 	protected String url = null;
 	protected String id;
-	protected String accessToken;
+	protected String[] accessToken;
 
 	// Values for name, email and password at the time of the login attempt.
 	private String name;
@@ -63,8 +63,15 @@ public class YasmeLogin extends Activity {
 		// get URL
 		url = getResources().getString(R.string.server_url);
 
+		// open storagePreferences
+		// Restore preferences
+		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
+		name = storage.getString("user_name", "anonym");
+		email = storage.getString("user_email", "anonym@yasme.net");
+		accessToken[1] = storage.getString("accesToken1", null);
+
 		// Set up the login form.
-		name = getIntent().getStringExtra(USER_NAME);
+		// name = getIntent().getStringExtra(USER_NAME);
 		nameView = (EditText) findViewById(R.id.name);
 		nameView.setText(name);
 
@@ -224,9 +231,10 @@ public class YasmeLogin extends Activity {
 
 	public void start() {
 		Intent intent = new Intent(this, YasmeHome.class);
-		id = name;
-		intent.putExtra(USER_ID, id);
-		intent.putExtra(USER_NAME, name);
+		/*
+		 * id = name; intent.putExtra(USER_ID, id); intent.putExtra(USER_NAME,
+		 * name);
+		 */
 		startActivity(intent);
 	}
 
@@ -284,8 +292,11 @@ public class YasmeLogin extends Activity {
 		protected Boolean doInBackground(Void... params) {
 
 			try {
-				// accessToken =
-				new UserTask(url).loginUser(new User(email, password));
+				accessToken = new UserTask(url).loginUser(new User(email,
+						password));
+				SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
+				SharedPreferences.Editor editor = storage.edit();
+				editor.putString("accesToken", accessToken[1]);
 
 			} catch (RestServiceException e) {
 				return false;
@@ -315,5 +326,19 @@ public class YasmeLogin extends Activity {
 			authTask = null;
 			showProgress(false);
 		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
+		SharedPreferences.Editor editor = storage.edit();
+		editor.putString("user_name", name);
+		editor.putString("user_email", email);
+		editor.putString("accesToken", accessToken[1]);
+
+		// Commit the edits!
+		editor.commit();
 	}
 }
