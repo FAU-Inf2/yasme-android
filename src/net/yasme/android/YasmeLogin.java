@@ -1,6 +1,5 @@
 package net.yasme.android;
 
-import net.yasme.android.entities.LoginUser;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.connection.UserTask;
@@ -284,14 +283,8 @@ public class YasmeLogin extends Activity {
 		protected Boolean doInBackground(Void... params) {
 
 			try {
-
-				// Debug: static Data
-				// To Do: Safe Token during the whole session
-
-				String token = new UserTask(url).loginUser(new LoginUser(
-						12582L, "test"));
-
-				// To Do: Replace with new uniform entity when it is finished
+				accessToken = new UserTask(url).loginUser(new User(email,
+						password));
 
 			} catch (RestServiceException e) {
 				return false;

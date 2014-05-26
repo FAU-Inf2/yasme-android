@@ -1,8 +1,6 @@
 package net.yasme.android.connection;
 
-import net.yasme.android.entities.LoginUser;
 import net.yasme.android.entities.User;
-import net.yasme.android.exception.ErrorCode;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.UserError;
 
@@ -81,7 +79,7 @@ public class UserTask {
 		return null;
 	}
 
-	public String loginUser(LoginUser user) throws RestServiceException {
+	public String loginUser(User user) throws RestServiceException {
 
 		try {
 
@@ -95,7 +93,7 @@ public class UserTask {
 			// To Do: UserDaten to JSon
 			// Edit UserObject from Server
 
-			obj.put("userID", user.getUserID());
+			obj.put("email", user.getEmail());
 			obj.put("pw", user.getPw());
 
 			String json = obj.toString();

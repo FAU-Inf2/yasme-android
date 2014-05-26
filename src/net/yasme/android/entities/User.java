@@ -1,30 +1,30 @@
 package net.yasme.android.entities;
 
+import java.io.Serializable;
+
 /**
  * Created by Stefan on 10.05.14.
  */
-public class User {
 
-	private String id;
+public class User implements Serializable {
+
+	private long id;
 	private String pw;
 	private String email;
 	private String name;
 
 	public User(String pw, String name, String email) {
-        this.name = name;
-        this.email = email;
-        this.pw = pw;
-    }
-    
-    public User(String pw, String name) {
-    	this.name = name;
 		this.pw = pw;
-	
+		this.name = name;
+		this.email = email;
+	}
 
+	public User(String email, String pw) {
+		this.email = email;
+		this.pw = pw;
 	}
 
 	public User() {
-
 	}
 
 	public String getEmail() {
@@ -39,7 +39,7 @@ public class User {
 		return pw;
 	}
 
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -55,7 +55,7 @@ public class User {
 		this.name = name;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 }
