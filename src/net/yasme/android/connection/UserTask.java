@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -33,7 +34,7 @@ public class UserTask {
 	 * @param user
 	 * @return userID, which should be stored on the device
 	 */
-	public String registerUser(User user) {
+	public String registerUser(User user) throws RestServiceException {
 		try {
 
 			DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -61,12 +62,14 @@ public class UserTask {
 
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 
-			if (httpResponse.getStatusLine().getStatusCode() == 201) {
-
-				BufferedReader rd = new BufferedReader(new InputStreamReader(
-						httpResponse.getEntity().getContent()));
-				String id = rd.readLine();
-				return id;
+			switch (httpResponse.getStatusLine().getStatusCode()) {
+			case 201:
+				return (new BufferedReader(new InputStreamReader(httpResponse
+						.getEntity().getContent(), "UTF-8"))).readLine();
+			case 500:
+				throw new RestServiceException(UserError.REGISTRATION_FAILED);
+			default:
+				new RestServiceException(UserError.ERROR);
 			}
 
 		} catch (ClientProtocolException e) {
@@ -79,7 +82,7 @@ public class UserTask {
 		return null;
 	}
 
-	public String loginUser(User user) throws RestServiceException {
+	public String[] loginUser(User user) throws RestServiceException {
 
 		try {
 
@@ -107,13 +110,11 @@ public class UserTask {
 
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 
-			BufferedReader rd = new BufferedReader(new InputStreamReader(
-					httpResponse.getEntity().getContent()));
-			String id = rd.readLine();
-
 			switch (httpResponse.getStatusLine().getStatusCode()) {
 			case 200:
-				return id;
+				Header[] header = httpResponse.getAllHeaders();
+				System.out.println(header.length);
+				return null;
 			case 401:
 				throw new RestServiceException(UserError.LOGIN_FAILED);
 			default:

@@ -238,9 +238,10 @@ public class YasmeLogin extends Activity {
 		protected Boolean doInBackground(Void... params) {
 			// TODO: ueberpruefen, ob user schon existiert
 
-			id = new UserTask(url)
-					.registerUser(new User(password, name, email));
-			if (id == null) {
+			try {
+				id = new UserTask(url).registerUser(new User(password, name,
+						email));
+			} catch (RestServiceException e) {
 				return false;
 			}
 			return true;
@@ -283,8 +284,8 @@ public class YasmeLogin extends Activity {
 		protected Boolean doInBackground(Void... params) {
 
 			try {
-				accessToken = new UserTask(url).loginUser(new User(email,
-						password));
+				// accessToken =
+				new UserTask(url).loginUser(new User(email, password));
 
 			} catch (RestServiceException e) {
 				return false;
