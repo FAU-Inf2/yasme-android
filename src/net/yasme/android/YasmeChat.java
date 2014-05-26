@@ -126,8 +126,9 @@ public class YasmeChat extends Activity {
 			// Message(sender, reciever, msg)
 
 			// Debug values
-			Message message = new Message(new User(null, usr_name, "flo@win"),
-					new User(null, "empfänger", "flo@win"), msg_encrypted);
+			Message message = new Message(new User(null, "flo", "flo@win"),
+					new User(null, "empfaenger", "flo@empfaenger"),
+					msg_encrypted);
 
 			boolean result = false;
 			try {
