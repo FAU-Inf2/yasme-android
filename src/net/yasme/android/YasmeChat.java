@@ -10,6 +10,7 @@ import net.yasme.android.connection.MessageTask;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.encryption.AESEncryption;
+import net.yasme.android.exception.RestServiceException;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -128,7 +129,13 @@ public class YasmeChat extends Activity {
 			Message message = new Message(new User(null, usr_name, "flo@win"),
 					new User(null, "empfänger", "flo@win"), msg_encrypted);
 
-			return messageTask.sendMessage(message);
+			boolean result = false;
+			try {
+				result = messageTask.sendMessage(message);
+			} catch (RestServiceException e) {
+				System.out.println(e.getMessage());
+			}
+			return result;
 		}
 
 		protected void onPostExecute(Boolean result) {

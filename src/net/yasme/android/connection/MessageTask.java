@@ -2,12 +2,12 @@ package net.yasme.android.connection;
 
 import android.annotation.SuppressLint;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import net.yasme.android.entities.Message;
+import net.yasme.android.exception.MessageError;
+import net.yasme.android.exception.RestServiceException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -29,13 +29,14 @@ public class MessageTask {
 		this.url = url;
 	}
 
-	public boolean sendMessage(Message message) {
+	public boolean sendMessage(Message message) throws RestServiceException {
 
 		try {
 
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(url + "/msg");
 
+			
 			JSONObject sender = new JSONObject();
 			sender.put("pw", "");
 			sender.put("name", message.getSender().getName());
@@ -53,8 +54,6 @@ public class MessageTask {
 
 			String json = mes.toString();
 
-			System.out.println(json);
-
 			StringEntity se = new StringEntity(json);
 
 			httpPost.setEntity(se);
@@ -64,21 +63,15 @@ public class MessageTask {
 
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 
-			if (httpResponse.getStatusLine().getStatusCode() == 201) {
-
-				/****************** Debug*Output ********************************/
-				BufferedReader rd = new BufferedReader(new InputStreamReader(
-						httpResponse.getEntity().getContent()));
-				String line = "";
-				while ((line = rd.readLine()) != null) {
-					System.out.println(line);
-				}
-				/****************** Debug*END ***********************************/
-
+			switch (httpResponse.getStatusLine().getStatusCode()) {
+			case 201:
 				return true;
+			case 500:
+				throw new RestServiceException(MessageError.SEND_MESSAGE_FAILED);
+			default:
+				throw new RestServiceException(MessageError.ERROR);
 			}
 
-			System.out.println(false);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -123,12 +116,14 @@ public class MessageTask {
 			JSONArray jArray = new JSONArray(json);
 
 			for (int i = 0; i < jArray.length(); i++) {
+
 				/*
 				 * JSONObject obj = jArray.getJSONObject(i); messages.add(new
 				 * Message( Long.parseLong(obj.getString("sender")), Long
 				 * .parseLong(obj.getString("recipient")), obj
 				 * .getString("message")));
 				 */
+
 			}
 
 		} catch (IllegalStateException e) {

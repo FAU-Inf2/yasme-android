@@ -15,7 +15,7 @@ public class RestServiceException extends Exception {
 		super(error);
 		this.statusCode = statusCode;
 
-		System.out.println(this.statusCode + this.getMessage());
+		System.out.println("Code: " + this.statusCode + "  " + "Message: "
+				+ this.getMessage());
 	}
-
 }
