@@ -67,7 +67,8 @@ public class YasmeLogin extends Activity {
 
 		// open storagePreferences
 		// Restore preferences
-		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
+		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS,
+				MODE_PRIVATE);
 		name = storage.getString(USER_NAME, "");
 		id = storage.getString(USER_ID, "001");
 		accessToken[1] = storage.getString("accesToken1", null);
@@ -296,8 +297,10 @@ public class YasmeLogin extends Activity {
 			try {
 				accessToken = new UserTask(url).loginUser(new User(email,
 						password));
-				//accessToken storage
-				SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
+
+				// accessToken storage
+				SharedPreferences storage = getSharedPreferences(STORAGE_PREFS,
+						MODE_PRIVATE);
 				SharedPreferences.Editor editor = storage.edit();
 				editor.putString("accesToken", accessToken[1]);
 				editor.commit();
@@ -336,7 +339,8 @@ public class YasmeLogin extends Activity {
 	protected void onStop() {
 		super.onStop();
 
-		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
+		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS,
+				MODE_PRIVATE);
 		SharedPreferences.Editor editor = storage.edit();
 		editor.putString(USER_NAME, name);
 		editor.putString(USER_ID, id);

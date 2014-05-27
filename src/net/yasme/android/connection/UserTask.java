@@ -40,11 +40,11 @@ public class UserTask {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(url + "/usr");
 
-			// To Do: Complete UserObject as JSon
+			// TODO: Complete UserObject as JSon
 
 			JSONObject obj = new JSONObject();
 
-			// To Do: UserDaten to JSon
+			// TODO: UserDaten to JSon
 			// Edit UserObject from Server
 
 			obj.put("pw", user.getPw());
@@ -69,13 +69,13 @@ public class UserTask {
 			case 500:
 				throw new RestServiceException(UserError.REGISTRATION_FAILED);
 			default:
-				new RestServiceException(UserError.ERROR);
+				throw new RestServiceException(UserError.ERROR);
 			}
 
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RestServiceException(UserError.REGISTRATION_FAILED);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -89,13 +89,9 @@ public class UserTask {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(url + "/sign/in");
 
-			// To Do: Complete UserObject as JSon
-
 			JSONObject obj = new JSONObject();
 
-			// To Do: UserDaten to JSon
-			// Edit UserObject from Server
-
+			// TODO: make it dynamic:
 			// obj.put("email", user.getEmail());
 			// obj.put("pw", user.getPw());
 
@@ -119,7 +115,7 @@ public class UserTask {
 			case 200:
 				Header userID = httpResponse.getFirstHeader("userId");
 				Header token = httpResponse.getFirstHeader("Authorization");
-
+				System.out.println("Login Success");
 				return new String[] { userID.getValue(), token.getValue() };
 
 			case 401:
@@ -132,7 +128,7 @@ public class UserTask {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RestServiceException(UserError.LOGIN_FAILED);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

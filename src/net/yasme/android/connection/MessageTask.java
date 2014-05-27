@@ -63,7 +63,7 @@ public class MessageTask {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RestServiceException(MessageError.SEND_MESSAGE_FAILED);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
