@@ -123,8 +123,6 @@ public class YasmeChat extends Activity {
 			// TODO: get uid from user_name, user_name = params[1]
 
 			long uid = 1; // DEBUG WERT
-			// Message(sender, reciever, msg)
-
 			boolean result = false;
 			try {
 				result = messageTask.sendMessage(new Message(uid, 2,
@@ -202,8 +200,7 @@ public class YasmeChat extends Activity {
 		/**
 		 * Fills the TextViews with the messages
 		 * 
-		 * @param Gets
-		 *            the result of doInBackground
+		 * @param Gets the result of doInBackground
 		 */
 		protected void onPostExecute(Boolean result) {
 			if (result) {

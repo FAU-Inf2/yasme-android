@@ -234,10 +234,6 @@ public class YasmeLogin extends Activity {
 
 	public void start() {
 		Intent intent = new Intent(this, YasmeHome.class);
-		/*
-		 * id = name; intent.putExtra(USER_ID, id); intent.putExtra(USER_NAME,
-		 * name);
-		 */
 		startActivity(intent);
 	}
 
@@ -302,6 +298,7 @@ public class YasmeLogin extends Activity {
 				SharedPreferences storage = getSharedPreferences(STORAGE_PREFS,
 						MODE_PRIVATE);
 				SharedPreferences.Editor editor = storage.edit();
+				editor.putString("user_id", accessToken[0]);
 				editor.putString("accesToken", accessToken[1]);
 				editor.commit();
 

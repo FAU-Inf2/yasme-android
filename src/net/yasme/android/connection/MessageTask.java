@@ -77,8 +77,8 @@ public class MessageTask {
 		try {
 
 			HttpClient client = new DefaultHttpClient();
-			// HttpGet request = new HttpGet(url + "/msg/" + lastMessageID);
-			HttpGet request = new HttpGet(url + "/msg/");
+			HttpGet request = new HttpGet(url + "/msg/" + lastMessageID);
+			// HttpGet request = new HttpGet(url + "/msg/");
 
 			request.addHeader("accept", "application/json");
 
