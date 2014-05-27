@@ -96,8 +96,12 @@ public class UserTask {
 			// To Do: UserDaten to JSon
 			// Edit UserObject from Server
 
-			obj.put("email", user.getEmail());
-			obj.put("pw", user.getPw());
+			// obj.put("email", user.getEmail());
+			// obj.put("pw", user.getPw());
+
+			// Debug: Testdaten
+			obj.put("email", "flo@yasme.net");
+			obj.put("pw", "pw");
 
 			String json = obj.toString();
 
@@ -111,14 +115,18 @@ public class UserTask {
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 
 			switch (httpResponse.getStatusLine().getStatusCode()) {
+
 			case 200:
-				Header[] header = httpResponse.getAllHeaders();
-				System.out.println(header.length);
-				return null;
+				Header userID = httpResponse.getFirstHeader("userId");
+				Header token = httpResponse.getFirstHeader("Authorization");
+
+				return new String[] { userID.getValue(), token.getValue() };
+
 			case 401:
 				throw new RestServiceException(UserError.LOGIN_FAILED);
+
 			default:
-				new RestServiceException(UserError.ERROR);
+				throw new RestServiceException(UserError.ERROR);
 			}
 
 		} catch (ClientProtocolException e) {
