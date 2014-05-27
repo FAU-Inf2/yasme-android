@@ -51,8 +51,6 @@ public class MessageTask {
 
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 
-			System.out.println(httpResponse.getStatusLine().getStatusCode());
-
 			switch (httpResponse.getStatusLine().getStatusCode()) {
 			case 201:
 				return true;
@@ -105,12 +103,23 @@ public class MessageTask {
 
 			for (int i = 0; i < jArray.length(); i++) {
 
-				JSONObject obj = jArray.getJSONObject(i);
-				messages.add(new Message(
-						Long.parseLong(obj.getString("sender")), Long
-								.parseLong(obj.getString("recipient")), obj
-								.getString("message")));
+				// To Do: Rückgabewert vom Server zu klären
 
+				/*
+				 * JSONObject obj = jArray.getJSONObject(i); messages.add(new
+				 * Message( Long.parseLong(obj.getString("sender")), Long
+				 * .parseLong(obj.getString("recipient")), obj
+				 * .getString("message")));
+				 */
+
+				// Temporäre Version:
+
+				JSONObject obj = jArray.getJSONObject(i);
+				JSONObject sender = obj.getJSONObject("sender");
+				JSONObject recipient = obj.getJSONObject("recipient");
+
+				messages.add(new Message(sender.getLong("id"), recipient
+						.getLong("id"), obj.getString("message")));
 			}
 
 		} catch (IllegalStateException e) {

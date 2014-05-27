@@ -122,12 +122,12 @@ public class YasmeChat extends Activity {
 			// creating message object
 			// TODO: get uid from user_name, user_name = params[1]
 
-			long uid = 001; // DEBUG WERT
+			long uid = 1; // DEBUG WERT
 			// Message(sender, reciever, msg)
 
 			boolean result = false;
 			try {
-				result = messageTask.sendMessage(new Message(uid, 002,
+				result = messageTask.sendMessage(new Message(uid, 2,
 						msg_encrypted));
 			} catch (RestServiceException e) {
 				System.out.println(e.getMessage());
