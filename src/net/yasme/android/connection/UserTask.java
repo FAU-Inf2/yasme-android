@@ -91,16 +91,10 @@ public class UserTask {
 
 			JSONObject obj = new JSONObject();
 
-			// TODO: make it dynamic:
-			// obj.put("email", user.getEmail());
-			// obj.put("pw", user.getPw());
-
-			// Debug: Testdaten
-			obj.put("email", "flo@yasme.net");
-			obj.put("pw", "pw");
+			obj.put("email", user.getEmail());
+			obj.put("pw", user.getPw());
 
 			String json = obj.toString();
-
 			StringEntity se = new StringEntity(json);
 
 			httpPost.setEntity(se);

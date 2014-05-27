@@ -295,7 +295,7 @@ public class YasmeLogin extends Activity {
 		protected Boolean doInBackground(Void... params) {
 
 			try {
-				accessToken = new UserTask(url).loginUser(new User(email,
+				accessToken = new UserTask(url).loginUser(new User(name,
 						password));
 
 				// accessToken storage
