@@ -9,29 +9,29 @@ import java.util.Date;
 
 public class Message implements Serializable {
 
-	private static final long serialVersionUID = -3614868307563665399L;
 	private long id;
 	private long sender;
 	private long recipient;
 	private Date dateSent;
 	private String message;
 	private long keyId;
-
 	private long chatID;
 
 	/** Constructors **/
 	public Message() {
 	}
 
-	public Message(long sender, long recipient, String message) {
-		this(sender, recipient, message, new Date());
+	public Message(long sender, long recipient, String message, long chatID) {
+		this(sender, recipient, message, new Date(), chatID);
 	}
 
-	public Message(long sender, long recipient, String message, Date dateSent) {
+	public Message(long sender, long recipient, String message, Date dateSent,
+			long chatID) {
 		this.sender = sender;
 		this.recipient = recipient;
 		this.message = message;
 		this.dateSent = dateSent;
+		this.chatID = chatID;
 	}
 
 	/** Getters **/

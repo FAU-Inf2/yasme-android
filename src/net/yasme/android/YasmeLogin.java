@@ -294,6 +294,7 @@ public class YasmeLogin extends Activity {
 				accessToken = new UserTask(url).loginUser(new User(name,
 						password));
 
+				System.out.println(accessToken[0]);
 				// accessToken storage
 				SharedPreferences storage = getSharedPreferences(STORAGE_PREFS,
 						MODE_PRIVATE);

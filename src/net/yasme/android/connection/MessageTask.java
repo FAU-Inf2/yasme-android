@@ -39,6 +39,7 @@ public class MessageTask {
 			msg.put("sender", message.getSender());
 			msg.put("recipient", message.getRecipient());
 			msg.put("message", message.getMessage());
+			msg.put("chatID", message.getChatID());
 
 			String json = msg.toString();
 
@@ -70,14 +71,14 @@ public class MessageTask {
 		return false;
 	}
 
-	public ArrayList<Message> getMessage(String lastMessageID) {
+	public ArrayList<Message> getMessage(String recipientID) {
 
 		ArrayList<Message> messages = new ArrayList<Message>();
 
 		try {
 
 			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(url + "/msg/" + lastMessageID);
+			HttpGet request = new HttpGet(url + "/msg/" + recipientID);
 			// HttpGet request = new HttpGet(url + "/msg/");
 
 			request.addHeader("accept", "application/json");
@@ -119,7 +120,7 @@ public class MessageTask {
 				JSONObject recipient = obj.getJSONObject("recipient");
 
 				messages.add(new Message(sender.getLong("id"), recipient
-						.getLong("id"), obj.getString("message")));
+						.getLong("id"), obj.getString("message"), 0));
 			}
 
 		} catch (IllegalStateException e) {

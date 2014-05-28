@@ -126,7 +126,7 @@ public class YasmeChat extends Activity {
 			boolean result = false;
 			try {
 				result = messageTask.sendMessage(new Message(uid, 2,
-						msg_encrypted));
+						msg_encrypted, 0));
 			} catch (RestServiceException e) {
 				System.out.println(e.getMessage());
 			}
@@ -159,8 +159,10 @@ public class YasmeChat extends Activity {
 
 	public void update(View view) {
 		status.setText("GET messages");
-		String lastMessageID = "1"; // Debug WERT
-		new GetMessageTask().execute(lastMessageID);
+
+		// TODO: USERID nicht korrekt -> evtl falsch von Login abgespeichert;
+		// momentan USERID immer '001'
+		new GetMessageTask().execute(user_id);
 		status.setText("GET messages done");
 	}
 
@@ -200,7 +202,8 @@ public class YasmeChat extends Activity {
 		/**
 		 * Fills the TextViews with the messages
 		 * 
-		 * @param Gets the result of doInBackground
+		 * @param Gets
+		 *            the result of doInBackground
 		 */
 		protected void onPostExecute(Boolean result) {
 			if (result) {
