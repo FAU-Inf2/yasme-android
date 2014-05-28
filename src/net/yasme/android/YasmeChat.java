@@ -38,7 +38,6 @@ public class YasmeChat extends Activity {
 	private String url;
 
 	int index = 0;
-	private long lastMessageID;
 
 	private MessageTask messageTask;
 
