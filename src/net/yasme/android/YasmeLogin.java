@@ -301,6 +301,7 @@ public class YasmeLogin extends Activity {
 				SharedPreferences.Editor editor = storage.edit();
 				editor.putString("user_id", accessToken[0]);
 				editor.putString("accesToken", accessToken[1]);
+				editor.putString(USER_NAME, name);
 				editor.commit();
 
 			} catch (RestServiceException e) {

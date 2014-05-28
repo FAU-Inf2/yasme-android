@@ -16,6 +16,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,13 +32,13 @@ public class YasmeChat extends Activity {
 
 	private EditText EditMessage;
 	private TextView status;
-	// private TextView chatView[];
 
 	private String user_name;
 	private String user_id;
 	private String url;
 
 	int index = 0;
+	private long lastMessageID;
 
 	private MessageTask messageTask;
 
@@ -77,18 +78,7 @@ public class YasmeChat extends Activity {
 		// chatView = new TextView[10];
 		EditMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
-		/*
-		 * chatView[0] = (TextView) findViewById(R.id.textView1); chatView[1] =
-		 * (TextView) findViewById(R.id.textView2); chatView[2] = (TextView)
-		 * findViewById(R.id.textView3); chatView[3] = (TextView)
-		 * findViewById(R.id.textView4); chatView[4] = (TextView)
-		 * findViewById(R.id.textView5); chatView[5] = (TextView)
-		 * findViewById(R.id.textView6); chatView[6] = (TextView)
-		 * findViewById(R.id.textView7); chatView[7] = (TextView)
-		 * findViewById(R.id.textView8); chatView[8] = (TextView)
-		 * findViewById(R.id.textView9); chatView[9] = (TextView)
-		 * findViewById(R.id.textView10);
-		 */status.setText("Eingeloggt: " + user_name);
+		status.setText("Eingeloggt: " + user_name);
 	}
 
 	public void send(View view) {
@@ -120,9 +110,7 @@ public class YasmeChat extends Activity {
 			String msg_encrypted = aes.encrypt(msg);
 
 			// creating message object
-			// TODO: get uid from user_name, user_name = params[1]
-
-			long uid = 1; // DEBUG WERT
+			long uid = Long.parseLong(user_id);
 			boolean result = false;
 			try {
 				result = messageTask.sendMessage(new Message(uid, 2,
@@ -161,7 +149,7 @@ public class YasmeChat extends Activity {
 		status.setText("GET messages");
 
 		// TODO: USERID nicht korrekt -> evtl falsch von Login abgespeichert;
-		// momentan USERID immer '001'
+		// momentan USERID immer '001' - fixed
 		new GetMessageTask().execute(user_id);
 		status.setText("GET messages done");
 	}
@@ -231,7 +219,11 @@ public class YasmeChat extends Activity {
 					textView2.setText(msg.getMessage());
 					row.addView(textView);
 					row.addView(textView2);
+					if (msg.getSender() == Long.parseLong(user_id)) {
+						row.setGravity(Gravity.RIGHT);
+					}
 					layout.addView(row, layoutParams);
+
 					if (iterator.hasNext()) {
 						msg = iterator.next();
 					}
