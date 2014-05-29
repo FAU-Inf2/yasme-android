@@ -1,6 +1,7 @@
 package net.yasme.android.entities;
 
 import java.util.ArrayList;
+
 import net.yasme.android.YasmeChat;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.AESEncryption;
@@ -10,13 +11,13 @@ import android.os.AsyncTask;
 /**
  * Created by robert on 28.05.14.
  */
-public class Chat {
-
-	private String chat_id;
+//@DatabaseTable
+public class Chat {	
 	private ArrayList<Message> messages;
-	// private long lastMessageID;
+	private String lastMessageID;
 	public long index;
-
+	
+	private String chat_id;
 	private String user_name;
 	private String user_id;
 
@@ -25,12 +26,16 @@ public class Chat {
 	public YasmeChat activity;
 
 	/** Constructors **/
-	public Chat(String user_name, String user_id, String url, YasmeChat activity) {
+	public Chat(int chat_id, String user_name, String user_id, String url, YasmeChat activity) {
+		this.chat_id = Integer.toString(chat_id);
 		this.user_name = user_name;
 		this.user_id = user_id;
+		
 		aes = new AESEncryption("geheim");
 		messageTask = new MessageTask(url);
 		this.activity = activity;
+		
+		lastMessageID = "0";
 	}
 
 	/** Getters **/
@@ -50,6 +55,7 @@ public class Chat {
 		return user_id;
 	}
 
+	
 	/** Setters **/
 	public void setMessages(ArrayList<Message> messages) {
 		this.messages = messages;
@@ -64,7 +70,7 @@ public class Chat {
 	public void update() {
 		// TODO: letzte dem Client bekannte lastMessageID übergeben
 		// Aktuell: Debugwert: 0
-		new GetMessageTask().execute(Integer.toString(0), user_id);
+		new GetMessageTask().execute(lastMessageID, user_id);
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -81,7 +87,7 @@ public class Chat {
 			boolean result = false;
 			try {
 				result = messageTask.sendMessage(new Message(uid,
-						msg_encrypted, 0));
+						msg_encrypted, Long.parseLong(chat_id)));
 			} catch (RestServiceException e) {
 				System.out.println(e.getMessage());
 			}
@@ -102,8 +108,7 @@ public class Chat {
 
 		/**
 		 * @return Returns true if it was successful, otherwise false
-		 * @param params
-		 *            [0] is lastMessageID, [1] is user_id
+		 * @param params [0] is lastMessageID
 		 */
 		protected Boolean doInBackground(String... params) {
 
@@ -135,12 +140,10 @@ public class Chat {
 
 		/**
 		 * Fills the TextViews with the messages
-		 * 
-		 * @param Gets
-		 *            the result of doInBackground
+		 * @param Gets the result of doInBackground
 		 */
 		protected void onPostExecute(Boolean result) {
-			if (result) {
+			if(result) {
 				activity.updateViews(messages);
 			} else {
 				activity.getStatus().setText("Keine neuen Nachrichten");

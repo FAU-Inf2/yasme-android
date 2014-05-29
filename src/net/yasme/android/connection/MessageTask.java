@@ -2,11 +2,9 @@ package net.yasme.android.connection;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import net.yasme.android.entities.Message;
 import net.yasme.android.exception.MessageError;
 import net.yasme.android.exception.RestServiceException;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
