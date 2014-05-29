@@ -95,8 +95,8 @@ public class Chat {
 
 			msg = params[0];
 			// encrypt message
-			//String msg_encrypted = aes.encrypt(msg);
-			String msg_encrypted = msg;
+			String msg_encrypted = aes.encrypt(msg);
+			//String msg_encrypted = msg;
 
 			// creating message object
 			long uid = Long.parseLong(user_id);
@@ -156,14 +156,16 @@ public class Chat {
 			for (int i = 0; i <= index; i++) {
 				messages.remove(0);
 			}
-		/*
+		
 			// decrypt Messages
 			for (Message msg : messages) {
-				msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
+				//msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
+				//DUMMY-Wert
+				msg.setMessage(new String(aes.decrypt(msg.getMessage(), 1L)));
+
 				//DEBUG System.out.println("[???] :"+msg.getMessage());
 			}
-			*/
-		
+			
 
 			index = new_index;
 

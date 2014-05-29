@@ -34,8 +34,8 @@ public class MessageEncryption {
 	long devid;
 	String url;
 	Context context;
+
 	AESEncryption aes; 
-	//Variables for saving the Key
 	private KeyTask keytask;
 
 	
@@ -91,6 +91,9 @@ public class MessageEncryption {
 	
 	public String decrypt(String encrypted, long keyid){
 		//is it the right key or is a older needed?
+		System.out.println("[???] thiskeyid:"+this.keyid.getId());
+		System.out.println("[???] keyid:"+keyid);
+
 		if (this.keyid.getId() == keyid){
 			return aes.decrypt(encrypted);
 		}
@@ -116,7 +119,7 @@ public class MessageEncryption {
 				
 				return decrypted;
 			}
-			return "Message could not be decrypted";
+				return "Key for Decryption could not be found";
 		}
 
 	}

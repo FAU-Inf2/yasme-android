@@ -92,15 +92,24 @@ public class AESEncryption {
 		byte[] encrypted = null;
 		try {
 			encrypted = crypt(text.getBytes("UTF-8"), Cipher.ENCRYPT_MODE);
-		} catch (UnsupportedEncodingException e) {}
+			return Base64.encodeToString(encrypted, Base64.DEFAULT);
+		} catch (Exception e){
+			System.out.println(e.getMessage());
+			return "Couldn't be encrypted: "+ text;
+		}
 		
-		return Base64.encodeToString(encrypted, Base64.DEFAULT);
 	}
 	//decrypt
 	public String decrypt(String encrypted) {
-		byte[] encrypted_decode = Base64.decode(encrypted.getBytes(), Base64.DEFAULT);
-		return new String(crypt(encrypted_decode, Cipher.DECRYPT_MODE));
-		
+		System.out.println("[???]: decrypt"+encrypted);
+		try{
+			byte[] encrypted_decode = Base64.decode(encrypted.getBytes(), Base64.DEFAULT);
+			return new String(crypt(encrypted_decode, Cipher.DECRYPT_MODE));
+		} catch (Exception e){
+			System.out.println(e.getMessage());
+			return "Couldn't be decrypted: "+ encrypted;
+		}
+				
 	}
 	
 	
