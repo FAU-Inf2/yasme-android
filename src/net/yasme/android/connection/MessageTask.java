@@ -36,7 +36,7 @@ public class MessageTask {
 
 			msg.put("sender", message.getSender());
 			msg.put("message", message.getMessage());
-			msg.put("chatID", message.getChat());
+			msg.put("chat", message.getChat());
 
 			String json = msg.toString();
 
@@ -119,13 +119,14 @@ public class MessageTask {
 				 */
 
 				// Temporäre Version:
-
-				JSONObject obj = jArray.getJSONObject(i);
-				JSONObject sender = obj.getJSONObject("sender");
-				JSONObject recipient = obj.getJSONObject("recipient");
-
-				messages.add(new Message(sender.getLong("id"), obj
-						.getString("message"), 0));
+				/*
+				 * JSONObject obj = jArray.getJSONObject(i); JSONObject sender =
+				 * obj.getJSONObject("sender"); JSONObject recipient =
+				 * obj.getJSONObject("recipient");
+				 * 
+				 * messages.add(new Message(sender.getLong("id"), obj
+				 * .getString("message"), 0));
+				 */
 			}
 
 		} catch (IllegalStateException e) {
