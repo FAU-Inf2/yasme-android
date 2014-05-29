@@ -7,7 +7,6 @@ import net.yasme.android.encryption.AESEncryption;
 import net.yasme.android.exception.RestServiceException;
 import android.os.AsyncTask;
 
-
 /**
  * Created by robert on 28.05.14.
  */
@@ -15,17 +14,16 @@ public class Chat {
 
 	private String chat_id;
 	private ArrayList<Message> messages;
-	//private long lastMessageID;
+	// private long lastMessageID;
 	public long index;
-	
+
 	private String user_name;
 	private String user_id;
-	
+
 	private AESEncryption aes;
 	private MessageTask messageTask;
 	public YasmeChat activity;
-	
-	
+
 	/** Constructors **/
 	public Chat(String user_name, String user_id, String url, YasmeChat activity) {
 		this.user_name = user_name;
@@ -34,8 +32,7 @@ public class Chat {
 		messageTask = new MessageTask(url);
 		this.activity = activity;
 	}
-	
-	
+
 	/** Getters **/
 	public String getChat_id() {
 		return chat_id;
@@ -44,11 +41,11 @@ public class Chat {
 	public ArrayList<Message> getStoredMessages() {
 		return messages;
 	}
-	
+
 	public String getUser_name() {
 		return user_name;
 	}
-	
+
 	public String getUser_id() {
 		return user_id;
 	}
@@ -57,18 +54,19 @@ public class Chat {
 	public void setMessages(ArrayList<Message> messages) {
 		this.messages = messages;
 	}
-	
-	
+
 	/** Other methods **/
 	public void send(String msg) {
 		new SendMessageTask().execute(msg, user_name);
 		update();
 	}
-	
+
 	public void update() {
-		new GetMessageTask().execute(user_id);
+		// TODO: letzte dem Client bekannte lastMessageID übergeben
+		// Aktuell: Debugwert: 0
+		new GetMessageTask().execute(Integer.toString(0), user_id);
 	}
-	
+
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 		String msg;
 
@@ -82,7 +80,7 @@ public class Chat {
 			long uid = Long.parseLong(user_id);
 			boolean result = false;
 			try {
-				result = messageTask.sendMessage(new Message(uid, 2,
+				result = messageTask.sendMessage(new Message(uid,
 						msg_encrypted, 0));
 			} catch (RestServiceException e) {
 				System.out.println(e.getMessage());
@@ -91,25 +89,29 @@ public class Chat {
 		}
 
 		protected void onPostExecute(Boolean result) {
-			if(result) {
+			if (result) {
 				update();
 			} else {
 				activity.getStatus().setText("Senden fehlgeschlagen");
 			}
 		}
 	}
-	
-	
+
 	private class GetMessageTask extends AsyncTask<String, Void, Boolean> {
 		ArrayList<Message> messages;
 
 		/**
 		 * @return Returns true if it was successful, otherwise false
-		 * @param params [0] is lastMessageID
+		 * @param params
+		 *            [0] is lastMessageID, [1] is user_id
 		 */
 		protected Boolean doInBackground(String... params) {
 
-			messages = messageTask.getMessage(params[0]);
+			try {
+				messages = messageTask.getMessage(params[0], params[1]);
+			} catch (RestServiceException e) {
+				e.printStackTrace();
+			}
 
 			if (messages.isEmpty()) {
 				return false;
@@ -133,10 +135,12 @@ public class Chat {
 
 		/**
 		 * Fills the TextViews with the messages
-		 * @param Gets the result of doInBackground
+		 * 
+		 * @param Gets
+		 *            the result of doInBackground
 		 */
 		protected void onPostExecute(Boolean result) {
-			if(result) {
+			if (result) {
 				activity.updateViews(messages);
 			} else {
 				activity.getStatus().setText("Keine neuen Nachrichten");

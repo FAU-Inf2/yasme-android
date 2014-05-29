@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 public class YasmeChat extends Activity {
 	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
