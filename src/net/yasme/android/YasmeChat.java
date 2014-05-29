@@ -88,7 +88,7 @@ public class YasmeChat extends Activity {
 	public void update(View view) {
 		status.setText("GET messages");
 
-		// TODO: USERID nicht korrekt -> evtl falsch von Login abgespeichert;
+		// USERID nicht korrekt -> evtl falsch von Login abgespeichert;
 		// momentan USERID immer '001' - fixed
 		chat.update();
 		status.setText("GET messages done");
@@ -114,12 +114,13 @@ public class YasmeChat extends Activity {
 			row.setLayoutParams(new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT,
 					LinearLayout.LayoutParams.WRAP_CONTENT));
-
-			textView.setText(msg.getSender() + ":");
+	
+			textView.setText(msg.getSender().getName() + ":");
 			textView2.setText(msg.getMessage());
 			row.addView(textView);
 			row.addView(textView2);
-			if (msg.getSender() == Long.parseLong(chat.getUser_id())) {
+			
+			if (msg.getSender().getId() == Long.parseLong(chat.getUser_id())) {
 				row.setGravity(Gravity.RIGHT);
 			}
 			layout.addView(row, layoutParams);

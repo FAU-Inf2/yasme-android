@@ -60,6 +60,10 @@ public class Chat {
 	public void setMessages(ArrayList<Message> messages) {
 		this.messages = messages;
 	}
+	
+	public void setLastMessageID(String newlastMessageID) {
+		this.lastMessageID = newlastMessageID;
+	}
 
 	/** Other methods **/
 	public void send(String msg) {
@@ -87,7 +91,7 @@ public class Chat {
 			long uid = Long.parseLong(user_id);
 			boolean result = false;
 			try {
-				result = messageTask.sendMessage(new Message(uid,
+				result = messageTask.sendMessage(new Message(new User(user_name ,uid),
 						msg_encrypted, Long.parseLong(chat_id)));
 			} catch (RestServiceException e) {
 				System.out.println(e.getMessage());
@@ -137,6 +141,8 @@ public class Chat {
 				msg.setMessage(new String(aes.decrypt(msg.getMessage())));
 			}*/
 			index = new_index;
+			
+			setLastMessageID(Long.toString(messages.get(messages.size()-1).getID()));
 			return true;
 		}
 

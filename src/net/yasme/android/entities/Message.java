@@ -11,7 +11,7 @@ public class Message implements Serializable {
 
 	private long id;
 	private long chat;
-	private long sender;
+	private User sender;
 	private Date dateSent;
 	private String message;
 	private long keyId;
@@ -20,11 +20,11 @@ public class Message implements Serializable {
 	public Message() {
 	}
 
-	public Message(long sender, String message, long chat) {
+	public Message(User sender, String message, long chat) {
 		this(sender, message, new Date(), chat);
 	}
 
-	public Message(long sender, String message, Date dateSent, long chat) {
+	public Message(User sender, String message, Date dateSent, long chat) {
 		this.sender = sender;
 		this.message = message;
 		this.dateSent = dateSent;
@@ -32,7 +32,7 @@ public class Message implements Serializable {
 	}
 
 	/** Getters **/
-	public long getSender() {
+	public User getSender() {
 		return sender;
 	}
 
@@ -73,7 +73,7 @@ public class Message implements Serializable {
 		this.dateSent = dateSent;
 	}
 
-	public void setSender(long sender) {
+	public void setSender(User sender) {
 		this.sender = sender;
 	}
 
