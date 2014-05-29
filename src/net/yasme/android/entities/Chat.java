@@ -17,11 +17,12 @@ public class Chat {
 	private ArrayList<Message> messages;
 	private String lastMessageID;
 	public long index;
-
+	
 	private String chat_id;
 	private String user_name;
 	private String user_id;
-
+	String url;
+	
 	private MessageEncryption aes;
 	private MessageTask messageTask;
 	public YasmeChat activity;
@@ -35,14 +36,11 @@ public class Chat {
 		this.url = url;
 		//DUMMY-WERTE
 		//TO-DO: richtige Werte einsetzen
-		Id chat_id = new Id(1);
+		Id chatid = new Id(1);
 		long creator = 1L;
 		long recipient = 2L;
 		long devid = 3L;
-		aes = new MessageEncryption(activity, chat_id, creator, recipient, devid);
-
-		aes = new AESEncryption("geheim");
-
+		aes = new MessageEncryption(activity, chatid, creator, recipient, devid);
 
 
 
@@ -97,9 +95,7 @@ public class Chat {
 
 			msg = params[0];
 			// encrypt message
-			String msg_encrypted = aes.encrypt(msg);
-			String msg_encrypted = aes.encrypt(msg);
-			// String msg_encrypted = aes.encrypt(msg);
+			//String msg_encrypted = aes.encrypt(msg);
 			String msg_encrypted = msg;
 
 			// creating message object
@@ -160,15 +156,14 @@ public class Chat {
 			for (int i = 0; i <= index; i++) {
 				messages.remove(0);
 			}
-
+		/*
 			// decrypt Messages
 			for (Message msg : messages) {
 				msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
 				//DEBUG System.out.println("[???] :"+msg.getMessage());
-			/*
-			 * for (Message msg : messages) { msg.setMessage(new
-			 * String(aes.decrypt(msg.getMessage()))); }
-			 */
+			}
+			*/
+		
 
 			index = new_index;
 
