@@ -109,24 +109,11 @@ public class MessageTask {
 
 			for (int i = 0; i < jArray.length(); i++) {
 
-				// To Do: Rückgabewert vom Server zu klären
+				JSONObject obj = jArray.getJSONObject(i);
+				JSONObject sender = obj.getJSONObject("sender");
 
-				/*
-				 * JSONObject obj = jArray.getJSONObject(i); messages.add(new
-				 * Message( Long.parseLong(obj.getString("sender")), Long
-				 * .parseLong(obj.getString("recipient")), obj
-				 * .getString("message")));
-				 */
-
-				// Temporäre Version:
-				/*
-				 * JSONObject obj = jArray.getJSONObject(i); JSONObject sender =
-				 * obj.getJSONObject("sender"); JSONObject recipient =
-				 * obj.getJSONObject("recipient");
-				 * 
-				 * messages.add(new Message(sender.getLong("id"), obj
-				 * .getString("message"), 0));
-				 */
+				messages.add(new Message(sender.getLong("id"), obj
+						.getString("message"), 1));
 			}
 
 		} catch (IllegalStateException e) {
@@ -136,6 +123,8 @@ public class MessageTask {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		System.out.println("Number new Messages: " + messages.size());
 
 		return messages;
 	}
