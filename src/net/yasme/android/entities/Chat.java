@@ -61,6 +61,10 @@ public class Chat {
 		this.messages = messages;
 	}
 
+	public void setLastMessageID(String newlastMessageID) {
+		this.lastMessageID = newlastMessageID;
+	}
+
 	/** Other methods **/
 	public void send(String msg) {
 		new SendMessageTask().execute(msg, user_name);
@@ -80,20 +84,22 @@ public class Chat {
 
 			msg = params[0];
 			// encrypt message
-
-			// String msg_encrypted = aes.encrypt(msg); Edit by Flo
+			// String msg_encrypted = aes.encrypt(msg);
+			String msg_encrypted = msg;
 
 			// creating message object
 			long uid = Long.parseLong(user_id);
 			boolean result = false;
 			try {
-
+				result = messageTask
+						.sendMessage(new Message(new User(user_name, uid),
+								msg_encrypted, Long.parseLong(chat_id)));
 				// result = messageTask.sendMessage(new Message(uid,
 				// msg_encrypted, Long.parseLong(chat_id)));
 
 				// TEMP VERSION:
-				result = messageTask.sendMessage(new Message(uid, msg, Long
-						.parseLong(chat_id)));
+				//result = messageTask.sendMessage(new Message(uid, msg, Long
+				//		.parseLong(chat_id)));
 
 			} catch (RestServiceException e) {
 				System.out.println(e.getMessage());
@@ -117,6 +123,8 @@ public class Chat {
 		 * @return Returns true if it was successful, otherwise false
 		 * @param params
 		 *            [0] is lastMessageID
+		 * @param params
+		 *            [1] is user_id
 		 */
 		protected Boolean doInBackground(String... params) {
 
@@ -139,20 +147,22 @@ public class Chat {
 			}
 
 			// decrypt Messages
-			for (Message msg : messages) {
-
-				// msg.setMessage(new String(aes.decrypt(msg.getMessage())));
-
-				// TEMP VERSION:
-				msg.setMessage(new String(msg.getMessage()));
-			}
+			/*
+			 * for (Message msg : messages) { msg.setMessage(new
+			 * String(aes.decrypt(msg.getMessage()))); }
+			 */
 			index = new_index;
+
+			setLastMessageID(Long.toString(messages.get(messages.size() - 1)
+					.getID()));
 			return true;
 		}
 
 		/**
 		 * Fills the TextViews with the messages
 		 * 
+		 * @param Gets
+		 *            the result of doInBackground
 		 * @param Gets
 		 *            the result of doInBackground
 		 */

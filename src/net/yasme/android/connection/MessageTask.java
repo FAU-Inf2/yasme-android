@@ -2,9 +2,12 @@ package net.yasme.android.connection;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.User;
 import net.yasme.android.exception.MessageError;
 import net.yasme.android.exception.RestServiceException;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -34,7 +37,7 @@ public class MessageTask {
 
 			JSONObject msg = new JSONObject();
 
-			msg.put("sender", message.getSender());
+			msg.put("sender", message.getSender().getId());
 			msg.put("message", message.getMessage());
 			msg.put("chat", message.getChat());
 
@@ -112,7 +115,7 @@ public class MessageTask {
 				JSONObject obj = jArray.getJSONObject(i);
 				JSONObject sender = obj.getJSONObject("sender");
 
-				messages.add(new Message(sender.getLong("id"), obj
+				messages.add(new Message(new User(sender.getString("name"), sender.getLong("id")), obj
 						.getString("message"), 1));
 			}
 
