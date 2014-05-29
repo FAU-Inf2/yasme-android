@@ -122,7 +122,7 @@ public class MessageTask {
 
 				JSONObject obj = jArray.getJSONObject(i);
 				JSONObject sender = obj.getJSONObject("sender");
-				JSONObject recipient = obj.getJSONObject("recipient");
+				//JSONObject recipient = obj.getJSONObject("recipient");
 
 				messages.add(new Message(sender.getLong("id"), obj
 						.getString("message"), 0));

@@ -80,8 +80,9 @@ public class Chat {
 
 			msg = params[0];
 			// encrypt message
-			String msg_encrypted = aes.encrypt(msg);
-
+			//String msg_encrypted = aes.encrypt(msg);
+			String msg_encrypted = msg;
+			
 			// creating message object
 			long uid = Long.parseLong(user_id);
 			boolean result = false;
@@ -108,7 +109,8 @@ public class Chat {
 
 		/**
 		 * @return Returns true if it was successful, otherwise false
-		 * @param params [0] is lastMessageID
+		 * @param params[0] is lastMessageID
+		 * @param params[1] is user_id
 		 */
 		protected Boolean doInBackground(String... params) {
 
@@ -131,9 +133,9 @@ public class Chat {
 			}
 
 			// decrypt Messages
-			for (Message msg : messages) {
+			/*for (Message msg : messages) {
 				msg.setMessage(new String(aes.decrypt(msg.getMessage())));
-			}
+			}*/
 			index = new_index;
 			return true;
 		}
