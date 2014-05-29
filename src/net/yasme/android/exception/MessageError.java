@@ -2,7 +2,7 @@ package net.yasme.android.exception;
 
 public enum MessageError implements ErrorCode {
 
-	ERROR(000), SEND_MESSAGE_FAILED(100);
+	ERROR(000), SEND_MESSAGE_FAILED(100), GET_NO_NEW_MESSAGE(101);
 
 	private final int number;
 

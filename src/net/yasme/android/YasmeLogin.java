@@ -290,6 +290,10 @@ public class YasmeLogin extends Activity {
 		protected Boolean doInBackground(Void... params) {
 
 			try {
+				// DEBUG:
+				System.out.println("e-Mail: " + name + " " + "Passwort: "
+						+ password);
+
 				accessToken = new UserTask(url).loginUser(new User(name,
 						password));
 

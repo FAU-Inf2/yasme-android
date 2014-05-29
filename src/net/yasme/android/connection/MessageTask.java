@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.User;
 import net.yasme.android.exception.MessageError;
 import net.yasme.android.exception.RestServiceException;
 
@@ -36,12 +37,13 @@ public class MessageTask {
 
 			JSONObject msg = new JSONObject();
 
-			msg.put("sender", message.getSender());
-			msg.put("recipient", message.getRecipient());
+			msg.put("sender", message.getSender().getId());
 			msg.put("message", message.getMessage());
-			msg.put("chatID", message.getChatID());
+			msg.put("chat", message.getChat());
 
 			String json = msg.toString();
+
+			System.out.println("JSON to Server: " + json);
 
 			StringEntity se = new StringEntity(json);
 
@@ -54,6 +56,7 @@ public class MessageTask {
 
 			switch (httpResponse.getStatusLine().getStatusCode()) {
 			case 201:
+				System.out.println("Message stored");
 				return true;
 			case 500:
 				throw new RestServiceException(MessageError.SEND_MESSAGE_FAILED);
@@ -71,14 +74,16 @@ public class MessageTask {
 		return false;
 	}
 
-	public ArrayList<Message> getMessage(String recipientID) {
+	public ArrayList<Message> getMessage(String lastMessageID, String userID)
+			throws RestServiceException {
 
 		ArrayList<Message> messages = new ArrayList<Message>();
 
 		try {
 
 			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(url + "/msg/" + recipientID);
+			HttpGet request = new HttpGet(url + "/msg/" + lastMessageID + "/"
+					+ userID);
 			// HttpGet request = new HttpGet(url + "/msg/");
 
 			request.addHeader("accept", "application/json");
@@ -102,25 +107,16 @@ public class MessageTask {
 
 			JSONArray jArray = new JSONArray(json);
 
+			if (jArray.isNull(0))
+				throw new RestServiceException(MessageError.GET_NO_NEW_MESSAGE);
+
 			for (int i = 0; i < jArray.length(); i++) {
-
-				// To Do: Rückgabewert vom Server zu klären
-
-				/*
-				 * JSONObject obj = jArray.getJSONObject(i); messages.add(new
-				 * Message( Long.parseLong(obj.getString("sender")), Long
-				 * .parseLong(obj.getString("recipient")), obj
-				 * .getString("message")));
-				 */
-
-				// Temporäre Version:
 
 				JSONObject obj = jArray.getJSONObject(i);
 				JSONObject sender = obj.getJSONObject("sender");
-				JSONObject recipient = obj.getJSONObject("recipient");
 
-				messages.add(new Message(sender.getLong("id"), recipient
-						.getLong("id"), obj.getString("message"), 0));
+				messages.add(new Message(new User(sender.getString("name"), sender.getLong("id")), obj
+						.getString("message"), 1));
 			}
 
 		} catch (IllegalStateException e) {
@@ -130,6 +126,8 @@ public class MessageTask {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		System.out.println("Number new Messages: " + messages.size());
 
 		return messages;
 	}
