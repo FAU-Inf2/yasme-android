@@ -12,11 +12,12 @@ import javax.crypto.spec.SecretKeySpec;
 
 import android.util.Base64;
 
+
+
 public class AESEncryption {
 	
 	private SecretKey key = null;
 	private IvParameterSpec iv = null;
-	
 	
 	public AESEncryption(){
 		//generate AES-Key and Inital-Vector, if necessary
@@ -30,7 +31,11 @@ public class AESEncryption {
 		//generate AES-Key from given password
 		key = generateKey(password);
 		iv = generateIV();
+	}
 	
+	public AESEncryption(byte[] key, byte[] iv){
+		this.key = new SecretKeySpec(key,"AES");
+		this.iv = new IvParameterSpec(iv);
 	}
 	
 	//generate Initial-Vector
@@ -97,6 +102,8 @@ public class AESEncryption {
 		return new String(crypt(encrypted_decode, Cipher.DECRYPT_MODE));
 		
 	}
+	
+	
 			
 	// One method for both. "mode" decides, whether it makes encryption or decryption.
 		public byte[] crypt(byte[] in, int mode) {
@@ -110,5 +117,10 @@ public class AESEncryption {
 			} catch (Exception e) {}
 			return out;
 		}
-			
+		
+		
+		
 }
+
+
+

@@ -1,10 +1,12 @@
 package net.yasme.android.entities;
 
 import java.util.ArrayList;
+
 import net.yasme.android.YasmeChat;
 import net.yasme.android.connection.MessageTask;
-import net.yasme.android.encryption.AESEncryption;
+import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.exception.RestServiceException;
+import android.content.Context;
 import android.os.AsyncTask;
 
 
@@ -20,8 +22,9 @@ public class Chat {
 	
 	private String user_name;
 	private String user_id;
+	String url;
 	
-	private AESEncryption aes;
+	private MessageEncryption aes;
 	private MessageTask messageTask;
 	public YasmeChat activity;
 	
@@ -30,7 +33,14 @@ public class Chat {
 	public Chat(String user_name, String user_id, String url, YasmeChat activity) {
 		this.user_name = user_name;
 		this.user_id = user_id;
-		aes = new AESEncryption("geheim");
+		this.url = url;
+		//DUMMY-WERTE
+		//TO-DO: richtige Werte einsetzen
+		Id chat_id = new Id(1);
+		long creator = 1L;
+		long recipient = 2L;
+		long devid = 3L;
+		aes = new MessageEncryption(activity, chat_id, creator, recipient, devid);
 		messageTask = new MessageTask(url);
 		this.activity = activity;
 	}
@@ -77,6 +87,7 @@ public class Chat {
 			msg = params[0];
 			// encrypt message
 			String msg_encrypted = aes.encrypt(msg);
+			//DEBUG System.out.println("[???] :"+msg_encrypted);
 
 			// creating message object
 			long uid = Long.parseLong(user_id);
@@ -125,7 +136,9 @@ public class Chat {
 
 			// decrypt Messages
 			for (Message msg : messages) {
-				msg.setMessage(new String(aes.decrypt(msg.getMessage())));
+				msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
+				//DEBUG System.out.println("[???] :"+msg.getMessage());
+
 			}
 			index = new_index;
 			return true;
