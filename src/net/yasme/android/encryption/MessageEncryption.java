@@ -96,8 +96,8 @@ public class MessageEncryption {
 	
 	public String decrypt(String encrypted, long keyid){
 		System.out.println("[???] Decrypt with:");
-		System.out.println("[???] thiskeyid:"+this.keyid.getId());
-		System.out.println("[???] keyid:"+keyid);
+		System.out.println("[???] aktuelle KEYID:"+this.keyid.getId());
+		System.out.println("[???] benoetigte KEYID:"+keyid);
 
 		if (this.keyid.getId() == keyid){
 			return aes.decrypt(encrypted);
