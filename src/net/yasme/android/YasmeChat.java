@@ -50,6 +50,13 @@ public class YasmeChat extends Activity {
 		} else {
 			chat = new Chat(chat_id, user_id, url, this);
 		}
+		
+		//setup Encryption for this chat
+		long creator = Long.parseLong(user_id);
+		long recipient = 2L;
+		long devid = 3L;
+		aes = new MessageEncryption(this, new Id(chat_id), creator, recipient, devid);
+		
 	}
 
 	@Override

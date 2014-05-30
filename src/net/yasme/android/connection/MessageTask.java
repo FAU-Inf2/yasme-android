@@ -40,11 +40,11 @@ public class MessageTask {
 			msg.put("sender", message.getSender().getId());
 			msg.put("message", message.getMessage());
 			msg.put("chat", message.getChat());
-			//msg.put("keyid", message.getKeyID());
+			msg.put("keyID", message.getKeyID());
 
 			String json = msg.toString();
 
-			System.out.println("JSON to Server: " + json);
+			System.out.println("[???]: JSON to Server: " + json);
 
 			StringEntity se = new StringEntity(json);
 
@@ -92,6 +92,8 @@ public class MessageTask {
 
 			String json = EntityUtils.toString(response.getEntity(), "UTF-8");
 
+			System.out.println("[???]: JSON to Client: " + json);
+
 			// BufferedReader reader = new BufferedReader(new InputStreamReader(
 			// response.getEntity().getContent()));
 
@@ -115,10 +117,7 @@ public class MessageTask {
 				JSONObject obj = jArray.getJSONObject(i);
 				JSONObject sender = obj.getJSONObject("sender");
 
-				//messages.add(new Message(new User(sender.getString("name"), sender.getLong("id")), obj
-				//		.getString("message"), 1, sender.getLong("keyid")));
-				messages.add(new Message(new User(sender.getString("name"), sender.getLong("id")), obj
-						.getString("message"), 1, 1));
+				messages.add(new Message(new User(sender.getString("name"), sender.getLong("id")), obj.getString("message"), 1, obj.getLong("keyID")));
 			}
 
 		} catch (IllegalStateException e) {
