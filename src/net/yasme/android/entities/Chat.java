@@ -18,7 +18,6 @@ public class Chat {
 	
 	private ArrayList<Message> messages;
 	private long lastMessageID;
-	public long index;
 	
 	private String chat_id;
 	private String user_name;
@@ -132,24 +131,17 @@ public class Chat {
 			
 			if(messages == null) {
 				return false;
-			}
+				}
 			if (messages.isEmpty()) {
-				return false;
-			}
-		
-			if (messages.size() - 1 == index) {
-				return false;
-			}
-			int new_index = messages.size() - 1;
+				 return false;
+				 }
 			
 			// decrypt Messages
 			for (Message msg : messages) {
 				msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
 				}
 			
-			index = new_index;
-			setLastMessageID(Long.toString(messages.get(messages.size() - 1)
-					.getID()));
+			
 			return true;
 		}
 
