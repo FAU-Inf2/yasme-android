@@ -10,15 +10,18 @@ import android.os.AsyncTask;
 /**
  * Created by robert on 28.05.14.
  */
-//@DatabaseTable
+//@DatabaseTable(tableName = "chatrooms")
 public class Chat {
 	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 	
+	//@DatabaseCollection
 	private ArrayList<Message> messages;
+	//@DatabaseField
 	private Id lastMessageID;
-	
+	//@DatabasreField(generatedId = true, id = true)
 	private Id chat_id;
+	
 	private String user_name;
 	private Id user_id;
 	String url;
@@ -42,6 +45,10 @@ public class Chat {
 		messageTask = new MessageTask(url);
 		
 		lastMessageID.setId(0);
+	}
+	
+	public Chat() {
+		// ORMLite needs a no-arg constructor
 	}
 
 	/** Getters **/
@@ -152,9 +159,7 @@ public class Chat {
 		protected void onPostExecute(Boolean result) {
 			if (result) {
 				activity.updateViews(messages);
-				setLastMessageID(messages.size() + lastMessageID.getId());
-				//activity.getStatus().setText(Integer.toString(messages.size()));
-				//activity.getStatus().setText("LastMessageID: " + lastMessageID);
+				setLastMessageID(messages.size() + lastMessageID.getId());	
 			} else {
 				activity.getStatus().setText("Keine neuen Nachrichten");
 			}
