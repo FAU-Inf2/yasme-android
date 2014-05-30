@@ -6,7 +6,6 @@ import net.yasme.android.YasmeChat;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.exception.RestServiceException;
-import android.content.Context;
 import android.os.AsyncTask;
 
 /**
@@ -14,9 +13,12 @@ import android.os.AsyncTask;
  */
 // @DatabaseTable
 public class Chat {
+	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
+	public final static String USER_ID = "net.yasme.andriod.USER_ID";
+	
 	private ArrayList<Message> messages;
-	private String lastMessageID;
-	public long index;
+	private long lastMessageID;
+	//public long index;
 	
 	private String chat_id;
 	private String user_name;
@@ -28,12 +30,10 @@ public class Chat {
 	public YasmeChat activity;
 
 	/** Constructors **/
-	public Chat(int chat_id, String user_name, String user_id, String url,
-			YasmeChat activity) {
-		this.chat_id = Integer.toString(chat_id);
-		this.user_name = user_name;
+	public Chat(int chat_id, String user_id, String url, YasmeChat activity) {
+		this.chat_id = Integer.toString(chat_id);		
 		this.user_id = user_id;
-		this.url = url;
+		this.activity = activity;
 	
 		long creator = Long.parseLong(user_id);
 		//DUMMY-WERTE
@@ -42,12 +42,9 @@ public class Chat {
 		long devid = 3L;
 		aes = new MessageEncryption(activity, new Id(chat_id), creator, recipient, devid);
 
-
-
 		messageTask = new MessageTask(url);
-		this.activity = activity;
-
-		lastMessageID = "1";
+		
+		lastMessageID = 0;
 	}
 
 	/** Getters **/
@@ -59,33 +56,28 @@ public class Chat {
 		return messages;
 	}
 
-	public String getUser_name() {
-		return user_name;
-	}
-
-	public String getUser_id() {
-		return user_id;
-	}
-
 	/** Setters **/
 	public void setMessages(ArrayList<Message> messages) {
 		this.messages = messages;
 	}
 
-	public void setLastMessageID(String newlastMessageID) {
+	public void setLastMessageID(long newlastMessageID) {
 		this.lastMessageID = newlastMessageID;
+	}
+	
+	public void incLastMessageID() {
+		lastMessageID++;
 	}
 
 	/** Other methods **/
 	public void send(String msg) {
 		new SendMessageTask().execute(msg, user_name);
-		update();
+		incLastMessageID();
+		//update();
 	}
 
 	public void update() {
-		// TODO: letzte dem Client bekannte lastMessageID übergeben
-		// Aktuell: Debugwert: 0
-		new GetMessageTask().execute(lastMessageID, user_id);
+		new GetMessageTask().execute(Long.toString(lastMessageID), user_id);
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -95,20 +87,16 @@ public class Chat {
 
 			msg = params[0];
 			
-			// creating message object
 			long uid = Long.parseLong(user_id);
 			boolean result = false;
+			
+			//Message verschlüsseln
+			String msg_encrypted = aes.encrypt(msg);
+			
 			try {
 				result = messageTask
 						.sendMessage(new Message(new User(user_name, uid),
-								msg, Long.parseLong(chat_id), aes.getKeyId()));
-				// result = messageTask.sendMessage(new Message(uid,
-				// msg_encrypted, Long.parseLong(chat_id)));
-
-				// TEMP VERSION:
-				//result = messageTask.sendMessage(new Message(uid, msg, Long
-				//		.parseLong(chat_id)));
-
+								msg_encrypted, Long.parseLong(chat_id), aes.getKeyId()));
 			} catch (RestServiceException e) {
 				System.out.println(e.getMessage());
 			}
@@ -118,6 +106,7 @@ public class Chat {
 		protected void onPostExecute(Boolean result) {
 			if (result) {
 				update();
+				activity.getStatus().setText("Gesendet: " + msg);
 			} else {
 				activity.getStatus().setText("Senden fehlgeschlagen");
 			}
@@ -141,17 +130,12 @@ public class Chat {
 			} catch (RestServiceException e) {
 				e.printStackTrace();
 			}
-
+			
+			if(messages == null) {
+				return false;
+			}
 			if (messages.isEmpty()) {
 				return false;
-			}
-			if (messages.size() - 1 == index) {
-				return false;
-			}
-			int new_index = messages.size() - 1;
-
-			for (int i = 0; i <= index; i++) {
-				messages.remove(0);
 			}
 		
 			// decrypt Messages
@@ -165,17 +149,12 @@ public class Chat {
 
 				//DEBUG System.out.println("[???] :"+msg.getMessage());
 			}
-			
-
-			index = new_index;
-
-			setLastMessageID(Long.toString(messages.get(messages.size() - 1)
-					.getID()));
 			return true;
 		}
 
 		/**
 		 * Fills the TextViews with the messages
+		 * - maybe this should be done also in doInBackground
 		 * 
 		 * @param Gets
 		 *            the result of doInBackground
@@ -185,6 +164,9 @@ public class Chat {
 		protected void onPostExecute(Boolean result) {
 			if (result) {
 				activity.updateViews(messages);
+				setLastMessageID(messages.size() - 1 + lastMessageID);
+				//activity.getStatus().setText(Integer.toString(messages.size()));
+				//activity.getStatus().setText("LastMessageID: " + lastMessageID);
 			} else {
 				activity.getStatus().setText("Keine neuen Nachrichten");
 			}

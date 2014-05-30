@@ -3,9 +3,7 @@ package net.yasme.android;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.Id;
 import net.yasme.android.entities.Message;
 import android.app.Activity;
 import android.app.Fragment;
@@ -30,7 +28,8 @@ public class YasmeChat extends Activity {
 	private EditText EditMessage;
 	private TextView status;
 	private Chat chat;
-	private MessageEncryption aes;
+	private String user_name;
+	private String user_id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,23 +41,15 @@ public class YasmeChat extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		Intent intent = getIntent();
-		String user_name = intent.getStringExtra(USER_NAME);
-		String user_id = intent.getStringExtra(USER_ID);
+		user_name = intent.getStringExtra(USER_NAME);
+		user_id = intent.getStringExtra(USER_ID);
 		String url = getResources().getString(R.string.server_url);
 		int chat_id = intent.getIntExtra(CHAT_ID, 1);
 		if(false) {
 			//TODO: existierenden Chat verwenden
 		} else {
-			chat = new Chat(chat_id, user_name, user_id, url, this);
+			chat = new Chat(chat_id, user_id, url, this);
 		}
-		
-		//setup Encryption for this chat
-		long creator = Long.parseLong(user_id);
-		long recipient = 2L;
-		long devid = 3L;
-		aes = new MessageEncryption(this, new Id(chat_id), creator, recipient, devid);
-		
-
 	}
 
 	@Override
@@ -79,7 +70,7 @@ public class YasmeChat extends Activity {
 	private void initializeViews() {
 		EditMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
-		status.setText("Eingeloggt: " + chat.getUser_name());
+		status.setText("Eingeloggt: " + user_name);
 	}
 
 	public void send(View view) {
@@ -90,37 +81,38 @@ public class YasmeChat extends Activity {
 			return;
 		}
 		
-		// encrypt message
-		String msg_encrypted = aes.encrypt(msg);		
-
-		chat.send(msg_encrypted);
+		chat.send(msg);
 		EditMessage.setText("");
-
-		status.setText("Gesendet: " + msg);
 		msg = null;
-
 	}
 
 	public void update(View view) {
 		status.setText("GET messages");
-
-		// USERID nicht korrekt -> evtl falsch von Login abgespeichert;
-		// momentan USERID immer '001' - fixed
 		chat.update();
 		status.setText("GET messages done");
 	}
+	
+	public void puMessage(Message msg) {
+		TextView textView = new TextView((getApplicationContext()));
+		textView.setGravity(Gravity.RIGHT);
+		textView.setText(msg.getSender().getName() + ": " + msg.getMessage());
+		
+		LinearLayout layout = (LinearLayout) findViewById(R.id.scrollLayout);
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.WRAP_CONTENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
+		
+		layout.addView(textView, layoutParams);
+
+	}
 
 	public void updateViews(ArrayList<Message> messages) {
-		if (messages.isEmpty()) {
-			status.setText("Keine neuen Nachrichten");
-			return;
-		}
 		Iterator<Message> iterator = messages.iterator();
 		Message msg = iterator.next();
 		for (int i = 0; i < messages.size(); i++) {
 			TextView textView = new TextView((getApplicationContext()));
-			TextView textView2 = new TextView((getApplicationContext()));
-
+			
+			
 			LinearLayout layout = (LinearLayout) findViewById(R.id.scrollLayout);
 			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -131,15 +123,14 @@ public class YasmeChat extends Activity {
 					LinearLayout.LayoutParams.WRAP_CONTENT,
 					LinearLayout.LayoutParams.WRAP_CONTENT));
 	
-			textView.setText(msg.getSender().getName() + ":");
-			textView2.setText(msg.getMessage());
-			row.addView(textView);
-			row.addView(textView2);
+			textView.setText(msg.getSender().getName() + ": " + msg.getMessage());
 			
-			if (msg.getSender().getId() == Long.parseLong(chat.getUser_id())) {
+			if(msg.getSender().getId() == (long)Long.parseLong(user_id)) {
+				textView.setGravity(Gravity.RIGHT);
 				row.setGravity(Gravity.RIGHT);
 			}
-			layout.addView(row, layoutParams);
+			//row.addView(textView);
+			layout.addView(textView, layoutParams);
 
 			if (iterator.hasNext()) {
 				msg = iterator.next();
