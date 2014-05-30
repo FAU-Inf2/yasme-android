@@ -18,7 +18,7 @@ public class Chat {
 	
 	private ArrayList<Message> messages;
 	private long lastMessageID;
-	//public long index;
+	public long index;
 	
 	private String chat_id;
 	private String user_name;
@@ -35,9 +35,8 @@ public class Chat {
 		this.user_id = user_id;
 		this.activity = activity;
 	
+		//setup Encryption for this chat
 		long creator = Long.parseLong(user_id);
-		//DUMMY-WERTE
-		//TO-DO: richtige Werte einsetzen
 		long recipient = 2L;
 		long devid = 3L;
 		aes = new MessageEncryption(activity, new Id(chat_id), creator, recipient, devid);
@@ -138,14 +137,17 @@ public class Chat {
 				return false;
 			}
 		
+			if (messages.size() - 1 == index) {
+				return false;
+			}
+			int new_index = messages.size() - 1;
+			
 			// decrypt Messages
 			for (Message msg : messages) {
 				msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
 				}
 			
-
 			index = new_index;
-
 			setLastMessageID(Long.toString(messages.get(messages.size() - 1)
 					.getID()));
 			return true;

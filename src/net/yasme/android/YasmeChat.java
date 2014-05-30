@@ -3,7 +3,9 @@ package net.yasme.android;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Id;
 import net.yasme.android.entities.Message;
 import android.app.Activity;
 import android.app.Fragment;
@@ -51,12 +53,6 @@ public class YasmeChat extends Activity {
 			chat = new Chat(chat_id, user_id, url, this);
 		}
 		
-		//setup Encryption for this chat
-		long creator = Long.parseLong(user_id);
-		long recipient = 2L;
-		long devid = 3L;
-		aes = new MessageEncryption(this, new Id(chat_id), creator, recipient, devid);
-		
 	}
 
 	@Override
@@ -87,7 +83,7 @@ public class YasmeChat extends Activity {
 			status.setText("Nichts eingegeben");
 			return;
 		}
-		
+				
 		chat.send(msg);
 		EditMessage.setText("");
 		msg = null;
