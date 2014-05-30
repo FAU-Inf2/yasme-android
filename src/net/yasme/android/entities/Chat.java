@@ -3,87 +3,100 @@ package net.yasme.android.entities;
 import java.util.ArrayList;
 import net.yasme.android.YasmeChat;
 import net.yasme.android.connection.MessageTask;
-import net.yasme.android.encryption.AESEncryption;
+import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.exception.RestServiceException;
 import android.os.AsyncTask;
-
 
 /**
  * Created by robert on 28.05.14.
  */
+//@DatabaseTable(tableName = "chatrooms")
 public class Chat {
-
-	private String chat_id;
+	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
+	public final static String USER_ID = "net.yasme.andriod.USER_ID";
+	
+	//@DatabaseCollection
 	private ArrayList<Message> messages;
-	//private long lastMessageID;
-	public long index;
+	//@DatabaseField
+	private Id lastMessageID;
+	//@DatabasreField(generatedId = true, id = true)
+	private Id chat_id;
 	
 	private String user_name;
-	private String user_id;
+	private Id user_id;
+	String url;
 	
-	private AESEncryption aes;
+	private MessageEncryption aes;
 	private MessageTask messageTask;
 	public YasmeChat activity;
-	
-	
+
 	/** Constructors **/
-	public Chat(String user_name, String user_id, String url, YasmeChat activity) {
-		this.user_name = user_name;
+	public Chat(Id chat_id, Id user_id, String url, YasmeChat activity) {
+		this.chat_id = chat_id;		
 		this.user_id = user_id;
-		aes = new AESEncryption("geheim");
-		messageTask = new MessageTask(url);
 		this.activity = activity;
+	
+		//setup Encryption for this chat
+		long creator = user_id.getId();
+		long recipient = 2L;
+		long devid = 3L;
+		aes = new MessageEncryption(activity, chat_id, creator, recipient, devid);
+
+		messageTask = new MessageTask(url);
+		
+		lastMessageID.setId(0);
 	}
 	
-	
+	public Chat() {
+		// ORMLite needs a no-arg constructor
+	}
+
 	/** Getters **/
-	public String getChat_id() {
+	public Id getChat_id() {
 		return chat_id;
 	}
 
 	public ArrayList<Message> getStoredMessages() {
 		return messages;
 	}
-	
-	public String getUser_name() {
-		return user_name;
-	}
-	
-	public String getUser_id() {
-		return user_id;
-	}
 
 	/** Setters **/
 	public void setMessages(ArrayList<Message> messages) {
 		this.messages = messages;
 	}
-	
-	
+
+	public void setLastMessageID(long newlastMessageID) {
+		lastMessageID.setId(newlastMessageID);
+	}
+
+
 	/** Other methods **/
 	public void send(String msg) {
 		new SendMessageTask().execute(msg, user_name);
-		update();
 	}
-	
+
 	public void update() {
-		new GetMessageTask().execute(user_id);
+		new GetMessageTask().execute(Long.toString(lastMessageID.getId()), Long.toString(user_id.getId()));
 	}
-	
+
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 		String msg;
 
 		protected Boolean doInBackground(String... params) {
 
 			msg = params[0];
-			// encrypt message
-			String msg_encrypted = aes.encrypt(msg);
-
-			// creating message object
-			long uid = Long.parseLong(user_id);
+			
+			Id uid = user_id;
 			boolean result = false;
+			
+			//encrypt Message
+			String msg_encrypted = aes.encrypt(msg);
+			
+			//create Message
+			Message createdMessage = new Message(new User(user_name, uid),
+						msg_encrypted, chat_id, aes.getKeyId());
 			try {
-				result = messageTask.sendMessage(new Message(uid, 2,
-						msg_encrypted, 0));
+				result = messageTask.sendMessage(createdMessage);
 			} catch (RestServiceException e) {
 				System.out.println(e.getMessage());
 			}
@@ -91,53 +104,62 @@ public class Chat {
 		}
 
 		protected void onPostExecute(Boolean result) {
-			if(result) {
+			if (result) {
 				update();
+				activity.getStatus().setText("Gesendet: " + msg);
 			} else {
 				activity.getStatus().setText("Senden fehlgeschlagen");
 			}
 		}
 	}
-	
-	
+
 	private class GetMessageTask extends AsyncTask<String, Void, Boolean> {
 		ArrayList<Message> messages;
 
 		/**
 		 * @return Returns true if it was successful, otherwise false
-		 * @param params [0] is lastMessageID
+		 * @param params
+		 *            [0] is lastMessageID
+		 * @param params
+		 *            [1] is user_id
 		 */
 		protected Boolean doInBackground(String... params) {
 
-			messages = messageTask.getMessage(params[0]);
-
+			try {
+				messages = messageTask.getMessage(params[0], params[1]);
+			} catch (RestServiceException e) {
+				e.printStackTrace();
+			}
+			
+			if(messages == null) {
+				return false;
+				}
 			if (messages.isEmpty()) {
-				return false;
-			}
-			if (messages.size() - 1 == index) {
-				return false;
-			}
-			int new_index = messages.size() - 1;
-
-			for (int i = 0; i <= index; i++) {
-				messages.remove(0);
-			}
-
+				 return false;
+				 }
+			
 			// decrypt Messages
 			for (Message msg : messages) {
-				msg.setMessage(new String(aes.decrypt(msg.getMessage())));
+				msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
 			}
-			index = new_index;
+			
+			
 			return true;
 		}
 
 		/**
 		 * Fills the TextViews with the messages
-		 * @param Gets the result of doInBackground
+		 * - maybe this should be done also in doInBackground
+		 * 
+		 * @param Gets
+		 *            the result of doInBackground
+		 * @param Gets
+		 *            the result of doInBackground
 		 */
 		protected void onPostExecute(Boolean result) {
-			if(result) {
+			if (result) {
 				activity.updateViews(messages);
+				setLastMessageID(messages.size() + lastMessageID.getId());	
 			} else {
 				activity.getStatus().setText("Keine neuen Nachrichten");
 			}

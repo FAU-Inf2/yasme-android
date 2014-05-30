@@ -31,7 +31,7 @@ public class YasmeHome extends Activity {
 		}
 		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
 		user_name = storage.getString(USER_NAME, "anonym");
-		user_id = storage.getString(USER_ID, "001");
+		user_id = storage.getString(USER_ID, "0");
 	}
 
 	@Override

@@ -8,8 +8,13 @@ buildscript {
 }
 apply plugin: 'android'
 
+//repositories {
+//	mavenCentral()
+//}
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+   	//'com.j256.ormlite:ormlite-core:4.48'
+	//'com.j256.ormlite:ormlite-android:4.48'
 }
 
 android {

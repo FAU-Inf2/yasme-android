@@ -9,38 +9,32 @@ import java.util.Date;
 
 public class Message implements Serializable {
 
-	private long id;
-	private long sender;
-	private long recipient;
+	private Id id;
+	private Id chat;
+	private User sender;
 	private Date dateSent;
 	private String message;
 	private long keyId;
-	private long chatID;
 
 	/** Constructors **/
 	public Message() {
 	}
 
-	public Message(long sender, long recipient, String message, long chatID) {
-		this(sender, recipient, message, new Date(), chatID);
+	public Message(User sender, String message, Id chatid, long keyid) {
+		this(sender, message, new Date(), chatid, keyid);
 	}
 
-	public Message(long sender, long recipient, String message, Date dateSent,
-			long chatID) {
+	public Message(User sender, String message, Date dateSent, Id chat, long keyid) {
 		this.sender = sender;
-		this.recipient = recipient;
 		this.message = message;
 		this.dateSent = dateSent;
-		this.chatID = chatID;
+		this.chat = chat;
+		this.keyId = keyid;
 	}
 
 	/** Getters **/
-	public long getSender() {
+	public User getSender() {
 		return sender;
-	}
-
-	public long getRecipient() {
-		return recipient;
 	}
 
 	public String getMessage() {
@@ -55,21 +49,24 @@ public class Message implements Serializable {
 		return keyId;
 	}
 
-	public long getChatID() {
-		return chatID;
+	public Id getChat() {
+		return chat;
+	}
+
+	public Id getID() {
+		return id;
 	}
 
 	/** Setters **/
-
-	public void setChatID(long chatID) {
-		this.chatID = chatID;
+	public void setChat(Id chat) {
+		this.chat = chat;
 	}
 
 	public void setMessage(String message) {
 		this.message = message;
 	}
 
-	public void setID(int id) {
+	public void setID(Id id) {
 		this.id = id;
 	}
 
@@ -77,12 +74,8 @@ public class Message implements Serializable {
 		this.dateSent = dateSent;
 	}
 
-	public void setSender(long sender) {
+	public void setSender(User sender) {
 		this.sender = sender;
-	}
-
-	public void setRecipient(long recipient) {
-		this.recipient = recipient;
 	}
 
 	public void setKeyID(long keyId) {

@@ -2,7 +2,9 @@ package net.yasme.android;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Id;
 import net.yasme.android.entities.Message;
 import android.app.Activity;
 import android.app.Fragment;
@@ -18,14 +20,17 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 public class YasmeChat extends Activity {
 	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
+	public final static String CHAT_ID = "net.yasme.andriod.CHAT_ID";
+
 
 	private EditText EditMessage;
 	private TextView status;
 	private Chat chat;
+	private String user_name;
+	private Id user_id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +42,19 @@ public class YasmeChat extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		Intent intent = getIntent();
-		String user_name = intent.getStringExtra(USER_NAME);
-		String user_id = intent.getStringExtra(USER_ID);
+		user_name = intent.getStringExtra(USER_NAME);
+		
+		String user_string = intent.getStringExtra(USER_ID);
+		user_id = new Id(Long.parseLong(user_string));
 		String url = getResources().getString(R.string.server_url);
-		chat = new Chat(user_name, user_id, url, this);
+		int chat_int = intent.getIntExtra(CHAT_ID, 1);
+		Id chat_id = new Id(chat_int);
+		if(false) {
+			//TODO: existierenden Chat verwenden
+		} else {
+			chat = new Chat(chat_id, user_id, url, this);
+		}
+		
 	}
 
 	@Override
@@ -61,7 +75,7 @@ public class YasmeChat extends Activity {
 	private void initializeViews() {
 		EditMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
-		status.setText("Eingeloggt: " + chat.getUser_name());
+		status.setText("Eingeloggt: " + user_name);
 	}
 
 	public void send(View view) {
@@ -71,34 +85,25 @@ public class YasmeChat extends Activity {
 			status.setText("Nichts eingegeben");
 			return;
 		}
+				
 		chat.send(msg);
 		EditMessage.setText("");
-
-		status.setText("Gesendet: " + msg);
 		msg = null;
-
 	}
 
 	public void update(View view) {
 		status.setText("GET messages");
-
-		// TODO: USERID nicht korrekt -> evtl falsch von Login abgespeichert;
-		// momentan USERID immer '001' - fixed
 		chat.update();
 		status.setText("GET messages done");
 	}
 
 	public void updateViews(ArrayList<Message> messages) {
-		if (messages.isEmpty()) {
-			status.setText("Keine neuen Nachrichten");
-			return;
-		}
 		Iterator<Message> iterator = messages.iterator();
 		Message msg = iterator.next();
 		for (int i = 0; i < messages.size(); i++) {
 			TextView textView = new TextView((getApplicationContext()));
-			TextView textView2 = new TextView((getApplicationContext()));
-
+			
+			
 			LinearLayout layout = (LinearLayout) findViewById(R.id.scrollLayout);
 			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -108,14 +113,14 @@ public class YasmeChat extends Activity {
 			row.setLayoutParams(new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT,
 					LinearLayout.LayoutParams.WRAP_CONTENT));
-
-			textView.setText(msg.getSender() + ":");
-			textView2.setText(msg.getMessage());
-			row.addView(textView);
-			row.addView(textView2);
-			if (msg.getSender() == Long.parseLong(chat.getUser_id())) {
+	
+			textView.setText(msg.getSender().getName() + ": " + msg.getMessage());
+			
+			if(msg.getSender().getId().getId() == user_id.getId()) {
+				textView.setGravity(Gravity.RIGHT);
 				row.setGravity(Gravity.RIGHT);
 			}
+			row.addView(textView);
 			layout.addView(row, layoutParams);
 
 			if (iterator.hasNext()) {

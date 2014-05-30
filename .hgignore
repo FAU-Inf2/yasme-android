@@ -5,3 +5,4 @@ gen/
 .metadata
 .project
 .gradle
+.classpath

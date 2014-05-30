@@ -109,7 +109,11 @@ public class UserTask {
 			case 200:
 				Header userID = httpResponse.getFirstHeader("userId");
 				Header token = httpResponse.getFirstHeader("Authorization");
-				System.out.println("Login Success");
+
+				// DEBUG:
+				System.out.println("Login successful. Your UserID is "
+						+ userID.getValue());
+
 				return new String[] { userID.getValue(), token.getValue() };
 
 			case 401:

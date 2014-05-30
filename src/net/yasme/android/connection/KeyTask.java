@@ -39,10 +39,14 @@ public class KeyTask {
 			JSONObject obj = new JSONObject();
 
 			obj.put("id", messageKey.getId());
-
-			/*
-			 * To Do: All propertys to JSON
-			 */
+			obj.put("creator", messageKey.getCreator());
+			obj.put("devId", messageKey.getDevId());
+			obj.put("encInfoId", messageKey.getEncInfoId());
+			obj.put("recipient", messageKey.getRecipient());
+			obj.put("encInfo", messageKey.getEncInfo());
+			obj.put("key", messageKey.getKey());
+			obj.put("sign", messageKey.getSign());
+			obj.put("encType", messageKey.getEncType());
 
 			String json = obj.toString();
 
@@ -60,7 +64,8 @@ public class KeyTask {
 				/**** DEBUG *******/
 				BufferedReader rd = new BufferedReader(new InputStreamReader(
 						httpResponse.getEntity().getContent()));
-				System.out.println(rd.readLine());
+				System.out.println("[???]: "+rd.readLine());
+
 				/**** DEBUG*END ***/
 
 				return true;
@@ -128,7 +133,7 @@ public class KeyTask {
 		try {
 
 			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(url + "/id/" + userID);
+			HttpGet request = new HttpGet(url + "/msgkey/id/" + userID);
 			request.addHeader("accept", "application/json");
 
 			HttpResponse response = client.execute(request);

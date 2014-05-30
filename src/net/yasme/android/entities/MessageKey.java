@@ -5,6 +5,8 @@ public class MessageKey {
 	private long id = -1;
 	private long creator = -1;
 	private long recipient = -1;
+	//TO-DO: chat ID must be added
+	private long chatid = -1;
 	private long devId = -1;
 	private String key = "";
 	private byte encType = -1;

@@ -12,11 +12,12 @@ import javax.crypto.spec.SecretKeySpec;
 
 import android.util.Base64;
 
+
+
 public class AESEncryption {
 	
 	private SecretKey key = null;
 	private IvParameterSpec iv = null;
-	
 	
 	public AESEncryption(){
 		//generate AES-Key and Inital-Vector, if necessary
@@ -30,7 +31,11 @@ public class AESEncryption {
 		//generate AES-Key from given password
 		key = generateKey(password);
 		iv = generateIV();
+	}
 	
+	public AESEncryption(byte[] key, byte[] iv){
+		this.key = new SecretKeySpec(key,"AES");
+		this.iv = new IvParameterSpec(iv);
 	}
 	
 	//generate Initial-Vector
@@ -82,21 +87,39 @@ public class AESEncryption {
 		return Base64.encodeToString(key.getEncoded(), Base64.DEFAULT);
 	}
 	
+	public byte[] getIVinByte(){
+		return iv.getIV();
+	}
+	
+	public byte[] getKeyinByte(){
+		return key.getEncoded();
+	}
+	
 	//encrypt
 	public String encrypt(String text) {
 		byte[] encrypted = null;
 		try {
 			encrypted = crypt(text.getBytes("UTF-8"), Cipher.ENCRYPT_MODE);
-		} catch (UnsupportedEncodingException e) {}
+			return Base64.encodeToString(encrypted, Base64.DEFAULT);
+		} catch (Exception e){
+			System.out.println(e.getMessage());
+			return "Couldn't be encrypted: "+ text;
+		}
 		
-		return Base64.encodeToString(encrypted, Base64.DEFAULT);
 	}
 	//decrypt
 	public String decrypt(String encrypted) {
-		byte[] encrypted_decode = Base64.decode(encrypted.getBytes(), Base64.DEFAULT);
-		return new String(crypt(encrypted_decode, Cipher.DECRYPT_MODE));
-		
+		try{
+			byte[] encrypted_decode = Base64.decode(encrypted.getBytes(), Base64.DEFAULT);
+			return new String(crypt(encrypted_decode, Cipher.DECRYPT_MODE));
+		} catch (Exception e){
+			System.out.println(e.getMessage());
+			return "Couldn't be decrypted: "+ encrypted;
+		}
+				
 	}
+	
+	
 			
 	// One method for both. "mode" decides, whether it makes encryption or decryption.
 		public byte[] crypt(byte[] in, int mode) {
@@ -110,5 +133,10 @@ public class AESEncryption {
 			} catch (Exception e) {}
 			return out;
 		}
-			
+		
+		
+		
 }
+
+
+
