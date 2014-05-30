@@ -70,8 +70,6 @@ public class Chat {
 	/** Other methods **/
 	public void send(String msg) {
 		new SendMessageTask().execute(msg, user_name);
-		incLastMessageID();
-		//update();
 	}
 
 	public void update() {
@@ -91,10 +89,11 @@ public class Chat {
 			//Message verschlüsseln
 			String msg_encrypted = aes.encrypt(msg);
 			
+			//create Message
+			Message createdMessage = new Message(new User(user_name, uid),
+						msg_encrypted, Long.parseLong(chat_id), aes.getKeyId());
 			try {
-				result = messageTask
-						.sendMessage(new Message(new User(user_name, uid),
-								msg_encrypted, Long.parseLong(chat_id), aes.getKeyId()));
+				result = messageTask.sendMessage(createdMessage);
 			} catch (RestServiceException e) {
 				System.out.println(e.getMessage());
 			}
@@ -139,7 +138,7 @@ public class Chat {
 			// decrypt Messages
 			for (Message msg : messages) {
 				msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
-				}
+			}
 			
 			
 			return true;
@@ -157,7 +156,7 @@ public class Chat {
 		protected void onPostExecute(Boolean result) {
 			if (result) {
 				activity.updateViews(messages);
-				setLastMessageID(messages.size() - 1 + lastMessageID);
+				setLastMessageID(messages.size() + lastMessageID);
 				//activity.getStatus().setText(Integer.toString(messages.size()));
 				//activity.getStatus().setText("LastMessageID: " + lastMessageID);
 			} else {

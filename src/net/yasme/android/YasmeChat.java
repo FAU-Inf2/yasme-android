@@ -2,10 +2,7 @@ package net.yasme.android;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.Id;
 import net.yasme.android.entities.Message;
 import android.app.Activity;
 import android.app.Fragment;
@@ -94,20 +91,6 @@ public class YasmeChat extends Activity {
 		chat.update();
 		status.setText("GET messages done");
 	}
-	
-	public void puMessage(Message msg) {
-		TextView textView = new TextView((getApplicationContext()));
-		textView.setGravity(Gravity.RIGHT);
-		textView.setText(msg.getSender().getName() + ": " + msg.getMessage());
-		
-		LinearLayout layout = (LinearLayout) findViewById(R.id.scrollLayout);
-		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.WRAP_CONTENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT);
-		
-		layout.addView(textView, layoutParams);
-
-	}
 
 	public void updateViews(ArrayList<Message> messages) {
 		Iterator<Message> iterator = messages.iterator();
@@ -132,8 +115,8 @@ public class YasmeChat extends Activity {
 				textView.setGravity(Gravity.RIGHT);
 				row.setGravity(Gravity.RIGHT);
 			}
-			//row.addView(textView);
-			layout.addView(textView, layoutParams);
+			row.addView(textView);
+			layout.addView(row, layoutParams);
 
 			if (iterator.hasNext()) {
 				msg = iterator.next();
