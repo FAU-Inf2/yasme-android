@@ -34,13 +34,13 @@ public class Chat {
 		this.user_name = user_name;
 		this.user_id = user_id;
 		this.url = url;
+	
+		long creator = Long.parseLong(user_id);
 		//DUMMY-WERTE
 		//TO-DO: richtige Werte einsetzen
-		Id chatid = new Id(1);
-		long creator = 1L;
 		long recipient = 2L;
 		long devid = 3L;
-		aes = new MessageEncryption(activity, chatid, creator, recipient, devid);
+		aes = new MessageEncryption(activity, new Id(chat_id), creator, recipient, devid);
 
 
 
@@ -94,17 +94,14 @@ public class Chat {
 		protected Boolean doInBackground(String... params) {
 
 			msg = params[0];
-			// encrypt message
-			String msg_encrypted = aes.encrypt(msg);
-			//String msg_encrypted = msg;
-
+			
 			// creating message object
 			long uid = Long.parseLong(user_id);
 			boolean result = false;
 			try {
 				result = messageTask
 						.sendMessage(new Message(new User(user_name, uid),
-								msg_encrypted, Long.parseLong(chat_id)));
+								msg, Long.parseLong(chat_id)));
 				// result = messageTask.sendMessage(new Message(uid,
 				// msg_encrypted, Long.parseLong(chat_id)));
 

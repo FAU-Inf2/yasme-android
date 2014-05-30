@@ -40,11 +40,11 @@ public class MessageEncryption {
 
 	
 	public MessageEncryption(Context context, Id chatid, long creator, long recipient, long devid){
-		//TODO: set Ressource ID for ChatKeyMapping
 		this.context = context;
 		this.chatid = chatid;
-		SharedPreferences sharedPref = context.getSharedPreferences("ChatKeyMapping",Context.MODE_PRIVATE);
 		
+		//TODO: set Ressource ID for ChatKeyMapping
+		SharedPreferences sharedPref = context.getSharedPreferences("ChatKeyMapping",Context.MODE_PRIVATE);
 		
 		//if no old key for this chat, then generate a new one, beginning with ID "1"
 		if (!sharedPref.contains(Long.toString(chatid.getId()))){
@@ -52,8 +52,10 @@ public class MessageEncryption {
 			aes = new AESEncryption("geheim");
 			saveKey(context, chatid, keyid);
 			sendKey(context.getResources().getString(R.string.server_url), chatid, keyid, creator, recipient, devid);
-			System.out.println("[???]: Key wurde erstellt und gespeichert");
+			//###DEBUG
+			System.out.println("[???]: KeyID "+keyid.getId()+" für Chat "+chatid.getId() + " wurde erstellt und gespeichert");
 			System.out.println("[???]: Key wurde gesendet");
+			//###
 		}
 		
 		//if old key is already available
@@ -73,7 +75,10 @@ public class MessageEncryption {
 				this.currentiv = Base64.decode(base64iv.getBytes(), Base64.DEFAULT);
 				
 				aes = new AESEncryption(currentkey, currentiv);
-				System.out.println("[???]: Key wurde geladen");
+				//###DEBUG
+				System.out.println("[???]: Key "+ keyid.getId()+" für Chat "+ chatid.getId()+" wurde geladen");
+				///###
+
 
 			}
 			
@@ -90,7 +95,7 @@ public class MessageEncryption {
 	}
 	
 	public String decrypt(String encrypted, long keyid){
-		//is it the right key or is a older needed?
+		System.out.println("[???] Decrypt with:");
 		System.out.println("[???] thiskeyid:"+this.keyid.getId());
 		System.out.println("[???] keyid:"+keyid);
 

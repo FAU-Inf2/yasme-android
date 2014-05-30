@@ -101,7 +101,6 @@ public class AESEncryption {
 	}
 	//decrypt
 	public String decrypt(String encrypted) {
-		System.out.println("[???]: decrypt"+encrypted);
 		try{
 			byte[] encrypted_decode = Base64.decode(encrypted.getBytes(), Base64.DEFAULT);
 			return new String(crypt(encrypted_decode, Cipher.DECRYPT_MODE));
