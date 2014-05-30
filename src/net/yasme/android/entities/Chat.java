@@ -157,14 +157,7 @@ public class Chat {
 			// decrypt Messages
 			for (Message msg : messages) {
 				msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
-				//###DEBUG
-				System.out.println("[???]: KeyId for Decryption:" +msg.getKeyID());
-				//###
-				//DUMMY-Wert
-				//msg.setMessage(new String(aes.decrypt(msg.getMessage(), 1L)));
-
-				//DEBUG System.out.println("[???] :"+msg.getMessage());
-			}
+				}
 			
 
 			index = new_index;

@@ -58,7 +58,6 @@ public class YasmeChat extends Activity {
 		long devid = 3L;
 		aes = new MessageEncryption(this, new Id(chat_id), creator, recipient, devid);
 		
-
 	}
 
 	@Override
