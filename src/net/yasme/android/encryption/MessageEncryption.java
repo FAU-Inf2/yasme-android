@@ -9,11 +9,11 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Base64;
 
-//um den Schlüssel zum Verschlüsseln abzurufen muss bekannt sein, mit welcher KeyId der Chat verschlüsselt wird
-//hier wird vorausgesetzt, dass zum Verschlüsseln nur ein Key vorhanden is
-//ACHTUNG: Zum Entschlüsseln können aber mehrere vorhanden sein
-//Tabelle für Chats --> KeyID nötig
-//Tabelle für KeyID --> Key nötig
+//um den Schluessel zum Verschluesseln abzurufen muss bekannt sein, mit welcher KeyId der Chat verschluesselt wird
+//hier wird vorausgesetzt, dass zum Verschluesseln nur ein Key vorhanden is
+//ACHTUNG: Zum Entschluesseln koennen aber mehrere vorhanden sein
+//Tabelle fuer Chats --> KeyID noetig
+//Tabelle fuer KeyID --> Key noetig
 
 
 //ChatKeyMapping						Chat-ID
@@ -21,7 +21,7 @@ import android.util.Base64;
 //---------------------					--------------------------------
 //	2		|	1							1	|	KEY, IV
 
-//WICHTIG: Bevor Nachrichten vom Server geholt werden, müssen neue Keys vom Server geholt werden und diese Tabellen aktualisiert werden
+//WICHTIG: Bevor Nachrichten vom Server geholt werden, muessen neue Keys vom Server geholt werden und diese Tabellen aktualisiert werden
 
 public class MessageEncryption {
 
@@ -53,7 +53,7 @@ public class MessageEncryption {
 			saveKey(context, chatid, keyid);
 			sendKey(context.getResources().getString(R.string.server_url), chatid, keyid, creator, recipient, devid);
 			//###DEBUG
-			System.out.println("[???]: KeyID "+keyid.getId()+" für Chat "+chatid.getId() + " wurde erstellt und gespeichert");
+			System.out.println("[???]: KeyID "+keyid.getId()+" fï¿½r Chat "+chatid.getId() + " wurde erstellt und gespeichert");
 			System.out.println("[???]: Key wurde gesendet");
 			//###
 		}
@@ -76,7 +76,7 @@ public class MessageEncryption {
 				
 				aes = new AESEncryption(currentkey, currentiv);
 				//###DEBUG
-				System.out.println("[???]: Key "+ keyid.getId()+" für Chat "+ chatid.getId()+" wurde geladen");
+				System.out.println("[???]: Key "+ keyid.getId()+" fï¿½r Chat "+ chatid.getId()+" wurde geladen");
 				///###
 
 
@@ -116,7 +116,7 @@ public class MessageEncryption {
 				
 				//get older key needed for decryption
 				aes = new AESEncryption(key, iv);
-				System.out.println("[???]: alter Key wurde zum Entschlüsseln geladen");
+				System.out.println("[???]: alter Key wurde zum Entschlï¿½sseln geladen");
 				String decrypted = aes.decrypt(encrypted);
 				
 				//restore the current key needed for encryption

@@ -1,7 +1,6 @@
 package net.yasme.android.entities;
 
 import java.util.ArrayList;
-
 import net.yasme.android.YasmeChat;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
@@ -11,17 +10,17 @@ import android.os.AsyncTask;
 /**
  * Created by robert on 28.05.14.
  */
-// @DatabaseTable
+//@DatabaseTable
 public class Chat {
 	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 	
 	private ArrayList<Message> messages;
-	private long lastMessageID;
+	private Id lastMessageID;
 	
-	private String chat_id;
+	private Id chat_id;
 	private String user_name;
-	private String user_id;
+	private Id user_id;
 	String url;
 	
 	private MessageEncryption aes;
@@ -29,24 +28,24 @@ public class Chat {
 	public YasmeChat activity;
 
 	/** Constructors **/
-	public Chat(int chat_id, String user_id, String url, YasmeChat activity) {
-		this.chat_id = Integer.toString(chat_id);		
+	public Chat(Id chat_id, Id user_id, String url, YasmeChat activity) {
+		this.chat_id = chat_id;		
 		this.user_id = user_id;
 		this.activity = activity;
 	
 		//setup Encryption for this chat
-		long creator = Long.parseLong(user_id);
+		long creator = user_id.getId();
 		long recipient = 2L;
 		long devid = 3L;
-		aes = new MessageEncryption(activity, new Id(chat_id), creator, recipient, devid);
+		aes = new MessageEncryption(activity, chat_id, creator, recipient, devid);
 
 		messageTask = new MessageTask(url);
 		
-		lastMessageID = 0;
+		lastMessageID.setId(0);
 	}
 
 	/** Getters **/
-	public String getChat_id() {
+	public Id getChat_id() {
 		return chat_id;
 	}
 
@@ -60,12 +59,9 @@ public class Chat {
 	}
 
 	public void setLastMessageID(long newlastMessageID) {
-		this.lastMessageID = newlastMessageID;
+		lastMessageID.setId(newlastMessageID);
 	}
-	
-	public void incLastMessageID() {
-		lastMessageID++;
-	}
+
 
 	/** Other methods **/
 	public void send(String msg) {
@@ -73,7 +69,7 @@ public class Chat {
 	}
 
 	public void update() {
-		new GetMessageTask().execute(Long.toString(lastMessageID), user_id);
+		new GetMessageTask().execute(Long.toString(lastMessageID.getId()), Long.toString(user_id.getId()));
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -83,15 +79,15 @@ public class Chat {
 
 			msg = params[0];
 			
-			long uid = Long.parseLong(user_id);
+			Id uid = user_id;
 			boolean result = false;
 			
-			//Message verschlüsseln
+			//encrypt Message
 			String msg_encrypted = aes.encrypt(msg);
 			
 			//create Message
 			Message createdMessage = new Message(new User(user_name, uid),
-						msg_encrypted, Long.parseLong(chat_id), aes.getKeyId());
+						msg_encrypted, chat_id, aes.getKeyId());
 			try {
 				result = messageTask.sendMessage(createdMessage);
 			} catch (RestServiceException e) {
@@ -156,7 +152,7 @@ public class Chat {
 		protected void onPostExecute(Boolean result) {
 			if (result) {
 				activity.updateViews(messages);
-				setLastMessageID(messages.size() + lastMessageID);
+				setLastMessageID(messages.size() + lastMessageID.getId());
 				//activity.getStatus().setText(Integer.toString(messages.size()));
 				//activity.getStatus().setText("LastMessageID: " + lastMessageID);
 			} else {
