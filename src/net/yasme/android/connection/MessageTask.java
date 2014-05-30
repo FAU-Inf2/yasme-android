@@ -40,6 +40,7 @@ public class MessageTask {
 			msg.put("sender", message.getSender().getId());
 			msg.put("message", message.getMessage());
 			msg.put("chat", message.getChat());
+			//msg.put("keyid", message.getKeyID());
 
 			String json = msg.toString();
 
@@ -115,8 +116,10 @@ public class MessageTask {
 				JSONObject obj = jArray.getJSONObject(i);
 				JSONObject sender = obj.getJSONObject("sender");
 
+				//messages.add(new Message(new User(sender.getString("name"), sender.getLong("id")), obj
+				//		.getString("message"), 1, sender.getLong("keyid")));
 				messages.add(new Message(new User(sender.getString("name"), sender.getLong("id")), obj
-						.getString("message"), 1));
+						.getString("message"), 1, 1));
 			}
 
 		} catch (IllegalStateException e) {

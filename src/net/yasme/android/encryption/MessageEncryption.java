@@ -129,6 +129,10 @@ public class MessageEncryption {
 
 	}
 	
+	public long getKeyId(){
+		return this.keyid.getId();
+	}
+	
 	//send Key to server
 	public boolean sendKey(String url, Id chatid, Id keyid, long creator, long recipient, long devid){
 		this.url = url;

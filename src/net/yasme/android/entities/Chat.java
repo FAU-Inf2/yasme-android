@@ -101,7 +101,7 @@ public class Chat {
 			try {
 				result = messageTask
 						.sendMessage(new Message(new User(user_name, uid),
-								msg, Long.parseLong(chat_id)));
+								msg, Long.parseLong(chat_id), aes.getKeyId()));
 				// result = messageTask.sendMessage(new Message(uid,
 				// msg_encrypted, Long.parseLong(chat_id)));
 
@@ -156,9 +156,12 @@ public class Chat {
 		
 			// decrypt Messages
 			for (Message msg : messages) {
-				//msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
+				msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
+				//###DEBUG
+				System.out.println("[???]: KeyId for Decryption:" +msg.getKeyID());
+				//###
 				//DUMMY-Wert
-				msg.setMessage(new String(aes.decrypt(msg.getMessage(), 1L)));
+				//msg.setMessage(new String(aes.decrypt(msg.getMessage(), 1L)));
 
 				//DEBUG System.out.println("[???] :"+msg.getMessage());
 			}
