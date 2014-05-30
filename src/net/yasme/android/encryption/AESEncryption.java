@@ -87,6 +87,14 @@ public class AESEncryption {
 		return Base64.encodeToString(key.getEncoded(), Base64.DEFAULT);
 	}
 	
+	public byte[] getIVinByte(){
+		return iv.getIV();
+	}
+	
+	public byte[] getKeyinByte(){
+		return key.getEncoded();
+	}
+	
 	//encrypt
 	public String encrypt(String text) {
 		byte[] encrypted = null;

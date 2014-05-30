@@ -12,28 +12,33 @@ import android.util.Base64;
 //um den Schlüssel zum Verschlüsseln abzurufen muss bekannt sein, mit welcher KeyId der Chat verschlüsselt wird
 //hier wird vorausgesetzt, dass zum Verschlüsseln nur ein Key vorhanden is
 //ACHTUNG: Zum Entschlüsseln können aber mehrere vorhanden sein
-//Tabelle für Chats --> KeyID nötig
-//Tabelle für KeyID --> Key nötig
+//Mapping: Chats --> KeyID
+//Tabelle: KeyID --> Key
 
 
-//ChatKeyMapping						Chat-ID
+//ChatKeyMapping						Chat-ID: 2
 //Chat-ID	|	Key-ID					Key-ID	|	Key
 //---------------------					--------------------------------
 //	2		|	1							1	|	KEY, IV
+//											2	| 	KEY, IV
 
-//WICHTIG: Bevor Nachrichten vom Server geholt werden, müssen neue Keys vom Server geholt werden und diese Tabellen aktualisiert werden
+
+
+//TO-DO: Bevor Nachrichten vom Server geholt werden, müssen neue Keys vom Server geholt werden und diese Tabellen aktualisiert werden
 
 public class MessageEncryption {
 
 	Id keyid; //contains the latest keyid for encryption
-	byte[] currentkey; //needed for restoring the current key
-	byte[] currentiv;
+	byte[] currentkey; //needed for restoring the current key, if decryption need more than one key
+	byte[] currentiv; //needed for restoring the current IV, if decryption need more than one key
 	Id chatid;
 	long creator;
 	long recipient;
 	long devid;
 	String url;
 	Context context;
+	
+	private final String CHATKEYMAPPING = "ChatKeyMapping"; //tablename for chatkeymapping
 
 	AESEncryption aes; 
 	private KeyTask keytask;
@@ -43,8 +48,7 @@ public class MessageEncryption {
 		this.context = context;
 		this.chatid = chatid;
 		
-		//TODO: set Ressource ID for ChatKeyMapping
-		SharedPreferences sharedPref = context.getSharedPreferences("ChatKeyMapping",Context.MODE_PRIVATE);
+		SharedPreferences sharedPref = context.getSharedPreferences(CHATKEYMAPPING,Context.MODE_PRIVATE);
 		
 		//if no old key for this chat, then generate a new one, beginning with ID "1"
 		if (!sharedPref.contains(Long.toString(chatid.getId()))){
@@ -52,9 +56,9 @@ public class MessageEncryption {
 			aes = new AESEncryption("geheim");
 			saveKey(context, chatid, keyid);
 			sendKey(context.getResources().getString(R.string.server_url), chatid, keyid, creator, recipient, devid);
+			
 			//###DEBUG
-			System.out.println("[???]: KeyID "+keyid.getId()+" für Chat "+chatid.getId() + " wurde erstellt und gespeichert");
-			System.out.println("[???]: Key wurde gesendet");
+			System.out.println("[???]: KeyID "+keyid.getId()+" für Chat "+chatid.getId() + " wurde erstellt und gespeichert und an Server gesendet");
 			//###
 		}
 		
@@ -66,20 +70,16 @@ public class MessageEncryption {
 			keyid = new Id(keyidfromstorage);
 			
 			//get Key from storage
-			String[] base64arr = getKeyfromLocalStorage(context, chatid, keyid);
+			byte[][] keydata = getKeyfromLocalStorage(context, chatid, keyid);
 			//if Key is available
-			if(base64arr != null){
-				String base64key = base64arr[0];
-				String base64iv = base64arr[1];
-				this.currentkey = Base64.decode(base64key.getBytes(), Base64.DEFAULT);
-				this.currentiv = Base64.decode(base64iv.getBytes(), Base64.DEFAULT);
+			if(keydata != null){
+				this.currentkey = keydata[0];
+				this.currentiv = keydata[1];
 				
 				aes = new AESEncryption(currentkey, currentiv);
 				//###DEBUG
 				System.out.println("[???]: Key "+ keyid.getId()+" für Chat "+ chatid.getId()+" wurde geladen");
 				///###
-
-
 			}
 			
 			//TO-DO:
@@ -106,13 +106,11 @@ public class MessageEncryption {
 		//another key is needed
 		else{
 			//get Key from storage
-			String[] base64arr = getKeyfromLocalStorage(context, chatid, new Id(keyid));
+			byte[][] keydata = getKeyfromLocalStorage(context, chatid, new Id(keyid));
 			//if Key is available
-			if(base64arr != null){
-				String base64key = base64arr[0];
-				String base64iv = base64arr[1];
-				byte[] key = Base64.decode(base64key.getBytes(), Base64.DEFAULT);
-				byte[] iv = Base64.decode(base64iv.getBytes(), Base64.DEFAULT);
+			if(keydata != null){
+				byte[] key = keydata[0];
+				byte[] iv = keydata[1];
 				
 				//get older key needed for decryption
 				aes = new AESEncryption(key, iv);
@@ -148,7 +146,7 @@ public class MessageEncryption {
 	//save needed key for chatid, and save key for keyid
 	public void saveKey(Context context, Id chatid, Id keyid){
 		SharedPreferences keyPref = context.getSharedPreferences(Long.toString(chatid.getId()),Context.MODE_PRIVATE);
-		SharedPreferences chatPref = context.getSharedPreferences("ChatKeyMapping",Context.MODE_PRIVATE);
+		SharedPreferences chatPref = context.getSharedPreferences(CHATKEYMAPPING,Context.MODE_PRIVATE);
 
 		SharedPreferences.Editor keyeditor = keyPref.edit();
 		SharedPreferences.Editor chateditor = chatPref.edit();
@@ -159,18 +157,36 @@ public class MessageEncryption {
 
 		keyeditor.commit();	
 		chateditor.commit();	
+		
+		//update current key
+		this.currentkey = aes.getKeyinByte();
+		this.currentiv = aes.getIVinByte();
 
 	}
 	
-	public String[] getKeyfromLocalStorage(Context context, Id chatid, Id keyid){
+	public byte[][] getKeyfromLocalStorage(Context context, Id chatid, Id keyid){
 		SharedPreferences sharedPref = context.getSharedPreferences(Long.toString(chatid.getId()),Context.MODE_PRIVATE);
 		if(sharedPref.contains(Long.toString(keyid.getId()))){
 			String base64 = sharedPref.getString(Long.toString(keyid.getId()), "");
-			String[] base64arr = base64.split(",");
+						
+			//if Key is available
+			if(base64 != ""){
+				String[] base64arr = base64.split(",");
+				String base64key = base64arr[0];
+				String base64iv = base64arr[1];
+				
+				//convert to byte
+				byte[][] keydata = new byte[2][16];
+				keydata[0] = Base64.decode(base64key.getBytes(), Base64.DEFAULT);
+				keydata[1] = Base64.decode(base64iv.getBytes(), Base64.DEFAULT);
 			
-			//[0] --> Key in Base64, [1] --> IV in Base64
-			return base64arr;
+				//[0] --> Key in Base64, [1] --> IV in Base64
+				return keydata;
+			}
+			//Key is not available
+			return null;
 		}
+		//Key is not available
 		return null;
 		
 	}
@@ -200,8 +216,7 @@ public class MessageEncryption {
 		}
 
 		protected void onPostExecute(Boolean result) {
-			//TO-DO
-			//save Key on local device
+			
 		}
 	}
 }
