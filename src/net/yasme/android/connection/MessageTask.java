@@ -3,6 +3,7 @@ package net.yasme.android.connection;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import net.yasme.android.entities.Id;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.MessageError;
@@ -117,7 +118,7 @@ public class MessageTask {
 				JSONObject obj = jArray.getJSONObject(i);
 				JSONObject sender = obj.getJSONObject("sender");
 
-				messages.add(new Message(new User(sender.getString("name"), sender.getLong("id")), obj.getString("message"), 1, obj.getLong("keyID")));
+				messages.add(new Message(new User(sender.getString("name"), new Id(sender.getLong("id"))), obj.getString("message"), new Id(1), obj.getLong("keyID")));
 			}
 
 		} catch (IllegalStateException e) {
