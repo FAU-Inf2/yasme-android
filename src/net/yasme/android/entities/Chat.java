@@ -44,7 +44,7 @@ public class Chat {
 
 		messageTask = new MessageTask(url);
 		
-		lastMessageID.setId(0);
+		lastMessageID = new Id(0);
 	}
 	
 	public Chat() {
