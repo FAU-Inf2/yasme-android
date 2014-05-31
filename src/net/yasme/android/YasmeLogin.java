@@ -7,11 +7,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -19,6 +22,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,19 +113,62 @@ public class YasmeLogin extends Activity {
 					public void onClick(View view) {
 						// TODO: register-Methode
 						// zusätzliche email-View erzeugen
-						// newView();
-						attemptLogin();
+						registerDialog();
 					}
 				});
 	}
 
-	private void newView() {
-		LinearLayout neu = new LinearLayout(this);
-		LinearLayout currentLayout = (LinearLayout) findViewById(R.layout.activity_login);
+	// TODO: Strings nach strings.xml bringen
+	private void registerDialog() {
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle("Enter the values");
 
-		TextView emailView = new TextView(this);
-		neu.addView(emailView);
-		currentLayout.addView(neu);
+		LinearLayout list = new LinearLayout(this);
+		list.setOrientation(LinearLayout.VERTICAL);
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.MATCH_PARENT);
+		final EditText name = new EditText(this);
+		name.setHint("Name");
+		list.addView(name, layoutParams);
+		final EditText mail = new EditText(this);
+		mail.setHint("E-Mail");
+		list.addView(mail, layoutParams);
+		final EditText password = new EditText(this);
+		password.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+		password.setHint("Passwort");
+		list.addView(password, layoutParams);
+		final EditText password_check = new EditText(this);
+		password.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+		password_check.setHint("Passwort");
+		list.addView(password_check, layoutParams);
+		alert.setView(list);
+
+		// "OK" button to save the values
+		alert.setPositiveButton("Register now!",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+
+						// Grab the EditText's input
+						String inputName = name.getText().toString();
+						String inputMail = mail.getText().toString();
+						String inputPassword = password.getText().toString();
+						String inputPasswordCheck = password_check.getText()
+								.toString();
+
+						new UserRegistrationTask().execute(inputName,
+								inputMail, inputPassword, inputPasswordCheck);
+					}
+				});
+
+		// "Cancel" button
+		alert.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+					}
+				});
+
+		alert.show();
 	}
 
 	@Override
@@ -143,7 +190,7 @@ public class YasmeLogin extends Activity {
 
 		boolean cancel = validate();
 
-		// focusView = null; //Edit by Flo
+		//focusView = null; //Edit by Flo
 
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
@@ -193,7 +240,6 @@ public class YasmeLogin extends Activity {
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	private void showProgress(final boolean show) {
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
 		// for very easy animations. If available, use these APIs to fade-in
@@ -238,12 +284,24 @@ public class YasmeLogin extends Activity {
 
 	/**
 	 * Represents an asynchronous task used to register the user.
+	 * 
+	 * @params params[0] is name
+	 * @params params[1] is email
+	 * @params params[2] is password
+	 * @params params[3] is password_check
 	 */
-	public class UserRegistrationTask extends AsyncTask<Void, Void, Boolean> {
+	public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
 		@Override
-		protected Boolean doInBackground(Void... params) {
+		protected Boolean doInBackground(String... params) {
 			// TODO: ueberpruefen, ob user schon existiert
+			String name = params[0];
+			String email = params[1];
+			String password = params[2];
+			String password_check = params[3];
 
+			if (!password.equals(password_check)) {
+				return false;
+			}
 			try {
 				id = new UserTask(url).registerUser(new User(password, name,
 						email));
@@ -258,19 +316,19 @@ public class YasmeLogin extends Activity {
 			authTask = null;
 			showProgress(false);
 
-			// TODO: komplette Eingabe der Anmeldedaten eines neuen Users
-			/*
-			 * Intent intent = new Intent(); intent.putExtra(USER_NAME, name);
-			 * startActivity(intent);
-			 */
-
 			if (success) {
 				Toast.makeText(
 						getApplicationContext(),
 						getResources().getString(
 								R.string.registration_successful),
 						Toast.LENGTH_SHORT).show();
+				start();
 			} else {
+				Toast.makeText(
+						getApplicationContext(),
+						getResources().getString(
+								R.string.registration_not_successful),
+						Toast.LENGTH_SHORT).show();
 				finish();
 			}
 		}
@@ -318,11 +376,8 @@ public class YasmeLogin extends Activity {
 		protected void onPostExecute(final Boolean success) {
 			authTask = null;
 			showProgress(false);
-
-			start();
-
 			if (success) {
-				finish();
+				start();
 			} else {
 				passwordView
 						.setError(getString(R.string.error_incorrect_password));
