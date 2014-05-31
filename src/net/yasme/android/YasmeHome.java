@@ -56,7 +56,7 @@ public class YasmeHome extends Activity {
 	
 	
 	public void showChat(View view) {
-		
+		findViewById(R.id.button1).performHapticFeedback(0);
 		Intent intent = new Intent(this, YasmeChat.class);
 		intent.putExtra(USER_NAME, user_name);
 		intent.putExtra(USER_ID, user_id);

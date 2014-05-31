@@ -125,6 +125,9 @@ public class YasmeChat extends Activity {
 
 			if (iterator.hasNext()) {
 				msg = iterator.next();
+			} else {
+				row.setFocusableInTouchMode(true);
+				row.requestFocus();
 			}
 		}
 	}
