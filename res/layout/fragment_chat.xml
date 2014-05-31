@@ -6,28 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="de.fau.cs
-		status = (TextView) findViewById(R.id.text_status);.mad.simplechatapp.YasmeChat$PlaceholderFragment" >
-
-    <EditText
-        android:id="@+id/text_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button_send"
-        android:layout_alignBottom="@+id/button_send"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/button_send"
-        android:ems="10"
-        android:hint="@string/type_text" />
-
-    <Button
-        android:id="@+id/button_send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:onClick="send"
-        android:text="@string/button_send" />
+    tools:context="net.yasme.android" >
 
     <TextView
         android:id="@+id/text_status"
@@ -50,7 +29,7 @@
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/text_message"
+        android:layout_above="@+id/text_message"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/button1"
@@ -63,5 +42,28 @@
             android:orientation="vertical" >
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/button_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/scrollView1"
+        android:onClick="send"
+        android:text="@string/button_send" />
+
+    <EditText
+        android:id="@+id/text_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/scrollView1"
+        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/button_send"
+        android:layout_toLeftOf="@+id/button_send"
+        android:ems="10"
+        android:hint="@string/type_text" >
+        
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>
