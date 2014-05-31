@@ -1,6 +1,5 @@
 package net.yasme.android;
 
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -19,7 +18,7 @@ public class YasmeHome extends Activity {
 
 	String user_name;
 	String user_id;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,17 +52,16 @@ public class YasmeHome extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	
+
 	public void showChat(View view) {
-		findViewById(R.id.button1).performHapticFeedback(0);
+		// BZZZTT!!1!
+		findViewById(R.id.button1).performHapticFeedback(2);
 		Intent intent = new Intent(this, YasmeChat.class);
 		intent.putExtra(USER_NAME, user_name);
 		intent.putExtra(USER_ID, user_id);
 		startActivity(intent);
 	}
-	
-	
+
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */

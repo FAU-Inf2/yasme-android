@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class YasmeChat extends Activity {
@@ -103,19 +104,18 @@ public class YasmeChat extends Activity {
 		for (int i = 0; i < messages.size(); i++) {
 			TextView textView = new TextView((getApplicationContext()));
 			
-			
 			LinearLayout layout = (LinearLayout) findViewById(R.id.scrollLayout);
 			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.WRAP_CONTENT,
-					LinearLayout.LayoutParams.WRAP_CONTENT);
+					LinearLayout.LayoutParams.MATCH_PARENT,
+					LinearLayout.LayoutParams.MATCH_PARENT);
 
-			LinearLayout row = new LinearLayout(getApplicationContext());
-			row.setLayoutParams(new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.WRAP_CONTENT,
-					LinearLayout.LayoutParams.WRAP_CONTENT));
-	
+			RelativeLayout row = new RelativeLayout(getApplicationContext());
+			row.setLayoutParams(new RelativeLayout.LayoutParams(
+					RelativeLayout.LayoutParams.MATCH_PARENT,
+					RelativeLayout.LayoutParams.MATCH_PARENT));
+
 			textView.setText(msg.getSender().getName() + ": " + msg.getMessage());
-			
+
 			if(msg.getSender().getId().getId() == user_id.getId()) {
 				textView.setGravity(Gravity.RIGHT);
 				row.setGravity(Gravity.RIGHT);
