@@ -38,9 +38,9 @@ public class MessageTask {
 
 			JSONObject msg = new JSONObject();
 
-			msg.put("sender", message.getSender().getId());
+			msg.put("sender", message.getSender().getId().getId());
 			msg.put("message", message.getMessage());
-			msg.put("chat", message.getChat());
+			msg.put("chat", message.getChat().getId());
 			msg.put("keyID", message.getKeyID());
 
 			String json = msg.toString();
