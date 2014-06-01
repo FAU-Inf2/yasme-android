@@ -5,7 +5,6 @@ import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.connection.UserTask;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -22,7 +21,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -132,17 +130,19 @@ public class YasmeLogin extends Activity {
 		name.setHint("Name");
 		list.addView(name, layoutParams);
 		final EditText mail = new EditText(this);
+		mail.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
 		mail.setHint("E-Mail");
 		list.addView(mail, layoutParams);
 		final EditText password = new EditText(this);
-		password.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+		password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
 		password.setHint("Passwort");
 		list.addView(password, layoutParams);
 		final EditText password_check = new EditText(this);
-		password.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+		password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
 		password_check.setHint("Passwort");
 		list.addView(password_check, layoutParams);
 		alert.setView(list);
+		//TODO: Input type seems to change nothing??
 
 		// "OK" button to save the values
 		alert.setPositiveButton("Register now!",
