@@ -1,10 +1,6 @@
 package net.yasme.android.entities;
 
 import java.util.ArrayList;
-
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
 import net.yasme.android.YasmeChat;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
@@ -14,16 +10,16 @@ import android.os.AsyncTask;
 /**
  * Created by robert on 28.05.14.
  */
-@DatabaseTable(tableName = "chatrooms")
+//@DatabaseTable(tableName = "chatrooms")
 public class Chat {
 	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 	
-	@DatabaseField
+	//@DatabaseField
 	private ArrayList<Message> messages;
-	@DatabaseField
+	//@DatabaseField
 	private Id lastMessageID;
-	@DatabaseField(generatedId = true, id = true)
+	//@DatabaseField(generatedId = true, id = true)
 	private Id chat_id;
 	
 	private String user_name;
