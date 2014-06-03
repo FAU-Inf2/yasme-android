@@ -93,7 +93,7 @@ public class MessageEncryption {
 				///###
 			}
 			
-			//TO-DO:
+			//TODO:
 			//What happens, if the needed key is not available
 			//is this a real scenario?
 		}

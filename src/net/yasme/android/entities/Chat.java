@@ -44,7 +44,7 @@ public class Chat {
 		this.activity = activity;
 	
 		//setup Encryption for this chat
-		//TO-DO: DEVICE-ID statt USERID uebergeben
+		//TODO: DEVICE-ID statt USERID uebergeben
 		long creatorDevice = user_id.getId();
 		aes = new MessageEncryption(activity, chat_id, creatorDevice);
 
@@ -174,9 +174,9 @@ public class Chat {
 	}
 	/*
 	//Async-Task for getting Keys from server
-	//TO-DO: können mehrere Keys sein
-	//To-DO: 
-	//TO-DO: Client muss letzte ID seiner Key-Id mitschicken
+	//TODO: können mehrere Keys sein
+	//TODO: 
+	//TODO: Client muss letzte ID seiner Key-Id mitschicken
 	private class GetKeyTask extends AsyncTask<String, Void, Boolean> {
 		MessageKey messagekey;
 
