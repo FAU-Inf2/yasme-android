@@ -88,6 +88,7 @@ public class YasmeChat extends Activity {
 				
 		chat.send(msg);
 		EditMessage.setText("");
+		EditMessage.requestFocus();
 		msg = null;
 	}
 
