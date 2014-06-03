@@ -24,17 +24,21 @@ import android.util.Base64;
 
 
 
-//TO-DO: Bevor Nachrichten vom Server geholt werden, muessen neue Keys vom Server geholt werden und diese Tabellen aktualisiert werden
+//TO-DO: Bevor Nachrichten vom Server geholt werden, müssen neue Keys vom Server geholt werden und diese Tabellen aktualisiert werden
+//TO-DO: Wenn Schlüssel empfangen wird, dann Befehl senden, dass Schlüssel auf Server gelöscht wird
+//TO-DO: Key-Erzeugung-->KEY-ID: Timestamp in Nanosekunden
+
 
 public class MessageEncryption {
 
-	Id keyid; //contains the latest keyid for encryption
+	Id keyId; //contains the latest keyid for encryption
 	byte[] currentkey; //needed for restoring the current key, if decryption need more than one key
 	byte[] currentiv; //needed for restoring the current IV, if decryption need more than one key
-	Id chatid;
-	long creator;
-	long recipient;
-	long devid;
+	
+	Id chatId;
+	long creatorDevice;
+	long recipientDevice; 
+
 	String url;
 	Context context;
 	
@@ -43,22 +47,29 @@ public class MessageEncryption {
 	AESEncryption aes; 
 	private KeyTask keytask;
 
-	
-	public MessageEncryption(Context context, Id chatid, long creator, long recipient, long devid){
+	//TODO: aus long chatid muss Chat chat werden
+	//Constructor --> holt bzw. generiert Key, falls noetig
+	public MessageEncryption(Context context, Id chatid, long creator){
 		this.context = context;
-		this.chatid = chatid;
+		this.chatId = chatid;
+		this.creatorDevice = creator;
 		
 		SharedPreferences sharedPref = context.getSharedPreferences(CHATKEYMAPPING,Context.MODE_PRIVATE);
 		
 		//if no old key for this chat, then generate a new one, beginning with ID "1"
-		if (!sharedPref.contains(Long.toString(chatid.getId()))){
-			keyid = new Id(1);
+		if (!sharedPref.contains(Long.toString(chatId.getId()))){
+			keyId = new Id(1);
 			aes = new AESEncryption("geheim");
-			saveKey(context, chatid, keyid);
-			sendKey(context.getResources().getString(R.string.server_url), chatid, keyid, creator, recipient, devid);
+			saveKey(context, chatId, keyId);
+			
+			
+			//TODO Schlüssel für jeden Empfänger an den Server senden
+			//get recipientDevice from chatid
+			//for every recipientDevice
+			sendKey(context.getResources().getString(R.string.server_url), recipientDevice);
 			
 			//###DEBUG
-			System.out.println("[???]: KeyID "+keyid.getId()+" fuer Chat "+chatid.getId() + " wurde erstellt und gespeichert und an Server gesendet");
+			System.out.println("[???]: KeyID "+keyId.getId()+" fuer Chat "+chatId.getId() + " wurde erstellt und gespeichert und an Server gesendet");
 			//###
 		}
 		
@@ -66,11 +77,11 @@ public class MessageEncryption {
 		else{
 			
 			//check, which Key is need to encrypt
-			long keyidfromstorage = sharedPref.getLong(Long.toString(chatid.getId()), 0);
-			keyid = new Id(keyidfromstorage);
+			long keyidfromstorage = sharedPref.getLong(Long.toString(chatId.getId()), 0);
+			keyId = new Id(keyidfromstorage);
 			
 			//get Key from storage
-			byte[][] keydata = getKeyfromLocalStorage(context, chatid, keyid);
+			byte[][] keydata = getKeyfromLocalStorage(context, chatId, keyId);
 			//if Key is available
 			if(keydata != null){
 				this.currentkey = keydata[0];
@@ -78,7 +89,7 @@ public class MessageEncryption {
 				
 				aes = new AESEncryption(currentkey, currentiv);
 				//###DEBUG
-				System.out.println("[???]: Key "+ keyid.getId()+" fuer Chat "+ chatid.getId()+" wurde geladen");
+				System.out.println("[???]: Key "+ keyId.getId()+" fuer Chat "+ chatId.getId()+" wurde geladen");
 				///###
 			}
 			
@@ -87,26 +98,29 @@ public class MessageEncryption {
 			//is this a real scenario?
 		}
 	}
-		
+	
+	
+			
 	
 	//encrypt
 	public String encrypt(String text) {
 		return aes.encrypt(text);
 	}
 	
+	//decrypt
 	public String decrypt(String encrypted, long keyid){
 		System.out.println("[???] Decrypt with:");
-		System.out.println("[???] aktuelle KEYID:"+this.keyid.getId());
+		System.out.println("[???] aktuelle KEYID:"+this.keyId);
 		System.out.println("[???] benoetigte KEYID:"+keyid);
 
-		if (this.keyid.getId() == keyid){
+		if (this.keyId.getId() == keyid){
 			return aes.decrypt(encrypted);
 		}
 		
 		//another key is needed
 		else{
 			//get Key from storage
-			byte[][] keydata = getKeyfromLocalStorage(context, chatid, new Id(keyid));
+			byte[][] keydata = getKeyfromLocalStorage(context, chatId, new Id(keyid));
 			//if Key is available
 			if(keydata != null){
 				byte[] key = keydata[0];
@@ -128,17 +142,13 @@ public class MessageEncryption {
 	}
 	
 	public long getKeyId(){
-		return this.keyid.getId();
+		return this.keyId.getId();
 	}
 	
 	//send Key to server
-	public boolean sendKey(String url, Id chatid, Id keyid, long creator, long recipient, long devid){
+	public boolean sendKey(String url, long recipient){
 		this.url = url;
-		this.chatid = chatid;
-		this.keyid = keyid;
-		this.creator = creator;
-		this.recipient = recipient;
-		this.devid = devid;
+		this.recipientDevice = recipient;
 		new SendKeyTask().execute();
 		return true;
 	}
@@ -199,11 +209,11 @@ public class MessageEncryption {
 			
 			try{
 				
-				key = aes.getKey();
+				key = aes.getKey()+","+aes.getIV();
 				byte encType = 1;
 				
 				//setup MessageKey-Object
-				MessageKey keydata = new MessageKey(keyid.getId(), creator, recipient, devid, key, encType, "test");
+				MessageKey keydata = new MessageKey(keyId.getId(), creatorDevice, recipientDevice, chatId.getId(), key, encType, "test");
 				
 				//send MessageKey-Object
 				keytask = new KeyTask(url);
@@ -219,4 +229,5 @@ public class MessageEncryption {
 			
 		}
 	}
+	
 }
