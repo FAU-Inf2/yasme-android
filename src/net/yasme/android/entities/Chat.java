@@ -6,10 +6,13 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import net.yasme.android.YasmeChat;
+import net.yasme.android.connection.KeyTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.exception.RestServiceException;
 import android.os.AsyncTask;
+
+
 
 /**
  * Created by robert on 28.05.14.
@@ -41,10 +44,9 @@ public class Chat {
 		this.activity = activity;
 	
 		//setup Encryption for this chat
-		long creator = user_id.getId();
-		long recipient = 2L;
-		long devid = 3L;
-		aes = new MessageEncryption(activity, chat_id, creator, recipient, devid);
+		//TO-DO: DEVICE-ID statt USERID uebergeben
+		long creatorDevice = user_id.getId();
+		aes = new MessageEncryption(activity, chat_id, creatorDevice);
 
 		messageTask = new MessageTask(url);
 		
@@ -117,6 +119,7 @@ public class Chat {
 		}
 	}
 
+	//TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach gelöscht werden
 	private class GetMessageTask extends AsyncTask<String, Void, Boolean> {
 		ArrayList<Message> messages;
 
@@ -169,4 +172,32 @@ public class Chat {
 			}
 		}
 	}
+	/*
+	//Async-Task for getting Keys from server
+	//TO-DO: können mehrere Keys sein
+	//To-DO: 
+	//TO-DO: Client muss letzte ID seiner Key-Id mitschicken
+	private class GetKeyTask extends AsyncTask<String, Void, Boolean> {
+		MessageKey messagekey;
+
+		protected Boolean doInBackground(String... params) {
+			
+			
+			try{
+				//get MessageKey-Object
+				keytask = new KeyTask(url);
+				//messagekey = keytask.getKey(Long.toString(creator), Long.toString(chatid.getId()), Long.toString(devid));
+				
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			return true;
+		}
+
+		protected void onPostExecute(Boolean result) {
+			//safe new Key in Chat-Tabelle
+			
+		}
+	}
+	*/
 }

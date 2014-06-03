@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,10 +40,10 @@ public class KeyTask {
 			JSONObject obj = new JSONObject();
 
 			obj.put("id", messageKey.getId());
-			obj.put("creator", messageKey.getCreator());
-			obj.put("devId", messageKey.getDevId());
+			obj.put("creatorDevice", messageKey.getCreator());
+			obj.put("chat", messageKey.getChat());
 			obj.put("encInfoId", messageKey.getEncInfoId());
-			obj.put("recipient", messageKey.getRecipient());
+			obj.put("recipientDevice", messageKey.getRecipient());
 			obj.put("encInfo", messageKey.getEncInfo());
 			obj.put("key", messageKey.getKey());
 			obj.put("sign", messageKey.getSign());
@@ -82,6 +83,27 @@ public class KeyTask {
 		return false;
 	}
 
+	
+	public boolean deleteKey(long chatId, long keyId) {
+		try {
+
+			HttpClient client = new DefaultHttpClient();
+			HttpGet request = new HttpGet(url + "/msg/" + chatId + "/"+ keyId);
+			
+			HttpResponse response = client.execute(request);
+			//String httpcode = EntityUtils.toString(response.getEntity(), "UTF-8");
+			
+			return true;
+			
+			} catch (Exception e) {
+			e.printStackTrace();
+			}
+		return false;
+	}
+	
+	
+	//TO-DO: Schreibe Klasse um
+	//Schluessel müssen aus Message-JSON extrahiert werden
 	public MessageKey getKey(String userID, String recID, String deviceID) {
 
 		MessageKey messageKey = null;

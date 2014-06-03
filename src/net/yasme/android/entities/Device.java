@@ -18,6 +18,12 @@ public class Device {
 		this.type = type;
 		this.number = number;
 	}
+	
+	public Device(String userID, String platform, String type) {
+		this.userID = userID;
+		this.platform = platform;
+		this.type = type;
+	}
 
 	public Device() {
 	}

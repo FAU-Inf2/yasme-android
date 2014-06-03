@@ -1,13 +1,14 @@
 package net.yasme.android.entities;
 
+//creator --> de
+
 public class MessageKey {
 
 	private long id = -1;
-	private long creator = -1;
-	private long recipient = -1;
-	//TO-DO: chat ID must be added
-	private long chatid = -1;
-	private long devId = -1;
+	private long creatorDevice = -1; //fuer Auswahl des oeffentlichen Schluessels
+	private long recipientDevice = -1; //fuer Auswahl des DH-Anteils
+	//TO-DO: aus long chat muss Chat chat werden
+	private long chat = -1;
 	private String key = "";
 	private byte encType = -1;
 	private long encInfoId = -1;
@@ -15,13 +16,13 @@ public class MessageKey {
 	private String sign = "";
 
 	/** Constructors **/
-	public MessageKey(long id, long creator, long recipient, long devId,
+	public MessageKey(long id, long creatorDevice, long recipientDevice, long chat,
 			String key, byte encType, long encInfoId, String encInfo,
 			String sign) {
 		this.id = id;
-		this.creator = creator;
-		this.recipient = recipient;
-		this.devId = devId;
+		this.creatorDevice = creatorDevice;
+		this.recipientDevice = recipientDevice;
+		this.chat = chat;
 		this.key = key;
 		this.encType = encType;
 		this.encInfoId = encInfoId;
@@ -29,12 +30,12 @@ public class MessageKey {
 		this.sign = sign;
 	}
 
-	public MessageKey(long id, long creator, long recipient, long devId,
+	public MessageKey(long id, long creatorDevice, long recipientDevice, long chat,
 			String key, byte encType, String sign) {
 		this.id = id;
-		this.creator = creator;
-		this.recipient = recipient;
-		this.devId = devId;
+		this.creatorDevice = creatorDevice;
+		this.recipientDevice = recipientDevice;
+		this.chat = chat;
 		this.key = key;
 		this.encType = encType;
 		this.sign = sign;
@@ -50,15 +51,15 @@ public class MessageKey {
 	}
 
 	public long getCreator() {
-		return creator;
+		return creatorDevice;
 	}
 
 	public long getRecipient() {
-		return recipient;
+		return recipientDevice;
 	}
 
-	public long getDevId() {
-		return devId;
+	public long getChat() {
+		return chat;
 	}
 
 	public String getKey() {
@@ -87,15 +88,15 @@ public class MessageKey {
 	}
 
 	public void setCreator(long creator) {
-		this.creator = creator;
+		this.creatorDevice = creator;
 	}
 
 	public void setRecipient(long recipient) {
-		this.recipient = recipient;
+		this.recipientDevice = recipient;
 	}
 
-	public void setDevId(long devId) {
-		this.devId = devId;
+	public void setChat(long chat) {
+		this.chat = chat;
 	}
 
 	public void setKey(String key) {
@@ -122,13 +123,13 @@ public class MessageKey {
 		if (id < 0) {
 			return false;
 		}
-		if (creator < 0) {
+		if (creatorDevice < 0) {
 			return false;
 		}
-		if (recipient < 0) {
+		if (recipientDevice < 0) {
 			return false;
 		}
-		if (devId < 0) {
+		if (chat < 0) {
 			return false;
 		}
 		if (key.length() <= 0) {
