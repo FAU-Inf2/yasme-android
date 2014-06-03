@@ -3,169 +3,192 @@ package net.yasme.android.connection;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.UserError;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class UserTask {
 
-	private String url;
+    private String url;
 
-	public UserTask(String url) {
-		this.url = url;
-	}
+    public UserTask(String url) {
+        this.url = url;
+    }
 
-	/**
-	 * registerUser() get as return value an ID which should be saved on the
-	 * client to use it for all user requests
-	 * 
-	 * @param user
-	 * @return userID, which should be stored on the device
-	 */
-	public String registerUser(User user) throws RestServiceException {
-		try {
+    /**
+     * registerUser() get as return value an ID which should be saved on the
+     * client to use it for all user requests
+     *
+     * @param user
+     * @return userID, which should be stored on the device
+     */
+    public String registerUser(User user) throws RestServiceException {
 
-			DefaultHttpClient httpclient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(url + "/usr");
+        String requestURL = url.concat("/usr");
 
-			// TODO: Complete UserObject as JSon
+        try {
 
-			JSONObject obj = new JSONObject();
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(requestURL);
 
-			// TODO: UserDaten to JSon
-			// Edit UserObject from Server
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
-			obj.put("pw", user.getPw());
-			obj.put("email", user.getEmail());
-			obj.put("name", user.getName());
+            StringEntity se = new StringEntity(ow.writeValueAsString(user));
+            httpPost.setEntity(se);
 
-			String json = obj.toString();
+            httpPost.setHeader("Content-type", "application/json");
+            httpPost.setHeader("Accept", "application/json");
 
-			StringEntity se = new StringEntity(json);
+            HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			httpPost.setEntity(se);
+            switch (httpResponse.getStatusLine().getStatusCode()) {
+                case 201:
+                    return (new BufferedReader(new InputStreamReader(httpResponse
+                            .getEntity().getContent(), "UTF-8"))).readLine();
+                case 500:
+                    throw new RestServiceException(UserError.REGISTRATION_FAILED);
+                default:
+                    throw new RestServiceException(UserError.ERROR);
+            }
 
-			httpPost.setHeader("Content-type", "application/json");
-			httpPost.setHeader("Accept", "application/json");
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RestServiceException(UserError.REGISTRATION_FAILED);
+        }
+        return null;
+    }
 
-			HttpResponse httpResponse = httpclient.execute(httpPost);
+    public String[] loginUser(User user) throws RestServiceException {
 
-			switch (httpResponse.getStatusLine().getStatusCode()) {
-			case 201:
-				return (new BufferedReader(new InputStreamReader(httpResponse
-						.getEntity().getContent(), "UTF-8"))).readLine();
-			case 500:
-				throw new RestServiceException(UserError.REGISTRATION_FAILED);
-			default:
-				throw new RestServiceException(UserError.ERROR);
-			}
+        String requestURL = url.concat("/sign/in");
 
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			throw new RestServiceException(UserError.REGISTRATION_FAILED);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+        try {
 
-	public String[] loginUser(User user) throws RestServiceException {
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(requestURL);
 
-		try {
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
-			DefaultHttpClient httpclient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(url + "/sign/in");
+            StringEntity se = new StringEntity(ow.writeValueAsString(user));
+            httpPost.setEntity(se);
 
-			JSONObject obj = new JSONObject();
+            httpPost.setHeader("Content-type", "application/json");
+            httpPost.setHeader("Accept", "application/json");
 
-			obj.put("email", user.getEmail());
-			obj.put("pw", user.getPw());
+            HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			String json = obj.toString();
-			StringEntity se = new StringEntity(json);
+            switch (httpResponse.getStatusLine().getStatusCode()) {
+                case 200:
+                    Header userID = httpResponse.getFirstHeader("userId");
+                    Header token = httpResponse.getFirstHeader("Authorization");
 
-			httpPost.setEntity(se);
+                    // DEBUG:
+                    System.out.println("Login successful. Your UserID is "
+                            + userID.getValue());
 
-			httpPost.setHeader("Content-type", "application/json");
-			httpPost.setHeader("Accept", "application/json");
+                    return new String[]{userID.getValue(), token.getValue()};
+                case 401:
+                    throw new RestServiceException(UserError.LOGIN_FAILED);
+                default:
+                    throw new RestServiceException(UserError.ERROR);
+            }
 
-			HttpResponse httpResponse = httpclient.execute(httpPost);
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RestServiceException(UserError.LOGIN_FAILED);
+        }
 
-			switch (httpResponse.getStatusLine().getStatusCode()) {
+        return null;
+    }
 
-			case 200:
-				Header userID = httpResponse.getFirstHeader("userId");
-				Header token = httpResponse.getFirstHeader("Authorization");
+    public boolean changeUserData(long id, User user) throws RestServiceException {
 
-				// DEBUG:
-				System.out.println("Login successful. Your UserID is "
-						+ userID.getValue());
+        String requestURL = url.concat("/usr" + id);
 
-				return new String[] { userID.getValue(), token.getValue() };
+        try {
 
-			case 401:
-				throw new RestServiceException(UserError.LOGIN_FAILED);
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPut httpPut = new HttpPut(requestURL);
 
-			default:
-				throw new RestServiceException(UserError.ERROR);
-			}
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			throw new RestServiceException(UserError.LOGIN_FAILED);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+            StringEntity se = new StringEntity(ow.writeValueAsString(user));
+            httpPut.setEntity(se);
 
-	public User getUserData(String userID) {
+            httpPut.addHeader("accept", "application/json");
+            httpPut.setHeader("Content-type", "application/json");
 
-		User user = null;
+            HttpResponse httpResponse = httpClient.execute(httpPut);
 
-		try {
+            switch (httpResponse.getStatusLine().getStatusCode()) {
 
-			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(url + "/usr/" + userID);
-			request.addHeader("accept", "application/json");
+                case 200:
+                    return true;
+                case 500:
+                    throw new RestServiceException(UserError.USER_NOT_FOUND);
+                default:
+                    throw new RestServiceException(UserError.ERROR);
+            }
 
-			HttpResponse response = client.execute(request);
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RestServiceException(UserError.ERROR);
+        }
+        return false;
+    }
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent(), "UTF-8"));
-			String json = reader.readLine();
+    public User getUserData(long userId) throws RestServiceException {
 
-			JSONObject jObject = new JSONObject(json);
+        String requestURL = url.concat("/usr/" + userId);
 
-			user = new User(null, jObject.getString("name"),
-					jObject.getString("email"));
+        User user = null;
 
-			/******** DEBUG ***********/
-			System.out.println(user.getEmail() + " " + user.getName());
-			/******** DEBUG*END *******/
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(requestURL);
+            httpGet.addHeader("accept", "application/json");
 
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+            HttpResponse httpResponse = httpClient.execute(httpGet);
 
-		return user;
-	}
+            switch (httpResponse.getStatusLine().getStatusCode()) {
+
+                case 200:
+                    JSONObject json = new JSONObject(((new BufferedReader(new InputStreamReader(
+                            httpResponse.getEntity().getContent(), "UTF-8"))).readLine()));
+
+                    return new User(null, json.getString("name"),
+                            json.getString("email"));
+                case 404:
+                    throw new RestServiceException(UserError.USER_NOT_FOUND);
+                default:
+                    throw new RestServiceException(UserError.ERROR);
+            }
+
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RestServiceException(UserError.ERROR);
+        }
+
+        return user;
+    }
 }
