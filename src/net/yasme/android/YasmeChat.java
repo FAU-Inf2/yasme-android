@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.Id;
 import net.yasme.android.entities.Message;
 import android.app.Activity;
 import android.app.Fragment;
@@ -31,7 +30,7 @@ public class YasmeChat extends Activity {
 	private TextView status;
 	private Chat chat;
 	private String user_name;
-	private Id user_id;
+	private long user_id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +45,10 @@ public class YasmeChat extends Activity {
 		user_name = intent.getStringExtra(USER_NAME);
 		
 		String user_string = intent.getStringExtra(USER_ID);
-		user_id = new Id(Long.parseLong(user_string));
+		user_id = Long.parseLong(user_string);
 		String url = getResources().getString(R.string.server_url);
 		int chat_int = intent.getIntExtra(CHAT_ID, 1);
-		Id chat_id = new Id(chat_int);
+		long chat_id = chat_int;
 		if(false) {
 			//TODO: existierenden Chat verwenden
 		} else {
@@ -116,7 +115,7 @@ public class YasmeChat extends Activity {
 
 			textView.setText(msg.getSender().getName() + ": " + msg.getMessage());
 
-			if(msg.getSender().getId().getId() == user_id.getId()) {
+			if(msg.getSender().getId() == user_id) {
 				textView.setGravity(Gravity.RIGHT);
 				row.setGravity(Gravity.RIGHT);
 			}
