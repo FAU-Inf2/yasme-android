@@ -46,7 +46,7 @@ public class UserTask {
             HttpPost httpPost = new HttpPost(requestURL);
 
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            ow.toString();
+
             StringEntity se = new StringEntity(ow.writeValueAsString(user));
             httpPost.setEntity(se);
 
