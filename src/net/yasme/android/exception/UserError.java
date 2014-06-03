@@ -3,8 +3,8 @@ package net.yasme.android.exception;
 public enum UserError implements ErrorCode {
 
 	// To Do: global error codes must be determined
-	ERROR(000), LOGIN_FAILED(100), USER_NOT_FOUND(101), PASSWORD_INCORRECT(102), REGISTRATION_FAILED(
-			103);
+	ERROR(000), LOGIN_FAILED(100), USER_NOT_FOUND(101), CHAT_NOT_FOUND_EXCEPTION(102), PASSWORD_INCORRECT(103), REGISTRATION_FAILED(
+			104);
 
 	private final int number;
 

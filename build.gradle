@@ -16,6 +16,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile 'com.j256.ormlite:ormlite-core:4.48'
 	compile 'com.j256.ormlite:ormlite-android:4.48'
+    compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
 }
 
 android {
@@ -31,6 +32,15 @@ android {
             renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
+        }
+
+        packagingOptions {
+            exclude 'META-INF/DEPENDENCIES'
+            exclude 'META-INF/NOTICE'
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'META-INF/NOTICE.txt'
+            exclude 'META-INF/ASL2.0'
         }
 
         // Move the tests to tests/java, tests/res, etc...
