@@ -9,8 +9,8 @@ import java.util.Date;
 
 public class Message implements Serializable {
 
-	private Id id;
-	private Id chat;
+	private long id;
+	private long chat;
 	private User sender;
 	private Date dateSent;
 	private String message;
@@ -20,11 +20,11 @@ public class Message implements Serializable {
 	public Message() {
 	}
 
-	public Message(User sender, String message, Id chatid, long keyid) {
-		this(sender, message, new Date(), chatid, keyid);
+	public Message(User sender, String message, long chat_id, long keyid) {
+		this(sender, message, new Date(), chat_id, keyid);
 	}
 
-	public Message(User sender, String message, Date dateSent, Id chat, long keyid) {
+	public Message(User sender, String message, Date dateSent, long chat, long keyid) {
 		this.sender = sender;
 		this.message = message;
 		this.dateSent = dateSent;
@@ -49,16 +49,16 @@ public class Message implements Serializable {
 		return keyId;
 	}
 
-	public Id getChat() {
+	public long getChat() {
 		return chat;
 	}
 
-	public Id getID() {
+	public long getID() {
 		return id;
 	}
 
 	/** Setters **/
-	public void setChat(Id chat) {
+	public void setChat(long chat) {
 		this.chat = chat;
 	}
 
@@ -66,7 +66,7 @@ public class Message implements Serializable {
 		this.message = message;
 	}
 
-	public void setID(Id id) {
+	public void setID(long id) {
 		this.id = id;
 	}
 

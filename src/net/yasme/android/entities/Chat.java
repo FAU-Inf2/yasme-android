@@ -25,12 +25,12 @@ public class Chat {
 	@DatabaseField
 	private ArrayList<Message> messages;
 	@DatabaseField
-	private Id lastMessageID;
+	private long lastMessageID;
 	@DatabaseField(generatedId = true, id = true)
-	private Id chat_id;
+	private long chat_id;
 	
 	private String user_name;
-	private Id user_id;
+	private long user_id;
 	String url;
 	
 	private MessageEncryption aes;
@@ -38,19 +38,19 @@ public class Chat {
 	public YasmeChat activity;
 
 	/** Constructors **/
-	public Chat(Id chat_id, Id user_id, String url, YasmeChat activity) {
+	public Chat(long chat_id, long user_id, String url, YasmeChat activity) {
 		this.chat_id = chat_id;		
 		this.user_id = user_id;
 		this.activity = activity;
 	
 		//setup Encryption for this chat
 		//TO-DO: DEVICE-ID statt USERID uebergeben
-		long creatorDevice = user_id.getId();
-		aes = new MessageEncryption(activity, chat_id, creatorDevice);
+		long creatorDevice = user_id;
+		aes = new MessageEncryption(activity, new Id(chat_id), creatorDevice);
 
 		messageTask = new MessageTask(url);
 		
-		lastMessageID = new Id(0);
+		lastMessageID = 0;
 	}
 	
 	public Chat() {
@@ -58,7 +58,7 @@ public class Chat {
 	}
 
 	/** Getters **/
-	public Id getChat_id() {
+	public long getChat_id() {
 		return chat_id;
 	}
 
@@ -72,7 +72,7 @@ public class Chat {
 	}
 
 	public void setLastMessageID(long newlastMessageID) {
-		lastMessageID.setId(newlastMessageID);
+		lastMessageID = newlastMessageID;
 	}
 
 
@@ -82,7 +82,7 @@ public class Chat {
 	}
 
 	public void update() {
-		new GetMessageTask().execute(Long.toString(lastMessageID.getId()), Long.toString(user_id.getId()));
+		new GetMessageTask().execute(Long.toString(lastMessageID), Long.toString(user_id));
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -92,7 +92,7 @@ public class Chat {
 
 			msg = params[0];
 			
-			Id uid = user_id;
+			long uid = user_id;
 			boolean result = false;
 			
 			//encrypt Message
@@ -119,7 +119,7 @@ public class Chat {
 		}
 	}
 
-	//TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach gelöscht werden
+	//TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach gelï¿½scht werden
 	private class GetMessageTask extends AsyncTask<String, Void, Boolean> {
 		ArrayList<Message> messages;
 
@@ -166,7 +166,7 @@ public class Chat {
 		protected void onPostExecute(Boolean result) {
 			if (result) {
 				activity.updateViews(messages);
-				setLastMessageID(messages.size() + lastMessageID.getId());	
+				lastMessageID = messages.size() + lastMessageID;	
 			} else {
 				activity.getStatus().setText("Keine neuen Nachrichten");
 			}
@@ -174,9 +174,9 @@ public class Chat {
 	}
 	/*
 	//Async-Task for getting Keys from server
-	//TO-DO: können mehrere Keys sein
-	//To-DO: 
-	//TO-DO: Client muss letzte ID seiner Key-Id mitschicken
+	//TODO: koennen mehrere Keys sein
+	//TODO: 
+	//TODO: Client muss letzte ID seiner Key-Id mitschicken
 	private class GetKeyTask extends AsyncTask<String, Void, Boolean> {
 		MessageKey messagekey;
 

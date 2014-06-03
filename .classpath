@@ -7,5 +7,6 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="lib" path="/home/robert/Downloads/ormlite-core-4.48.jar"/>
 	<classpathentry kind="lib" path="/home/robert/Downloads/ormlite-android-4.48.jar"/>
+	<classpathentry kind="lib" path="/home/robert/Downloads/jackson-mapper-asl-1.9.13.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
