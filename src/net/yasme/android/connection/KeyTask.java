@@ -10,11 +10,11 @@ import net.yasme.android.entities.MessageKey;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -88,10 +88,12 @@ public class KeyTask {
 		try {
 
 			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(url + "/msg/" + chatId + "/"+ keyId);
+			HttpDelete request = new HttpDelete(url + "/msgkey/" + keyId + "/"+ chatId);
 			
 			HttpResponse response = client.execute(request);
 			//String httpcode = EntityUtils.toString(response.getEntity(), "UTF-8");
+			
+			//TODO: Antwort ueberpruefen
 			
 			return true;
 			
