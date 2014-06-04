@@ -186,7 +186,7 @@ public class ChatTask {
                 case 404:
                     throw new RestServiceException(UserError.CHAT_NOT_FOUND_EXCEPTION);
                 case 500:
-                    throw new RestServiceException(Error.STORE_CHAT_EXCEPTION);
+                    throw new RestServiceException(Error.STORE_FAILED_EXCEPTION);
                 default:
                     throw new RestServiceException(UserError.ERROR);
             }

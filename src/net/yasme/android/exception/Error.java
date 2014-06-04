@@ -3,7 +3,7 @@ package net.yasme.android.exception;
 public enum Error implements ErrorCode {
 
     // To Do: global error codes must be determined
-    CONNECTION_ERROR(500), STORE_CHAT_EXCEPTION(501);
+    ERROR(000), CONNECTION_ERROR(500), STORE_FAILED_EXCEPTION(501);
 
     private final int number;
 

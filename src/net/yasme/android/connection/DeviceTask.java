@@ -1,150 +1,157 @@
 package net.yasme.android.connection;
 
+import net.yasme.android.entities.Device;
+import net.yasme.android.exception.Error;
+import net.yasme.android.exception.RestServiceException;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import net.yasme.android.entities.Device;
-
 public class DeviceTask {
 
-	private String url;
+    private String url;
 
-	public DeviceTask(String url) {
-		this.url = url;
-	}
+    public DeviceTask(String url) {
+        this.url = url.concat("/device");
+    }
 
-	public String registerDevice(Device device) {
+    public Long registerDevice(Device device) throws RestServiceException {
 
-		try {
+        String requestURL = url;
 
-			DefaultHttpClient httpclient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(url + "/device");
+        try {
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(requestURL);
 
-			// To Do: Complete Device as JSon
-			// ObjectMapper mapper = new ObjectMapper();
-			// String json = mapper.writeValueAsString(message);
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(device);
 
-			JSONObject obj = new JSONObject();
-			obj.put("id", device.getId());
-			obj.put("platform", device.getPlatform());
-			obj.put("type", device.getType());
-			obj.put("userID", device.getUserID());
-			obj.put("number", device.getNumber());
-			String json = obj.toString();
+            httpPost.setEntity(new StringEntity(json));
 
-			StringEntity se = new StringEntity(json);
+            httpPost.setHeader("Content-type", "application/json");
+            httpPost.setHeader("Accept", "application/json");
 
-			httpPost.setEntity(se);
+            HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			httpPost.setHeader("Content-type", "application/json");
-			httpPost.setHeader("Accept", "application/json");
+            switch (httpResponse.getStatusLine().getStatusCode()) {
+                case 201:
 
-			HttpResponse httpResponse = httpclient.execute(httpPost);
+                    System.out.println("Device registration was successful");
 
-			if (httpResponse.getStatusLine().getStatusCode() == 201) {
+                    return (new JSONObject((new BufferedReader(new InputStreamReader(
+                            httpResponse.getEntity().getContent()))).readLine())).getLong("id");
+                case 500:
+                    throw new RestServiceException(Error.STORE_FAILED_EXCEPTION);
+                default:
+                    throw new RestServiceException(Error.ERROR);
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-				BufferedReader rd = new BufferedReader(new InputStreamReader(
-						httpResponse.getEntity().getContent()));
+    public Device getDevice(long deviceId) throws RestServiceException {
 
-				return rd.readLine();
-			}
+        String requestURL = url.concat("/" + deviceId);
 
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+        try {
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(requestURL);
+            httpGet.addHeader("accept", "application/json");
 
-		return null;
-	}
+            HttpResponse httpResponse = httpClient.execute(httpGet);
 
-	public Device getDevice(String deviceID) {
+            switch (httpResponse.getStatusLine().getStatusCode()) {
+                case 200:
 
-		Device device = null;
+                    JSONObject jsonObject = new JSONObject((new BufferedReader(new InputStreamReader(
+                            httpResponse.getEntity().getContent()))).readLine());
+                    JSONObject user = jsonObject.getJSONObject("user");
 
-		try {
+                    /*TODO:
+                    Platform Enum aus Rückgabe JSON auslesen und in Device ablegen
+                    Sinn von Number Obj erfragen
+                     */
 
-			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(url + "/device/" + deviceID);
-			request.addHeader("accept", "application/json");
+                    return new Device(jsonObject.getLong("id"), (jsonObject.getJSONObject("user")).getLong("id"),
+                            null, jsonObject.getString("type"));
+                case 500:
+                    throw new RestServiceException(Error.CONNECTION_ERROR);
+                default:
+                    throw new RestServiceException(Error.ERROR);
+            }
 
-			HttpResponse response = client.execute(request);
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent(), "UTF-8"));
-			String json = reader.readLine();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        }
 
-			JSONObject jObject = new JSONObject(json);
+        return null;
+    }
 
-			device = new Device(jObject.getString("id"),
-					jObject.getString("platform"), jObject.getString("type"),
-					jObject.getString("userID"));
+    public ArrayList<Device> getAllDevices(String userID) {
 
-			/******** DEBUG ***********/
-			System.out.println(device.getUserID() + " " + device.getPlatform());
-			/******** DEBUG*END *******/
+        //TODO: IN PROGRESS
+        /*
+        ArrayList<Device> devices = new ArrayList<Device>();
 
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        try {
 
-		return device;
-	}
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet(url + "/device/all/" + userID);
+            request.addHeader("accept", "application/json");
 
-	public ArrayList<Device> getAllDevices(String userID) {
+            HttpResponse response = client.execute(request);
 
-		ArrayList<Device> devices = new ArrayList<Device>();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    response.getEntity().getContent()));
 
-		try {
+            String json = reader.readLine();
 
-			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(url + "/device/all/" + userID);
-			request.addHeader("accept", "application/json");
+            JSONArray jArray = new JSONArray(json);
 
-			HttpResponse response = client.execute(request);
+            for (int i = 0; i < jArray.length(); i++) {
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent()));
 
-			String json = reader.readLine();
+                JSONObject obj = jArray.getJSONObject(i);
+                devices.add(new Device(obj.getString("id"), obj
+                        .getString("platform"), obj.getString("type"), obj
+                        .getString("userID")));
 
-			JSONArray jArray = new JSONArray(json);
+            }
 
-			for (int i = 0; i < jArray.length(); i++) {
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-				JSONObject obj = jArray.getJSONObject(i);
-				devices.add(new Device(obj.getString("id"), obj
-						.getString("platform"), obj.getString("type"), obj
-						.getString("userID")));
-			}
+        return devices;
+        */
+        return null;
+    }
 
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return devices;
-	}
+    //TODO: DELETE Methode erstellen
 }

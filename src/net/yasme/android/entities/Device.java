@@ -5,66 +5,77 @@ package net.yasme.android.entities;
  */
 public class Device {
 
-	private String id;
-	private String platform; // android, ios or windowsmobile
-	private String type; // mobilephone, tablet or desktop
-	private String userID;
+    public enum Platform {
+        ANDROID, IOS, WINDOWSPHONE;
+    }
 
-	private String number; // optional
+    private long id;
+    private Platform platform; // android, ios or windowsmobile
+    private String type; // mobilephone, tablet or desktop
+    private long user;
+    private String number; // optional
 
-	public Device(String userID, String platform, String type, String number) {
-		this.userID = userID;
-		this.platform = platform;
-		this.type = type;
-		this.number = number;
-	}
-	
-	public Device(String userID, String platform, String type) {
-		this.userID = userID;
-		this.platform = platform;
-		this.type = type;
-	}
+    public Device(long user, Platform platform, String type, String number) {
+        this.user = user;
+        this.platform = platform;
+        this.type = type;
+        this.number = number;
+    }
 
-	public Device() {
-	}
+    public Device(long user, Platform platform, String type) {
+        this.user = user;
+        this.platform = platform;
+        this.type = type;
+    }
 
-	public String getUserID() {
-		return userID;
-	}
+    public Device(long id, long user, Platform platform, String type) {
+        this.id = id;
+        this.user = user;
+        this.platform = platform;
+        this.type = type;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public Device() {
+    }
 
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
+    public long getUser() {
+        return user;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getPlatform() {
-		return platform;
-	}
+    public void setUser(long user) {
+        this.user = user;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public String getNumber() {
-		return number;
-	}
+    public Platform getPlatform() {
+        return platform;
+    }
 
-	public void setPlatform(String platform) {
-		this.platform = platform;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public String getNumber() {
+        return number;
+    }
 
-	public void setNumber(String number) {
-		this.number = number;
-	}
+    public void setPlatform(Platform platform) {
+        this.platform = platform;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
 }
+
