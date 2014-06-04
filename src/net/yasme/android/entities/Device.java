@@ -5,7 +5,7 @@ package net.yasme.android.entities;
  */
 public class Device {
 
-	private String id;
+	private long id;
 	private String platform; // android, ios or windowsmobile
 	private String type; // mobilephone, tablet or desktop
 	private String userID;
@@ -32,7 +32,7 @@ public class Device {
 		return userID;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -40,7 +40,7 @@ public class Device {
 		this.userID = userID;
 	}
 
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 
