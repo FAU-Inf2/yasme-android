@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.Id;
 import net.yasme.android.entities.Message;
 import android.app.Activity;
 import android.app.Fragment;

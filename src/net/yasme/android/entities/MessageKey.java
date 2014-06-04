@@ -7,13 +7,17 @@ public class MessageKey {
 	private long id = -1;
 	private long creatorDevice = -1; //fuer Auswahl des oeffentlichen Schluessels
 	private long recipientDevice = -1; //fuer Auswahl des DH-Anteils
-	//TO-DO: aus long chat muss Chat chat werden
+	//TODO: aus long chat muss Chat chat werden
 	private long chat = -1;
 	private String key = "";
+	//TODO IV hinzufuegen
+	private String iv = "";
 	private byte encType = -1;
 	private long encInfoId = -1;
 	private String encInfo = "";
 	private String sign = "";
+	//TODO: Zeitstempel hinzufuegen
+	private long timestamp = -1;
 
 	/** Constructors **/
 	public MessageKey(long id, long creatorDevice, long recipientDevice, long chat,

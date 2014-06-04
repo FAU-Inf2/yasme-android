@@ -3,7 +3,6 @@ package net.yasme.android.connection;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.UserError;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -26,7 +25,7 @@ public class UserTask {
     private String url;
 
     public UserTask(String url) {
-        this.url = url;
+        this.url = url.concat("/usr");
     }
 
     /**
@@ -38,7 +37,7 @@ public class UserTask {
      */
     public String registerUser(User user) throws RestServiceException {
 
-        String requestURL = url.concat("/usr");
+        String requestURL = url;
 
         try {
 
@@ -73,53 +72,9 @@ public class UserTask {
         return null;
     }
 
-    public String[] loginUser(User user) throws RestServiceException {
-
-        String requestURL = url.concat("/sign/in");
-
-        try {
-
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(requestURL);
-
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-
-            StringEntity se = new StringEntity(ow.writeValueAsString(user));
-            httpPost.setEntity(se);
-
-            httpPost.setHeader("Content-type", "application/json");
-            httpPost.setHeader("Accept", "application/json");
-
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-
-            switch (httpResponse.getStatusLine().getStatusCode()) {
-                case 200:
-                    Header userID = httpResponse.getFirstHeader("userId");
-                    Header token = httpResponse.getFirstHeader("Authorization");
-
-                    // DEBUG:
-                    System.out.println("Login successful. Your UserID is "
-                            + userID.getValue());
-
-                    return new String[]{userID.getValue(), token.getValue()};
-                case 401:
-                    throw new RestServiceException(UserError.LOGIN_FAILED);
-                default:
-                    throw new RestServiceException(UserError.ERROR);
-            }
-
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            throw new RestServiceException(UserError.LOGIN_FAILED);
-        }
-
-        return null;
-    }
-
     public boolean changeUserData(long id, User user) throws RestServiceException {
 
-        String requestURL = url.concat("/usr" + id);
+        String requestURL = url.concat("/" + id);
 
         try {
 
@@ -156,7 +111,7 @@ public class UserTask {
 
     public User getUserData(long userId) throws RestServiceException {
 
-        String requestURL = url.concat("/usr/" + userId);
+        String requestURL = url.concat("/" + userId);
 
         User user = null;
 
