@@ -1,6 +1,7 @@
 package net.yasme.android.connection;
 
 import net.yasme.android.entities.Chat;
+import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.UserError;
 import org.apache.http.HttpResponse;
@@ -30,6 +31,7 @@ public class ChatTask {
     }
 
     //TEST OK
+    //Methode benötigt?
     public String createChat() throws RestServiceException {
 
         String requestURL = url.concat("/newtmp");
@@ -58,13 +60,12 @@ public class ChatTask {
         return null;
     }
 
-    //TEST OK
+
     public String createChatwithPar(Chat chat) throws RestServiceException {
 
         String requestURL = url.concat("/new");
 
         try {
-
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestURL);
 
@@ -83,6 +84,10 @@ public class ChatTask {
                 case 201:
                     return (new BufferedReader(new InputStreamReader(httpResponse
                             .getEntity().getContent(), "UTF-8"))).readLine();
+                case 404:
+                    throw new RestServiceException(UserError.USER_NOT_FOUND);
+                case 500:
+                    throw new RestServiceException(UserError.ERROR);
                 default:
                     throw new RestServiceException(UserError.ERROR);
             }
@@ -95,20 +100,17 @@ public class ChatTask {
         return null;
     }
 
-    //TEST OK
     public Chat getInfoOfChat(long chatId) throws RestServiceException {
 
         String requestURL = url.concat("/info/" + chatId);
 
         try {
 
-            HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet(requestURL);
-            request.addHeader("accept", "application/json");
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(requestURL);
+            httpGet.addHeader("accept", "application/json");
 
-            HttpResponse httpResponse = client.execute(request);
-
-            System.out.println(httpResponse.getStatusLine().getStatusCode());
+            HttpResponse httpResponse = httpClient.execute(httpGet);
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 200:
@@ -121,17 +123,14 @@ public class ChatTask {
                     throw new RestServiceException(UserError.ERROR);
             }
 
-
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(UserError.ERROR);
         }
-
         return null;
     }
 
-    //TEST OK
     public boolean addParticipantToChat(long userId, long chatId) throws RestServiceException {
 
         String requestURL = url.concat("/addParToChat/" + userId + "/" + chatId);
@@ -158,12 +157,11 @@ public class ChatTask {
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            throw new RestServiceException(UserError.REGISTRATION_FAILED);
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
         return false;
     }
 
-    //TEST OK
     public boolean removePartipantFromChat(long userId, long chatId) throws RestServiceException {
 
         String requestURL = url.concat("/removeParFromChat/" + userId + "/" + chatId);
@@ -192,13 +190,11 @@ public class ChatTask {
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            throw new RestServiceException(UserError.REGISTRATION_FAILED);
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
         return false;
     }
 
-
-    //TEST OK
     public boolean updateStatus(Chat chat) throws RestServiceException {
 
         String requestURL = url.concat("/update");
@@ -222,6 +218,8 @@ public class ChatTask {
                     return true;
                 case 404:
                     throw new RestServiceException(UserError.CHAT_NOT_FOUND_EXCEPTION);
+                case 500:
+                    throw new RestServiceException(Error.STORE_CHAT_EXCEPTION);
                 default:
                     throw new RestServiceException(UserError.ERROR);
             }
@@ -229,7 +227,7 @@ public class ChatTask {
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            throw new RestServiceException(UserError.REGISTRATION_FAILED);
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
         return false;
     }
