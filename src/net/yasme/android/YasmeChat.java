@@ -47,8 +47,7 @@ public class YasmeChat extends Activity {
 		String user_string = intent.getStringExtra(USER_ID);
 		user_id = Long.parseLong(user_string);
 		String url = getResources().getString(R.string.server_url);
-		int chat_int = intent.getIntExtra(CHAT_ID, 1);
-		long chat_id = chat_int;
+		long chat_id = intent.getIntExtra(CHAT_ID, 1);
 		if(false) {
 			//TODO: existierenden Chat verwenden
 		} else {
@@ -88,6 +87,7 @@ public class YasmeChat extends Activity {
 				
 		chat.send(msg);
 		EditMessage.setText("");
+		EditMessage.requestFocus();
 		msg = null;
 	}
 

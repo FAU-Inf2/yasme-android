@@ -22,12 +22,12 @@ public class Chat {
     @DatabaseField
     private ArrayList<Message> messages;
     @DatabaseField
-    private long lastMessageID;
+	private long lastMessageID;
     @DatabaseField(generatedId = true, id = true)
-    private long chat_id;
+	private long chat_id;
 
     private String user_name;
-    private long user_id;
+	private long user_id;
     String url;
 
     private MessageEncryption aes;
@@ -44,7 +44,7 @@ public class Chat {
 
         //setup Encryption for this chat
         //TODO: DEVICE-ID statt USERID uebergeben
-        long creatorDevice = user_id;
+		long creatorDevice = user_id;
         aes = new MessageEncryption(activity, chat_id, creatorDevice);
 
         messageTask = new MessageTask(url);
@@ -167,7 +167,7 @@ public class Chat {
         protected void onPostExecute(Boolean result) {
             if (result) {
                 activity.updateViews(messages);
-                setLastMessageID(messages.size() + lastMessageID);
+				lastMessageID = messages.size() + lastMessageID;	
             } else {
                 activity.getStatus().setText("Keine neuen Nachrichten");
             }
@@ -175,7 +175,7 @@ public class Chat {
     }
     /*
     //Async-Task for getting Keys from server
-	//TODO: k�nnen mehrere Keys sein
+	//TODO: koennen mehrere Keys sein
 	//TODO: 
 	//TODO: Client muss letzte ID seiner Key-Id mitschicken
 	private class GetKeyTask extends AsyncTask<String, Void, Boolean> {

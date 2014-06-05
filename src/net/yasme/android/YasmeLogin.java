@@ -31,9 +31,9 @@ import net.yasme.android.exception.RestServiceException;
  */
 public class YasmeLogin extends Activity {
 
-    public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
-    public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
-    public final static String USER_ID = "net.yasme.andriod.USER_ID";
+	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
+	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
+	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -129,20 +129,25 @@ public class YasmeLogin extends Activity {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
+		
         final EditText name = new EditText(this);
         name.setHint("Name");
         list.addView(name, layoutParams);
+		
         final EditText mail = new EditText(this);
         mail.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
         mail.setHint("E-Mail");
         list.addView(mail, layoutParams);
+		
         final EditText password = new EditText(this);
         password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
         password.setHint("Passwort");
         list.addView(password, layoutParams);
+		
         final EditText password_check = new EditText(this);
         password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
         password_check.setHint("Passwort");
+		
         list.addView(password_check, layoutParams);
         alert.setView(list);
         //TODO: Input type seems to change nothing??
@@ -162,7 +167,7 @@ public class YasmeLogin extends Activity {
                         new UserRegistrationTask().execute(inputName,
                                 inputMail, inputPassword, inputPasswordCheck);
                     }
-                }
+
         );
 
         // "Cancel" button
@@ -303,10 +308,18 @@ public class YasmeLogin extends Activity {
             String email = params[1];
             String password = params[2];
             String password_check = params[3];
-
-            if (!password.equals(password_check)) {
-                return false;
-            }
+			
+			//validate values
+			if (!password.equals(password_check)) {
+				return false;
+			}
+			if(password.length() < 4) {
+				return false;
+			}
+			if(!email.contains("@")) {
+				return false;
+			}
+			
             try {
                 id = new UserTask(url).registerUser(new User(password, name,
                         email));
