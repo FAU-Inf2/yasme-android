@@ -5,6 +5,7 @@ import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -93,16 +94,16 @@ public class DeviceTask {
                     Device.Platform platform = null;
                     String jsonPlatform = jsonObject.getString("platform");
 
-                    if(jsonPlatform.equals(Device.Platform.ANDROID.toString()))
+                    if (jsonPlatform.equals(Device.Platform.ANDROID.toString()))
                         platform = Device.Platform.ANDROID;
-                    else if(jsonPlatform.equals(Device.Platform.IOS.toString()))
+                    else if (jsonPlatform.equals(Device.Platform.IOS.toString()))
                         platform = Device.Platform.IOS;
-                    else if(jsonPlatform.equals(Device.Platform.WINDOWSPHONE.toString()))
+                    else if (jsonPlatform.equals(Device.Platform.WINDOWSPHONE.toString()))
                         platform = Device.Platform.WINDOWSPHONE;
 
                     //TODO: publicKey nachtragen
                     return new Device(jsonObject.getLong("id"), (jsonObject.getJSONObject("user")).getLong("id"),
-                            platform, jsonObject.getString("type"),jsonObject.getString("number"), null);
+                            platform, jsonObject.getString("type"), jsonObject.getString("number"), null);
                 case 500:
                     throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 default:
@@ -152,18 +153,18 @@ public class DeviceTask {
                         Device.Platform platform = null;
                         String jsonPlatform = jsonObject.getString("platform");
 
-                        if(jsonPlatform.equals(Device.Platform.ANDROID.toString()))
+                        if (jsonPlatform.equals(Device.Platform.ANDROID.toString()))
                             platform = Device.Platform.ANDROID;
-                        else if(jsonPlatform.equals(Device.Platform.IOS.toString()))
+                        else if (jsonPlatform.equals(Device.Platform.IOS.toString()))
                             platform = Device.Platform.IOS;
-                        else if(jsonPlatform.equals(Device.Platform.WINDOWSPHONE.toString()))
+                        else if (jsonPlatform.equals(Device.Platform.WINDOWSPHONE.toString()))
                             platform = Device.Platform.WINDOWSPHONE;
 
-                        devices.add(new Device(jsonObject.getLong("id"),jsonObject.getJSONObject("user").getLong("id"),
-                                platform, jsonObject.getString("type"),jsonObject.getString("number"),null));
+                        devices.add(new Device(jsonObject.getLong("id"), jsonObject.getJSONObject("user").getLong("id"),
+                                platform, jsonObject.getString("type"), jsonObject.getString("number"), null));
                     }
 
-                    System.out.println("No.Devices: "+jsonArray.length());
+                    System.out.println("No.Devices: " + jsonArray.length());
                     break;
 
                 //TODO: ErrorCode vermutlich fehlerhaft
@@ -182,5 +183,35 @@ public class DeviceTask {
         return devices;
     }
 
-    //TODO: DELETE Methode erstellen
+    public boolean deleteDevice(long deviceId, long userId, String accessToken) throws RestServiceException {
+
+        String requestURL = url.concat("/" + deviceId);
+        try {
+
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpDelete httpDelete = new HttpDelete(requestURL);
+
+            httpDelete.setHeader("userId", Long.toString(userId));
+            httpDelete.setHeader("Authorization", accessToken);
+
+            HttpResponse httpResponse = httpClient.execute(httpDelete);
+
+            switch (httpResponse.getStatusLine().getStatusCode()) {
+
+                case 201:
+                    System.out.println("[DEBUG] Device removed!");
+                    return true;
+                case 404:
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
+                default:
+                    throw new RestServiceException(Error.ERROR);
+
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        }
+        return false;
+    }
 }
