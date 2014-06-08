@@ -15,6 +15,8 @@ public class Device {
     private long user;
     private String number; // optional
 
+    private String publicKey;
+
     public Device(long user, Platform platform, String type, String number) {
         this.user = user;
         this.platform = platform;
@@ -22,17 +24,13 @@ public class Device {
         this.number = number;
     }
 
-    public Device(long user, Platform platform, String type) {
-        this.user = user;
-        this.platform = platform;
-        this.type = type;
-    }
-
-    public Device(long id, long user, Platform platform, String type) {
+    public Device(long id, long user, Platform platform, String type, String number, String publicKey) {
         this.id = id;
         this.user = user;
         this.platform = platform;
         this.type = type;
+        this.number = number;
+        this.publicKey = publicKey;
     }
 
     public Device() {
@@ -76,6 +74,14 @@ public class Device {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 }
 

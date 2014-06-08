@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,7 +27,7 @@ public class DeviceTask {
         this.url = url.concat("/device");
     }
 
-    public Long registerDevice(Device device) throws RestServiceException {
+    public Long registerDevice(Device device, String accessToken) throws RestServiceException {
 
         String requestURL = url;
 
@@ -41,6 +42,9 @@ public class DeviceTask {
 
             httpPost.setHeader("Content-type", "application/json");
             httpPost.setHeader("Accept", "application/json");
+
+            httpPost.setHeader("userId", Long.toString(device.getUser()));
+            httpPost.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
 
@@ -66,37 +70,44 @@ public class DeviceTask {
         return null;
     }
 
-    public Device getDevice(long deviceId) throws RestServiceException {
+    public Device getDevice(long deviceId, long userId, String accessToken) throws RestServiceException {
 
         String requestURL = url.concat("/" + deviceId);
 
         try {
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(requestURL);
-            httpGet.addHeader("accept", "application/json");
+
+            httpGet.setHeader("accept", "application/json");
+            httpGet.setHeader("userId", Long.toString(userId));
+            httpGet.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpGet);
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
-                case 200:
 
+                case 200:
                     JSONObject jsonObject = new JSONObject((new BufferedReader(new InputStreamReader(
                             httpResponse.getEntity().getContent()))).readLine());
-                    JSONObject user = jsonObject.getJSONObject("user");
 
-                    /*TODO:
-                    Platform Enum aus Rückgabe JSON auslesen und in Device ablegen
-                    Sinn von Number Obj erfragen
-                     */
+                    Device.Platform platform = null;
+                    String jsonPlatform = jsonObject.getString("platform");
 
+                    if(jsonPlatform.equals(Device.Platform.ANDROID.toString()))
+                        platform = Device.Platform.ANDROID;
+                    else if(jsonPlatform.equals(Device.Platform.IOS.toString()))
+                        platform = Device.Platform.IOS;
+                    else if(jsonPlatform.equals(Device.Platform.WINDOWSPHONE.toString()))
+                        platform = Device.Platform.WINDOWSPHONE;
+
+                    //TODO: publicKey nachtragen
                     return new Device(jsonObject.getLong("id"), (jsonObject.getJSONObject("user")).getLong("id"),
-                            null, jsonObject.getString("type"));
+                            platform, jsonObject.getString("type"),jsonObject.getString("number"), null);
                 case 500:
-                    throw new RestServiceException(Error.CONNECTION_ERROR);
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 default:
                     throw new RestServiceException(Error.ERROR);
             }
-
 
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -109,48 +120,66 @@ public class DeviceTask {
         return null;
     }
 
-    public ArrayList<Device> getAllDevices(String userID) {
+    public ArrayList<Device> getAllDevices(long userId, String accessToken) throws RestServiceException {
 
-        //TODO: IN PROGRESS
-        /*
+        String requestURL = url.concat("/all/" + userId);
         ArrayList<Device> devices = new ArrayList<Device>();
 
         try {
 
-            HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet(url + "/device/all/" + userID);
-            request.addHeader("accept", "application/json");
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(requestURL);
 
-            HttpResponse response = client.execute(request);
+            httpGet.setHeader("accept", "application/json");
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    response.getEntity().getContent()));
+            httpGet.setHeader("userId", Long.toString(userId));
+            httpGet.setHeader("Authorization", accessToken);
 
-            String json = reader.readLine();
+            HttpResponse httpResponse = httpClient.execute(httpGet);
 
-            JSONArray jArray = new JSONArray(json);
+            System.out.println(httpResponse.getStatusLine().getStatusCode());
 
-            for (int i = 0; i < jArray.length(); i++) {
+            switch (httpResponse.getStatusLine().getStatusCode()) {
 
+                case 200:
+                    JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
+                            httpResponse.getEntity().getContent())).readLine());
 
-                JSONObject obj = jArray.getJSONObject(i);
-                devices.add(new Device(obj.getString("id"), obj
-                        .getString("platform"), obj.getString("type"), obj
-                        .getString("userID")));
+                    for (int i = 0; i < jsonArray.length(); i++) {
 
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                        Device.Platform platform = null;
+                        String jsonPlatform = jsonObject.getString("platform");
+
+                        if(jsonPlatform.equals(Device.Platform.ANDROID.toString()))
+                            platform = Device.Platform.ANDROID;
+                        else if(jsonPlatform.equals(Device.Platform.IOS.toString()))
+                            platform = Device.Platform.IOS;
+                        else if(jsonPlatform.equals(Device.Platform.WINDOWSPHONE.toString()))
+                            platform = Device.Platform.WINDOWSPHONE;
+
+                        devices.add(new Device(jsonObject.getLong("id"),jsonObject.getJSONObject("user").getLong("id"),
+                                platform, jsonObject.getString("type"),jsonObject.getString("number"),null));
+                    }
+
+                    System.out.println("No.Devices: "+jsonArray.length());
+                    break;
+
+                //TODO: ErrorCode vermutlich fehlerhaft
+                case 204:
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
+                default:
+                    throw new RestServiceException(Error.ERROR);
             }
-
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            new RestServiceException(Error.CONNECTION_ERROR);
         }
-
         return devices;
-        */
-        return null;
     }
 
     //TODO: DELETE Methode erstellen
