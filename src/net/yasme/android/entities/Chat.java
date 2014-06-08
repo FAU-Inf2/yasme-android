@@ -106,7 +106,10 @@ public class Chat {
             Message createdMessage = new Message(new User(user_name, uid),
                     msg_encrypted, chat_id, aes.getKeyId());
             try {
-                result = messageTask.sendMessage(createdMessage);
+
+                //TODO: AccessToken auslesen und als String sendMessage übergeben
+                //Current: Default Value 0
+                result = messageTask.sendMessage(createdMessage,"0");
             } catch (RestServiceException e) {
                 System.out.println(e.getMessage());
             }
@@ -136,7 +139,9 @@ public class Chat {
         protected Boolean doInBackground(Long... params) {
 
             try {
-                messages = messageTask.getMessage(params[0], params[1]);
+                //TODO: AccessToken auslesen und als String getMessage() übergeben
+                //Current: Default Value 0
+                messages = messageTask.getMessage(params[0], params[1],"0");
             } catch (RestServiceException e) {
                 e.printStackTrace();
             }
