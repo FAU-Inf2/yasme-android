@@ -21,7 +21,7 @@ import net.yasme.android.entities.MessageKey;
 //											2	| 	KEY, IV
 
 //TO-DO: Bevor Nachrichten vom Server geholt werden, m�ssen neue Keys vom Server geholt werden und diese Tabellen aktualisiert werden
-//TO-DO: Wenn Schl�ssel empfangen wird, dann Befehl senden, dass Schl�ssel auf Server gel�scht wird
+//TO-DO: Wenn Schluessel empfangen wird, dann Befehl senden, dass Schl�ssel auf Server gel�scht wird
 //TO-DO: Key-Erzeugung-->KEY-ID: Timestamp in Nanosekunden
 
 public class MessageEncryption {
@@ -42,8 +42,8 @@ public class MessageEncryption {
 	private final String CHATKEYMAPPING = "ChatKeyMapping"; // tablename for
 															// chatkeymapping
 
-	AESEncryption aes;
-	private KeyTask keytask;
+    private AESEncryption aes;
+    private KeyTask keytask;
 
 	// TODO: aus long chatid muss Chat chat werden
 	// Constructor --> holt bzw. generiert Key, falls noetig
@@ -206,7 +206,11 @@ public class MessageEncryption {
 		// Key is not available
 		return null;
 
-	}
+                //convert to byte
+                byte[][] keydata = new byte[2][16];
+                keydata[0] = Base64.decode(base64key.getBytes(), Base64.DEFAULT);
+                keydata[1] = Base64.decode(base64iv.getBytes(), Base64.DEFAULT);
+          
 
 	// Async-Task for sending Key to Server
 	private class SendKeyTask extends AsyncTask<String, Void, Boolean> {

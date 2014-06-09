@@ -110,9 +110,8 @@ public class AESEncryption {
 
 	// decrypt
 	public String decrypt(String encrypted) {
-		try {
-			byte[] encrypted_decode = Base64.decode(encrypted.getBytes(),
-					Base64.DEFAULT);
+		try{
+			byte[] encrypted_decode = Base64.decode(encrypted.getBytes("UTF-8"), Base64.DEFAULT);
 			return new String(crypt(encrypted_decode, Cipher.DECRYPT_MODE));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -120,6 +119,24 @@ public class AESEncryption {
 		}
 
 	}
+	
+	
+			
+	// One method for both. "mode" decides, whether it makes encryption or decryption.
+		public byte[] crypt(byte[] in, int mode) {
+			Cipher cipher;
+			try {
+				cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+				cipher.init(mode, key, iv);		
+				return cipher.doFinal(in);
+				
+			} catch (Exception e) {}
+			return null;
+		}
+		
+		
+		
+}
 
 	// One method for both. "mode" decides, whether it makes encryption or
 	// decryption.
