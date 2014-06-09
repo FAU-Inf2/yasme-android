@@ -14,8 +14,10 @@ import android.util.Base64;
 
 public class RSAEncryption {
 
-private static final int KEYSIZE = 2048;
-private KeyPair keys = null;	
+	private static final int KEYSIZE = 2048;
+	private static final String SIGNATURE_MODE = "SHA256withRSA";
+	
+	private KeyPair keys = null;	
 
 	//generate RSAKeys
 	public KeyPair generateKeyPair(){
@@ -69,8 +71,7 @@ private KeyPair keys = null;
 		byte[] signatured = null;
 		
 		try {
-			//TODO: MD5 or better SHA?
-			Signature sig = Signature.getInstance("SHA256withRSA");
+			Signature sig = Signature.getInstance(SIGNATURE_MODE);
 		    sig.initSign(privKey);
 		    sig.update(text.getBytes("UTF-8"));
 		    
@@ -92,8 +93,7 @@ private KeyPair keys = null;
 			byte[] signature = Base64.decode(signature_base64.getBytes("UTF-8"), Base64.DEFAULT);
 			byte[] encrypted = Base64.decode(encrypted_base64.getBytes("UTF-8"), Base64.DEFAULT);
 			
-			//TODO: MD5 or better SHA?
-			Signature sig = Signature.getInstance("SHA256withRSA");
+			Signature sig = Signature.getInstance(SIGNATURE_MODE);
 		    sig.initVerify(pubKey);
 		    //TODO: Laut Tutorial muss hier das Ergebnis nach der Entschlüsselung stehen
 		    sig.update(encrypted);

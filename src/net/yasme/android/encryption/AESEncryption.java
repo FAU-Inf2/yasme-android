@@ -134,23 +134,6 @@ public class AESEncryption {
 			return null;
 		}
 		
-		
-		
-}
 
-	// One method for both. "mode" decides, whether it makes encryption or
-	// decryption.
-	public byte[] crypt(byte[] in, int mode) {
-		Cipher cipher;
-		byte[] out = new byte[0];
-		try {
-			cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			cipher.init(mode, key, iv);
-			out = cipher.doFinal(in);
-
-		} catch (Exception e) {
-		}
-		return out;
-	}
 
 }
