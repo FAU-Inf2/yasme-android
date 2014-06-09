@@ -1,5 +1,9 @@
 package net.yasme.android;
 
+import net.yasme.android.connection.AuthorizationTask;
+import net.yasme.android.entities.User;
+import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.connection.UserTask;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
@@ -20,10 +24,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import net.yasme.android.connection.AuthorizationTask;
-import net.yasme.android.connection.UserTask;
-import net.yasme.android.entities.User;
-import net.yasme.android.exception.RestServiceException;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -31,9 +31,9 @@ import net.yasme.android.exception.RestServiceException;
  */
 public class YasmeLogin extends Activity {
 
-	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
-	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
-	public final static String USER_ID = "net.yasme.andriod.USER_ID";
+    public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
+    public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
+    public final static String USER_ID = "net.yasme.andriod.USER_ID";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -41,7 +41,7 @@ public class YasmeLogin extends Activity {
     private UserLoginTask authTask = null;
 
     protected String url = null;
-    protected String id;
+    protected long id;
     protected String[] accessToken = new String[2];
 
     // Values for name, email and password at the time of the login attempt.
@@ -104,8 +104,7 @@ public class YasmeLogin extends Activity {
                     public void onClick(View view) {
                         attemptLogin();
                     }
-                }
-        );
+                });
 
         findViewById(R.id.register_button).setOnClickListener(
                 new View.OnClickListener() {
@@ -115,8 +114,7 @@ public class YasmeLogin extends Activity {
                         // zusätzliche email-View erzeugen
                         registerDialog();
                     }
-                }
-        );
+                });
     }
 
     // TODO: Strings nach strings.xml bringen
@@ -129,25 +127,20 @@ public class YasmeLogin extends Activity {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
-		
         final EditText name = new EditText(this);
         name.setHint("Name");
         list.addView(name, layoutParams);
-		
         final EditText mail = new EditText(this);
         mail.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
         mail.setHint("E-Mail");
         list.addView(mail, layoutParams);
-		
         final EditText password = new EditText(this);
         password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
         password.setHint("Passwort");
         list.addView(password, layoutParams);
-		
         final EditText password_check = new EditText(this);
         password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
         password_check.setHint("Passwort");
-		
         list.addView(password_check, layoutParams);
         alert.setView(list);
         //TODO: Input type seems to change nothing??
@@ -167,16 +160,14 @@ public class YasmeLogin extends Activity {
                         new UserRegistrationTask().execute(inputName,
                                 inputMail, inputPassword, inputPasswordCheck);
                     }
-
-        );
+                });
 
         // "Cancel" button
         alert.setNegativeButton("Cancel",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     }
-                }
-        );
+                });
 
         alert.show();
     }
@@ -308,18 +299,10 @@ public class YasmeLogin extends Activity {
             String email = params[1];
             String password = params[2];
             String password_check = params[3];
-			
-			//validate values
-			if (!password.equals(password_check)) {
-				return false;
-			}
-			if(password.length() < 4) {
-				return false;
-			}
-			if(!email.contains("@")) {
-				return false;
-			}
-			
+
+            if (!password.equals(password_check)) {
+                return false;
+            }
             try {
                 id = new UserTask(url).registerUser(new User(password, name,
                         email));
@@ -339,16 +322,14 @@ public class YasmeLogin extends Activity {
                         getApplicationContext(),
                         getResources().getString(
                                 R.string.registration_successful),
-                        Toast.LENGTH_SHORT
-                ).show();
+                        Toast.LENGTH_SHORT).show();
                 start();
             } else {
                 Toast.makeText(
                         getApplicationContext(),
                         getResources().getString(
                                 R.string.registration_not_successful),
-                        Toast.LENGTH_SHORT
-                ).show();
+                        Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -380,7 +361,7 @@ public class YasmeLogin extends Activity {
                 SharedPreferences storage = getSharedPreferences(STORAGE_PREFS,
                         MODE_PRIVATE);
                 SharedPreferences.Editor editor = storage.edit();
-                editor.putString(USER_ID, accessToken[0]);
+                editor.putLong(USER_ID, Long.parseLong(accessToken[0]));
                 editor.putString("accesToken", accessToken[1]);
                 editor.putString(USER_NAME, name);
                 editor.commit();
@@ -420,7 +401,7 @@ public class YasmeLogin extends Activity {
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = storage.edit();
         editor.putString(USER_NAME, name);
-        editor.putString(USER_ID, id);
+        editor.putLong(USER_ID, id);
         editor.putString("accesToken1", accessToken[1]);
 
         // Commit the edits!

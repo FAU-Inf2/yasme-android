@@ -18,168 +18,167 @@ import java.io.InputStreamReader;
 
 public class KeyTask {
 
-    private String url;
+	private String url;
 
-    public KeyTask(String url) {
-        this.url = url;
-    }
+	public KeyTask(String url) {
+		this.url = url;
+	}
 
-    public boolean saveKey(MessageKey messageKey) {
+	public boolean saveKey(MessageKey messageKey) {
 
-        String requestURL = url.concat("/msgkey");
+		String requestURL = url.concat("/msgkey");
 
-        try {
+		try {
 
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(requestURL);
+			DefaultHttpClient httpClient = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost(requestURL);
 
-            // To Do: Complete MessageKey as JSon
-            // ObjectMapper mapper = new ObjectMapper();
-            // String json = mapper.writeValueAsString(message);
+			// To Do: Complete MessageKey as JSon
+			// ObjectMapper mapper = new ObjectMapper();
+			// String json = mapper.writeValueAsString(message);
 
-            JSONObject obj = new JSONObject();
+			JSONObject obj = new JSONObject();
 
-            obj.put("id", messageKey.getId());
-            obj.put("creatorDevice", messageKey.getCreator());
-            obj.put("chat", messageKey.getChat());
-            obj.put("encInfoId", messageKey.getEncInfoId());
-            obj.put("recipientDevice", messageKey.getRecipient());
-            obj.put("encInfo", messageKey.getEncInfo());
-            obj.put("key", messageKey.getKey());
-            obj.put("sign", messageKey.getSign());
-            obj.put("encType", messageKey.getEncType());
+			obj.put("id", messageKey.getId());
+			obj.put("creatorDevice", messageKey.getCreator());
+			obj.put("chat", messageKey.getChat());
+			obj.put("encInfoId", messageKey.getEncInfoId());
+			obj.put("recipientDevice", messageKey.getRecipient());
+			obj.put("encInfo", messageKey.getEncInfo());
+			obj.put("key", messageKey.getKey());
+			obj.put("sign", messageKey.getSign());
+			obj.put("encType", messageKey.getEncType());
 
-            String json = obj.toString();
-            StringEntity se = new StringEntity(json);
+			String json = obj.toString();
+			StringEntity se = new StringEntity(json);
 
-            httpPost.setEntity(se);
+			httpPost.setEntity(se);
 
-            httpPost.setHeader("Content-type", "application/json");
-            httpPost.setHeader("Accept", "application/json");
+			httpPost.setHeader("Content-type", "application/json");
+			httpPost.setHeader("Accept", "application/json");
 
-            HttpResponse httpResponse = httpClient.execute(httpPost);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-            if (httpResponse.getStatusLine().getStatusCode() == 201) {
+			if (httpResponse.getStatusLine().getStatusCode() == 201) {
 
-                /**** DEBUG *******/
-                BufferedReader rd = new BufferedReader(new InputStreamReader(
-                        httpResponse.getEntity().getContent()));
-                System.out.println("[???]: " + rd.readLine());
+				/**** DEBUG *******/
+				BufferedReader rd = new BufferedReader(new InputStreamReader(
+						httpResponse.getEntity().getContent()));
+				System.out.println("[???]: " + rd.readLine());
 
-                /**** DEBUG*END ***/
+				/**** DEBUG*END ***/
 
-                return true;
-            }
+				return true;
+			}
 
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 
-        return false;
-    }
+		return false;
+	}
 
+	public boolean deleteKey(long chatId, long keyId) {
+		try {
 
-    public boolean deleteKey(long chatId, long keyId) {
-        try {
+			HttpClient client = new DefaultHttpClient();
+			HttpDelete request = new HttpDelete(url + "/msgkey/" + keyId + "/"
+					+ chatId);
 
-            HttpClient client = new DefaultHttpClient();
-            HttpDelete request = new HttpDelete(url + "/msgkey/" + keyId + "/" + chatId);
+			HttpResponse response = client.execute(request);
+			// String httpcode = EntityUtils.toString(response.getEntity(),
+			// "UTF-8");
 
-            HttpResponse response = client.execute(request);
-            //String httpcode = EntityUtils.toString(response.getEntity(), "UTF-8");
+			// TODO: Antwort ueberpruefen
 
-            //TODO: Antwort ueberpruefen
+			return true;
 
-            return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+	// TO-DO: Schreibe Klasse um
+	// Schluessel m�ssen aus Message-JSON extrahiert werden
+	public MessageKey getKey(long userID, long recID, long deviceID) {
 
+		MessageKey messageKey = null;
 
-    //TO-DO: Schreibe Klasse um
-    //Schluessel m�ssen aus Message-JSON extrahiert werden
-    public MessageKey getKey(long userID, long recID, long deviceID) {
+		try {
 
-        MessageKey messageKey = null;
+			HttpClient client = new DefaultHttpClient();
+			HttpGet request = new HttpGet(url + "/" + userID + "/" + recID
+					+ "/" + deviceID);
+			request.addHeader("accept", "application/json");
 
-        try {
+			HttpResponse response = client.execute(request);
 
-            HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet(url + "/" + userID + "/" + recID
-                    + "/" + deviceID);
-            request.addHeader("accept", "application/json");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent(), "UTF-8"));
+			String json = reader.readLine();
 
-            HttpResponse response = client.execute(request);
+			JSONObject jObject = new JSONObject(json);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    response.getEntity().getContent(), "UTF-8"));
-            String json = reader.readLine();
+			messageKey = new MessageKey(
+					Long.parseLong(jObject.getString("id")),
+					Long.parseLong(jObject.getString("creator")),
+					Long.parseLong(jObject.getString("recipient")),
+					Long.parseLong(jObject.getString("devId")),
+					jObject.getString("key"), Byte.parseByte(jObject
+							.getString("encType")), Long.parseLong(jObject
+							.getString("encInfoId")),
+					jObject.getString("encInfo"), jObject.getString("sign"));
 
-            JSONObject jObject = new JSONObject(json);
+			/******** DEBUG ***********/
+			System.out.println(messageKey.getId() + " "
+					+ messageKey.getRecipient());
+			/******** DEBUG*END *******/
 
-            messageKey = new MessageKey(
-                    Long.parseLong(jObject.getString("id")),
-                    Long.parseLong(jObject.getString("creator")),
-                    Long.parseLong(jObject.getString("recipient")),
-                    Long.parseLong(jObject.getString("devId")),
-                    jObject.getString("key"), Byte.parseByte(jObject
-                    .getString("encType")), Long.parseLong(jObject
-                    .getString("encInfoId")),
-                    jObject.getString("encInfo"), jObject.getString("sign")
-            );
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-            /******** DEBUG ***********/
-            System.out.println(messageKey.getId() + " "
-                    + messageKey.getRecipient());
-            /******** DEBUG*END *******/
+		return messageKey;
+	}
 
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+	public long getKeyId(String userID) {
 
-        return messageKey;
-    }
+		long id = 0;
+		try {
 
-    public long getKeyId(String userID) {
+			HttpClient client = new DefaultHttpClient();
+			HttpGet request = new HttpGet(url + "/msgkey/id/" + userID);
+			request.addHeader("accept", "application/json");
 
-        long id = 0;
-        try {
+			HttpResponse response = client.execute(request);
 
-            HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet(url + "/msgkey/id/" + userID);
-            request.addHeader("accept", "application/json");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent(), "UTF-8"));
 
-            HttpResponse response = client.execute(request);
+			String json = reader.readLine();
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    response.getEntity().getContent(), "UTF-8"));
+			JSONObject jObject = new JSONObject(json);
 
-            String json = reader.readLine();
+			id = Long.parseLong(jObject.getString("id"));
 
-            JSONObject jObject = new JSONObject(json);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-            id = Long.parseLong(jObject.getString("id"));
-
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return id;
-    }
+		return id;
+	}
 
 }

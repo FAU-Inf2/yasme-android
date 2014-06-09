@@ -10,141 +10,143 @@ import net.yasme.android.exception.RestServiceException;
 
 import java.util.ArrayList;
 
-
 /**
  * Created by robert on 28.05.14.
  */
 @DatabaseTable(tableName = "chatrooms")
 public class Chat {
-    public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
-    public final static String USER_ID = "net.yasme.andriod.USER_ID";
+	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
+	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 
-    @DatabaseField
-    private ArrayList<Message> messages;
-    @DatabaseField
+	@DatabaseField
+	private ArrayList<Message> messages;
+	@DatabaseField
 	private long lastMessageID;
-    @DatabaseField(generatedId = true, id = true)
+	@DatabaseField(generatedId = true, id = true)
 	private long chat_id;
 
-    private String user_name;
+	private String user_name;
 	private long user_id;
-    String url;
+	String url;
 
-    private MessageEncryption aes;
-    private MessageTask messageTask;
-    public YasmeChat activity;
+	private MessageEncryption aes;
+	private MessageTask messageTask;
+	public YasmeChat activity;
 
-    /**
-     * Constructors *
-     */
-    public Chat(long chat_id, long user_id, String url, YasmeChat activity) {
-        this.chat_id = chat_id;
-        this.user_id = user_id;
-        this.activity = activity;
+	/**
+	 * Constructors *
+	 */
+	public Chat(long chat_id, long user_id, String url, YasmeChat activity) {
+		this.chat_id = chat_id;
+		this.user_id = user_id;
+		this.activity = activity;
 
-        //setup Encryption for this chat
-        //TODO: DEVICE-ID statt USERID uebergeben
+		// setup Encryption for this chat
+		// TODO: DEVICE-ID statt USERID uebergeben
 		long creatorDevice = user_id;
-        aes = new MessageEncryption(activity, chat_id, creatorDevice);
+		aes = new MessageEncryption(activity, chat_id, creatorDevice);
 
-        messageTask = new MessageTask(url);
+		messageTask = new MessageTask(url);
 
-        lastMessageID = 0L;
-    }
+		lastMessageID = 0L;
+	}
 
-    public Chat() {
-        // ORMLite needs a no-arg constructor
-    }
+	public Chat() {
+		// ORMLite needs a no-arg constructor
+	}
 
-    /**
-     * Getters *
-     */
-    public long getChat_id() {
-        return chat_id;
-    }
+	/**
+	 * Getters *
+	 */
+	public long getChat_id() {
+		return chat_id;
+	}
 
-    public ArrayList<Message> getStoredMessages() {
-        return messages;
-    }
+	public ArrayList<Message> getStoredMessages() {
+		return messages;
+	}
 
-    /**
-     * Setters *
-     */
-    public void setMessages(ArrayList<Message> messages) {
-        this.messages = messages;
-    }
+	/**
+	 * Setters *
+	 */
+	public void setMessages(ArrayList<Message> messages) {
+		this.messages = messages;
+	}
 
-    public void setLastMessageID(long newlastMessageID) {
-        lastMessageID = newlastMessageID;
-    }
+	public void setLastMessageID(long newlastMessageID) {
+		lastMessageID = newlastMessageID;
+	}
 
-    /**
-     * Other methods *
-     */
-    public void send(String msg) {
-        new SendMessageTask().execute(msg, user_name);
-    }
+	/**
+	 * Other methods *
+	 */
+	public void send(String msg) {
+		new SendMessageTask().execute(msg, user_name);
+	}
 
-    public void update() {
-        new GetMessageTask().execute(lastMessageID, user_id);
-    }
+	public void update() {
+		new GetMessageTask().execute(lastMessageID, user_id);
+	}
 
-    private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
-        String msg;
+	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
+		String msg;
 
-        protected Boolean doInBackground(String... params) {
+		protected Boolean doInBackground(String... params) {
 
-            msg = params[0];
+			msg = params[0];
 
-            long uid = user_id;
-            boolean result = false;
+			long uid = user_id;
+			boolean result = false;
 
-            //encrypt Message
-            String msg_encrypted = aes.encrypt(msg);
+			// encrypt Message
+			String msg_encrypted = aes.encrypt(msg);
 
-            //create Message
-            Message createdMessage = new Message(new User(user_name, uid),
-                    msg_encrypted, chat_id, aes.getKeyId());
-            try {
+			// create Message
+			Message createdMessage = new Message(new User(user_name, uid),
+					msg_encrypted, chat_id, aes.getKeyId());
+			try {
 
                 //TODO: AccessToken auslesen und als String sendMessage übergeben
                 //Current: Default Value 0
                 result = messageTask.sendMessage(createdMessage,"0");
-            } catch (RestServiceException e) {
-                System.out.println(e.getMessage());
-            }
-            return result;
-        }
+			} catch (RestServiceException e) {
+				System.out.println(e.getMessage());
+			}
+			return result;
+		}
 
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                update();
-                activity.getStatus().setText("Gesendet: " + msg);
-            } else {
-                activity.getStatus().setText("Senden fehlgeschlagen");
-            }
-        }
-    }
+		protected void onPostExecute(Boolean result) {
+			if (result) {
+				update();
+				activity.getStatus().setText("Gesendet: " + msg);
+			} else {
+				activity.getStatus().setText("Senden fehlgeschlagen");
+			}
+		}
+	}
 
-    //TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach gel�scht werden
+	// TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach
+	// gel�scht werden
 
-    private class GetMessageTask extends AsyncTask<Long, Void, Boolean> {
-        ArrayList<Message> messages;
+	private class GetMessageTask extends AsyncTask<Long, Void, Boolean> {
+		ArrayList<Message> messages;
 
-        /**
-         * @param params [0] is lastMessageID
-         * @param params [1] is user_id
-         * @return Returns true if it was successful, otherwise false
-         */
-        protected Boolean doInBackground(Long... params) {
+		/**
+		 * @param params
+		 *            [0] is lastMessageID
+		 * @param params
+		 *            [1] is user_id
+		 * @return Returns true if it was successful, otherwise false
+		 */
+		protected Boolean doInBackground(Long... params) {
 
-            try {
+			try {
                 //TODO: AccessToken auslesen und als String getMessage() übergeben
                 //Current: Default Value 0
                 messages = messageTask.getMessage(params[0], params[1],"0");
-            } catch (RestServiceException e) {
-                e.printStackTrace();
-            }
+			} catch (RestServiceException e) {
+				e.printStackTrace();
+			}
 
             if (messages == null) {
                 return false;
@@ -158,9 +160,8 @@ public class Chat {
                 msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
             }
 
-
-            return true;
-        }
+			return true;
+		}
 
         /**
          * Fills the TextViews with the messages

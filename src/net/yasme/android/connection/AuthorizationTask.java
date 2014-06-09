@@ -20,84 +20,86 @@ import java.io.IOException;
  */
 public class AuthorizationTask {
 
-    private String url;
+	private String url;
 
-    public AuthorizationTask(String url) {
-        this.url = url.concat("/sign");
-    }
+	public AuthorizationTask(String url) {
+		this.url = url.concat("/sign");
+	}
 
-    public String[] loginUser(User user) throws RestServiceException {
+	public String[] loginUser(User user) throws RestServiceException {
 
-        String requestURL = url.concat("/in");
+		String requestURL = url.concat("/in");
 
-        try {
+		try {
 
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(requestURL);
+			DefaultHttpClient httpClient = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost(requestURL);
 
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+			ObjectWriter ow = new ObjectMapper().writer()
+					.withDefaultPrettyPrinter();
 
-            StringEntity se = new StringEntity(ow.writeValueAsString(user));
-            httpPost.setEntity(se);
+			StringEntity se = new StringEntity(ow.writeValueAsString(user));
+			httpPost.setEntity(se);
 
-            httpPost.setHeader("Content-type", "application/json");
-            httpPost.setHeader("Accept", "application/json");
+			httpPost.setHeader("Content-type", "application/json");
+			httpPost.setHeader("Accept", "application/json");
 
-            HttpResponse httpResponse = httpClient.execute(httpPost);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-            switch (httpResponse.getStatusLine().getStatusCode()) {
-                case 200:
-                    Header userID = httpResponse.getFirstHeader("userId");
-                    Header token = httpResponse.getFirstHeader("Authorization");
+			switch (httpResponse.getStatusLine().getStatusCode()) {
+			case 200:
+				Header userID = httpResponse.getFirstHeader("userId");
+				Header token = httpResponse.getFirstHeader("Authorization");
 
-                    // DEBUG:
-                    System.out.println("Login successful. Your UserID is "
-                            + userID.getValue()+".");
+				// DEBUG:
+				System.out.println("Login successful. Your UserID is "
+						+ userID.getValue() + ".");
 
-                    return new String[]{userID.getValue(), token.getValue()};
-                case 401:
-                    throw new RestServiceException(UserError.LOGIN_FAILED);
-                default:
-                    throw new RestServiceException(UserError.ERROR);
-            }
+				return new String[] { userID.getValue(), token.getValue() };
+			case 401:
+				throw new RestServiceException(UserError.LOGIN_FAILED);
+			default:
+				throw new RestServiceException(UserError.ERROR);
+			}
 
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            throw new RestServiceException(Error.CONNECTION_ERROR);
-        }
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			throw new RestServiceException(Error.CONNECTION_ERROR);
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public boolean logoutUser(long userId, long accessToken) throws RestServiceException {
+	public boolean logoutUser(long userId, long accessToken)
+			throws RestServiceException {
 
-        String requestURL = url.concat("/out");
+		String requestURL = url.concat("/out");
 
-        try {
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(requestURL);
+		try {
+			DefaultHttpClient httpClient = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost(requestURL);
 
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("userId", Long.toString(userId));
-            httpPost.setHeader("Authorization", Long.toString(accessToken));
+			httpPost.setHeader("Accept", "application/json");
+			httpPost.setHeader("userId", Long.toString(userId));
+			httpPost.setHeader("Authorization", Long.toString(accessToken));
 
-            HttpResponse httpResponse = httpClient.execute(httpPost);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-            switch (httpResponse.getStatusLine().getStatusCode()) {
-                case 200:
-                    // DEBUG:
-                    System.out.println("Signed out successful!");
-                    return true;
-                default:
-                    throw new RestServiceException(UserError.LOGOUT_FAILED);
-            }
+			switch (httpResponse.getStatusLine().getStatusCode()) {
+			case 200:
+				// DEBUG:
+				System.out.println("Signed out successful!");
+				return true;
+			default:
+				throw new RestServiceException(UserError.LOGOUT_FAILED);
+			}
 
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            throw new RestServiceException(Error.CONNECTION_ERROR);
-        }
-        return false;
-    }
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			throw new RestServiceException(Error.CONNECTION_ERROR);
+		}
+		return false;
+	}
 }

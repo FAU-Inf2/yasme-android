@@ -5,24 +5,25 @@ package net.yasme.android.entities;
 public class MessageKey {
 
 	private long id = -1;
-	private long creatorDevice = -1; //fuer Auswahl des oeffentlichen Schluessels
-	private long recipientDevice = -1; //fuer Auswahl des DH-Anteils
-	//TODO: aus long chat muss Chat chat werden
+	private long creatorDevice = -1; // fuer Auswahl des oeffentlichen
+										// Schluessels
+	private long recipientDevice = -1; // fuer Auswahl des DH-Anteils
+	// TODO: aus long chat muss Chat chat werden
 	private long chat = -1;
 	private String key = "";
-	//TODO IV hinzufuegen
+	// TODO IV hinzufuegen
 	private String iv = "";
 	private byte encType = -1;
 	private long encInfoId = -1;
 	private String encInfo = "";
 	private String sign = "";
-	//TODO: Zeitstempel hinzufuegen
+	// TODO: Zeitstempel hinzufuegen
 	private long timestamp = -1;
 
 	/** Constructors **/
-	public MessageKey(long id, long creatorDevice, long recipientDevice, long chat,
-			String key, byte encType, long encInfoId, String encInfo,
-			String sign) {
+	public MessageKey(long id, long creatorDevice, long recipientDevice,
+			long chat, String key, byte encType, long encInfoId,
+			String encInfo, String sign) {
 		this.id = id;
 		this.creatorDevice = creatorDevice;
 		this.recipientDevice = recipientDevice;
@@ -34,8 +35,8 @@ public class MessageKey {
 		this.sign = sign;
 	}
 
-	public MessageKey(long id, long creatorDevice, long recipientDevice, long chat,
-			String key, byte encType, String sign) {
+	public MessageKey(long id, long creatorDevice, long recipientDevice,
+			long chat, String key, byte encType, String sign) {
 		this.id = id;
 		this.creatorDevice = creatorDevice;
 		this.recipientDevice = recipientDevice;

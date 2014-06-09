@@ -7,3 +7,6 @@ gen/
 .gradle
 .classpath
 .settings
+.idea
+.properties
+.iml

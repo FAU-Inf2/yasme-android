@@ -3,6 +3,7 @@ package net.yasme.android.connection;
 import net.yasme.android.entities.Device;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
@@ -54,8 +55,10 @@ public class DeviceTask {
 
                     System.out.println("Device registration was successful");
 
-                    return (new JSONObject((new BufferedReader(new InputStreamReader(
-                            httpResponse.getEntity().getContent()))).readLine())).getLong("id");
+                    return (new JSONObject((new BufferedReader(
+                            new InputStreamReader(httpResponse.getEntity()
+                                    .getContent())
+                    )).readLine())).getLong("id");
                 case 500:
                     throw new RestServiceException(Error.STORE_FAILED_EXCEPTION);
                 default:
@@ -88,8 +91,8 @@ public class DeviceTask {
             switch (httpResponse.getStatusLine().getStatusCode()) {
 
                 case 200:
-                    JSONObject jsonObject = new JSONObject((new BufferedReader(new InputStreamReader(
-                            httpResponse.getEntity().getContent()))).readLine());
+                    /*new InputStreamReader(httpResponse.getEntity()
+                            .getContent()).readLine();
 
                     Device.Platform platform = null;
                     String jsonPlatform = jsonObject.getString("platform");
@@ -101,9 +104,10 @@ public class DeviceTask {
                     else if (jsonPlatform.equals(Device.Platform.WINDOWSPHONE.toString()))
                         platform = Device.Platform.WINDOWSPHONE;
 
+                    */
                     //TODO: publicKey nachtragen
-                    return new Device(jsonObject.getLong("id"), (jsonObject.getJSONObject("user")).getLong("id"),
-                            platform, jsonObject.getString("type"), jsonObject.getString("number"), null);
+                    //(jsonObject.getJSONObject("user")).getLong("id"), null,
+                    //        platform, jsonObject.getString("type"), jsonObject.getString("number"), null);
                 case 500:
                     throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 default:
@@ -112,8 +116,8 @@ public class DeviceTask {
 
         } catch (IllegalStateException e) {
             e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        //} catch (JSONException e) {
+        //    e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         }
@@ -125,7 +129,7 @@ public class DeviceTask {
 
         String requestURL = url.concat("/all/" + userId);
         ArrayList<Device> devices = new ArrayList<Device>();
-
+        /*
         try {
 
             DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -145,7 +149,7 @@ public class DeviceTask {
                 case 200:
                     JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
                             httpResponse.getEntity().getContent())).readLine());
-
+                    obj.getString("type"), obj.getString("userID")));
                     for (int i = 0; i < jsonArray.length(); i++) {
 
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -163,7 +167,6 @@ public class DeviceTask {
                         devices.add(new Device(jsonObject.getLong("id"), jsonObject.getJSONObject("user").getLong("id"),
                                 platform, jsonObject.getString("type"), jsonObject.getString("number"), null));
                     }
-
                     System.out.println("No.Devices: " + jsonArray.length());
                     break;
 
@@ -173,13 +176,8 @@ public class DeviceTask {
                 default:
                     throw new RestServiceException(Error.ERROR);
             }
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             new RestServiceException(Error.CONNECTION_ERROR);
-        }
+        }*/
         return devices;
     }
 

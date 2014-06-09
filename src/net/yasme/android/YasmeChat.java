@@ -25,7 +25,6 @@ public class YasmeChat extends Activity {
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 	public final static String CHAT_ID = "net.yasme.andriod.CHAT_ID";
 
-
 	private EditText EditMessage;
 	private TextView status;
 	private Chat chat;
@@ -43,17 +42,17 @@ public class YasmeChat extends Activity {
 		}
 		Intent intent = getIntent();
 		user_name = intent.getStringExtra(USER_NAME);
-		
+
 		String user_string = intent.getStringExtra(USER_ID);
 		user_id = Long.parseLong(user_string);
 		String url = getResources().getString(R.string.server_url);
 		long chat_id = intent.getIntExtra(CHAT_ID, 1);
-		if(false) {
-			//TODO: existierenden Chat verwenden
+		if (false) {
+			// TODO: existierenden Chat verwenden
 		} else {
 			chat = new Chat(chat_id, user_id, url, this);
 		}
-		
+
 	}
 
 	@Override
@@ -84,7 +83,7 @@ public class YasmeChat extends Activity {
 			status.setText("Nichts eingegeben");
 			return;
 		}
-				
+
 		chat.send(msg);
 		EditMessage.setText("");
 		EditMessage.requestFocus();
@@ -102,7 +101,7 @@ public class YasmeChat extends Activity {
 		Message msg = iterator.next();
 		for (int i = 0; i < messages.size(); i++) {
 			TextView textView = new TextView((getApplicationContext()));
-			
+
 			LinearLayout layout = (LinearLayout) findViewById(R.id.scrollLayout);
 			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.MATCH_PARENT,
@@ -113,13 +112,16 @@ public class YasmeChat extends Activity {
 					RelativeLayout.LayoutParams.MATCH_PARENT,
 					RelativeLayout.LayoutParams.MATCH_PARENT));
 
-			textView.setText(msg.getSender().getName() + ": " + msg.getMessage());
-			textView.setBackgroundColor(getResources().getColor(R.color.chat_text_bg_other));
+			textView.setText(msg.getSender().getName() + ": "
+					+ msg.getMessage());
+			textView.setBackgroundColor(getResources().getColor(
+					R.color.chat_text_bg_other));
 
-			if(msg.getSender().getId() == user_id) {
+			if (msg.getSender().getId() == user_id) {
 				textView.setGravity(Gravity.RIGHT);
 				row.setGravity(Gravity.RIGHT);
-				textView.setBackgroundColor(getResources().getColor(R.color.chat_text_bg_self));
+				textView.setBackgroundColor(getResources().getColor(
+						R.color.chat_text_bg_self));
 			}
 			row.addView(textView);
 			layout.addView(row, layoutParams);
