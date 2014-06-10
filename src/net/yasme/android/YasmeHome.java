@@ -13,9 +13,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.yasme.android.connection.ChatTask;
+import net.yasme.android.connection.UserTask;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 
 public class YasmeHome extends Activity {
@@ -39,8 +42,19 @@ public class YasmeHome extends Activity {
 		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
 		user_mail = storage.getString(USER_MAIL, "anonym@yasme.net");
 		user_id = storage.getLong(USER_ID, 0);
+        String accessToken = storage.getString("accessToken", null);
         url = getResources().getString(R.string.server_url);
 
+        //show_chatrooms();
+
+        User user = null;
+        try {
+            user = new UserTask(url).getUserData(user_id, accessToken);
+        } catch (RestServiceException e) {
+            e.printStackTrace();
+        }
+        TextView profileInfo = (TextView) findViewById(R.id.profileInfo);
+        profileInfo.setText(user.getName() + ": " + user_mail);
     }
 
 	@Override
@@ -72,7 +86,7 @@ public class YasmeHome extends Activity {
 	}
 
 
-    public void find_chatrooms() {
+    public void show_chatrooms() {
         LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -93,8 +107,10 @@ public class YasmeHome extends Activity {
             try {
                 chat = chatTask.getInfoOfChat(i);
             } catch (RestServiceException e) {
+                Toast.makeText(getApplicationContext(), "Rest error", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
+
             name.setText(chat.getName());
             status.setText(chat.getStatus());
 

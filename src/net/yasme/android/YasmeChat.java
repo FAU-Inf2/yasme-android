@@ -8,6 +8,7 @@ import net.yasme.android.entities.Message;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,12 +25,15 @@ public class YasmeChat extends Activity {
 	public final static String USER_MAIL = "net.yasme.andriod.USER_MAIL";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 	public final static String CHAT_ID = "net.yasme.andriod.CHAT_ID";
+    public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 
-	private EditText EditMessage;
+
+    private EditText EditMessage;
 	private TextView status;
 	private Chat chat;
 	private String user_mail;
 	private long user_id;
+    public String accessToken;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +46,14 @@ public class YasmeChat extends Activity {
 		}
 		Intent intent = getIntent();
 		user_mail = intent.getStringExtra(USER_MAIL);
-
 		long user_id = intent.getLongExtra(USER_ID, 0);
-		String url = getResources().getString(R.string.server_url);
 		long chat_id = intent.getIntExtra(CHAT_ID, 1);
+
+        String url = getResources().getString(R.string.server_url);
+
+        SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
+        accessToken = storage.getString("accessToken", null);
+
 		if (false) {
 			// TODO: existierenden Chat verwenden
 		} else {
@@ -112,7 +120,7 @@ public class YasmeChat extends Activity {
 					RelativeLayout.LayoutParams.MATCH_PARENT));
 
 			textView.setText(msg.getSender().getName() + ": "
-					+ msg.getMessage());
+                    + msg.getMessage());
 			textView.setBackgroundColor(getResources().getColor(
 					R.color.chat_text_bg_other));
 
