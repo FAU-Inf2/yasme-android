@@ -17,6 +17,8 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-core:4.48'
 	compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+    compile 'org.apache.httpcomponents:httpclient:4.3.4'
+    compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.3'
 }
 
 android {

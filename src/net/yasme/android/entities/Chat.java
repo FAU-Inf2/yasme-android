@@ -52,7 +52,7 @@ public class Chat {
 		long creatorDevice = user_id;
 		aes = new MessageEncryption(activity, chat_id, creatorDevice);
 
-		messageTask = new MessageTask(url);
+		messageTask = MessageTask.getInstance();
 
 		lastMessageID = 0L;
 	}
@@ -197,7 +197,7 @@ public class Chat {
 
             // decrypt Messages
             for (Message msg : messages) {
-                msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getKeyID())));
+                msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
             }
 
 			return true;

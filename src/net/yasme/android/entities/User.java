@@ -8,59 +8,80 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-	private long id;
-	private String pw;
-	private String email;
-	private String name;
+    private long id;
+    private String pw;
+    private String email;
+    private String name;
+   // private List<Chat> chats = new ArrayList<Chat>();        // list of all chats the user participates
 
-	public User(String pw, String name, String email) {
-		this.pw = pw;
-		this.name = name;
-		this.email = email;
-	}
 
-	public User(String email, String pw) {
-		this.email = email;
-		this.pw = pw;
-	}
+    public User(String pw, String name, String email) {
+        this.pw = pw;
+        this.name = name;
+        this.email = email;
+    }
 
-	public User(String name, long id) {
-		this.name = name;
-		this.id = id;
-	}
+    public User(String email, String pw) {
+        this.email = email;
+        this.pw = pw;
+    }
 
-	public User() {
-	}
+    public User(String email, long id){
+        this.email = email;
+        this.id = id;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public User() {
+    }
 
-	public String getName() {
-		return name;
-	}
+    /*
+    public List<Chat> getChats() {
+        return this.chats;
+    }
+    */
 
-	public String getPw() {
-		return pw;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public long getId() {
-		return id;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setPw(String pw) {
-		this.pw = pw;
-	}
+    public String getPw() {
+        return pw;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    /*
+    public void setChat(Chat chat) {
+        this.chats.add(chat);
+    }
+    */
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setPw(String pw) {
+        this.pw = pw;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    /*
+    public void removeChat(Chat chat) {
+        chats.remove(chat);
+    }
+    */
 }
+

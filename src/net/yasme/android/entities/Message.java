@@ -9,83 +9,93 @@ import java.util.Date;
 
 public class Message implements Serializable {
 
-	private long id;
-	private long chat;
-	private User sender;
-	private Date dateSent;
-	private String message;
-	private long keyId;
+    private long id;
+    private long chat;
+    private User sender;
+    private Date dateSent;
+    private String message;
+    private long messageKeyId;
+    private MessageKey messageKey;
 
-	/**
-	 * Constructors *
-	 */
-	public Message() {
-	}
+    /**
+     * Constructors *
+     */
+    public Message() {
+    }
 
-	public Message(User sender, String message, long chatId, long keyId) {
-		this(sender, message, new Date(), chatId, keyId);
-	}
+    public Message(User sender, String message, long chatId, long messageKeyId) {
+        this(sender, message, new Date(), chatId, messageKeyId);
+    }
 
-	public Message(User sender, String message, Date dateSent, long chat,
-			long keyId) {
-		this.sender = sender;
-		this.message = message;
-		this.dateSent = dateSent;
-		this.chat = chat;
-		this.keyId = keyId;
-	}
+    public Message(User sender, String message, Date dateSent, long chat,
+                   long messageKeyId) {
+        this.sender = sender;
+        this.message = message;
+        this.dateSent = dateSent;
+        this.chat = chat;
+        this.messageKeyId = messageKeyId;
+    }
 
-	/**
-	 * Getters *
-	 */
-	public User getSender() {
-		return sender;
-	}
+    /**
+     * Getters *
+     */
+    public User getSender() {
+        return sender;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public Date getDateSent() {
-		return dateSent;
-	}
+    public Date getDateSent() {
+        return dateSent;
+    }
 
-	public long getKeyID() {
-		return keyId;
-	}
 
-	public long getChat() {
-		return chat;
-	}
+    public long getMessageKeyId() {
+        return messageKeyId;
+    }
 
-	public long getID() {
-		return id;
-	}
+    public long getChat() {
+        return chat;
+    }
 
-	/**
-	 * Setters *
-	 */
-	public void setChat(long chat) {
-		this.chat = chat;
-	}
+    public long getID() {
+        return id;
+    }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    public MessageKey getMessageKey() {
+        return messageKey;
+    }
 
-	public void setID(long id) {
-		this.id = id;
-	}
+    /**
+     * Setters *
+     */
+    public void setChat(long chat) {
+        this.chat = chat;
+    }
 
-	public void setDateSent(Date dateSent) {
-		this.dateSent = dateSent;
-	}
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-	public void setSender(User sender) {
-		this.sender = sender;
-	}
+    public void setID(long id) {
+        this.id = id;
+    }
 
-	public void setKeyID(long keyId) {
-		this.keyId = keyId;
-	}
+    public void setDateSent(Date dateSent) {
+        this.dateSent = dateSent;
+    }
+
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public void setMessageKeyId(long messageKeyId) {
+        this.messageKeyId = messageKeyId;
+    }
+
+    public void setMessageKey(MessageKey messageKey) {
+        this.messageKey = messageKey;
+    }
 }

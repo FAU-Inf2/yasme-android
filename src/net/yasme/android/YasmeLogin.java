@@ -304,7 +304,7 @@ public class YasmeLogin extends Activity {
                 return false;
             }
             try {
-                id = new UserTask(url).registerUser(new User(password, name,
+                id = UserTask.getInstance().registerUser(new User(password, name,
                         email));
             } catch (RestServiceException e) {
                 return false;
@@ -353,7 +353,7 @@ public class YasmeLogin extends Activity {
                 System.out.println("e-Mail: " + name + " " + "Passwort: "
                         + password);
 
-                accessToken = new AuthorizationTask(url).loginUser(new User(name,
+                accessToken = AuthorizationTask.getInstance().loginUser(new User(name,
                         password));
 
                 System.out.println(accessToken[0]);

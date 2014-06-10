@@ -1,5 +1,6 @@
 package net.yasme.android.connection;
 
+import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.Error;
@@ -10,8 +11,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.json.JSONArray;
@@ -21,24 +23,43 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class MessageTask {
 
-    private String url;
+    private static MessageTask instance;
+    private URI uri;
 
-    public MessageTask(String url) {
-        this.url = url.concat("/msg");
+    public static MessageTask getInstance() {
+        if (instance == null) {
+            instance = new MessageTask();
+        }
+        return instance;
+    }
+
+    private MessageTask() {
+
+        //TODO: URI dynamisch auslesen
+        try {
+            this.uri = new URIBuilder().setScheme("https").
+                    setHost("devel.yasme.net").setPort(443).setPath("/msg").build();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean sendMessage(Message message, String accessToken) throws RestServiceException {
 
-        String requestURL = url;
-
         try {
+            URI requestURI = uri;
 
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(requestURL);
+            CloseableHttpClient httpClient = HttpClient.createSSLClient();
+            HttpPost httpPost = new HttpPost(requestURI);
 
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
@@ -52,13 +73,15 @@ public class MessageTask {
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
 
+            System.out.println(httpResponse.getStatusLine().getStatusCode());
+
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 201:
                     System.out.println("Message stored");
                     return true;
                 case 401:
-                    System.out.println("Unauthorized");
-                    throw new RestServiceException(MessageError.SEND_MESSAGE_FAILED);
+                    System.out.println("[DEBUG] Unauthorized");
+                    throw new RestServiceException(Error.UNAUTHORIZED);
                 case 500:
                     throw new RestServiceException(MessageError.SEND_MESSAGE_FAILED);
                 default:
@@ -69,20 +92,27 @@ public class MessageTask {
             e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-
         return false;
     }
 
     public ArrayList<Message> getMessage(long lastMessageId, long userId, String accessToken)
             throws RestServiceException {
 
-        String requestURL = url.concat("/" + lastMessageId);
         ArrayList<Message> messages = new ArrayList<Message>();
 
         try {
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet(requestURL);
+            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + lastMessageId).build();
+
+
+            CloseableHttpClient httpClient = HttpClient.createSSLClient();
+            HttpGet httpGet = new HttpGet(requestURI);
 
             httpGet.setHeader("accept", "application/json");
             httpGet.setHeader("userId", Long.toString(userId));
@@ -112,6 +142,9 @@ public class MessageTask {
                                 sender.getLong("id")), obj.getString("message"), 1, obj.getLong("keyID")));
                     }
                     break;
+                case 401:
+                    System.out.println("[DEBUG] Unauthorized");
+                    throw new RestServiceException(Error.UNAUTHORIZED);
                 case 500:
                     throw new RestServiceException(UserError.USER_NOT_FOUND);
                 default:
@@ -122,6 +155,14 @@ public class MessageTask {
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
             e.printStackTrace();
         }
 
