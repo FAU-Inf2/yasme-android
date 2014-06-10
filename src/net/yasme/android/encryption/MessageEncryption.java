@@ -191,11 +191,10 @@ public class MessageEncryption {
                 String base64key = base64arr[0];
                 String base64iv = base64arr[1];
 
-                // convert to byte
-                byte[][] keydata = new byte[2][16];
-                keydata[0] = Base64
-                        .decode(base64key.getBytes(), Base64.DEFAULT);
-                keydata[1] = Base64.decode(base64iv.getBytes(), Base64.DEFAULT);
+				// convert to byte
+				byte[][] keydata = new byte[2][16];
+				keydata[0] = Base64.decode(base64key.getBytes(), Base64.DEFAULT);
+				keydata[1] = Base64.decode(base64iv.getBytes(), Base64.DEFAULT);
 
                 // [0] --> Key in Base64, [1] --> IV in Base64
                 return keydata;
@@ -206,11 +205,8 @@ public class MessageEncryption {
         // Key is not available
         return null;
 
-        //convert to byte
-        byte[][] keydata = new byte[2][16];
-        keydata[0] = Base64.decode(base64key.getBytes(), Base64.DEFAULT);
-        keydata[1] = Base64.decode(base64iv.getBytes(), Base64.DEFAULT);
-    }
+	}
+          
 
 
     // Async-Task for sending Key to Server
