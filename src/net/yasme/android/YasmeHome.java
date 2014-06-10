@@ -10,6 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import net.yasme.android.connection.ChatTask;
+import net.yasme.android.entities.Chat;
+import net.yasme.android.exception.RestServiceException;
 
 public class YasmeHome extends Activity {
 	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
@@ -18,6 +25,7 @@ public class YasmeHome extends Activity {
 
 	String user_name;
 	long user_id;
+    String url;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +39,11 @@ public class YasmeHome extends Activity {
 		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
 		user_name = storage.getString(USER_NAME, "anonym");
 		user_id = storage.getLong(USER_ID, 0);
-	}
+        url = getResources().getString(R.string.server_url);
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
@@ -61,6 +69,39 @@ public class YasmeHome extends Activity {
 		intent.putExtra(USER_ID, user_id);
 		startActivity(intent);
 	}
+
+
+    public void find_chatrooms() {
+        LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        ChatTask chatTask = new ChatTask(url);
+
+        for (int i = 2; i < 16; i++) {
+            TextView name = new TextView((getApplicationContext()));
+            TextView status = new TextView((getApplicationContext()));
+
+            RelativeLayout row = new RelativeLayout(getApplicationContext());
+            row.setLayoutParams(new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT));
+
+            Chat chat = null;
+
+            try {
+                chat = chatTask.getInfoOfChat(i);
+            } catch (RestServiceException e) {
+                e.printStackTrace();
+            }
+            name.setText(chat.getName());
+            status.setText(chat.getStatus());
+
+            row.addView(name);
+            row.addView(status);
+            table.addView(row, layoutParams);
+        }
+    }
 
 	/**
 	 * A placeholder fragment containing a simple view.

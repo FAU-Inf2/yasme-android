@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import net.yasme.android.YasmeChat;
+import net.yasme.android.connection.ChatTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.exception.RestServiceException;
@@ -32,6 +33,11 @@ public class Chat {
 	private MessageEncryption aes;
 	private MessageTask messageTask;
 	public YasmeChat activity;
+
+    private String status;
+    private String name;
+    private int parCounter;
+    private ArrayList<User> participants;
 
 	/**
 	 * Constructors *
@@ -66,6 +72,16 @@ public class Chat {
 		return messages;
 	}
 
+    public ArrayList<User> getParticipants() { return participants; }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 	/**
 	 * Setters *
 	 */
@@ -76,6 +92,30 @@ public class Chat {
 	public void setLastMessageID(long newlastMessageID) {
 		lastMessageID = newlastMessageID;
 	}
+
+    public void setStatus(String newStatus) {
+        status = newStatus;
+    }
+
+    public void setName(String newName) {
+        name = newName;
+    }
+
+    public void addParticipant(User participant) {
+        try {
+            new ChatTask(url).addParticipantToChat(participant.getId(), chat_id);
+        } catch (RestServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeParticipant(User participant) {
+        try {
+            new ChatTask(url).removePartipantFromChat(participant.getId(), chat_id);
+        } catch (RestServiceException e) {
+            e.printStackTrace();
+        }
+    }
 
 	/**
 	 * Other methods *
