@@ -21,14 +21,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class YasmeChat extends Activity {
-	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
+	public final static String USER_MAIL = "net.yasme.andriod.USER_MAIL";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 	public final static String CHAT_ID = "net.yasme.andriod.CHAT_ID";
 
 	private EditText EditMessage;
 	private TextView status;
 	private Chat chat;
-	private String user_name;
+	private String user_mail;
 	private long user_id;
 
 	@Override
@@ -41,7 +41,7 @@ public class YasmeChat extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		Intent intent = getIntent();
-		user_name = intent.getStringExtra(USER_NAME);
+		user_mail = intent.getStringExtra(USER_MAIL);
 
 		long user_id = intent.getLongExtra(USER_ID, 0);
 		String url = getResources().getString(R.string.server_url);
@@ -72,7 +72,7 @@ public class YasmeChat extends Activity {
 	private void initializeViews() {
 		EditMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
-		status.setText("Eingeloggt: " + user_name);
+		status.setText("Eingeloggt: " + user_mail);
 	}
 
 	public void send(View view) {
