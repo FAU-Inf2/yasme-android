@@ -87,11 +87,11 @@ public class RSAEncryption {
 	
 	
 	//verify the signature
-	public boolean verify(String signature_base64, String encrypted_base64, PublicKey pubKey) {
+	public boolean verify(String signature_base64, String text_base64, PublicKey pubKey) {
 	
 		try {
 			byte[] signature = Base64.decode(signature_base64.getBytes("UTF-8"), Base64.DEFAULT);
-			byte[] encrypted = Base64.decode(encrypted_base64.getBytes("UTF-8"), Base64.DEFAULT);
+			byte[] encrypted = Base64.decode(text_base64.getBytes("UTF-8"), Base64.DEFAULT);
 			
 			Signature sig = Signature.getInstance(SIGNATURE_MODE);
 		    sig.initVerify(pubKey);
