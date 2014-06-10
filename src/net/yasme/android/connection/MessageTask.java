@@ -73,8 +73,6 @@ public class MessageTask {
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
 
-            System.out.println(httpResponse.getStatusLine().getStatusCode());
-
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 201:
                     System.out.println("Message stored");
