@@ -43,8 +43,7 @@ public class YasmeChat extends Activity {
 		Intent intent = getIntent();
 		user_name = intent.getStringExtra(USER_NAME);
 
-		String user_string = intent.getStringExtra(USER_ID);
-		user_id = Long.parseLong(user_string);
+		long user_id = intent.getLongExtra(USER_ID, 0);
 		String url = getResources().getString(R.string.server_url);
 		long chat_id = intent.getIntExtra(CHAT_ID, 1);
 		if (false) {

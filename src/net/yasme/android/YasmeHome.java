@@ -17,7 +17,7 @@ public class YasmeHome extends Activity {
 	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 
 	String user_name;
-	String user_id;
+	long user_id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class YasmeHome extends Activity {
 		}
 		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
 		user_name = storage.getString(USER_NAME, "anonym");
-		user_id = storage.getString(USER_ID, "0");
+		user_id = storage.getLong(USER_ID, 0);
 	}
 
 	@Override

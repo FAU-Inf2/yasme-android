@@ -95,7 +95,7 @@ public class RSAEncryption {
 			
 			Signature sig = Signature.getInstance(SIGNATURE_MODE);
 		    sig.initVerify(pubKey);
-		    //TODO: Laut Tutorial muss hier das Ergebnis nach der Entschlüsselung stehen
+		    //TODO: Laut Tutorial muss hier das Ergebnis nach der Entschluesselung stehen
 		    sig.update(encrypted);
 		    
 		    return sig.verify(signature); 
