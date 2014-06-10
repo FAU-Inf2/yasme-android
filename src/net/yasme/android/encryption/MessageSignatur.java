@@ -2,6 +2,7 @@ package net.yasme.android.encryption;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 
 import android.content.Context;
@@ -10,19 +11,23 @@ import android.util.Base64;
 
 public class MessageSignatur {
 
-	private static final String RSAKEYSTORAGE = "rsaKeyStorage";
+	private String RSAKEYSTORAGE = "rsaKeyStorage"; //Storage for Private and Public Keys from user
 	
 	Context context;
 	private RSAEncryption rsa;
+	long userId;
 
-	public MessageSignatur(Context context) {
+	public MessageSignatur(Context context, long userId) {
 		this.context = context;
+		this.userId = userId;
+		//add UserId to the storagename, because there are more than one user on device who need a private key
+		RSAKEYSTORAGE += "_" + Long.toString(userId); 
 	}
 	
 	public void generateRSAKeys(){
 		rsa.generateKeyPair();
 		saveRSAKeys();
-		
+		//TODO: send Public Key to Server
 	}
 	
 	//save RSAKeys
@@ -72,6 +77,27 @@ public class MessageSignatur {
      
 	}
 	
+	//sign
+	public String sign(String text){
+		PrivateKey privKey = getPrivateRSAKey();
+		return rsa.sign(text, privKey);
+	}
+	
+	//verify
+	public boolean verify(String signature_base64, String text_base64, PublicKey pubKey){
+		return rsa.verify(signature_base64, text_base64, pubKey);
+	}
+	
+	//get a Public Key for a specific server
+	public String[] getPubKeyfromServer(){
+		//gibt Array an Base64-Public-Keys zurück
+		return null;
+	}
+	
+	//get a Public Key from LocalStorage
+	public PublicKey getPubKey(long userId){
+		return null;
+	}
 	
 	
 }

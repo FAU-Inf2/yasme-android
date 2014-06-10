@@ -20,9 +20,8 @@ import net.yasme.android.entities.MessageKey;
 //	2		|	1							1	|	KEY, IV
 //											2	| 	KEY, IV
 
-//TO-DO: Bevor Nachrichten vom Server geholt werden, muessen neue Keys vom Server geholt werden und diese Tabellen aktualisiert werden
-//TO-DO: Wenn Schluessel empfangen wird, dann Befehl senden, dass Schluessel auf Server geloescht wird
-//TO-DO: Key-Erzeugung-->KEY-ID: Timestamp in Nanosekunden
+//TODO: Bevor Nachrichten vom Server geholt werden, muessen neue Keys vom Server geholt werden und diese Tabellen aktualisiert werden
+//TODO: Wenn Schluessel empfangen wird, dann Befehl senden, dass Schluessel auf Server geloescht wird
 
 public class MessageEncryption {
 
