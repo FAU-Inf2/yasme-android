@@ -155,6 +155,7 @@ public class YasmeLogin extends Activity {
                         String inputPasswordCheck = password_check.getText()
                                 .toString();
 
+                        //TODO: RSA-Keys erstellen und öffentlichen Schlüssel senden
                         new UserRegistrationTask().execute(inputName,
                                 inputMail, inputPassword, inputPasswordCheck);
                     }

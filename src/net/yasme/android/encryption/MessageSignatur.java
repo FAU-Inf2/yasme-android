@@ -77,6 +77,19 @@ public class MessageSignatur {
      
 	}
 	
+	//get PublicKey from Local Storage
+	public String getPublicRSAKeyInBase64(){
+		SharedPreferences rsakeys = context.getSharedPreferences(RSAKEYSTORAGE, Context.MODE_PRIVATE);
+		String pubKey_base64 = rsakeys.getString("publicKey", "");
+		
+		 //if Key is available
+        if (pubKey_base64 != "") {
+        	return pubKey_base64;
+        }
+        
+        return null;
+	}
+	
 	//sign
 	public String sign(String text){
 		PrivateKey privKey = getPrivateRSAKey();

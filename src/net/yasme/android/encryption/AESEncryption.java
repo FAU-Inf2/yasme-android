@@ -79,11 +79,19 @@ public class AESEncryption {
 		return keySpec;
 	}
 
-	public String getIV() {
+	public SecretKey getKey(){
+		return key;
+	}
+	
+	public IvParameterSpec getIV(){
+		return iv;
+	}
+	
+	public String getIVinBase64() {
 		return Base64.encodeToString(iv.getIV(), Base64.DEFAULT);
 	}
 
-	public String getKey() {
+	public String getKeyinBase64() {
 		return Base64.encodeToString(key.getEncoded(), Base64.DEFAULT);
 	}
 
@@ -94,13 +102,31 @@ public class AESEncryption {
 	public byte[] getKeyinByte() {
 		return key.getEncoded();
 	}
-
+	
+	//convert Base64-String to Type SecretKey
+	public SecretKey base64toKey(String base64){
+		byte[] keyBytes = Base64.decode(base64.getBytes(), Base64.DEFAULT);
+		return new SecretKeySpec(keyBytes, "AES");
+	}
+	
+	//convert Base64-String to Type IV
+	public IvParameterSpec base64toIV(String base64){
+		byte[] IvBytes = Base64.decode(base64.getBytes(), Base64.DEFAULT);
+		return new IvParameterSpec(IvBytes);
+	}
+	
 	// encrypt
 	public String encrypt(String text) {
 		byte[] encrypted = null;
 		try {
-			encrypted = crypt(text.getBytes("UTF-8"), Cipher.ENCRYPT_MODE);
+			
+			Cipher cipher;
+			cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher.init(Cipher.ENCRYPT_MODE, key, iv);		
+			encrypted = cipher.doFinal(text.getBytes("UTF-8"));
+				
 			return Base64.encodeToString(encrypted, Base64.DEFAULT);
+			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return "Couldn't be encrypted: " + text;
@@ -109,10 +135,18 @@ public class AESEncryption {
 	}
 
 	// decrypt
-	public String decrypt(String encrypted) {
+	public String decrypt(String encrypted, SecretKey key, IvParameterSpec iv) {
+		byte[] decrypted = null;
+
 		try{
 			byte[] encrypted_decode = Base64.decode(encrypted.getBytes("UTF-8"), Base64.DEFAULT);
-			return new String(crypt(encrypted_decode, Cipher.DECRYPT_MODE));
+			
+			Cipher cipher;
+			cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher.init(Cipher.DECRYPT_MODE, key, iv);		
+			decrypted = cipher.doFinal(encrypted_decode);
+			
+			return new String(decrypted);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return "Couldn't be decrypted: " + encrypted;
@@ -120,19 +154,6 @@ public class AESEncryption {
 
 	}
 	
-	
-			
-	// One method for both. "mode" decides, whether it makes encryption or decryption.
-		public byte[] crypt(byte[] in, int mode) {
-			Cipher cipher;
-			try {
-				cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-				cipher.init(mode, key, iv);		
-				return cipher.doFinal(in);
-				
-			} catch (Exception e) {}
-			return null;
-		}
 		
 
 

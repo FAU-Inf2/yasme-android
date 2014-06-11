@@ -1,12 +1,16 @@
 package net.yasme.android.encryption;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import net.yasme.android.R;
+import net.yasme.android.connection.KeyTask;
+import net.yasme.android.entities.MessageKey;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Base64;
-import net.yasme.android.R;
-import net.yasme.android.connection.KeyTask;
-import net.yasme.android.entities.MessageKey;
 
 //um den Schluessel zum Verschluesseln abzurufen muss bekannt sein, mit welcher KeyId der Chat verschluesselt wird
 //hier wird vorausgesetzt, dass zum Verschluesseln nur ein Key vorhanden is
@@ -26,11 +30,7 @@ import net.yasme.android.entities.MessageKey;
 public class MessageEncryption {
 
     long keyId; // contains the latest keyid for encryption
-    byte[] currentkey; // needed for restoring the current key, if decryption
-    // need more than one key
-    byte[] currentiv; // needed for restoring the current IV, if decryption need
-    // more than one key
-
+    
     long chatId;
     long creatorDevice;
     long recipientDevice;
@@ -57,6 +57,7 @@ public class MessageEncryption {
         // if no old key for this chat, then generate a new one, beginning with
         // ID "1"
         if (!sharedPref.contains(Long.toString(chatId))) {
+        	//TODO: Wert kommt von Server
             keyId = 1L;
             aes = new AESEncryption("geheim");
             saveKey(context, chatId, keyId);
@@ -76,29 +77,42 @@ public class MessageEncryption {
         // if old key is already available
         else {
 
-            // check, which Key is need to encrypt
-            long keyidfromstorage = sharedPref
-                    .getLong(Long.toString(chatId), 0);
-            keyId = keyidfromstorage;
-
-            // get Key from storage
-            byte[][] keydata = getKeyfromLocalStorage(context, chatId, keyId);
-            // if Key is available
-            if (keydata != null) {
-                this.currentkey = keydata[0];
-                this.currentiv = keydata[1];
-
-                aes = new AESEncryption(currentkey, currentiv);
-                // ###DEBUG
-                System.out.println("[???]: Key " + keyId + " fuer Chat "
-                        + chatId + " wurde geladen");
-                // /###
-            }
-
-            // TODO:
-            // What happens, if the needed key is not available
-            // is this a real scenario?
+            // get needed Key from LocalStorage
+            updateKey();
         }
+        
+        // TODO:
+        // What happens, if the needed key is not available
+        // is this a real scenario?
+    }
+    
+    //update Key for Encryption
+    public void updateKey(){
+        
+    	// check, which Key is need to encrypt
+    	checkCurrentKeyId();
+    	
+    	// get Key from storage
+        byte[][] keydata = getKeyfromLocalStorage(context, chatId, keyId);
+        // if Key is available
+        if (keydata != null) {
+            byte[] key = keydata[0];
+            byte[] iv = keydata[1];
+
+            aes = new AESEncryption(key, iv);
+            // ###DEBUG
+            System.out.println("[???]: Key " + keyId + " fuer Chat "
+                    + chatId + " wurde geladen");
+            // /###
+        }
+    }
+    
+    // check, which Key is need to encrypt
+    public void checkCurrentKeyId(){
+    	SharedPreferences sharedPref = context.getSharedPreferences(CHATKEYMAPPING, Context.MODE_PRIVATE);
+    	
+    	long keyidfromstorage = sharedPref.getLong(Long.toString(chatId), 0);
+        keyId = keyidfromstorage;
     }
 
     // encrypt
@@ -113,7 +127,7 @@ public class MessageEncryption {
         System.out.println("[???] benoetigte KEYID:" + keyid);
 
         if (this.keyId == keyid) {
-            return aes.decrypt(encrypted);
+            return aes.decrypt(encrypted, aes.getKey(), aes.getIV());
         }
 
         // another key is needed
@@ -122,17 +136,15 @@ public class MessageEncryption {
             byte[][] keydata = getKeyfromLocalStorage(context, chatId, keyid);
             // if Key is available
             if (keydata != null) {
-                byte[] key = keydata[0];
-                byte[] iv = keydata[1];
+                byte[] keyBytes = keydata[0];
+                byte[] ivBytes = keydata[1];
 
-                // get older key needed for decryption
-                aes = new AESEncryption(key, iv);
-                System.out
-                        .println("[???]: alter Key wurde zum Entschl�sseln geladen");
-                String decrypted = aes.decrypt(encrypted);
-
-                // restore the current key needed for encryption
-                aes = new AESEncryption(this.currentkey, this.currentiv);
+                // convert key needed for decryption
+                SecretKey key = new SecretKeySpec(keyBytes, "AES");
+                IvParameterSpec iv = new IvParameterSpec(ivBytes);
+                
+                System.out.println("[???]: alter Key wurde zum Entschluesseln geladen");
+                String decrypted = aes.decrypt(encrypted, key, iv);
 
                 return decrypted;
             }
@@ -157,23 +169,26 @@ public class MessageEncryption {
     public void saveKey(Context context, long chatid, long keyid) {
         SharedPreferences keyPref = context.getSharedPreferences(
                 Long.toString(chatid), Context.MODE_PRIVATE);
+        
         SharedPreferences chatPref = context.getSharedPreferences(
                 CHATKEYMAPPING, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor keyeditor = keyPref.edit();
         SharedPreferences.Editor chateditor = chatPref.edit();
-        // safe Key-Id for this Chat-ID
-        chateditor.putLong(Long.toString(chatid), keyid);
         // safe Key+IV, which belongs to Key-Id
         keyeditor.putString(Long.toString(keyid),
                 aes.getKey() + "," + aes.getIV());
+        
+        //delete old key, which was needed for encryption
+        if (keyPref.contains(Long.toString(chatid))) {
+            chateditor.remove(Long.toString(chatid));
+        }
 
+        // safe new Key-Id for this Chat-ID
+        chateditor.putLong(Long.toString(chatid), keyid);
+        
         keyeditor.commit();
         chateditor.commit();
-
-        // update current key
-        this.currentkey = aes.getKeyinByte();
-        this.currentiv = aes.getIVinByte();
 
     }
 
