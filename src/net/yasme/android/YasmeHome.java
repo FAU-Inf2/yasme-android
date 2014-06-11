@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +22,8 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 
+import java.util.ArrayList;
+
 public class YasmeHome extends Activity {
 	public final static String USER_MAIL = "net.yasme.andriod.USER_MAIL";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
@@ -30,6 +33,7 @@ public class YasmeHome extends Activity {
 	private long user_id;
     private String url;
     private String accessToken;
+    private User self;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +50,8 @@ public class YasmeHome extends Activity {
         accessToken = storage.getString("accessToken", null);
         url = getResources().getString(R.string.server_url);
 
-        //show_chatrooms();
-
-        User user = null;
-        try {
-            user = UserTask.getInstance().getUserData(user_id, accessToken);
-        } catch (RestServiceException e) {
-            e.printStackTrace();
-        }
-        TextView profileInfo = (TextView) findViewById(R.id.profileInfo);
-        profileInfo.setText(user.getName() + ": " + user_mail);
+        show_chatrooms();
+        new GetUserDataTask().execute(Long.toString(user_id), accessToken);
     }
 
 	@Override
@@ -88,37 +84,9 @@ public class YasmeHome extends Activity {
 
 
     public void show_chatrooms() {
-        LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        ChatTask chatTask = ChatTask.getInstance();
 
-        for (int i = 2; i < 16; i++) {
-            TextView name = new TextView((getApplicationContext()));
-            TextView status = new TextView((getApplicationContext()));
+        new GetChatDataTask().execute();
 
-            RelativeLayout row = new RelativeLayout(getApplicationContext());
-            row.setLayoutParams(new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT));
-
-            Chat chat = null;
-
-            try {
-                chat = chatTask.getInfoOfChat(i,user_id, accessToken);
-            } catch (RestServiceException e) {
-                Toast.makeText(getApplicationContext(), "Rest error", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-
-            name.setText(chat.getName());
-            status.setText(chat.getStatus());
-
-            row.addView(name);
-            row.addView(status);
-            table.addView(row, layoutParams);
-        }
     }
 
 	/**
@@ -137,4 +105,81 @@ public class YasmeHome extends Activity {
 			return rootView;
 		}
 	}
+
+    public class GetUserDataTask extends AsyncTask<String, Void, Boolean> {
+
+        protected Boolean doInBackground(String... params) {
+            long user_id = Long.getLong(params[0]);
+            String accessToken = params[1];
+            try {
+                self = UserTask.getInstance().getUserData(user_id, accessToken);
+            } catch (RestServiceException e) {
+                System.out.println(e.getMessage());
+                return false;
+            }
+            if (self == null) {
+                return false;
+            }
+            return true;
+        }
+
+        protected void onPostExecute(final Boolean success) {
+            if(!success) {
+                return;
+            }
+            TextView profileInfo = (TextView) findViewById(R.id.profileInfo);
+            profileInfo.setText(self.getName() + ": " + user_mail);
+        }
+    }
+
+    public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
+        ChatTask chatTask;
+        ArrayList<Chat> chatrooms;
+        protected Boolean doInBackground(String... params) {
+            chatTask = ChatTask.getInstance();
+
+            for (int i = 2; i < 16; i++) {
+                Chat chat;
+
+                try {
+                    chat = chatTask.getInfoOfChat(i,user_id, accessToken);
+                } catch (RestServiceException e) {
+                    System.out.println(e.getMessage());
+                    return false;
+                }
+                chatrooms.add(chat);
+            }
+            if(chatrooms == null) {
+                return false;
+            }
+            return true;
+        }
+
+        protected void onPostExecute(final Boolean success) {
+            if(!success) {
+                return;
+            }
+            LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+
+            for (Chat chat : chatrooms) {
+                TextView name = new TextView((getApplicationContext()));
+                TextView status = new TextView((getApplicationContext()));
+
+                RelativeLayout row = new RelativeLayout(getApplicationContext());
+                row.setLayoutParams(new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT));
+
+                name.setText(chat.getName());
+                status.setText(chat.getStatus());
+
+                row.addView(name);
+                row.addView(status);
+                table.addView(row, layoutParams);
+            }
+        }
+    }
 }
