@@ -76,7 +76,7 @@ public class YasmeHome extends Activity {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
-        ChatTask chatTask = new ChatTask(url);
+        ChatTask chatTask = ChatTask.getInstance();
 
         for (int i = 2; i < 16; i++) {
             TextView name = new TextView((getApplicationContext()));
@@ -90,7 +90,9 @@ public class YasmeHome extends Activity {
             Chat chat = null;
 
             try {
-                chat = chatTask.getInfoOfChat(i);
+                //TODO: AccessToken auslesen und als String sendMessage übergeben
+                //Current: Default Value 0
+                chat = chatTask.getInfoOfChat(i,user_id,"0");
             } catch (RestServiceException e) {
                 e.printStackTrace();
             }
