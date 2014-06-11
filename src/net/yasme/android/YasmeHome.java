@@ -26,9 +26,10 @@ public class YasmeHome extends Activity {
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 
-	String user_mail;
-	long user_id;
-    String url;
+	private String user_mail;
+	private long user_id;
+    private String url;
+    private String accessToken;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +43,14 @@ public class YasmeHome extends Activity {
 		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
 		user_mail = storage.getString(USER_MAIL, "anonym@yasme.net");
 		user_id = storage.getLong(USER_ID, 0);
-        String accessToken = storage.getString("accessToken", null);
+        accessToken = storage.getString("accessToken", null);
         url = getResources().getString(R.string.server_url);
 
         //show_chatrooms();
 
         User user = null;
         try {
-            user = new UserTask(url).getUserData(user_id, accessToken);
+            user = UserTask.getInstance().getUserData(user_id, accessToken);
         } catch (RestServiceException e) {
             e.printStackTrace();
         }
@@ -105,9 +106,7 @@ public class YasmeHome extends Activity {
             Chat chat = null;
 
             try {
-                //TODO: AccessToken auslesen und als String sendMessage übergeben
-                //Current: Default Value 0
-                chat = chatTask.getInfoOfChat(i,user_id,"0");
+                chat = chatTask.getInfoOfChat(i,user_id, accessToken);
             } catch (RestServiceException e) {
                 Toast.makeText(getApplicationContext(), "Rest error", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();

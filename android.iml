@@ -72,6 +72,7 @@
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
     <orderEntry type="library" exported="" name="ormlite-android-4.48" level="project" />
     <orderEntry type="library" exported="" name="jackson-core-asl-1.9.13" level="project" />
+    <orderEntry type="library" exported="" name="httpclient-android-4.3.3" level="project" />
     <orderEntry type="library" exported="" name="jackson-mapper-asl-1.9.13" level="project" />
     <orderEntry type="library" exported="" name="ormlite-core-4.48" level="project" />
   </component>

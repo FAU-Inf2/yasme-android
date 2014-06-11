@@ -105,9 +105,7 @@ public class Chat {
 
     public void addParticipant(User participant) {
         try {
-            //TODO: AccessToken mitübergeben
-            //Current: Default Value "0"
-            ChatTask.getInstance().addParticipantToChat(participant.getId(), chat_id,"0");
+            ChatTask.getInstance().addParticipantToChat(participant.getId(), chat_id, accessToken);
         } catch (RestServiceException e) {
             e.printStackTrace();
         }
@@ -115,9 +113,7 @@ public class Chat {
 
     public void removeParticipant(User participant) {
         try {
-            //TODO: AccessToken mitübergeben
-            //Current: Default Value "0"
-            ChatTask.getInstance().removePartipantFromChat(participant.getId(), chat_id,"0");
+            ChatTask.getInstance().removePartipantFromChat(participant.getId(), chat_id, accessToken);
         } catch (RestServiceException e) {
             e.printStackTrace();
         }
@@ -150,12 +146,12 @@ public class Chat {
 			// create Message
 			Message createdMessage = new Message(new User(user_name, uid),
 					msg_encrypted, chat_id, aes.getKeyId());
+            try {
                 result = messageTask.sendMessage(createdMessage, accessToken);
-			try {
-			} catch (RestServiceException e) {
-				System.out.println(e.getMessage());
-			}
-			return result;
+            } catch (RestServiceException e) {
+                System.out.println(e.getMessage());
+            }
+           	return result;
 		}
 
 		protected void onPostExecute(Boolean result) {
