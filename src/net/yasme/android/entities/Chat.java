@@ -1,5 +1,6 @@
 package net.yasme.android.entities;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
  */
 @DatabaseTable(tableName = "chatrooms")
 public class Chat {
-	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 
 	@DatabaseField
@@ -33,6 +33,7 @@ public class Chat {
 	private MessageEncryption aes;
 	private MessageTask messageTask;
 	public YasmeChat activity;
+    private String accessToken;
 
     private String status;
     private String name;
@@ -46,8 +47,9 @@ public class Chat {
 		this.chat_id = chat_id;
 		this.user_id = user_id;
 		this.activity = activity;
+        accessToken = activity.accessToken;
 
-		// setup Encryption for this chat
+        // setup Encryption for this chat
 		// TODO: DEVICE-ID statt USERID uebergeben
 		long creatorDevice = user_id;
 		aes = new MessageEncryption(activity, chat_id, creatorDevice);
@@ -148,11 +150,8 @@ public class Chat {
 			// create Message
 			Message createdMessage = new Message(new User(user_name, uid),
 					msg_encrypted, chat_id, aes.getKeyId());
-
+                result = messageTask.sendMessage(createdMessage, accessToken);
 			try {
-                //TODO: AccessToken auslesen und als String sendMessage übergeben
-                //Current: Default Value 0
-                result = messageTask.sendMessage(createdMessage,"0");
 			} catch (RestServiceException e) {
 				System.out.println(e.getMessage());
 			}
@@ -170,7 +169,7 @@ public class Chat {
 	}
 
 	// TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach
-	// gel�scht werden
+	// geloescht werden
 
 	private class GetMessageTask extends AsyncTask<Long, Void, Boolean> {
 		ArrayList<Message> messages;
@@ -185,9 +184,7 @@ public class Chat {
 		protected Boolean doInBackground(Long... params) {
 
 			try {
-                //TODO: AccessToken auslesen und als String getMessage() übergeben
-                //Current: Default Value 0
-                messages = messageTask.getMessage(params[0], params[1],"0");
+                messages = messageTask.getMessage(params[0], params[1], accessToken);
 			} catch (RestServiceException e) {
 				e.printStackTrace();
 			}

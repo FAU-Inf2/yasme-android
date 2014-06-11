@@ -32,7 +32,7 @@ import android.widget.Toast;
 public class YasmeLogin extends Activity {
 
     public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
-    public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
+    public final static String USER_MAIL = "net.yasme.andriod.USER_MAIL";
     public final static String USER_ID = "net.yasme.andriod.USER_ID";
 
     /**
@@ -53,7 +53,7 @@ public class YasmeLogin extends Activity {
     private View focusView = null;
 
     // UI references.
-    private EditText nameView;
+    private EditText emailView;
     private EditText passwordView;
     private View loginFormView;
     private View loginStatusView;
@@ -69,16 +69,16 @@ public class YasmeLogin extends Activity {
         url = getResources().getString(R.string.server_url);
 
         // open storagePreferences
-        // Restore preferences
+        // Restore preferencesNAME
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS,
                 MODE_PRIVATE);
-        name = storage.getString(USER_NAME, "");
+        email = storage.getString(USER_MAIL, "");
         accessToken[1] = storage.getString("accesToken1", null);
 
         // Set up the login form.
         // name = getIntent().getStringExtra(USER_NAME);
-        nameView = (EditText) findViewById(R.id.name);
-        nameView.setText(name);
+        emailView = (EditText) findViewById(R.id.email);
+        emailView.setText(email);
 
         passwordView = (EditText) findViewById(R.id.password);
         passwordView
@@ -110,8 +110,6 @@ public class YasmeLogin extends Activity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO: register-Methode
-                        // zusätzliche email-View erzeugen
                         registerDialog();
                     }
                 });
@@ -209,11 +207,11 @@ public class YasmeLogin extends Activity {
 
     private boolean validate() {
         // Reset errors.
-        nameView.setError(null);
+        emailView.setError(null);
         passwordView.setError(null);
 
         // Store values at the time of the login attempt.
-        name = nameView.getText().toString();
+        email = emailView.getText().toString();
         password = passwordView.getText().toString();
 
         boolean cancel = false;
@@ -230,9 +228,9 @@ public class YasmeLogin extends Activity {
         }
 
         // Check for a valid name.
-        if (TextUtils.isEmpty(name)) {
-            nameView.setError(getString(R.string.error_field_required));
-            focusView = nameView;
+        if (TextUtils.isEmpty(email)) {
+            emailView.setError(getString(R.string.error_field_required));
+            focusView = emailView;
             cancel = true;
         }
         return cancel;
@@ -350,7 +348,7 @@ public class YasmeLogin extends Activity {
 
             try {
                 // DEBUG:
-                System.out.println("e-Mail: " + name + " " + "Passwort: "
+                System.out.println("e-Mail: " + email + " " + "Passwort: "
                         + password);
 
                 accessToken = AuthorizationTask.getInstance().loginUser(new User(name,
@@ -363,7 +361,7 @@ public class YasmeLogin extends Activity {
                 SharedPreferences.Editor editor = storage.edit();
                 editor.putLong(USER_ID, Long.parseLong(accessToken[0]));
                 editor.putString("accesToken", accessToken[1]);
-                editor.putString(USER_NAME, name);
+                editor.putString(USER_MAIL, email);
                 editor.commit();
 
             } catch (RestServiceException e) {
@@ -400,7 +398,7 @@ public class YasmeLogin extends Activity {
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS,
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = storage.edit();
-        editor.putString(USER_NAME, name);
+        editor.putString(USER_MAIL, email);
         editor.putLong(USER_ID, id);
         editor.putString("accesToken1", accessToken[1]);
 

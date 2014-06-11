@@ -13,17 +13,20 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.yasme.android.connection.ChatTask;
+import net.yasme.android.connection.UserTask;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 
 public class YasmeHome extends Activity {
-	public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
+	public final static String USER_MAIL = "net.yasme.andriod.USER_MAIL";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 
-	String user_name;
+	String user_mail;
 	long user_id;
     String url;
 
@@ -37,9 +40,21 @@ public class YasmeHome extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
-		user_name = storage.getString(USER_NAME, "anonym");
+		user_mail = storage.getString(USER_MAIL, "anonym@yasme.net");
 		user_id = storage.getLong(USER_ID, 0);
+        String accessToken = storage.getString("accessToken", null);
         url = getResources().getString(R.string.server_url);
+
+        //show_chatrooms();
+
+        User user = null;
+        try {
+            user = new UserTask(url).getUserData(user_id, accessToken);
+        } catch (RestServiceException e) {
+            e.printStackTrace();
+        }
+        TextView profileInfo = (TextView) findViewById(R.id.profileInfo);
+        profileInfo.setText(user.getName() + ": " + user_mail);
     }
 
 	@Override
@@ -65,13 +80,13 @@ public class YasmeHome extends Activity {
 		// BZZZTT!!1!
 		// findViewById(R.id.button1).performHapticFeedback(2);
 		Intent intent = new Intent(this, YasmeChat.class);
-		intent.putExtra(USER_NAME, user_name);
+		intent.putExtra(USER_MAIL, user_mail);
 		intent.putExtra(USER_ID, user_id);
 		startActivity(intent);
 	}
 
 
-    public void find_chatrooms() {
+    public void show_chatrooms() {
         LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -94,8 +109,10 @@ public class YasmeHome extends Activity {
                 //Current: Default Value 0
                 chat = chatTask.getInfoOfChat(i,user_id,"0");
             } catch (RestServiceException e) {
+                Toast.makeText(getApplicationContext(), "Rest error", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
+
             name.setText(chat.getName());
             status.setText(chat.getStatus());
 
@@ -121,5 +138,4 @@ public class YasmeHome extends Activity {
 			return rootView;
 		}
 	}
-
 }
