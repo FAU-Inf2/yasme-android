@@ -136,5 +136,4 @@ public class YasmeHome extends Activity {
 			return rootView;
 		}
 	}
-
 }
