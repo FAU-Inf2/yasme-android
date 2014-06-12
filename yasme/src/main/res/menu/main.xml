@@ -1,11 +1,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="de.fau.cs.mad.simplechatapp.YasmeHome" >
+    tools:context="net.yasme.android.YasmeHome" >
+
+    <item
+        android:id="@+id/action_chats"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/action_chats"
+        android:icon="@drawable/chats"/>
+
+    <item
+        android:id="@+id/action_chat"
+        android:orderInCategory="200"
+        android:showAsAction="always"
+        android:title="@string/action_chat"
+        android:icon="@drawable/chat"/>
+
+    <item
+        android:id="@+id/action_contacts"
+        android:orderInCategory="300"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_contacts"
+        android:icon="@drawable/contacts"/>
 
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:orderInCategory="400"
         android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:title="@string/action_settings"
+        android:icon="@drawable/settings"/>
 
 </menu>
