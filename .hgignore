@@ -10,3 +10,4 @@ gen/
 .idea
 .properties
 .iml
+.DS_Store
