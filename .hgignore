@@ -12,3 +12,4 @@ gen/
 .properties
 .iml
 .DS_Store
+local.properties
