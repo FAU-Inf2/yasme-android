@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-       <color name="chat_text_bg_self">#FFCC3366</color>
-       <color name="chat_text_bg_other">#FF00CC66</color>
-</resources>
