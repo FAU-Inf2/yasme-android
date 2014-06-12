@@ -8,6 +8,7 @@ gen/
 .classpath
 .settings
 .idea
+*.iml
 .properties
 .iml
 .DS_Store
