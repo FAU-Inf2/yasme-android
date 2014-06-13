@@ -95,7 +95,6 @@ public class YasmeChat extends Activity {
 		chat.send(msg);
 		EditMessage.setText("");
 		EditMessage.requestFocus();
-		msg = null;
 	}
 
 	public void update(View view) {
@@ -105,42 +104,42 @@ public class YasmeChat extends Activity {
 	}
 
 	public void updateViews(ArrayList<Message> messages) {
-		Iterator<Message> iterator = messages.iterator();
-		Message msg = iterator.next();
-		for (int i = 0; i < messages.size(); i++) {
-			TextView textView = new TextView((getApplicationContext()));
+		//Iterator<Message> iterator = messages.iterator();
+		//Message msg = iterator.next();
+        for (Message msg : messages) {
+            TextView textView = new TextView((getApplicationContext()));
 
-			LinearLayout layout = (LinearLayout) findViewById(R.id.scrollLayout);
-			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.MATCH_PARENT,
-					LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout layout = (LinearLayout) findViewById(R.id.scrollLayout);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
 
-			RelativeLayout row = new RelativeLayout(getApplicationContext());
-			row.setLayoutParams(new RelativeLayout.LayoutParams(
-					RelativeLayout.LayoutParams.MATCH_PARENT,
-					RelativeLayout.LayoutParams.MATCH_PARENT));
+            RelativeLayout row = new RelativeLayout(getApplicationContext());
+            row.setLayoutParams(new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT));
 
-			textView.setText(msg.getSender().getName() + ": "
+            textView.setText(msg.getSender().getName() + ": "
                     + msg.getMessage());
-			textView.setBackgroundColor(getResources().getColor(
+            textView.setBackgroundColor(getResources().getColor(
                     R.color.chat_text_bg_other));
 
-			if (msg.getSender().getId() == user_id) {
-				textView.setGravity(Gravity.RIGHT);
-				row.setGravity(Gravity.RIGHT);
-				textView.setBackgroundColor(getResources().getColor(
-						R.color.chat_text_bg_self));
-			}
-			row.addView(textView);
-			layout.addView(row, layoutParams);
+            if (msg.getSender().getId() == user_id) {
+                textView.setGravity(Gravity.RIGHT);
+                row.setGravity(Gravity.RIGHT);
+                textView.setBackgroundColor(getResources().getColor(
+                        R.color.chat_text_bg_self));
+            }
+            row.addView(textView);
+            layout.addView(row, layoutParams);
 
-			if (iterator.hasNext()) {
-				msg = iterator.next();
-			} else {
-				row.setFocusableInTouchMode(true);
-				row.requestFocus();
-			}
-		}
+            //if (iterator.hasNext()) {
+            //    msg = iterator.next();
+            //} else {
+                row.setFocusableInTouchMode(true);
+                row.requestFocus();
+            //}
+        }
 	}
 
 	@Override

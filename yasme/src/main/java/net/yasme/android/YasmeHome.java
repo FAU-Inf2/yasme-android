@@ -20,6 +20,7 @@ import net.yasme.android.connection.UserTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.DatabaseManager;
 
 import java.util.ArrayList;
 
@@ -50,6 +51,9 @@ public class YasmeHome extends Activity {
         accessToken = storage.getString("accessToken", null);
         url = getResources().getString(R.string.server_url);
 
+        //Initialize database (once in application)
+        DatabaseManager.init(this);
+
         show_chatrooms();
         new GetProfileDataTask().execute(Long.toString(user_id), accessToken);
     }
@@ -79,7 +83,7 @@ public class YasmeHome extends Activity {
 		Intent intent = new Intent(this, YasmeChat.class);
 		intent.putExtra(USER_MAIL, user_mail);
 		intent.putExtra(USER_ID, user_id);
-        intent.putExtra(CHAT_ID, 0);
+        intent.putExtra(CHAT_ID, (long)0);
 		startActivity(intent);
 	}
 
