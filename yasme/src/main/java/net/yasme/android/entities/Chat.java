@@ -16,13 +16,33 @@ import java.util.ArrayList;
  */
 @DatabaseTable(tableName = "chatrooms")
 public class Chat {
+    public static final String LAST_MESSAGE_ID = "lastMessageId";
+    public static final String CHAT_ID = "chatId";
+    public static final String CHAT_NAME = "chatName";
+    public static final String CHAT_STATUS = "chatStatus";
+    public static final String MESSAGES = "messages";
 
-	@DatabaseField
+
+    @DatabaseField(columnName = MESSAGES)
 	private ArrayList<Message> messages;
-	@DatabaseField
+
+	@DatabaseField(columnName = LAST_MESSAGE_ID)
 	private long lastMessageID;
-	@DatabaseField(id = true)
-	private long chat_id;
+
+	@DatabaseField(columnName = CHAT_ID, id = true)
+	private long chatId;
+
+    @DatabaseField(columnName = CHAT_STATUS)
+    private String status;
+
+    @DatabaseField(columnName = CHAT_NAME)
+    private String chatName;
+
+    @DatabaseField
+    private int parCounter;
+
+    @DatabaseField
+    private ArrayList<User> participants;
 
 	private String user_name;
 	private long user_id;
@@ -33,16 +53,11 @@ public class Chat {
 	public YasmeChat activity;
     private String accessToken;
 
-    private String status;
-    private String name;
-    private int parCounter;
-    private ArrayList<User> participants;
-
 	/**
 	 * Constructors *
 	 */
-	public Chat(long chat_id, long user_id, String url, YasmeChat activity) {
-		this.chat_id = chat_id;
+	public Chat(long chatId, long user_id, String url, YasmeChat activity) {
+		this.chatId = chatId;
 		this.user_id = user_id;
 		this.activity = activity;
         accessToken = activity.accessToken;
@@ -50,7 +65,7 @@ public class Chat {
         // setup Encryption for this chat
 		// TODO: DEVICE-ID statt USERID uebergeben
 		long creatorDevice = user_id;
-		aes = new MessageEncryption(activity, chat_id, creatorDevice);
+		aes = new MessageEncryption(activity, chatId, creatorDevice);
 
 		messageTask = MessageTask.getInstance();
 
@@ -64,8 +79,8 @@ public class Chat {
 	/**
 	 * Getters *
 	 */
-	public long getChat_id() {
-		return chat_id;
+	public long getChatId() {
+		return chatId;
 	}
 
 	public ArrayList<Message> getStoredMessages() {
@@ -79,7 +94,7 @@ public class Chat {
     }
 
     public String getName() {
-        return name;
+        return chatName;
     }
 
 	/**
@@ -98,12 +113,12 @@ public class Chat {
     }
 
     public void setName(String newName) {
-        name = newName;
+        chatName = newName;
     }
 
     public void addParticipant(User participant) {
         try {
-            ChatTask.getInstance().addParticipantToChat(participant.getId(), chat_id, accessToken);
+            ChatTask.getInstance().addParticipantToChat(participant.getId(), chatId, accessToken);
         } catch (RestServiceException e) {
             e.printStackTrace();
         }
@@ -111,7 +126,7 @@ public class Chat {
 
     public void removeParticipant(User participant) {
         try {
-            ChatTask.getInstance().removePartipantFromChat(participant.getId(), chat_id, accessToken);
+            ChatTask.getInstance().removePartipantFromChat(participant.getId(), chatId, accessToken);
         } catch (RestServiceException e) {
             e.printStackTrace();
         }
@@ -143,7 +158,7 @@ public class Chat {
 
 			// create Message
 			Message createdMessage = new Message(new User(user_name, uid),
-					msg_encrypted, chat_id, aes.getKeyId());
+					msg_encrypted, chatId, aes.getKeyId());
             try {
                 result = messageTask.sendMessage(createdMessage, accessToken);
             } catch (RestServiceException e) {
