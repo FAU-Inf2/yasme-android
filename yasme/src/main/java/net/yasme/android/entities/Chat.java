@@ -2,6 +2,7 @@ package net.yasme.android.entities;
 
 import android.os.AsyncTask;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import net.yasme.android.YasmeChat;
 import net.yasme.android.connection.ChatTask;
@@ -23,7 +24,7 @@ public class Chat {
     public static final String MESSAGES = "messages";
 
 
-    @DatabaseField(columnName = MESSAGES)
+    @ForeignCollectionField(columnName = MESSAGES)
 	private ArrayList<Message> messages;
 
 	@DatabaseField(columnName = LAST_MESSAGE_ID)
