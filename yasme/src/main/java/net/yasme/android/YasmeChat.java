@@ -33,7 +33,7 @@ public class YasmeChat extends Activity {
 	private Chat chat;
 	private String user_mail;
 	private long user_id;
-    private String accessToken;
+    public String accessToken;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +123,7 @@ public class YasmeChat extends Activity {
 			textView.setText(msg.getSender().getName() + ": "
                     + msg.getMessage());
 			textView.setBackgroundColor(getResources().getColor(
-					R.color.chat_text_bg_other));
+                    R.color.chat_text_bg_other));
 
 			if (msg.getSender().getId() == user_id) {
 				textView.setGravity(Gravity.RIGHT);

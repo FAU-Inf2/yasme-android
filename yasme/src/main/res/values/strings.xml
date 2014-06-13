@@ -12,7 +12,7 @@
 
     <!-- Home -->
     <string name="title_activity_home">Yasme Home</string>
-    <string name="button_showChat">Chat!</string>
+    <string name="button_showChat">TestChat</string>
     <string name="usr_name_hint">Benutzername</string>
 
     <!-- Chat -->

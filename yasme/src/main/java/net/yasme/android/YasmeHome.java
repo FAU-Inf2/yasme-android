@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.connection.UserTask;
@@ -74,15 +73,23 @@ public class YasmeHome extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void showChat(View view, long chat_id) {
+	public void showStandardChat(View view) {
 		// BZZZTT!!1!
 		// findViewById(R.id.button1).performHapticFeedback(2);
 		Intent intent = new Intent(this, YasmeChat.class);
 		intent.putExtra(USER_MAIL, user_mail);
 		intent.putExtra(USER_ID, user_id);
-        intent.putExtra(CHAT_ID, chat_id);
+        intent.putExtra(CHAT_ID, 0);
 		startActivity(intent);
 	}
+
+    public void showChat(long chat_id) {
+        Intent intent = new Intent(this, YasmeChat.class);
+        intent.putExtra(USER_MAIL, user_mail);
+        intent.putExtra(USER_ID, user_id);
+        intent.putExtra(CHAT_ID, chat_id);
+        startActivity(intent);
+    }
 
 
     public void show_chatrooms() {
@@ -97,7 +104,7 @@ public class YasmeHome extends Activity {
         public void onClick(View view) {
             //TODO: get chat_id from table row, maybe with Adapter class
             long chat_id = 0;
-            showChat(view, chat_id);
+            showChat(chat_id);
         }
     };
 
@@ -121,7 +128,7 @@ public class YasmeHome extends Activity {
     public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
 
         protected Boolean doInBackground(String... params) {
-            long user_id = Long.getLong(params[0]);
+            long user_id = Long.parseLong(params[0]);
             String accessToken = params[1];
             try {
                 self = UserTask.getInstance().getUserData(user_id, accessToken);
@@ -129,10 +136,7 @@ public class YasmeHome extends Activity {
                 System.out.println(e.getMessage());
                 return false;
             }
-            if (self == null) {
-                return false;
-            }
-            return true;
+            return self != null;
         }
 
         protected void onPostExecute(final Boolean success) {
@@ -162,10 +166,7 @@ public class YasmeHome extends Activity {
                 }
                 chatrooms.add(chat);
             }
-            if(chatrooms == null) {
-                return false;
-            }
-            return true;
+            return chatrooms != null;
         }
 
         protected void onPostExecute(final Boolean success) {

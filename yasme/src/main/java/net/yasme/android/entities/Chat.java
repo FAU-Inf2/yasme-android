@@ -1,6 +1,5 @@
 package net.yasme.android.entities;
 
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -17,13 +16,12 @@ import java.util.ArrayList;
  */
 @DatabaseTable(tableName = "chatrooms")
 public class Chat {
-	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 
 	@DatabaseField
 	private ArrayList<Message> messages;
 	@DatabaseField
 	private long lastMessageID;
-	@DatabaseField(generatedId = true, id = true)
+	@DatabaseField(id = true)
 	private long chat_id;
 
 	private String user_name;
@@ -171,10 +169,8 @@ public class Chat {
 		ArrayList<Message> messages;
 
 		/**
-		 * @param params
-		 *            [0] is lastMessageID
-		 * @param params
-		 *            [1] is user_id
+		 * @param params [0] is lastMessageID
+		 *        params [1] is user_id
 		 * @return Returns true if it was successful, otherwise false
 		 */
 		protected Boolean doInBackground(Long... params) {
@@ -203,9 +199,6 @@ public class Chat {
         /**
          * Fills the TextViews with the messages
          * - maybe this should be done also in doInBackground
-         *
-         * //@param Gets the result of doInBackground
-         * //@param Gets the result of doInBackground
          */
         protected void onPostExecute(Boolean result) {
             if (result) {
