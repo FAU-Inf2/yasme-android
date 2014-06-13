@@ -27,7 +27,8 @@ import java.util.ArrayList;
 public class YasmeHome extends Activity {
 	public final static String USER_MAIL = "net.yasme.andriod.USER_MAIL";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
-	public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
+    public final static String CHAT_ID = "net.yasme.andriod.CHAT_ID";
+    public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 
 	private String user_mail;
 	private long user_id;
@@ -51,7 +52,7 @@ public class YasmeHome extends Activity {
         url = getResources().getString(R.string.server_url);
 
         show_chatrooms();
-        new GetUserDataTask().execute(Long.toString(user_id), accessToken);
+        new GetProfileDataTask().execute(Long.toString(user_id), accessToken);
     }
 
 	@Override
@@ -73,12 +74,13 @@ public class YasmeHome extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void showChat(View view) {
+	public void showChat(View view, long chat_id) {
 		// BZZZTT!!1!
 		// findViewById(R.id.button1).performHapticFeedback(2);
 		Intent intent = new Intent(this, YasmeChat.class);
 		intent.putExtra(USER_MAIL, user_mail);
 		intent.putExtra(USER_ID, user_id);
+        intent.putExtra(CHAT_ID, chat_id);
 		startActivity(intent);
 	}
 
@@ -86,8 +88,18 @@ public class YasmeHome extends Activity {
     public void show_chatrooms() {
 
         new GetChatDataTask().execute();
+       // LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);
 
     }
+
+    View.OnClickListener chatClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //TODO: get chat_id from table row, maybe with Adapter class
+            long chat_id = 0;
+            showChat(view, chat_id);
+        }
+    };
 
 	/**
 	 * A placeholder fragment containing a simple view.
@@ -106,7 +118,7 @@ public class YasmeHome extends Activity {
 		}
 	}
 
-    public class GetUserDataTask extends AsyncTask<String, Void, Boolean> {
+    public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
 
         protected Boolean doInBackground(String... params) {
             long user_id = Long.getLong(params[0]);
@@ -137,12 +149,13 @@ public class YasmeHome extends Activity {
         ArrayList<Chat> chatrooms;
         protected Boolean doInBackground(String... params) {
             chatTask = ChatTask.getInstance();
-
-            for (int i = 2; i < 16; i++) {
+            int numberOfChats = 16;
+            //TODO: print chats dynamic
+            for (int i = 2; i < numberOfChats; i++) {
                 Chat chat;
 
                 try {
-                    chat = chatTask.getInfoOfChat(i,user_id, accessToken);
+                    chat = chatTask.getInfoOfChat(i ,user_id, accessToken);
                 } catch (RestServiceException e) {
                     System.out.println(e.getMessage());
                     return false;
@@ -175,6 +188,8 @@ public class YasmeHome extends Activity {
 
                 name.setText(chat.getName());
                 status.setText(chat.getStatus());
+
+                row.setOnClickListener(chatClickListener);
 
                 row.addView(name);
                 row.addView(status);

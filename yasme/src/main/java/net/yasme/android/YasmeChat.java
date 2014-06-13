@@ -33,7 +33,7 @@ public class YasmeChat extends Activity {
 	private Chat chat;
 	private String user_mail;
 	private long user_id;
-    public String accessToken;
+    private String accessToken;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +46,9 @@ public class YasmeChat extends Activity {
 		}
 		Intent intent = getIntent();
 		user_mail = intent.getStringExtra(USER_MAIL);
+
 		long user_id = intent.getLongExtra(USER_ID, 0);
-		long chat_id = intent.getIntExtra(CHAT_ID, 1);
+		long chat_id = intent.getLongExtra(CHAT_ID, 0);
 
         String url = getResources().getString(R.string.server_url);
 
@@ -55,7 +56,7 @@ public class YasmeChat extends Activity {
         accessToken = storage.getString("accessToken", null);
 
 		if (false) {
-			// TODO: existierenden Chat verwenden
+			chat = new Chat(chat_id, user_id, url, this);
 		} else {
 			chat = new Chat(chat_id, user_id, url, this);
 		}

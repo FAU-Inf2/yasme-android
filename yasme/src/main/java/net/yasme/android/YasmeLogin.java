@@ -76,7 +76,7 @@ public class YasmeLogin extends Activity {
         accessToken[1] = storage.getString("accesToken1", null);
 
         // Set up the login form.
-        // name = getIntent().getStringExtra(USER_NAME);
+        // email = getIntent().getStringExtra(USER_EMAIL);
         emailView = (EditText) findViewById(R.id.email);
         emailView.setText(email);
 
