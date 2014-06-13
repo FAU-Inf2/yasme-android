@@ -22,6 +22,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // when anything changes in your database objects, we have to increase the database version
     private static final int DATABASE_VERSION = 1;
 
+    // the DAO object for chat
+    private Dao<Chat, Integer> chatDao = null;
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE, null, DATABASE_VERSION);
     }
@@ -46,5 +49,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             System.out.println("Can't drop databases");
             System.out.println(e.getMessage());
         }
+    }
+
+
+    /**
+     * Function to access Chat data
+     * from database
+     *
+     * @return chatDao
+     */
+    public Dao<Chat, Integer> getChatDao() {
+        if (null == chatDao) {
+            try {
+                chatDao = getDao(Chat.class);
+            }catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return chatDao;
     }
 }
