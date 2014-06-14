@@ -352,7 +352,7 @@ public class YasmeLogin extends Activity {
                 System.out.println("e-Mail: " + email + " " + "Passwort: "
                         + password);
 
-                accessToken = AuthorizationTask.getInstance().loginUser(new User(name,
+                accessToken = AuthorizationTask.getInstance().loginUser(new User(email,
                         password));
 
                 System.out.println(accessToken[0]);
