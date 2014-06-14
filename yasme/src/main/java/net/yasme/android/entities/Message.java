@@ -23,12 +23,11 @@ public class Message implements Serializable {
     public Message() {
     }
 
-    public Message(User sender, String message, long chatId, long messageKeyId) {
-        this(sender, message, new Date(), chatId, messageKeyId);
+    public Message(User sender, String message, long chat, long messageKeyId) {
+        this(sender, message, new Date(), chat, messageKeyId);
     }
 
-    public Message(User sender, String message, Date dateSent, long chat,
-                   long messageKeyId) {
+    public Message(User sender, String message, Date dateSent, long chat, long messageKeyId) {
         this.sender = sender;
         this.message = message;
         this.dateSent = dateSent;
@@ -51,21 +50,20 @@ public class Message implements Serializable {
         return dateSent;
     }
 
-
-    public long getMessageKeyId() {
-        return messageKeyId;
+    public MessageKey getMessageKey() {
+        return messageKey;
     }
 
     public long getChat() {
         return chat;
     }
 
-    public long getID() {
+    public long getId() {
         return id;
     }
 
-    public MessageKey getMessageKey() {
-        return messageKey;
+    public long getMessageKeyId() {
+        return messageKeyId;
     }
 
     /**
@@ -79,10 +77,6 @@ public class Message implements Serializable {
         this.message = message;
     }
 
-    public void setID(long id) {
-        this.id = id;
-    }
-
     public void setDateSent(Date dateSent) {
         this.dateSent = dateSent;
     }
@@ -91,11 +85,16 @@ public class Message implements Serializable {
         this.sender = sender;
     }
 
-    public void setMessageKeyId(long messageKeyId) {
-        this.messageKeyId = messageKeyId;
-    }
-
     public void setMessageKey(MessageKey messageKey) {
         this.messageKey = messageKey;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setMessageKeyId(long messageKeyId) {
+        this.messageKeyId = messageKeyId;
+    }
 }
+

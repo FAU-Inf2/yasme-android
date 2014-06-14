@@ -63,6 +63,7 @@ public class MessageTask {
 
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
+            System.out.println(ow.writeValueAsString(message));
             StringEntity se = new StringEntity(ow.writeValueAsString(message));
             httpPost.setEntity(se);
 
@@ -72,6 +73,8 @@ public class MessageTask {
             httpPost.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
+
+            System.out.println(httpResponse.getStatusLine().getStatusCode());
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 201:

@@ -53,7 +53,8 @@ public class Chat {
 	public YasmeChat activity;
     private String accessToken;
 
-	/**
+
+    /**
 	 * Constructors *
 	 */
 	public Chat(long chatId, long user_id, String url, YasmeChat activity) {
@@ -157,6 +158,7 @@ public class Chat {
 			String msg_encrypted = aes.encrypt(msg);
 
 			// create Message
+            //TODO: Uebergabeparamter ueberpruefen!!!!!
 			Message createdMessage = new Message(new User(user_name, uid),
 					msg_encrypted, chatId, aes.getKeyId());
             try {
