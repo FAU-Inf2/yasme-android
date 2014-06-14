@@ -28,7 +28,7 @@ import java.security.NoSuchAlgorithmException;
  * Created by florianwinklmeier on 03.06.14.
  */
 
-public class ChatTask {
+public class ChatTask extends  ConnectionTask{
 
     private static ChatTask instance;
     private URI uri;
@@ -44,8 +44,8 @@ public class ChatTask {
 
         //TODO: URI dynamisch auslesen
         try {
-            this.uri = new URIBuilder().setScheme("https").
-                    setHost("devel.yasme.net").setPort(443).setPath("/chat").build();
+            this.uri = new URIBuilder().setScheme(serverScheme).
+                    setHost(serverHost).setPort(serverPort).setPath("/chat").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

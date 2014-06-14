@@ -65,8 +65,8 @@ public class MessageEncryption {
             // TODO Schluessel fuer jeden Empaenger an den Server senden
             // get recipientDevice from chatid
             // for every recipientDevice
-            sendKey(context.getResources().getString(R.string.server_url),
-                    recipientDevice);
+            String serverUrl = context.getResources().getString(R.string.server_scheme) + context.getResources().getString(R.string.server_host) + ":" + context.getResources().getString(R.string.server_port);
+            sendKey(serverUrl, recipientDevice);
 
             // ###DEBUG
             System.out.println("[???]: KeyID " + keyId + " fuer Chat " + chatId

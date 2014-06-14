@@ -25,7 +25,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
-public class UserTask {
+public class UserTask extends  ConnectionTask {
 
     private static UserTask instance;
     private URI uri;
@@ -41,8 +41,8 @@ public class UserTask {
 
         //TODO: URI dynamisch auslesen
         try {
-            this.uri = new URIBuilder().setScheme("https").
-                    setHost("devel.yasme.net").setPort(443).setPath("/usr").build();
+            this.uri = new URIBuilder().setScheme(serverScheme).
+                    setHost(serverHost).setPort(serverPort).setPath("/usr").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

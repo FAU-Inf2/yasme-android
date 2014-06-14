@@ -57,7 +57,7 @@ public class Chat {
     /**
 	 * Constructors *
 	 */
-	public Chat(long chatId, long user_id, String url, YasmeChat activity) {
+	public Chat(long chatId, long user_id, YasmeChat activity) {
 		this.chatId = chatId;
 		this.user_id = user_id;
 		this.activity = activity;

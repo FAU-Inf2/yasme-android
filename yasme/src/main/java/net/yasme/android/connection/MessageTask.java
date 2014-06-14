@@ -30,7 +30,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-public class MessageTask {
+public class MessageTask extends  ConnectionTask {
 
     private static MessageTask instance;
     private URI uri;
@@ -46,8 +46,8 @@ public class MessageTask {
 
         //TODO: URI dynamisch auslesen
         try {
-            this.uri = new URIBuilder().setScheme("https").
-                    setHost("devel.yasme.net").setPort(443).setPath("/msg").build();
+            this.uri = new URIBuilder().setScheme(serverScheme).
+                    setHost(serverHost).setPort(serverPort).setPath("/msg").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

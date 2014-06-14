@@ -1,6 +1,7 @@
 package net.yasme.android;
 
 import net.yasme.android.connection.AuthorizationTask;
+import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.connection.UserTask;
@@ -40,7 +41,6 @@ public class YasmeLogin extends Activity {
      */
     private UserLoginTask authTask = null;
 
-    protected String url = null;
     protected long id;
     protected String[] accessToken = new String[2];
 
@@ -62,11 +62,11 @@ public class YasmeLogin extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_login);
 
-        // get URL
-        url = getResources().getString(R.string.server_url);
+        if (!ConnectionTask.isInitialized()) {
+            ConnectionTask.initParams(getResources().getString(R.string.server_scheme),getResources().getString(R.string.server_host),getResources().getString(R.string.server_port));
+        }
 
         // open storagePreferences
         // Restore preferencesNAME
