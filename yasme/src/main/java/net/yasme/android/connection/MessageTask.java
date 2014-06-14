@@ -129,7 +129,7 @@ public class MessageTask extends  ConnectionTask {
 
                     JSONArray jsonArray = new JSONArray(json);
 
-                    System.out.println("[DEBUG] getMessageRequest successful");
+                    System.out.println("[DEBUG] getMessageRequest successful: " + json);
 
                     if (jsonArray.length() == 0)
                         throw new RestServiceException(MessageError.GET_NO_NEW_MESSAGE);
@@ -139,8 +139,10 @@ public class MessageTask extends  ConnectionTask {
                         JSONObject obj = jsonArray.getJSONObject(i);
                         JSONObject sender = obj.getJSONObject("sender");
 
+                        System.out.println("Sender: " + sender.toString());
+
                         messages.add(new Message(new User(sender.getString("name"),
-                                sender.getLong("id")), obj.getString("message"), 1, obj.getLong("keyID")));
+                                sender.getLong("id")), obj.getString("message"), 1, obj.getLong("messageKeyId")));
                     }
                     break;
                 case 401:

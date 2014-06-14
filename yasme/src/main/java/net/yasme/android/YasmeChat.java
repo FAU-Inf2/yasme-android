@@ -126,15 +126,15 @@ public class YasmeChat extends Activity {
 
             textView.setText(msg.getSender().getName() + ": "
                     + msg.getMessage());
-            textView.setBackgroundColor(getResources().getColor(
-                    R.color.chat_text_bgcol_other));
+            textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
+            textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
 
 
             if (msg.getSender().getId() == user_id) {
                 textView.setGravity(Gravity.RIGHT);
                 row.setGravity(Gravity.RIGHT);
-                textView.setBackgroundColor(getResources().getColor(
-                        R.color.chat_text_bgcol_self));
+                textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
+                textView.setTextColor(getResources().getColor(R.color.chat_text_color_self));
             }
             row.addView(textView);
             layout.addView(row, layoutParams);
