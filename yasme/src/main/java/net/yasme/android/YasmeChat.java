@@ -82,6 +82,7 @@ public class YasmeChat extends Activity {
 		EditMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
 		status.setText("Eingeloggt: " + user_mail);
+        status.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
 	}
 
 	public void send(View view) {
@@ -122,13 +123,14 @@ public class YasmeChat extends Activity {
             textView.setText(msg.getSender().getName() + ": "
                     + msg.getMessage());
             textView.setBackgroundColor(getResources().getColor(
-                    R.color.chat_text_bg_other));
+                    R.color.chat_text_bgcol_other));
+
 
             if (msg.getSender().getId() == user_id) {
                 textView.setGravity(Gravity.RIGHT);
                 row.setGravity(Gravity.RIGHT);
                 textView.setBackgroundColor(getResources().getColor(
-                        R.color.chat_text_bg_self));
+                        R.color.chat_text_bgcol_self));
             }
             row.addView(textView);
             layout.addView(row, layoutParams);
