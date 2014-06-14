@@ -74,10 +74,15 @@ public class YasmeHome extends Activity {
 		if (id == R.id.action_settings) {
 			return true;
 		}
+        if (id == R.id.action_chat) {
+            showStandardChat();
+            return true;
+        }
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void showStandardChat(View view) {
+
+	public void showStandardChat() {
 		// BZZZTT!!1!
 		// findViewById(R.id.button1).performHapticFeedback(2);
 		Intent intent = new Intent(this, YasmeChat.class);
@@ -86,6 +91,7 @@ public class YasmeHome extends Activity {
         intent.putExtra(CHAT_ID, (long)0);
 		startActivity(intent);
 	}
+
 
     public void showChat(long chat_id) {
         Intent intent = new Intent(this, YasmeChat.class);
