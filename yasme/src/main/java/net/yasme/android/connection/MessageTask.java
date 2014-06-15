@@ -1,7 +1,12 @@
 package net.yasme.android.connection;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import net.yasme.android.connection.ssl.HttpClient;
+import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.MessageError;
@@ -34,20 +39,22 @@ public class MessageTask extends  ConnectionTask {
 
     private static MessageTask instance;
     private URI uri;
+    private Context context; //necessary for saving Key from Message
 
-    public static MessageTask getInstance() {
+    public static MessageTask getInstance(Context context) {
         if (instance == null) {
-            instance = new MessageTask();
+            instance = new MessageTask(context);
         }
         return instance;
     }
 
-    private MessageTask() {
+    private MessageTask(Context context) {
 
         //TODO: URI dynamisch auslesen
         try {
             this.uri = new URIBuilder().setScheme(serverScheme).
                     setHost(serverHost).setPort(serverPort).setPath("/msg").build();
+            this.context = context;
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -138,11 +145,28 @@ public class MessageTask extends  ConnectionTask {
 
                         JSONObject obj = jsonArray.getJSONObject(i);
                         JSONObject sender = obj.getJSONObject("sender");
+                        JSONObject chat = obj.getJSONObject("chat");
+
+                       //TODO: hole richtige Chatid
+                       // long chatId = chat.getLong("chatId");
+                        long chatId = 1;
 
                         System.out.println("Sender: " + sender.toString());
 
                         messages.add(new Message(new User(sender.getString("name"),
-                                sender.getLong("id")), obj.getString("message"), 1, obj.getLong("messageKeyId")));
+                                sender.getLong("id")), obj.getString("message"), chatId, obj.getLong("messageKeyId")));
+
+
+                        /* extracting Keys and save it */
+                        JSONObject key = obj.getJSONObject("messageKey");
+                        if (key != null){
+                            MessageEncryption keyStorage = new MessageEncryption(context);
+                            keyStorage.saveKey(chatId, obj.getLong("messageKeyId"));
+                        }
+
+
+
+
                     }
                     break;
                 case 401:
@@ -172,4 +196,6 @@ public class MessageTask extends  ConnectionTask {
         System.out.println("Number new Messages: " + messages.size());
         return messages;
     }
+
+
 }

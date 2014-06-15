@@ -68,7 +68,7 @@ public class Chat {
 		long creatorDevice = user_id;
 		aes = new MessageEncryption(activity, chatId, creatorDevice);
 
-		messageTask = MessageTask.getInstance();
+		messageTask = MessageTask.getInstance(activity);
 
 		lastMessageID = 0L;
 	}

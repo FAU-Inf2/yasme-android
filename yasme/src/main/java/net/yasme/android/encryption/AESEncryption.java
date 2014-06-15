@@ -79,29 +79,30 @@ public class AESEncryption {
 		return keySpec;
 	}
 
-	public SecretKey getKey(){
-		return key;
-	}
-	
-	public IvParameterSpec getIV(){
-		return iv;
-	}
-	
-	public String getIVinBase64() {
-		return Base64.encodeToString(iv.getIV(), Base64.DEFAULT);
-	}
 
-	public String getKeyinBase64() {
-		return Base64.encodeToString(key.getEncoded(), Base64.DEFAULT);
-	}
+    public SecretKey getKey(){
+        return key;
+    }
 
-	public byte[] getIVinByte() {
-		return iv.getIV();
-	}
+    public IvParameterSpec getIV(){
+        return iv;
+    }
 
-	public byte[] getKeyinByte() {
-		return key.getEncoded();
-	}
+    public String getIVinBase64() {
+        return Base64.encodeToString(iv.getIV(), Base64.DEFAULT);
+    }
+
+    public String getKeyinBase64() {
+        return Base64.encodeToString(key.getEncoded(), Base64.DEFAULT);
+    }
+
+    public byte[] getIVinByte() {
+        return iv.getIV();
+    }
+
+    public byte[] getKeyinByte() {
+        return key.getEncoded();
+    }
 	
 	//convert Base64-String to Type SecretKey
 	public SecretKey base64toKey(String base64){

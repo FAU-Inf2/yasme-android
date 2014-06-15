@@ -18,11 +18,11 @@ import android.util.Base64;
 //Mapping: Chats --> KeyID
 //Tabelle: KeyID --> Key
 
-//ChatKeyMapping						Chat-ID: 2
-//Chat-ID	|	Key-ID					Key-ID	|	Key
+//CurrentKey_[CHAT-ID]						Keys_[CHAT-ID]
+//Type	    |	Key-ID					Key-ID	|	Key
 //---------------------					--------------------------------
-//	2		|	1							1	|	KEY, IV
-//											2	| 	KEY, IV
+//keyId		|	1							1	|	KEY, IV
+//Timestamp	| xxxxx							2	| 	KEY, IV
 
 //TODO: Bevor Nachrichten vom Server geholt werden, muessen neue Keys vom Server geholt werden und diese Tabellen aktualisiert werden
 //TODO: Wenn Schluessel empfangen wird, dann Befehl senden, dass Schluessel auf Server geloescht wird
@@ -38,35 +38,45 @@ public class MessageEncryption {
     String url;
     Context context;
 
-    private final String CHATKEYMAPPING = "ChatKeyMapping"; // tablename for
-    // chatkeymapping
+    private String CURRENTKEY = "CurrentKey"; // tablename for "currentKey-Storage" per Chat
+    private String KEYSTORAGE = "KeyStorage"; //tablename for "KeyStorage" per Chat
 
     private AESEncryption aes;
     private KeyTask keytask;
 
-    // TODO: aus long chatid muss Chat chat werden
-    // Constructor --> holt bzw. generiert Key, falls noetig
-    public MessageEncryption(Context context, long chatid, long creator) {
+
+    //Constructor for saving Key from server (Generating a key is not necessary)
+    public MessageEncryption(Context context, long chatid){
         this.context = context;
         this.chatId = chatid;
-        this.creatorDevice = creator;
+        this.CURRENTKEY = this.CURRENTKEY + "_" + Long.toString(chatId);
+        this.KEYSTORAGE = this.KEYSTORAGE + "_" + Long.toString(chatId);
+    }
 
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                CHATKEYMAPPING, Context.MODE_PRIVATE);
+    // TODO: aus long chatid muss Chat chat werden
+    // Constructor fuer Chat-Verschluesselung--> holt bzw. generiert Key, falls noetig
+    public MessageEncryption(Context context, long chatid, long creator) {
+        new MessageEncryption(context, chatid);
+
+        SharedPreferences currentKeyPref = context.getSharedPreferences(
+                CURRENTKEY, Context.MODE_PRIVATE);
 
         // if no old key for this chat, then generate a new one, beginning with
         // ID "1"
-        if (!sharedPref.contains(Long.toString(chatId))) {
-        	//TODO: Wert kommt von Server
-            keyId = 1L;
+        if (!currentKeyPref.contains("keyId")) {
+
             aes = new AESEncryption("geheim");
-            saveKey(context, chatId, keyId);
 
             // TODO Schluessel fuer jeden Empaenger an den Server senden
             // get recipientDevice from chatid
             // for every recipientDevice
             String serverUrl = context.getResources().getString(R.string.server_scheme) + context.getResources().getString(R.string.server_host) + ":" + context.getResources().getString(R.string.server_port);
             sendKey(serverUrl, recipientDevice);
+
+            //TODO: KeyId vom Server abspeichern und Timestamp
+            keyId = 1L;
+            long timestamp = 1;
+            saveKey(chatId, keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
 
             // ###DEBUG
             System.out.println("[???]: KeyID " + keyId + " fuer Chat " + chatId
@@ -85,6 +95,8 @@ public class MessageEncryption {
         // What happens, if the needed key is not available
         // is this a real scenario?
     }
+
+
     
     //update Key for Encryption
     public void updateKey(){
@@ -93,7 +105,7 @@ public class MessageEncryption {
     	checkCurrentKeyId();
     	
     	// get Key from storage
-        byte[][] keydata = getKeyfromLocalStorage(context, chatId, keyId);
+        byte[][] keydata = getKeyfromLocalStorage(chatId, keyId);
         // if Key is available
         if (keydata != null) {
             byte[] key = keydata[0];
@@ -109,9 +121,9 @@ public class MessageEncryption {
     
     // check, which Key is need to encrypt
     public void checkCurrentKeyId(){
-    	SharedPreferences sharedPref = context.getSharedPreferences(CHATKEYMAPPING, Context.MODE_PRIVATE);
+    	SharedPreferences currentKeyPref = context.getSharedPreferences(CURRENTKEY, Context.MODE_PRIVATE);
     	
-    	long keyidfromstorage = sharedPref.getLong(Long.toString(chatId), 0);
+    	long keyidfromstorage = currentKeyPref.getLong("keyId", 0);
         keyId = keyidfromstorage;
     }
 
@@ -133,7 +145,7 @@ public class MessageEncryption {
         // another key is needed
         else {
             // get Key from storage
-            byte[][] keydata = getKeyfromLocalStorage(context, chatId, keyid);
+            byte[][] keydata = getKeyfromLocalStorage(chatId, keyid);
             // if Key is available
             if (keydata != null) {
                 byte[] keyBytes = keydata[0];
@@ -166,36 +178,36 @@ public class MessageEncryption {
     }
 
     // save needed key for chatid, and save key for keyid
-    public void saveKey(Context context, long chatid, long keyid) {
-        SharedPreferences keyPref = context.getSharedPreferences(
-                Long.toString(chatid), Context.MODE_PRIVATE);
+    public void saveKey(long chatid, long keyid, String key, String iv, long timestamp) {
+        SharedPreferences keysPref = context.getSharedPreferences(KEYSTORAGE, Context.MODE_PRIVATE);
         
-        SharedPreferences chatPref = context.getSharedPreferences(
-                CHATKEYMAPPING, Context.MODE_PRIVATE);
+        SharedPreferences currentKeyPref = context.getSharedPreferences(
+                CURRENTKEY, Context.MODE_PRIVATE);
 
-        SharedPreferences.Editor keyeditor = keyPref.edit();
-        SharedPreferences.Editor chateditor = chatPref.edit();
+        SharedPreferences.Editor keysEditor = keysPref.edit();
+        SharedPreferences.Editor currentKeyEditor = currentKeyPref.edit();
         // safe Key+IV, which belongs to Key-Id
-        keyeditor.putString(Long.toString(keyid),
-                aes.getKey() + "," + aes.getIV());
+        keysEditor.putString(Long.toString(keyid), key + "," + iv);
         
         //delete old key, which was needed for encryption
-        if (keyPref.contains(Long.toString(chatid))) {
-            chateditor.remove(Long.toString(chatid));
+        //TODO: ueberpruefen, ob der abzuspeichernde Key neuer oder älter ist
+        if (currentKeyPref.contains("keyId")) {
+            currentKeyEditor.remove("keyId");
+            currentKeyEditor.remove("timestamp");
         }
 
         // safe new Key-Id for this Chat-ID
-        chateditor.putLong(Long.toString(chatid), keyid);
+        currentKeyEditor.putLong("keyId", keyid);
+        currentKeyEditor.putLong("timestamp",timestamp);
         
-        keyeditor.commit();
-        chateditor.commit();
+        keysEditor.commit();
+        currentKeyEditor.commit();
 
     }
 
-    public byte[][] getKeyfromLocalStorage(Context context, long chatid,
-                                           long keyid) {
+    public byte[][] getKeyfromLocalStorage(long chatid, long keyid) {
         SharedPreferences sharedPref = context.getSharedPreferences(
-                Long.toString(chatid), Context.MODE_PRIVATE);
+                KEYSTORAGE, Context.MODE_PRIVATE);
         if (sharedPref.contains(Long.toString(keyid))) {
             String base64 = sharedPref.getString(Long.toString(keyid), "");
 
@@ -231,7 +243,7 @@ public class MessageEncryption {
 
             try {
 
-                key = aes.getKey() + "," + aes.getIV();
+                key = aes.getKeyinBase64() + "," + aes.getIVinBase64();
                 byte encType = 1;
 
                 // setup MessageKey-Object
