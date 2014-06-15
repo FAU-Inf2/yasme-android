@@ -7,6 +7,7 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import net.yasme.android.entities.Chat;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,14 +56,33 @@ public class DatabaseManager {
      *
      * @return List of chats
      */
-    public List<Chat> getAllChats() {
+    public ArrayList<Chat> getAllChats() {
         List<Chat> chats = null;
         try {
             chats = getHelper().getChatDao().queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return chats;
+        ArrayList<Chat> chatsArray = new ArrayList(chats);
+        return chatsArray;
+    }
+
+    /**
+     * This function will return one chats from database with chatId
+     *
+     * @param chatId        ID (primary key) of chat
+     * @return chat with chatID or null if chat not exists
+     */
+    public Chat getChat(long chatId) {
+        Chat chat = null;
+        try {
+            Long cId = chatId;
+            //TODO: conversion may cause overrun!
+            chat = getHelper().getChatDao().queryForId(cId.intValue());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return chat;
     }
 
     /**
@@ -74,7 +94,7 @@ public class DatabaseManager {
     public void deleteChat(String chatName) {
         try {
             DeleteBuilder<Chat, Integer> deleteBuilder = getHelper().getChatDao().deleteBuilder();
-            deleteBuilder.where().eq(Chat.CHAT_NAME, chatName);
+            deleteBuilder.where().eq(DatabaseConstants.CHAT_NAME, chatName);
             deleteBuilder.delete();
         } catch (SQLException e) {
             e.printStackTrace();
