@@ -6,6 +6,8 @@ import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.DBChatTask;
+import net.yasme.android.storage.DatabaseManager;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -51,17 +53,15 @@ public class YasmeChat extends Activity {
 		userMail = intent.getStringExtra(Constants.USER_MAIL);
         userName = intent.getStringExtra(Constants.USER_NAME);
 		userId = intent.getLongExtra(Constants.USER_ID, 0);
-		long chat_id = intent.getLongExtra(Constants.CHAT_ID, 1);
+		long chatId = intent.getLongExtra(Constants.CHAT_ID, 1);
 
         SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
         accessToken = storage.getString("accessToken", null);
 
-		if (false) {
-			chat = new Chat(chat_id, new User(userName, userMail, userId), this);
-		} else {
-            chat = new Chat(chat_id, new User(userName, userMail, userId), this);
-		}
-
+        chat = DatabaseManager.getInstance().getChat(chatId);
+        if(chat == null) {
+            chat = new Chat(chatId, new User(userName, userMail, userId), this);
+        }
 	}
 
 	@Override
@@ -72,6 +72,7 @@ public class YasmeChat extends Activity {
 
 	@Override
 	protected void onStop() {
+        DatabaseManager.getInstance().updateChat(chat);
 		super.onStop();
 	}
 

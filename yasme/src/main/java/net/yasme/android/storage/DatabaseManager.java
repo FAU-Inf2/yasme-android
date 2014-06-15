@@ -66,6 +66,24 @@ public class DatabaseManager {
     }
 
     /**
+     * This function will return one chats from database with chatId
+     *
+     * @param chatId        ID (primary key) of chat
+     * @return chat with chatID or null if chat not exists
+     */
+    public Chat getChat(long chatId) {
+        Chat chat = null;
+        try {
+            Long cId = chatId;
+            //TODO: conversion may cause overrun!
+            chat = getHelper().getChatDao().queryForId(cId.intValue());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return chat;
+    }
+
+    /**
      * This function will delete chat with chatName
      * from table
      *
@@ -74,7 +92,7 @@ public class DatabaseManager {
     public void deleteChat(String chatName) {
         try {
             DeleteBuilder<Chat, Integer> deleteBuilder = getHelper().getChatDao().deleteBuilder();
-            deleteBuilder.where().eq(Chat.CHAT_NAME, chatName);
+            deleteBuilder.where().eq(DatabaseConstants.CHAT_NAME, chatName);
             deleteBuilder.delete();
         } catch (SQLException e) {
             e.printStackTrace();

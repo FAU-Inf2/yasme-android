@@ -40,20 +40,19 @@ public class Chat {
     @DatabaseField
     private ArrayList<User> participants;
 
-	User user;
+	User self;
 
 	private MessageEncryption aes;
 	private MessageTask messageTask;
 	public YasmeChat activity;
     private String accessToken;
 
-
     /**
 	 * Constructors *
 	 */
 	public Chat(long chatId, User user, YasmeChat activity) {
 		this.chatId = chatId;
-		this.user = user;
+		this.self = user;
 		this.activity = activity;
         accessToken = activity.accessToken;
 
@@ -131,11 +130,11 @@ public class Chat {
 	 * Other methods *
 	 */
 	public void send(String msg) {
-		new SendMessageTask().execute(msg, user.getName(), user.getEmail(), Long.toString(user.getId()));
+		new SendMessageTask().execute(msg, self.getName(), self.getEmail(), Long.toString(self.getId()));
 	}
 
 	public void update() {
-		new GetMessageTask().execute(lastMessageID, user.getId());
+		new GetMessageTask().execute(lastMessageID, self.getId());
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -154,7 +153,6 @@ public class Chat {
 			String msg_encrypted = aes.encrypt(msg);
 
 			// create Message
-            //TODO: Uebergabeparamter ueberpruefen!!!!!
 			Message createdMessage = new Message(new User(uName, uMail,  uId),
 					msg_encrypted, chatId, aes.getKeyId());
             try {
