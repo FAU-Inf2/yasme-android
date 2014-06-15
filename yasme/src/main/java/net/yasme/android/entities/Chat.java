@@ -62,14 +62,14 @@ public class Chat {
 		this.activity = activity;
         accessToken = activity.accessToken;
 
-        // setup Encryption for this chat
-		// TODO: DEVICE-ID statt USERID uebergeben
-		long creatorDevice = user.getId();
-		aes = new MessageEncryption(activity, chatId, creatorDevice);
-
-		messageTask = MessageTask.getInstance(activity);
+        messageTask = MessageTask.getInstance(activity);
 
 		lastMessageID = 0L;
+
+        // setup Encryption for this chat
+        // TODO: DEVICE-ID statt USERID uebergeben
+        long creatorDevice = user.getId();
+        aes = new MessageEncryption(activity, this, creatorDevice, accessToken);
 	}
 
 	public Chat() {
