@@ -156,11 +156,12 @@ public class Chat {
 			boolean result = false;
 
 			// encrypt Message
-			String msg_encrypted = aes.encrypt(msg);
+			//String msg_encrypted = aes.encrypt(msg);TODO
+            String msg_encrypted = msg;
 
 			// create Message
             //TODO: Uebergabeparamter ueberpruefen!!!!!
-			Message createdMessage = new Message(new User(user_name, uid),
+			Message createdMessage = new Message(new User("Robert", uid),
 					msg_encrypted, chatId, aes.getKeyId());
             try {
                 result = messageTask.sendMessage(createdMessage, accessToken);
@@ -206,10 +207,10 @@ public class Chat {
                 return false;
             }
 
-            // decrypt Messages
-            for (Message msg : messages) {
-                msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
-            }
+            // decrypt Messages TODO
+            //for (Message msg : messages) {
+            //    msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
+            //}
 
 			return true;
 		}
