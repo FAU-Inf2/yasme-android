@@ -5,6 +5,7 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.UserError;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -14,6 +15,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,6 +26,8 @@ import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by florianwinklmeier on 03.06.14.
@@ -42,13 +47,67 @@ public class ChatTask extends  ConnectionTask{
 
     private ChatTask() {
 
-        //TODO: URI dynamisch auslesen
         try {
             this.uri = new URIBuilder().setScheme(serverScheme).
                     setHost(serverHost).setPort(serverPort).setPath("/chat").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Chat> getAllChatsForUser(long userId, String accessToken) throws RestServiceException{
+
+        List<Chat> chats = new ArrayList<Chat>();
+
+        try {
+            URI requestURI = uri;
+
+            CloseableHttpClient httpClient = HttpClient.createSSLClient();
+            HttpGet httpGet = new HttpGet(requestURI);
+
+            httpGet.setHeader("Content-type", "application/json");
+            httpGet.setHeader("Accept", "application/json");
+
+            httpGet.setHeader("userId", Long.toString(userId));
+            httpGet.setHeader("Authorization", accessToken);
+
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+
+            System.out.println(httpResponse.getStatusLine().getStatusCode());
+            switch (httpResponse.getStatusLine().getStatusCode()) {
+                case 200:
+                    JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
+                            httpResponse.getEntity().getContent())).readLine());
+
+                    for (int i = 0; i < jsonArray.length(); i++)
+                        chats.add(new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
+                                toString(), Chat.class));
+                    break;
+                case 401:
+                    System.out.println("[DEBUG] Unauthorized");
+                    throw new RestServiceException(Error.UNAUTHORIZED);
+                case 500:
+                    throw new RestServiceException(Error.ERROR);
+                default:
+                    throw new RestServiceException(Error.ERROR);
+            }
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return chats;
     }
 
     //TODO: ExceptionHandling verfeinern für ganze Klasse!

@@ -40,7 +40,6 @@ public class AuthorizationTask extends  ConnectionTask{
 
     private AuthorizationTask() {
 
-        //TODO: URI dynamisch auslesen
         try {
             this.uri = new URIBuilder().setScheme(serverScheme).
                     setHost(serverHost).setPort(serverPort).setPath("/sign").build();
