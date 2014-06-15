@@ -30,7 +30,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-public class MessageTask {
+public class MessageTask extends  ConnectionTask {
 
     private static MessageTask instance;
     private URI uri;
@@ -46,8 +46,8 @@ public class MessageTask {
 
         //TODO: URI dynamisch auslesen
         try {
-            this.uri = new URIBuilder().setScheme("https").
-                    setHost("devel.yasme.net").setPort(443).setPath("/msg").build();
+            this.uri = new URIBuilder().setScheme(serverScheme).
+                    setHost(serverHost).setPort(serverPort).setPath("/msg").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -63,6 +63,7 @@ public class MessageTask {
 
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
+            System.out.println(ow.writeValueAsString(message));
             StringEntity se = new StringEntity(ow.writeValueAsString(message));
             httpPost.setEntity(se);
 
@@ -72,6 +73,8 @@ public class MessageTask {
             httpPost.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
+
+            System.out.println(httpResponse.getStatusLine().getStatusCode());
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 201:
@@ -126,7 +129,7 @@ public class MessageTask {
 
                     JSONArray jsonArray = new JSONArray(json);
 
-                    System.out.println("[DEBUG] getMessageRequest successful");
+                    System.out.println("[DEBUG] getMessageRequest successful: " + json);
 
                     if (jsonArray.length() == 0)
                         throw new RestServiceException(MessageError.GET_NO_NEW_MESSAGE);
@@ -136,8 +139,10 @@ public class MessageTask {
                         JSONObject obj = jsonArray.getJSONObject(i);
                         JSONObject sender = obj.getJSONObject("sender");
 
+                        System.out.println("Sender: " + sender.toString());
+
                         messages.add(new Message(new User(sender.getString("name"),
-                                sender.getLong("id")), obj.getString("message"), 1, obj.getLong("keyID")));
+                                sender.getLong("id")), obj.getString("message"), 1, obj.getLong("messageKeyId")));
                     }
                     break;
                 case 401:

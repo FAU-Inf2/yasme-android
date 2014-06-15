@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Connection -->
+    <string name="server_scheme">https</string>
+    <string name="server_host">devel.yasme.net</string>
+    <string name="server_port">443</string>
+</resources>

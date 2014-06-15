@@ -26,7 +26,7 @@ import java.security.NoSuchAlgorithmException;
  * Created by florianwinklmeier on 04.06.14.
  */
 
-public class AuthorizationTask {
+public class AuthorizationTask extends  ConnectionTask{
 
     private static AuthorizationTask instance;
     private URI uri;
@@ -42,8 +42,8 @@ public class AuthorizationTask {
 
         //TODO: URI dynamisch auslesen
         try {
-            this.uri = new URIBuilder().setScheme("https").
-                    setHost("devel.yasme.net").setPort(443).setPath("/sign").build();
+            this.uri = new URIBuilder().setScheme(serverScheme).
+                    setHost(serverHost).setPort(serverPort).setPath("/sign").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

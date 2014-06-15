@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.yasme.android.connection.ChatTask;
+import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.connection.UserTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
@@ -30,9 +31,9 @@ public class YasmeHome extends Activity {
     public final static String CHAT_ID = "net.yasme.andriod.CHAT_ID";
     public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 
+
 	private String user_mail;
 	private long user_id;
-    private String url;
     private String accessToken;
     private User self;
 
@@ -45,11 +46,15 @@ public class YasmeHome extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+
+        if (!ConnectionTask.isInitialized()) {
+            ConnectionTask.initParams(getResources().getString(R.string.server_scheme),getResources().getString(R.string.server_host),getResources().getString(R.string.server_port));
+        }
+
 		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
 		user_mail = storage.getString(USER_MAIL, "anonym@yasme.net");
 		user_id = storage.getLong(USER_ID, 0);
         accessToken = storage.getString("accessToken", null);
-        url = getResources().getString(R.string.server_url);
 
         //Initialize database (once in application)
         DatabaseManager.init(this);
@@ -74,10 +79,15 @@ public class YasmeHome extends Activity {
 		if (id == R.id.action_settings) {
 			return true;
 		}
+        if (id == R.id.action_chat) {
+            showStandardChat();
+            return true;
+        }
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void showStandardChat(View view) {
+
+	public void showStandardChat() {
 		// BZZZTT!!1!
 		// findViewById(R.id.button1).performHapticFeedback(2);
 		Intent intent = new Intent(this, YasmeChat.class);
@@ -86,6 +96,7 @@ public class YasmeHome extends Activity {
         intent.putExtra(CHAT_ID, (long)0);
 		startActivity(intent);
 	}
+
 
     public void showChat(long chat_id) {
         Intent intent = new Intent(this, YasmeChat.class);

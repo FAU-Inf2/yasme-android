@@ -28,7 +28,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-public class DeviceTask {
+public class DeviceTask extends  ConnectionTask {
 
     private static DeviceTask instance;
     private URI uri;
@@ -44,8 +44,8 @@ public class DeviceTask {
 
         //TODO: URI dynamisch auslesen
         try {
-            this.uri = new URIBuilder().setScheme("https").
-                    setHost("devel.yasme.net").setPort(443).setPath("/device").build();
+            this.uri = new URIBuilder().setScheme(serverScheme).
+                    setHost(serverHost).setPort(serverPort).setPath("/device").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

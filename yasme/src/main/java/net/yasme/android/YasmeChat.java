@@ -3,6 +3,7 @@ package net.yasme.android;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import android.app.Activity;
@@ -44,21 +45,24 @@ public class YasmeChat extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+
+        if (!ConnectionTask.isInitialized()) {
+            ConnectionTask.initParams(getResources().getString(R.string.server_scheme),getResources().getString(R.string.server_host),getResources().getString(R.string.server_port));
+        }
+
 		Intent intent = getIntent();
 		user_mail = intent.getStringExtra(USER_MAIL);
 
 		long user_id = intent.getLongExtra(USER_ID, 0);
 		long chat_id = intent.getLongExtra(CHAT_ID, 0);
 
-        String url = getResources().getString(R.string.server_url);
-
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
         accessToken = storage.getString("accessToken", null);
 
 		if (false) {
-			chat = new Chat(chat_id, user_id, url, this);
+			chat = new Chat(chat_id, user_id, this);
 		} else {
-			chat = new Chat(chat_id, user_id, url, this);
+			chat = new Chat(chat_id, user_id, this);
 		}
 
 	}
@@ -82,6 +86,7 @@ public class YasmeChat extends Activity {
 		EditMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
 		status.setText("Eingeloggt: " + user_mail);
+        status.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
 	}
 
 	public void send(View view) {
@@ -121,14 +126,15 @@ public class YasmeChat extends Activity {
 
             textView.setText(msg.getSender().getName() + ": "
                     + msg.getMessage());
-            textView.setBackgroundColor(getResources().getColor(
-                    R.color.chat_text_bg_other));
+            textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
+            textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
+
 
             if (msg.getSender().getId() == user_id) {
                 textView.setGravity(Gravity.RIGHT);
                 row.setGravity(Gravity.RIGHT);
-                textView.setBackgroundColor(getResources().getColor(
-                        R.color.chat_text_bg_self));
+                textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
+                textView.setTextColor(getResources().getColor(R.color.chat_text_color_self));
             }
             row.addView(textView);
             layout.addView(row, layoutParams);
