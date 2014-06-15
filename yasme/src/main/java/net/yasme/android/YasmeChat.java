@@ -6,6 +6,8 @@ import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.DBChatTask;
+import net.yasme.android.storage.DatabaseManager;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -24,12 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class YasmeChat extends Activity {
-	public final static String USER_MAIL = "net.yasme.andriod.USER_MAIL";
-    public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
-	public final static String USER_ID = "net.yasme.andriod.USER_ID";
-	public final static String CHAT_ID = "net.yasme.andriod.CHAT_ID";
-    public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
-
 
     private EditText EditMessage;
 	private TextView status;
@@ -53,21 +49,27 @@ public class YasmeChat extends Activity {
             ConnectionTask.initParams(getResources().getString(R.string.server_scheme),getResources().getString(R.string.server_host),getResources().getString(R.string.server_port));
         }
 
+        //Initialize database (once in application)
+        if(!DatabaseManager.isInitialized()) {
+            DatabaseManager.init(this);
+        }
+
 		Intent intent = getIntent();
-		userMail = intent.getStringExtra(USER_MAIL);
-        userName = intent.getStringExtra(USER_NAME);
-		userId = intent.getLongExtra(USER_ID, 0);
-		long chat_id = intent.getLongExtra(CHAT_ID, 1);
+		userMail = intent.getStringExtra(Constants.USER_MAIL);
+        userName = intent.getStringExtra(Constants.USER_NAME);
+		userId = intent.getLongExtra(Constants.USER_ID, 0);
+		long chatId = intent.getLongExtra(Constants.CHAT_ID, 1);
 
-        SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
+        SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
         accessToken = storage.getString("accessToken", null);
-
-		if (false) {
-			chat = new Chat(chat_id, new User(userName, userMail, userId), this);
-		} else {
-            chat = new Chat(chat_id, new User(userName, userMail, userId), this);
-		}
-
+        try { //TODO try-catch ist debug
+            chat = DatabaseManager.getInstance().getChat(chatId);
+        } catch (NullPointerException e) {
+            chat = null;
+        }
+        if(chat == null) {
+            chat = new Chat(chatId, new User(userName, userMail, userId), this);
+        }
 	}
 
 	@Override
@@ -78,6 +80,7 @@ public class YasmeChat extends Activity {
 
 	@Override
 	protected void onStop() {
+        DatabaseManager.getInstance().updateChat(chat);
 		super.onStop();
 	}
 

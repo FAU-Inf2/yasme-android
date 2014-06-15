@@ -9,6 +9,7 @@ import net.yasme.android.connection.ChatTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.DatabaseConstants;
 
 import java.util.ArrayList;
 
@@ -17,26 +18,20 @@ import java.util.ArrayList;
  */
 @DatabaseTable(tableName = "chatrooms")
 public class Chat {
-    public static final String LAST_MESSAGE_ID = "lastMessageId";
-    public static final String CHAT_ID = "chatId";
-    public static final String CHAT_NAME = "chatName";
-    public static final String CHAT_STATUS = "chatStatus";
-    public static final String MESSAGES = "messages";
 
-
-    @ForeignCollectionField(columnName = MESSAGES)
+    @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
 	private ArrayList<Message> messages;
 
-	@DatabaseField(columnName = LAST_MESSAGE_ID)
+	@DatabaseField(columnName = DatabaseConstants.LAST_MESSAGE_ID)
 	private long lastMessageID;
 
-	@DatabaseField(columnName = CHAT_ID, id = true)
+	@DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
 	private long chatId;
 
-    @DatabaseField(columnName = CHAT_STATUS)
+    @DatabaseField(columnName = DatabaseConstants.CHAT_STATUS)
     private String status;
 
-    @DatabaseField(columnName = CHAT_NAME)
+    @DatabaseField(columnName = DatabaseConstants.CHAT_NAME)
     private String chatName;
 
     @DatabaseField
@@ -45,20 +40,19 @@ public class Chat {
     @DatabaseField
     private ArrayList<User> participants;
 
-	User user;
+	User self;
 
 	private MessageEncryption aes;
 	private MessageTask messageTask;
 	public YasmeChat activity;
     private String accessToken;
 
-
     /**
 	 * Constructors *
 	 */
 	public Chat(long chatId, User user, YasmeChat activity) {
 		this.chatId = chatId;
-		this.user = user;
+		this.self = user;
 		this.activity = activity;
         accessToken = activity.accessToken;
 
@@ -140,11 +134,11 @@ public class Chat {
 	 * Other methods *
 	 */
 	public void send(String msg) {
-		new SendMessageTask().execute(msg, user.getName(), user.getEmail(), Long.toString(user.getId()));
+		new SendMessageTask().execute(msg, self.getName(), self.getEmail(), Long.toString(self.getId()));
 	}
 
 	public void update() {
-		new GetMessageTask().execute(lastMessageID, user.getId());
+		new GetMessageTask().execute(lastMessageID, self.getId());
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -163,7 +157,6 @@ public class Chat {
 			String msg_encrypted = aes.encrypt(msg);
 
 			// create Message
-            //TODO: Uebergabeparamter ueberpruefen!!!!!
 			Message createdMessage = new Message(new User(uName, uMail,  uId),
 					msg_encrypted, chatId, aes.getKeyId());
             try {

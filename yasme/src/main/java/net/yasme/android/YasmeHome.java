@@ -26,12 +26,6 @@ import net.yasme.android.storage.DatabaseManager;
 import java.util.ArrayList;
 
 public class YasmeHome extends Activity {
-	public final static String USER_MAIL = "net.yasme.andriod.USER_MAIL";
-    public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
-    public final static String USER_ID = "net.yasme.andriod.USER_ID";
-    public final static String CHAT_ID = "net.yasme.andriod.CHAT_ID";
-    public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
-
 
 	private String user_mail;
 	private long user_id;
@@ -52,13 +46,15 @@ public class YasmeHome extends Activity {
             ConnectionTask.initParams(getResources().getString(R.string.server_scheme),getResources().getString(R.string.server_host),getResources().getString(R.string.server_port));
         }
 
-		SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
-		user_mail = storage.getString(USER_MAIL, "anonym@yasme.net");
-		user_id = storage.getLong(USER_ID, 0);
+		SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
+		user_mail = storage.getString(Constants.USER_MAIL, "anonym@yasme.net");
+		user_id = storage.getLong(Constants.USER_ID, 0);
         accessToken = storage.getString("accessToken", null);
 
         //Initialize database (once in application)
-        DatabaseManager.init(this);
+        if(!DatabaseManager.isInitialized()) {
+            DatabaseManager.init(this);
+        }
 
         show_chatrooms();
         new GetProfileDataTask().execute(Long.toString(user_id), accessToken);
@@ -90,19 +86,20 @@ public class YasmeHome extends Activity {
 
 	public void showStandardChat() {
 		Intent intent = new Intent(this, YasmeChat.class);
-		intent.putExtra(USER_MAIL, user_mail);
-		intent.putExtra(USER_ID, user_id);
-        intent.putExtra(CHAT_ID, (long)1);
-        intent.putExtra(USER_NAME, self.getName());
+		intent.putExtra(Constants.USER_MAIL, user_mail);
+		intent.putExtra(Constants.USER_ID, user_id);
+        intent.putExtra(Constants.CHAT_ID, (long)1);
+        intent.putExtra(Constants.USER_NAME, self.getName());
 		startActivity(intent);
 	}
 
 
     public void showChat(long chat_id) {
         Intent intent = new Intent(this, YasmeChat.class);
-        intent.putExtra(USER_MAIL, user_mail);
-        intent.putExtra(USER_ID, user_id);
-        intent.putExtra(CHAT_ID, chat_id);
+        intent.putExtra(Constants.USER_MAIL, user_mail);
+        intent.putExtra(Constants.USER_ID, user_id);
+        intent.putExtra(Constants.CHAT_ID, chat_id);
+        intent.putExtra(Constants.USER_NAME, self.getName());
         startActivity(intent);
     }
 
@@ -164,12 +161,13 @@ public class YasmeHome extends Activity {
     }
 
     public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
-        ChatTask chatTask;
-        ArrayList<Chat> chatrooms;
+        //ChatTask chatTask;
+        ArrayList<Chat> chatrooms = null;
         protected Boolean doInBackground(String... params) {
+            /*
             chatTask = ChatTask.getInstance();
             int numberOfChats = 16;
-            //TODO: print chats dynamic
+
             for (int i = 2; i < numberOfChats; i++) {
                 Chat chat;
 
@@ -182,10 +180,17 @@ public class YasmeHome extends Activity {
                 chatrooms.add(chat);
             }
             return chatrooms != null;
+            */
+
+
+            //chatrooms = DatabaseManager.getInstance().getAllChats();
+            return chatrooms != null;
         }
 
         protected void onPostExecute(final Boolean success) {
             if(!success) {
+                //TODO: Debug
+                System.out.println("Fehler bei Datenbankzugriff");
                 return;
             }
             LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);
