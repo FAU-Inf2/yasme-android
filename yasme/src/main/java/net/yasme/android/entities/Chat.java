@@ -117,19 +117,23 @@ public class Chat {
     }
 
     public void addParticipant(User participant) {
+        /*
         try {
             ChatTask.getInstance().addParticipantToChat(participant.getId(), chatId, accessToken);
         } catch (RestServiceException e) {
             e.printStackTrace();
         }
+        */
     }
 
     public void removeParticipant(User participant) {
+        /*
         try {
             ChatTask.getInstance().removePartipantFromChat(participant.getId(), chatId, accessToken);
         } catch (RestServiceException e) {
             e.printStackTrace();
         }
+        */
     }
 
 	/**
