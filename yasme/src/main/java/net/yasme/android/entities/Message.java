@@ -1,5 +1,8 @@
 package net.yasme.android.entities;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,13 +10,28 @@ import java.util.Date;
  * Created by bene on 06.05.14.
  */
 
+@DatabaseTable(tableName = "messages")
 public class Message implements Serializable {
+    public static final String MESSAGE_ID = "messageId";
+    public static final String SENDER = "sender";
+    public static final String DATE = "date";
+    public static final String MESSAGE = "message";
 
+    @DatabaseField(columnName = MESSAGE_ID, id = true)
     private long id;
+
+    @DatabaseField(canBeNull = true, foreign = true)
     private long chat;
+
+    @DatabaseField(columnName = SENDER, foreign = true)
     private User sender;
+
+    @DatabaseField(columnName = DATE)
     private Date dateSent;
+
+    @DatabaseField(columnName = MESSAGE)
     private String message;
+
     private long messageKeyId;
     private MessageKey messageKey;
 
@@ -21,6 +39,7 @@ public class Message implements Serializable {
      * Constructors *
      */
     public Message() {
+        // ORMLite needs a no-arg constructor
     }
 
     public Message(User sender, String message, long chat, long messageKeyId) {
@@ -32,6 +51,7 @@ public class Message implements Serializable {
         this.message = message;
         this.dateSent = dateSent;
         this.chat = chat;
+        this.id = id++;
         this.messageKeyId = messageKeyId;
     }
 

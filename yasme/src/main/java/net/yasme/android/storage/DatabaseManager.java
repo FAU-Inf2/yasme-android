@@ -42,7 +42,7 @@ public class DatabaseManager {
     /**
      * Adds one chat to database
      */
-    public void addCountry(Chat c) {
+    public void addChat(Chat c) {
         try {
             getHelper().getChatDao().create(c);
         } catch (SQLException e) {
@@ -55,7 +55,7 @@ public class DatabaseManager {
      *
      * @return List of chats
      */
-    public List<Chat> getAllCountry() {
+    public List<Chat> getAllChats() {
         List<Chat> chats = null;
         try {
             chats = getHelper().getChatDao().queryForAll();

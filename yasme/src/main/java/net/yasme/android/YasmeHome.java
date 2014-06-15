@@ -27,7 +27,8 @@ import java.util.ArrayList;
 
 public class YasmeHome extends Activity {
 	public final static String USER_MAIL = "net.yasme.andriod.USER_MAIL";
-	public final static String USER_ID = "net.yasme.andriod.USER_ID";
+    public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
+    public final static String USER_ID = "net.yasme.andriod.USER_ID";
     public final static String CHAT_ID = "net.yasme.andriod.CHAT_ID";
     public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 
@@ -88,12 +89,11 @@ public class YasmeHome extends Activity {
 
 
 	public void showStandardChat() {
-		// BZZZTT!!1!
-		// findViewById(R.id.button1).performHapticFeedback(2);
 		Intent intent = new Intent(this, YasmeChat.class);
 		intent.putExtra(USER_MAIL, user_mail);
 		intent.putExtra(USER_ID, user_id);
-        intent.putExtra(CHAT_ID, (long)0);
+        intent.putExtra(CHAT_ID, (long)1);
+        intent.putExtra(USER_NAME, self.getName());
 		startActivity(intent);
 	}
 

@@ -2,6 +2,7 @@ package net.yasme.android.entities;
 
 import android.os.AsyncTask;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import net.yasme.android.YasmeChat;
 import net.yasme.android.connection.ChatTask;
@@ -23,7 +24,7 @@ public class Chat {
     public static final String MESSAGES = "messages";
 
 
-    @DatabaseField(columnName = MESSAGES)
+    @ForeignCollectionField(columnName = MESSAGES)
 	private ArrayList<Message> messages;
 
 	@DatabaseField(columnName = LAST_MESSAGE_ID)
@@ -44,9 +45,7 @@ public class Chat {
     @DatabaseField
     private ArrayList<User> participants;
 
-	private String user_name;
-	private long user_id;
-	String url;
+	User user;
 
 	private MessageEncryption aes;
 	private MessageTask messageTask;
@@ -57,15 +56,15 @@ public class Chat {
     /**
 	 * Constructors *
 	 */
-	public Chat(long chatId, long user_id, YasmeChat activity) {
+	public Chat(long chatId, User user, YasmeChat activity) {
 		this.chatId = chatId;
-		this.user_id = user_id;
+		this.user = user;
 		this.activity = activity;
         accessToken = activity.accessToken;
 
         // setup Encryption for this chat
 		// TODO: DEVICE-ID statt USERID uebergeben
-		long creatorDevice = user_id;
+		long creatorDevice = user.getId();
 		aes = new MessageEncryption(activity, chatId, creatorDevice);
 
 		messageTask = MessageTask.getInstance(activity);
@@ -137,11 +136,11 @@ public class Chat {
 	 * Other methods *
 	 */
 	public void send(String msg) {
-		new SendMessageTask().execute(msg, user_name);
+		new SendMessageTask().execute(msg, user.getName(), user.getEmail(), Long.toString(user.getId()));
 	}
 
 	public void update() {
-		new GetMessageTask().execute(lastMessageID, user_id);
+		new GetMessageTask().execute(lastMessageID, user.getId());
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -151,7 +150,9 @@ public class Chat {
 
 			msg = params[0];
 
-			long uid = user_id;
+            String uName = params[1];
+            String uMail = params[2];
+			long uId = Long.parseLong(params[3]);
 			boolean result = false;
 
 			// encrypt Message
@@ -159,7 +160,7 @@ public class Chat {
 
 			// create Message
             //TODO: Uebergabeparamter ueberpruefen!!!!!
-			Message createdMessage = new Message(new User(user_name, uid),
+			Message createdMessage = new Message(new User(uName, uMail,  uId),
 					msg_encrypted, chatId, aes.getKeyId());
             try {
                 result = messageTask.sendMessage(createdMessage, accessToken);
