@@ -6,6 +6,8 @@ import java.util.Iterator;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.User;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 
 public class YasmeChat extends Activity {
 	public final static String USER_MAIL = "net.yasme.andriod.USER_MAIL";
+    public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
 	public final static String USER_ID = "net.yasme.andriod.USER_ID";
 	public final static String CHAT_ID = "net.yasme.andriod.CHAT_ID";
     public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
@@ -32,8 +35,9 @@ public class YasmeChat extends Activity {
     private EditText EditMessage;
 	private TextView status;
 	private Chat chat;
-	private String user_mail;
-	private long user_id;
+	private String userMail;
+    private String userName;
+    private long userId;
     public String accessToken;
 
 	@Override
@@ -51,18 +55,18 @@ public class YasmeChat extends Activity {
         }
 
 		Intent intent = getIntent();
-		user_mail = intent.getStringExtra(USER_MAIL);
-
-		long user_id = intent.getLongExtra(USER_ID, 0);
+		userMail = intent.getStringExtra(USER_MAIL);
+        userName = intent.getStringExtra(USER_NAME);
+		userId = intent.getLongExtra(USER_ID, 0);
 		long chat_id = intent.getLongExtra(CHAT_ID, 0);
 
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
         accessToken = storage.getString("accessToken", null);
 
 		if (false) {
-			chat = new Chat(chat_id, user_id, this);
+			chat = new Chat(chat_id, new User(userName, userMail, userId), this);
 		} else {
-			chat = new Chat(chat_id, user_id, this);
+            chat = new Chat(chat_id, new User(userName, userMail, userId), this);
 		}
 
 	}
@@ -85,7 +89,7 @@ public class YasmeChat extends Activity {
 	private void initializeViews() {
 		EditMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
-		status.setText("Eingeloggt: " + user_mail);
+		status.setText("Eingeloggt: " + userMail);
         status.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
 	}
 
@@ -130,7 +134,7 @@ public class YasmeChat extends Activity {
             textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
 
 
-            if (msg.getSender().getId() == user_id) {
+            if (msg.getSender().getId() == userId) {
                 textView.setGravity(Gravity.RIGHT);
                 row.setGravity(Gravity.RIGHT);
                 textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));

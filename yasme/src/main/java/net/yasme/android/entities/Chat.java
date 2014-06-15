@@ -45,8 +45,7 @@ public class Chat {
     @DatabaseField
     private ArrayList<User> participants;
 
-	private String user_name;
-	private long user_id;
+	User user;
 	String url;
 
 	private MessageEncryption aes;
@@ -58,15 +57,15 @@ public class Chat {
     /**
 	 * Constructors *
 	 */
-	public Chat(long chatId, long user_id, YasmeChat activity) {
+	public Chat(long chatId, User user, YasmeChat activity) {
 		this.chatId = chatId;
-		this.user_id = user_id;
+		this.user = user;
 		this.activity = activity;
         accessToken = activity.accessToken;
 
         // setup Encryption for this chat
 		// TODO: DEVICE-ID statt USERID uebergeben
-		long creatorDevice = user_id;
+		long creatorDevice = user.getId();
 		aes = new MessageEncryption(activity, chatId, creatorDevice);
 
 		messageTask = MessageTask.getInstance();
@@ -138,11 +137,11 @@ public class Chat {
 	 * Other methods *
 	 */
 	public void send(String msg) {
-		new SendMessageTask().execute(msg, user_name);
+		new SendMessageTask().execute(msg, user.getName(), user.getEmail(), Long.toString(user.getId()));
 	}
 
 	public void update() {
-		new GetMessageTask().execute(lastMessageID, user_id);
+		new GetMessageTask().execute(lastMessageID, user.getId());
 	}
 
 	private class SendMessageTask extends AsyncTask<String, Void, Boolean> {
@@ -152,16 +151,17 @@ public class Chat {
 
 			msg = params[0];
 
-			long uid = user_id;
+            String uName = params[1];
+            String uMail = params[2];
+			long uId = Long.parseLong(params[3]);
 			boolean result = false;
 
 			// encrypt Message
-			//String msg_encrypted = aes.encrypt(msg);TODO
-            String msg_encrypted = msg;
+			String msg_encrypted = aes.encrypt(msg);
 
 			// create Message
             //TODO: Uebergabeparamter ueberpruefen!!!!!
-			Message createdMessage = new Message(new User("Robert", uid),
+			Message createdMessage = new Message(new User(uName, uMail,  uId),
 					msg_encrypted, chatId, aes.getKeyId());
             try {
                 result = messageTask.sendMessage(createdMessage, accessToken);
@@ -207,10 +207,10 @@ public class Chat {
                 return false;
             }
 
-            // decrypt Messages TODO
-            //for (Message msg : messages) {
-            //    msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
-            //}
+            // decrypt Messages
+            for (Message msg : messages) {
+                msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
+            }
 
 			return true;
 		}
