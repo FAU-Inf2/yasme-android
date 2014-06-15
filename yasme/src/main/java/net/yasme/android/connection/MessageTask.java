@@ -171,6 +171,8 @@ public class MessageTask extends  ConnectionTask {
                             MessageEncryption keyStorage = new MessageEncryption(context, chatId);
 
                             keyStorage.saveKey(obj.getLong("messageKeyId"), keyBase64, ivBase64, timestamp);
+
+                            //TODO: schicke Delete-Request an Server
                         }
 
 

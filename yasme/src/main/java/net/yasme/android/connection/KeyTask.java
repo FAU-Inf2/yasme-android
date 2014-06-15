@@ -1,7 +1,9 @@
 package net.yasme.android.connection;
 
 import net.yasme.android.connection.ssl.HttpClient;
+import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.MessageKey;
+import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.Error;
 
@@ -16,6 +18,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,6 +30,7 @@ import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 public class KeyTask extends ConnectionTask {
 
@@ -54,24 +58,33 @@ public class KeyTask extends ConnectionTask {
 
     //TODO: Exception Handling
 
-    public boolean saveKey(MessageKey messageKey) throws RestServiceException {
+    public boolean saveKey(long keyId, long creatorDevice, ArrayList<Long> recipients,Chat chat, String key, byte encType, String sign ) throws RestServiceException {
 
         URI requestURI = uri;
         try {
+            ObjectWriter ow = new ObjectMapper().writer()
+                    .withDefaultPrettyPrinter();
+
+            JSONArray keys= new JSONArray();
+
+            //TODO: erzeuge JSON-Object-Array mit MessageKey pro Recipient
+            for (long recipient: recipients){
+                MessageKey messageKey = new MessageKey(keyId, creatorDevice, recipient, chat, key, encType,sign);
+                keys.put(ow.writeValueAsString(messageKey));
+            }
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpPost httpPost = new HttpPost(requestURI);
 
-            ObjectWriter ow = new ObjectMapper().writer()
-                    .withDefaultPrettyPrinter();
+            System.out.println("[???] Sending Keys to Server:"+key.toString());
 
-            StringEntity se = new StringEntity(ow.writeValueAsString(messageKey));
+            StringEntity se = new StringEntity(keys.toString());
             httpPost.setEntity(se);
 
             httpPost.setHeader("Content-type", "application/json");
             httpPost.setHeader("Accept", "application/json");
 
-            httpPost.setHeader("userId", Long.toString(messageKey.getCreator()));
+            httpPost.setHeader("userId", Long.toString(creatorDevice));
             httpPost.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -112,7 +125,7 @@ public class KeyTask extends ConnectionTask {
         return false;
     }
 
-    public boolean deleteKey(long chatId, long keyId, long userId, String accessToken) {
+    public boolean deleteKey(long chatId, long keyId, long userId) {
 
         try {
 
