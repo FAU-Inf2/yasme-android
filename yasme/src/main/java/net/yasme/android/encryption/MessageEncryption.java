@@ -36,6 +36,7 @@ public class MessageEncryption {
     long creatorDevice;
     long recipientDevice;
     Context context;
+    String accessToken;
 
     private String CURRENTKEY = "CurrentKey"; // tablename for "currentKey-Storage" per Chat
     private String KEYSTORAGE = "KeyStorage"; //tablename for "KeyStorage" per Chat
@@ -54,8 +55,9 @@ public class MessageEncryption {
 
     // TODO: aus long chatid muss Chat chat werden
     // Constructor fuer Chat-Verschluesselung--> holt bzw. generiert Key, falls noetig
-    public MessageEncryption(Context context, long chatid, long creator) {
+    public MessageEncryption(Context context, long chatid, long creator, String accessToken) {
         new MessageEncryption(context, chatid);
+        this.accessToken = accessToken;
 
         SharedPreferences currentKeyPref = context.getSharedPreferences(
                 CURRENTKEY, Context.MODE_PRIVATE);
@@ -255,10 +257,9 @@ public class MessageEncryption {
                         recipientDevice, chatId, key, encType, "test");
 
                 // send MessageKey-Object
-                keytask = KeyTask.getInstance();
+                keytask = KeyTask.getInstance(accessToken);
 
-                //TODO: AccessToken mit übergeben
-                keytask.saveKey(keydata,"0");
+                keytask.saveKey(keydata);
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());

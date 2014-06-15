@@ -32,19 +32,21 @@ public class KeyTask extends ConnectionTask {
 
     private static KeyTask instance;
     private URI uri;
+    private String accessToken;
 
-    public static KeyTask getInstance() {
+    public static KeyTask getInstance(String accessToken) {
         if (instance == null) {
-            instance = new KeyTask();
+            instance = new KeyTask(accessToken);
         }
         return instance;
     }
 
-    private KeyTask() {
+    private KeyTask(String accessToken) {
 
         try {
             this.uri = new URIBuilder().setScheme(serverScheme).
                     setHost(serverHost).setPort(serverPort).setPath("/msgkey").build();
+            this.accessToken = accessToken;
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -52,7 +54,7 @@ public class KeyTask extends ConnectionTask {
 
     //TODO: Exception Handling
 
-    public boolean saveKey(MessageKey messageKey, String accessToken) throws RestServiceException {
+    public boolean saveKey(MessageKey messageKey) throws RestServiceException {
 
         URI requestURI = uri;
         try {

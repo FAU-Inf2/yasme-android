@@ -65,7 +65,7 @@ public class Chat {
         // setup Encryption for this chat
 		// TODO: DEVICE-ID statt USERID uebergeben
 		long creatorDevice = user.getId();
-		aes = new MessageEncryption(activity, chatId, creatorDevice);
+		aes = new MessageEncryption(activity, chatId, creatorDevice, accessToken);
 
 		messageTask = MessageTask.getInstance(activity);
 
