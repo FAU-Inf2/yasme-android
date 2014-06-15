@@ -16,11 +16,17 @@ import java.util.List;
 public class DatabaseManager {
 
     static private DatabaseManager instance;
+    private static Boolean initialized = false;
 
     static public void init(Context context) {
         if (null == instance) {
             instance = new DatabaseManager(context);
         }
+        initialized = true;
+    }
+
+    public static Boolean isInitialized() {
+        return initialized;
     }
 
     static public DatabaseManager getInstance() {
@@ -54,7 +60,7 @@ public class DatabaseManager {
     /**
      * This function will return all chats from database
      *
-     * @return List of chats
+     * @return List of chats or null on error
      */
     public ArrayList<Chat> getAllChats() {
         List<Chat> chats = null;
@@ -62,6 +68,10 @@ public class DatabaseManager {
             chats = getHelper().getChatDao().queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        if(chats == null) {
+            return null;
         }
         ArrayList<Chat> chatsArray = new ArrayList(chats);
         return chatsArray;

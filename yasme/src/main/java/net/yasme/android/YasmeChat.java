@@ -49,6 +49,11 @@ public class YasmeChat extends Activity {
             ConnectionTask.initParams(getResources().getString(R.string.server_scheme),getResources().getString(R.string.server_host),getResources().getString(R.string.server_port));
         }
 
+        //Initialize database (once in application)
+        if(!DatabaseManager.isInitialized()) {
+            DatabaseManager.init(this);
+        }
+
 		Intent intent = getIntent();
 		userMail = intent.getStringExtra(Constants.USER_MAIL);
         userName = intent.getStringExtra(Constants.USER_NAME);

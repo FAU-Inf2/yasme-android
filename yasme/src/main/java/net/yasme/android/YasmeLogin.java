@@ -70,6 +70,11 @@ public class YasmeLogin extends Activity {
             ConnectionTask.initParams(getResources().getString(R.string.server_scheme),getResources().getString(R.string.server_host),getResources().getString(R.string.server_port));
         }
 
+        //Initialize database (once in application)
+        if(!DatabaseManager.isInitialized()) {
+            DatabaseManager.init(this);
+        }
+
         // open storagePreferences
         // Restore preferencesNAME
         SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,

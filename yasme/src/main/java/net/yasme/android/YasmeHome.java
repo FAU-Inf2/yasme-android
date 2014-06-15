@@ -52,7 +52,9 @@ public class YasmeHome extends Activity {
         accessToken = storage.getString("accessToken", null);
 
         //Initialize database (once in application)
-        DatabaseManager.init(this);
+        if(!DatabaseManager.isInitialized()) {
+            DatabaseManager.init(this);
+        }
 
         show_chatrooms();
         new GetProfileDataTask().execute(Long.toString(user_id), accessToken);
