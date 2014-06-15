@@ -3,7 +3,9 @@ package net.yasme.android;
 import net.yasme.android.connection.AuthorizationTask;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.connection.MessageTask;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.connection.UserTask;
@@ -29,6 +31,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -403,13 +407,14 @@ public class YasmeLogin extends Activity {
         }
     }
 
-    public class UpdateDBTask extends AsyncTask<Void, Void, Boolean> {
+    public class UpdateDBTask extends AsyncTask<Long, Void, Boolean> {
+        ArrayList<Message> messages;
 
-        protected Boolean doInBackground(Void... params) {
+        protected Boolean doInBackground(Long... params) {
             ChatTask chatTask = ChatTask.getInstance();
             DatabaseManager dbManager = DatabaseManager.getInstance();
 
-            int numberOfChats = 16;//dbManager.getNumberOfChats();
+            /*int numberOfChats = 16;//dbManager.getNumberOfChats();
 
             Chat chat;
             for(int i = 0; i < numberOfChats; i++) {
@@ -422,6 +427,33 @@ public class YasmeLogin extends Activity {
                 }
                 dbManager.updateChat(chat);
             }
+            return true;*/
+
+            ArrayList<Chat> chats = dbManager.getAllChats();
+
+
+            try {
+                messages = MessageTask.getInstance(getApplicationContext()).getMessage(params[0], params[1], accessToken);
+            } catch (RestServiceException e) {
+                e.printStackTrace();
+            }
+
+            if (messages == null) {
+                return false;
+            }
+            if (messages.isEmpty()) {
+                return false;
+            }
+
+            for(Chat chat : chats) {
+                for(Message msg : messages) {
+                    if(msg.getChat() == chat.getChatId()) {
+                        chat.addMessage(msg);
+                    }
+                }
+                dbManager.updateChat(chat);
+            }
+
             return true;
         }
     }

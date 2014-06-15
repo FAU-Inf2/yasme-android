@@ -1,5 +1,6 @@
 syntax: glob
 build/
+/build
 bin/
 gen/
 .metadata
@@ -13,3 +14,4 @@ gen/
 .iml
 .DS_Store
 local.properties
+.gitignore

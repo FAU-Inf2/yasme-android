@@ -98,6 +98,10 @@ public class Chat {
 		this.messages = messages;
 	}
 
+    public void addMessage(Message msg) {
+        messages.add(msg);
+    }
+
 	public void setLastMessageID(long newlastMessageID) {
 		lastMessageID = newlastMessageID;
 	}

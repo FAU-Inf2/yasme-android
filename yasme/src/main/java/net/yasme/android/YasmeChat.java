@@ -62,7 +62,7 @@ public class YasmeChat extends Activity {
 
         SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
         accessToken = storage.getString("accessToken", null);
-        try { //TODO try-catch ist debug
+        try {
             chat = DatabaseManager.getInstance().getChat(chatId);
         } catch (NullPointerException e) {
             chat = null;
@@ -115,10 +115,8 @@ public class YasmeChat extends Activity {
 	}
 
 	public void updateViews(ArrayList<Message> messages) {
-		//Iterator<Message> iterator = messages.iterator();
-		//Message msg = iterator.next();
         for (Message msg : messages) {
-            TextView textView = new TextView((getApplicationContext()));
+            TextView textView = new TextView(getApplicationContext());
 
             LinearLayout layout = (LinearLayout) findViewById(R.id.scrollLayout);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(

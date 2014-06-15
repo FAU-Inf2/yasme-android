@@ -164,25 +164,6 @@ public class YasmeHome extends Activity {
         //ChatTask chatTask;
         ArrayList<Chat> chatrooms = null;
         protected Boolean doInBackground(String... params) {
-            /*
-            chatTask = ChatTask.getInstance();
-            int numberOfChats = 16;
-
-            for (int i = 2; i < numberOfChats; i++) {
-                Chat chat;
-
-                try {
-                    chat = chatTask.getInfoOfChat(i ,user_id, accessToken);
-                } catch (RestServiceException e) {
-                    System.out.println(e.getMessage());
-                    return false;
-                }
-                chatrooms.add(chat);
-            }
-            return chatrooms != null;
-            */
-
-
             //chatrooms = DatabaseManager.getInstance().getAllChats();
             return chatrooms != null;
         }
