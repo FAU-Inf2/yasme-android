@@ -16,8 +16,6 @@ import java.sql.SQLException;
  * Created by robert on 13.06.14.
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
-    // name of the database file
-    private static final String DATABASE = "net.yasme.android.DATABASE";
 
     // when anything changes in your database objects, we have to increase the database version
     private static final int DATABASE_VERSION = 1;
@@ -26,7 +24,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<Chat, Integer> chatDao = null;
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE, null, DATABASE_VERSION);
+        super(context, DatabaseConstants.DATABASE, null, DATABASE_VERSION);
     }
 
     @Override

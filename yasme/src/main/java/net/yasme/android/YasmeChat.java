@@ -24,12 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class YasmeChat extends Activity {
-	public final static String USER_MAIL = "net.yasme.andriod.USER_MAIL";
-    public final static String USER_NAME = "net.yasme.andriod.USER_NAME";
-	public final static String USER_ID = "net.yasme.andriod.USER_ID";
-	public final static String CHAT_ID = "net.yasme.andriod.CHAT_ID";
-    public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
-
 
     private EditText EditMessage;
 	private TextView status;
@@ -54,12 +48,12 @@ public class YasmeChat extends Activity {
         }
 
 		Intent intent = getIntent();
-		userMail = intent.getStringExtra(USER_MAIL);
-        userName = intent.getStringExtra(USER_NAME);
-		userId = intent.getLongExtra(USER_ID, 0);
-		long chat_id = intent.getLongExtra(CHAT_ID, 1);
+		userMail = intent.getStringExtra(Constants.USER_MAIL);
+        userName = intent.getStringExtra(Constants.USER_NAME);
+		userId = intent.getLongExtra(Constants.USER_ID, 0);
+		long chat_id = intent.getLongExtra(Constants.CHAT_ID, 1);
 
-        SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
+        SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
         accessToken = storage.getString("accessToken", null);
 
 		if (false) {
