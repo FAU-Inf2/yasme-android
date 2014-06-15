@@ -387,7 +387,7 @@ public class YasmeLogin extends Activity {
             authTask = null;
             showProgress(false);
             if (success) {
-                new UpdateDBTask().execute();
+                //new UpdateDBTask().execute();
                 start();
             } else {
                 passwordView

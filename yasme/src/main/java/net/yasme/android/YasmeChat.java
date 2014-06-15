@@ -62,8 +62,11 @@ public class YasmeChat extends Activity {
 
         SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
         accessToken = storage.getString("accessToken", null);
-
-        chat = DatabaseManager.getInstance().getChat(chatId);
+        try { //TODO try-catch ist debug
+            chat = DatabaseManager.getInstance().getChat(chatId);
+        } catch (NullPointerException e) {
+            chat = null;
+        }
         if(chat == null) {
             chat = new Chat(chatId, new User(userName, userMail, userId), this);
         }

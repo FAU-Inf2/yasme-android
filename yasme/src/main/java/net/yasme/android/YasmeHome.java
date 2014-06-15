@@ -161,13 +161,13 @@ public class YasmeHome extends Activity {
     }
 
     public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
-        ChatTask chatTask;
-        ArrayList<Chat> chatrooms;
+        //ChatTask chatTask;
+        ArrayList<Chat> chatrooms = null;
         protected Boolean doInBackground(String... params) {
             /*
             chatTask = ChatTask.getInstance();
             int numberOfChats = 16;
-            //TODO: print chats dynamic
+
             for (int i = 2; i < numberOfChats; i++) {
                 Chat chat;
 
@@ -181,7 +181,9 @@ public class YasmeHome extends Activity {
             }
             return chatrooms != null;
             */
-            chatrooms = DatabaseManager.getInstance().getAllChats();
+
+
+            //chatrooms = DatabaseManager.getInstance().getAllChats();
             return chatrooms != null;
         }
 
