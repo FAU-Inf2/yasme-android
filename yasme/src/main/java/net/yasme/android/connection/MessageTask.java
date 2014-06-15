@@ -159,9 +159,13 @@ public class MessageTask extends  ConnectionTask {
 
                         /* extracting Keys and save it */
                         JSONObject key = obj.getJSONObject("messageKey");
+
                         if (key != null){
-                            MessageEncryption keyStorage = new MessageEncryption(context);
-                            keyStorage.saveKey(chatId, obj.getLong("messageKeyId"));
+                            MessageEncryption keyStorage = new MessageEncryption(context, chatId);
+                            long timestamp = 0;
+                            String keyBase64 = "";
+                            String ivBase64 = "";
+                            keyStorage.saveKey(chatId, obj.getLong("messageKeyId"), keyBase64, ivBase64, timestamp);
                         }
 
 
