@@ -76,7 +76,7 @@ public class MessageEncryption {
             //TODO: KeyId vom Server abspeichern und Timestamp
             keyId = 1L;
             long timestamp = 1;
-            saveKey(chatId, keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
+            saveKey(keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
 
             // ###DEBUG
             System.out.println("[???]: KeyID " + keyId + " fuer Chat " + chatId
@@ -178,7 +178,7 @@ public class MessageEncryption {
     }
 
     // save needed key for chatid, and save key for keyid
-    public void saveKey(long chatid, long keyid, String key, String iv, long timestamp) {
+    public void saveKey(long keyid, String key, String iv, long timestamp) {
         SharedPreferences keysPref = context.getSharedPreferences(KEYSTORAGE, Context.MODE_PRIVATE);
         
         SharedPreferences currentKeyPref = context.getSharedPreferences(
