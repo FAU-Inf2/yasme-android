@@ -3,50 +3,38 @@ package net.yasme.android.entities;
 /**
  * Created by Stefan on 15.05.14.
  */
+
 public class Device {
 
     public enum Platform {
-        ANDROID, IOS, WINDOWSPHONE;
+        ANDROID,
+        IOS,
+        WINDOWSPHONE;
     }
 
     private long id;
     private Platform platform; // android, ios or windowsmobile
-    private String type; // mobilephone, tablet or desktop
-    private long user;
-    private String number; // optional
-
+    private String type;    // mobilephone, tablet or desktop
+    private User user;
+    private String number;  // optional
     private String publicKey;
 
-    public Device(long user, Platform platform, String type, String number) {
+    public Device(User user, Platform platform, String type, String number) {
         this.user = user;
         this.platform = platform;
         this.type = type;
         this.number = number;
     }
 
-    public Device(long id, long user, Platform platform, String type, String number, String publicKey) {
-        this.id = id;
-        this.user = user;
-        this.platform = platform;
-        this.type = type;
-        this.number = number;
-        this.publicKey = publicKey;
-    }
+    public Device(){}
 
-    public Device() {
-    }
+    public User getUser() { return this.user; }
 
-    public long getUser() {
-        return user;
-    }
-
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public void setUser(long user) {
-        this.user = user;
-    }
+    public void setUser(User user) { this.user = user; }
 
     public long getId() {
         return id;
@@ -72,9 +60,7 @@ public class Device {
         this.type = type;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
+    public void setNumber(String number) { this.number = number; }
 
     public String getPublicKey() {
         return publicKey;
@@ -84,4 +70,3 @@ public class Device {
         this.publicKey = publicKey;
     }
 }
-

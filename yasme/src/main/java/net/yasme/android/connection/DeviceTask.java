@@ -42,7 +42,6 @@ public class DeviceTask extends  ConnectionTask {
 
     private DeviceTask() {
 
-        //TODO: URI dynamisch auslesen
         try {
             this.uri = new URIBuilder().setScheme(serverScheme).
                     setHost(serverHost).setPort(serverPort).setPath("/device").build();
@@ -67,7 +66,7 @@ public class DeviceTask extends  ConnectionTask {
             httpPost.setHeader("Content-type", "application/json");
             httpPost.setHeader("Accept", "application/json");
 
-            httpPost.setHeader("userId", Long.toString(device.getUser()));
+            httpPost.setHeader("userId", Long.toString(device.getUser().getId()));
             httpPost.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -92,7 +91,7 @@ public class DeviceTask extends  ConnectionTask {
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
-             throw new RestServiceException(Error.CONNECTION_ERROR);
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (KeyManagementException e) {
@@ -123,34 +122,18 @@ public class DeviceTask extends  ConnectionTask {
             switch (httpResponse.getStatusLine().getStatusCode()) {
 
                 case 200:
-                    JSONObject jsonObject = new JSONObject(new BufferedReader (new InputStreamReader(httpResponse.getEntity()
-                            .getContent())).readLine());
-
-                    Device.Platform platform = null;
-                    String jsonPlatform = jsonObject.getString("platform");
-
-                    if (jsonPlatform.equals(Device.Platform.ANDROID.toString()))
-                        platform = Device.Platform.ANDROID;
-                    else if (jsonPlatform.equals(Device.Platform.IOS.toString()))
-                        platform = Device.Platform.IOS;
-                    else if (jsonPlatform.equals(Device.Platform.WINDOWSPHONE.toString()))
-                        platform = Device.Platform.WINDOWSPHONE;
-
-                    //TODO: publicKey nachtragen
-                    return new Device((jsonObject.getJSONObject("user")).getLong("id"),platform,
-                            jsonObject.getString("type"),jsonObject.getString("number"));
+                    return new ObjectMapper().readValue(new BufferedReader (new InputStreamReader(httpResponse.getEntity()
+                            .getContent())).readLine(), Device.class);
                 case 401:
                     System.out.println("Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 500:
-                     throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 default:
-                     throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.ERROR);
             }
 
         } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.UNAUTHORIZED);
@@ -193,23 +176,9 @@ public class DeviceTask extends  ConnectionTask {
                     JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
                             httpResponse.getEntity().getContent())).readLine());
 
-                    for (int i = 0; i < jsonArray.length(); i++) {
-
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                        Device.Platform platform = null;
-                        String jsonPlatform = jsonObject.getString("platform");
-
-                        if (jsonPlatform.equals(Device.Platform.ANDROID.toString()))
-                            platform = Device.Platform.ANDROID;
-                        else if (jsonPlatform.equals(Device.Platform.IOS.toString()))
-                            platform = Device.Platform.IOS;
-                        else if (jsonPlatform.equals(Device.Platform.WINDOWSPHONE.toString()))
-                            platform = Device.Platform.WINDOWSPHONE;
-
-                        devices.add(new Device(jsonObject.getLong("id"), jsonObject.getJSONObject("user").getLong("id"),
-                                platform, jsonObject.getString("type"), jsonObject.getString("number"), null));
-                    }
+                    for (int i = 0; i < jsonArray.length(); i++)
+                        devices.add(new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
+                                toString(), Device.class));
 
                     System.out.println("No.Devices: " + jsonArray.length());
                     break;
