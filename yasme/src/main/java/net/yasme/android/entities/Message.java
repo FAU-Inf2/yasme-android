@@ -17,7 +17,7 @@ public class Message implements Serializable {
     public static final String DATE = "date";
     public static final String MESSAGE = "message";
 
-    //@DatabaseField(columnName = MESSAGE_ID, id = true)
+    @DatabaseField(columnName = MESSAGE_ID, id = true)
     private long id;
 
     @DatabaseField(canBeNull = true, foreign = true)

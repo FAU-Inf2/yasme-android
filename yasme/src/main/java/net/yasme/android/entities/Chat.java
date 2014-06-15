@@ -46,7 +46,6 @@ public class Chat {
     private ArrayList<User> participants;
 
 	User user;
-	String url;
 
 	private MessageEncryption aes;
 	private MessageTask messageTask;

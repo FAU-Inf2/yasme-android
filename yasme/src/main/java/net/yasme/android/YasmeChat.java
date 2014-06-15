@@ -57,7 +57,7 @@ public class YasmeChat extends Activity {
 		userMail = intent.getStringExtra(USER_MAIL);
         userName = intent.getStringExtra(USER_NAME);
 		userId = intent.getLongExtra(USER_ID, 0);
-		long chat_id = intent.getLongExtra(CHAT_ID, 0);
+		long chat_id = intent.getLongExtra(CHAT_ID, 1);
 
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
         accessToken = storage.getString("accessToken", null);

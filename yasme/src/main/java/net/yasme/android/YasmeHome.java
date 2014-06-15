@@ -89,12 +89,10 @@ public class YasmeHome extends Activity {
 
 
 	public void showStandardChat() {
-		// BZZZTT!!1!
-		// findViewById(R.id.button1).performHapticFeedback(2);
 		Intent intent = new Intent(this, YasmeChat.class);
 		intent.putExtra(USER_MAIL, user_mail);
 		intent.putExtra(USER_ID, user_id);
-        intent.putExtra(CHAT_ID, (long)0);
+        intent.putExtra(CHAT_ID, (long)1);
         intent.putExtra(USER_NAME, self.getName());
 		startActivity(intent);
 	}
