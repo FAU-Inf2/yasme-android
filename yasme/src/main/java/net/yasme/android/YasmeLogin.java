@@ -1,10 +1,14 @@
 package net.yasme.android;
 
 import net.yasme.android.connection.AuthorizationTask;
+import net.yasme.android.connection.ChatTask;
 import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.connection.UserTask;
+import net.yasme.android.storage.DatabaseManager;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
@@ -38,12 +42,14 @@ public class YasmeLogin extends Activity {
     private UserLoginTask authTask = null;
 
     protected long id;
-    protected String[] accessToken = new String[2];
+    protected String[] loginReturn = new String[2];
+    protected String accessToken;
 
     // Values for name, email and password at the time of the login attempt.
     private String name;
     private String email;
     private String password;
+    private long userId;
 
     // focusView for validate()
     private View focusView = null;
@@ -69,7 +75,7 @@ public class YasmeLogin extends Activity {
         SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,
                 MODE_PRIVATE);
         email = storage.getString(Constants.USER_MAIL, "");
-        accessToken[1] = storage.getString("accesToken1", null);
+        loginReturn[1] = storage.getString("accesToken1", null);
 
         // Set up the login form.
         // email = getIntent().getStringExtra(USER_EMAIL);
@@ -348,16 +354,19 @@ public class YasmeLogin extends Activity {
                 System.out.println("e-Mail: " + email + " " + "Passwort: "
                         + password);
 
-                accessToken = AuthorizationTask.getInstance().loginUser(new User(email,
+                loginReturn = AuthorizationTask.getInstance().loginUser(new User(email,
                         password));
 
-                System.out.println(accessToken[0]);
+                userId = Long.parseLong(loginReturn[0]);
+                accessToken = loginReturn[1];
+
+                System.out.println(loginReturn[0]);
                 // accessToken storage
                 SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,
                         MODE_PRIVATE);
                 SharedPreferences.Editor editor = storage.edit();
-                editor.putLong(Constants.USER_ID, Long.parseLong(accessToken[0]));
-                editor.putString("accesToken", accessToken[1]);
+                editor.putLong(Constants.USER_ID, Long.parseLong(loginReturn[0]));
+                editor.putString("accesToken", loginReturn[1]);
                 editor.putString(Constants.USER_MAIL, email);
                 editor.commit();
 
@@ -373,6 +382,7 @@ public class YasmeLogin extends Activity {
             authTask = null;
             showProgress(false);
             if (success) {
+                new UpdateDBTask().execute();
                 start();
             } else {
                 passwordView
@@ -388,6 +398,30 @@ public class YasmeLogin extends Activity {
         }
     }
 
+    public class UpdateDBTask extends AsyncTask<Void, Void, Boolean> {
+
+        protected Boolean doInBackground(Void... params) {
+            ChatTask chatTask = ChatTask.getInstance();
+            DatabaseManager dbManager = DatabaseManager.getInstance();
+
+            int numberOfChats = 16;//dbManager.getNumberOfChats();
+
+            Chat chat;
+            for(int i = 0; i < numberOfChats; i++) {
+
+                try {
+                    chat = chatTask.getInfoOfChat(i, userId, accessToken);
+                } catch (RestServiceException e) {
+                    System.out.println(e.getMessage());
+                    return false;
+                }
+                dbManager.updateChat(chat);
+            }
+            return true;
+        }
+    }
+
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -397,7 +431,7 @@ public class YasmeLogin extends Activity {
         SharedPreferences.Editor editor = storage.edit();
         editor.putString(Constants.USER_MAIL, email);
         editor.putLong(Constants.USER_ID, id);
-        editor.putString("accesToken1", accessToken[1]);
+        editor.putString("accesToken1", loginReturn[1]);
 
         // Commit the edits!
         editor.commit();

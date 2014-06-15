@@ -7,6 +7,7 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import net.yasme.android.entities.Chat;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,14 +56,15 @@ public class DatabaseManager {
      *
      * @return List of chats
      */
-    public List<Chat> getAllChats() {
+    public ArrayList<Chat> getAllChats() {
         List<Chat> chats = null;
         try {
             chats = getHelper().getChatDao().queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return chats;
+        ArrayList<Chat> chatsArray = new ArrayList(chats);
+        return chatsArray;
     }
 
     /**

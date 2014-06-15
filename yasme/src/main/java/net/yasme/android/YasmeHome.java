@@ -162,6 +162,7 @@ public class YasmeHome extends Activity {
         ChatTask chatTask;
         ArrayList<Chat> chatrooms;
         protected Boolean doInBackground(String... params) {
+            /*
             chatTask = ChatTask.getInstance();
             int numberOfChats = 16;
             //TODO: print chats dynamic
@@ -177,10 +178,15 @@ public class YasmeHome extends Activity {
                 chatrooms.add(chat);
             }
             return chatrooms != null;
+            */
+            chatrooms = DatabaseManager.getInstance().getAllChats();
+            return chatrooms != null;
         }
 
         protected void onPostExecute(final Boolean success) {
             if(!success) {
+                //TODO: Debug
+                System.out.println("Fehler bei Datenbankzugriff");
                 return;
             }
             LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);

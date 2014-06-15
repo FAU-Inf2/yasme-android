@@ -31,7 +31,5 @@ public class DBChatTask {
         protected void onPostExecute(final Boolean success) {
 
         }
-
-
     }
 }
