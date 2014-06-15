@@ -8,6 +8,7 @@ import net.yasme.android.exception.UserError;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
@@ -54,6 +55,8 @@ public class ChatTask extends  ConnectionTask{
             e.printStackTrace();
         }
     }
+
+    //TODO: ExceptionHandling verfeinern für ganze Klasse!
 
     public List<Chat> getAllChatsForUser(long userId, String accessToken) throws RestServiceException{
 
@@ -110,14 +113,11 @@ public class ChatTask extends  ConnectionTask{
         return chats;
     }
 
-    //TODO: ExceptionHandling verfeinern für ganze Klasse!
-
     public Long createChatwithPar(Chat chat, long userId, String accessToken) throws RestServiceException {
 
+        URI requestURI = uri;
+
         try {
-
-            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/new").build();
-
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpPost httpPost = new HttpPost(requestURI);
 
@@ -135,8 +135,6 @@ public class ChatTask extends  ConnectionTask{
             httpPost.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
-
-            System.out.println(httpResponse.getStatusLine().getStatusCode());
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 201:
@@ -161,8 +159,6 @@ public class ChatTask extends  ConnectionTask{
             e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         } catch (KeyManagementException e) {
             e.printStackTrace();
         } catch (KeyStoreException e) {
@@ -414,6 +410,52 @@ public class ChatTask extends  ConnectionTask{
                     throw new RestServiceException(UserError.ERROR);
             }
 
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean deleteDevice(long chatId, long userId, String accessToken) throws RestServiceException {
+
+        try {
+
+            URI requestURI = new URIBuilder(uri).setPath(uri.getPath()+"/"+chatId).build();
+
+            CloseableHttpClient httpClient = HttpClient.createSSLClient();
+            HttpDelete httpDelete = new HttpDelete(requestURI);
+
+            httpDelete.setHeader("userId", Long.toString(userId));
+            httpDelete.setHeader("Authorization", accessToken);
+
+            HttpResponse httpResponse = httpClient.execute(httpDelete);
+
+            System.out.println(httpResponse.getStatusLine().getStatusCode());
+            switch (httpResponse.getStatusLine().getStatusCode()) {
+
+                case 201:
+                    System.out.println("[DEBUG] Device removed!");
+                    return true;
+                case 401:
+                    System.out.println("Unauthorized");
+                    throw new RestServiceException(Error.UNAUTHORIZED);
+                case 403:
+                    throw new RestServiceException(Error.ERROR);
+                case 404:
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
+                default:
+                    throw new RestServiceException(Error.ERROR);
+            }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
