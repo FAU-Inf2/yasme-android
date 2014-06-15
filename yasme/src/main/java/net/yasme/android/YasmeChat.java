@@ -1,7 +1,6 @@
 package net.yasme.android;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.entities.Chat;
