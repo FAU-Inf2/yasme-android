@@ -2,9 +2,19 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
     <solid android:color="@color/chat_text_bgcol_other" />
     <corners
-        android:topLeftRadius="10dp"
-        android:topRightRadius="10dp"
-        android:bottomLeftRadius="10dp"
-        android:bottomRightRadius="10dp"
+        android:topLeftRadius="8dip"
+        android:topRightRadius="8dip"
+        android:bottomLeftRadius="8dip"
+        android:bottomRightRadius="8dip"
         />
+    <padding
+        android:left="15dip"
+        android:top="15dip"
+        android:right="15dip"
+        android:bottom="15dip" />
+
+    <stroke
+        android:width="5dip"
+        />
+
 </shape>
