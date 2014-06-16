@@ -269,6 +269,7 @@ public class ChatTask extends  ConnectionTask{
             e.printStackTrace();
         }
         return false;
+
     }
 
     public boolean changeOwnerOfChat(long chatId, long newOwnerId, long userId, String accessToken) throws RestServiceException {
@@ -276,15 +277,15 @@ public class ChatTask extends  ConnectionTask{
         try {
             URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/"+chatId+"/owner/"+userId).build();
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
-            HttpPost httpPost = new HttpPost(requestURI);
+            HttpPut httpPut = new HttpPut(requestURI);
 
-            httpPost.setHeader("Content-type", "application/json");
-            httpPost.setHeader("Accept", "application/json");
+            httpPut.setHeader("Content-type", "application/json");
+            httpPut.setHeader("Accept", "application/json");
 
-            httpPost.setHeader("userId", Long.toString(userId));
-            httpPost.setHeader("Authorization", accessToken);
+            httpPut.setHeader("userId", Long.toString(userId));
+            httpPut.setHeader("Authorization", accessToken);
 
-            HttpResponse httpResponse = httpClient.execute(httpPost);
+            HttpResponse httpResponse = httpClient.execute(httpPut);
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 201:
