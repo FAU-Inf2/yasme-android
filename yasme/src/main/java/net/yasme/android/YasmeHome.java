@@ -30,6 +30,7 @@ public class YasmeHome extends Activity {
 	private String userMail;
 	private long userId;
     private String accessToken;
+    private User selfProfile;
     private User self;
 
 	@Override
@@ -55,6 +56,9 @@ public class YasmeHome extends Activity {
         if(!DatabaseManager.isInitialized()) {
             DatabaseManager.init(this, userId, accessToken);
         }
+        self = new User();
+        self.setEmail(userMail);
+        self.setId(userId);
 
         show_chatrooms();
         new GetProfileDataTask().execute(Long.toString(userId), accessToken);
@@ -143,20 +147,21 @@ public class YasmeHome extends Activity {
             long user_id = Long.parseLong(params[0]);
             String accessToken = params[1];
             try {
-                self = UserTask.getInstance().getUserData(user_id, accessToken);
+                selfProfile = UserTask.getInstance().getUserData(user_id, accessToken);
             } catch (RestServiceException e) {
                 System.out.println(e.getMessage());
                 return false;
             }
-            return self != null;
+            return selfProfile != null;
         }
 
         protected void onPostExecute(final Boolean success) {
             if(!success) {
                 return;
             }
+            self.setName(selfProfile.getName());
             TextView profileInfo = (TextView) findViewById(R.id.profileInfo);
-            profileInfo.setText(self.getName() + ": " + userMail);
+            profileInfo.setText(selfProfile.getName() + ": " + userMail);
         }
     }
 

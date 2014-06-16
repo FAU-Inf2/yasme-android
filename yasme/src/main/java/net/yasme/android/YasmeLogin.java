@@ -45,7 +45,6 @@ public class YasmeLogin extends Activity {
      */
     private UserLoginTask authTask = null;
 
-    protected long id;
     protected String[] loginReturn = new String[2];
     protected String accessToken;
 
@@ -71,7 +70,7 @@ public class YasmeLogin extends Activity {
         setContentView(R.layout.activity_login);
 
         if (!ConnectionTask.isInitialized()) {
-            ConnectionTask.initParams(getResources().getString(R.string.server_scheme),getResources().getString(R.string.server_host),getResources().getString(R.string.server_port));
+            ConnectionTask.initParams(getResources().getString(R.string.server_scheme), getResources().getString(R.string.server_host), getResources().getString(R.string.server_port));
         }
 
         // open storagePreferences
@@ -110,7 +109,8 @@ public class YasmeLogin extends Activity {
                     public void onClick(View view) {
                         attemptLogin();
                     }
-                });
+                }
+        );
 
         findViewById(R.id.register_button).setOnClickListener(
                 new View.OnClickListener() {
@@ -118,7 +118,8 @@ public class YasmeLogin extends Activity {
                     public void onClick(View view) {
                         registerDialog();
                     }
-                });
+                }
+        );
     }
 
     // TODO: Strings nach strings.xml bringen
@@ -165,14 +166,16 @@ public class YasmeLogin extends Activity {
                         new UserRegistrationTask().execute(inputName,
                                 inputMail, inputPassword, inputPasswordCheck);
                     }
-                });
+                }
+        );
 
         // "Cancel" button
         alert.setNegativeButton("Cancel",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     }
-                });
+                }
+        );
 
         alert.show();
     }
@@ -309,11 +312,22 @@ public class YasmeLogin extends Activity {
                 return false;
             }
             try {
-                id = UserTask.getInstance().registerUser(new User(password, name,
+                userId = UserTask.getInstance().registerUser(new User(password, name,
                         email));
             } catch (RestServiceException e) {
                 return false;
             }
+
+            SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,
+                    MODE_PRIVATE);
+            SharedPreferences.Editor editor = storage.edit();
+            editor.putLong(Constants.USER_ID, userId);
+            //editor.putString("accesToken", loginReturn[1]);
+            editor.putString(Constants.USER_MAIL, email);
+            editor.putString(Constants.USER_NAME, name);
+            editor.putLong(Constants.LAST_MESSAGE_ID, 0L);
+            editor.commit();
+
             return true;
         }
 
@@ -327,14 +341,16 @@ public class YasmeLogin extends Activity {
                         getApplicationContext(),
                         getResources().getString(
                                 R.string.registration_successful),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT
+                ).show();
                 start();
             } else {
                 Toast.makeText(
                         getApplicationContext(),
                         getResources().getString(
                                 R.string.registration_not_successful),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT
+                ).show();
                 finish();
             }
         }
@@ -350,9 +366,9 @@ public class YasmeLogin extends Activity {
      * Represents an asynchronous login task used to authenticate the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+        long lastMessageId = 0;
 
         protected Boolean doInBackground(Void... params) {
-
             try {
                 // DEBUG:
                 System.out.println("e-Mail: " + email + " " + "Passwort: "
@@ -365,17 +381,19 @@ public class YasmeLogin extends Activity {
                 accessToken = loginReturn[1];
 
                 System.out.println(loginReturn[0]);
-                // accessToken storage
+
+                // storage
                 SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,
                         MODE_PRIVATE);
                 SharedPreferences.Editor editor = storage.edit();
                 editor.putLong(Constants.USER_ID, Long.parseLong(loginReturn[0]));
                 editor.putString("accesToken", loginReturn[1]);
                 editor.putString(Constants.USER_MAIL, email);
+                lastMessageId = storage.getLong(Constants.LAST_MESSAGE_ID, 0L);
                 editor.commit();
 
                 //Initialize database (once in application)
-                if(!DatabaseManager.isInitialized()) {
+                if (!DatabaseManager.isInitialized()) {
                     DatabaseManager.init(getApplicationContext(), userId, accessToken);
                 }
 
@@ -391,7 +409,7 @@ public class YasmeLogin extends Activity {
             authTask = null;
             showProgress(false);
             if (success) {
-                //new UpdateDBTask().execute();
+                new UpdateDBTask().execute(Long.toString(lastMessageId), Long.toString(userId), accessToken);
                 start();
             } else {
                 passwordView
@@ -407,33 +425,20 @@ public class YasmeLogin extends Activity {
         }
     }
 
-    public class UpdateDBTask extends AsyncTask<Long, Void, Boolean> {
+
+    public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
+        DatabaseManager dbManager = DatabaseManager.getInstance();
+
         ArrayList<Message> messages;
+        ArrayList<Chat> chats = dbManager.getAllChats();
 
-        protected Boolean doInBackground(Long... params) {
-            ChatTask chatTask = ChatTask.getInstance();
-            DatabaseManager dbManager = DatabaseManager.getInstance();
-
-            /*int numberOfChats = 16;//dbManager.getNumberOfChats();
-
-            Chat chat;
-            for(int i = 0; i < numberOfChats; i++) {
-
-                try {
-                    chat = chatTask.getInfoOfChat(i, userId, accessToken);
-                } catch (RestServiceException e) {
-                    System.out.println(e.getMessage());
-                    return false;
-                }
-                dbManager.updateChat(chat);
-            }
-            return true;*/
-
-            ArrayList<Chat> chats = dbManager.getAllChats();
-
-
+        /**
+         * params[0] is lastMessageId
+         * params[1] is userId
+         */
+        protected Boolean doInBackground(String... params) {
             try {
-                messages = MessageTask.getInstance(getApplicationContext()).getMessage(params[0], params[1], accessToken);
+                messages = MessageTask.getInstance(getApplicationContext()).getMessage(Long.parseLong(params[0]), Long.parseLong(params[1]), accessToken);
             } catch (RestServiceException e) {
                 e.printStackTrace();
             }
@@ -445,9 +450,9 @@ public class YasmeLogin extends Activity {
                 return false;
             }
 
-            for(Chat chat : chats) {
-                for(Message msg : messages) {
-                    if(msg.getChat() == chat.getChatId()) {
+            for (Chat chat : chats) {
+                for (Message msg : messages) {
+                    if (msg.getChat() == chat.getChatId()) {
                         chat.addMessage(msg);
                     }
                 }
@@ -467,7 +472,7 @@ public class YasmeLogin extends Activity {
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = storage.edit();
         editor.putString(Constants.USER_MAIL, email);
-        editor.putLong(Constants.USER_ID, id);
+        editor.putLong(Constants.USER_ID, userId);
         editor.putString("accesToken1", loginReturn[1]);
 
         // Commit the edits!

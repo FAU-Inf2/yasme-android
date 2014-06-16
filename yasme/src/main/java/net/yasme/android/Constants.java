@@ -9,6 +9,7 @@ public class Constants {
     public final static String USER_ID = "net.yasme.andriod.USER_ID";
 
     public final static String CHAT_ID = "net.yasme.andriod.CHAT_ID";
+    public final static String LAST_MESSAGE_ID = "net.yasme.andriod.LAST_MESSAGE_ID";
 
     public final static String STORAGE_PREFS = "net.yasme.andriod.STORAGE_PREFS";
 }
