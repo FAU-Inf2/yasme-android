@@ -1,6 +1,7 @@
 package net.yasme.android.storage;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import com.j256.ormlite.stmt.DeleteBuilder;
 
@@ -24,21 +25,8 @@ public class DatabaseManager {
         if (null == instance) {
             instance = new DatabaseManager(context);
         }
-
-        long numberOfChats = 16L;
-        Chat chat = null;
-        for(long i = 0; i < numberOfChats; i++) {
-            try {
-                chat = ChatTask.getInstance().getInfoOfChat(i, userId, accessToken);
-            } catch (RestServiceException e) {
-                e.printStackTrace();
-            }
-            if(chat != null) {
-                instance.addChat(chat);
-            }
-
-        }
-
+        GetSeedTask getSeedTask = new GetSeedTask();
+        getSeedTask.execute(Long.toString(userId), accessToken);
         initialized = true;
     }
 
@@ -153,6 +141,30 @@ public class DatabaseManager {
             getHelper().getChatDao().update(chat);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public static class GetSeedTask extends AsyncTask<String, Void, Boolean> {
+
+        protected Boolean doInBackground(String... params) {
+            ChatTask chatTask = ChatTask.getInstance();
+
+            long numberOfChats = 16L;
+            Chat chat = null;
+            for(long i = 0; i < numberOfChats; i++) {
+                try {
+                    chat = chatTask.getInfoOfChat(i, Long.parseLong(params[0]), params[1]);
+                } catch (RestServiceException e) {
+                    e.printStackTrace();
+                }
+                if (chat != null) {
+                    instance.addChat(chat);
+                } else {
+                    break;
+                }
+            }
+            return true;
         }
     }
 }
