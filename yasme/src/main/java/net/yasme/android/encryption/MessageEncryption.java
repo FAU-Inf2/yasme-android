@@ -76,7 +76,7 @@ public class MessageEncryption {
             System.out.println("[???] Generate Key");
             aes = new AESEncryption("geheim");
             /*
-            // TODO pro User alle Devices suchen und speichern
+            // TODO pro User alle Devices suchen und in recipients speichern
             //suche alle Empfaenger des Schluessels
             ArrayList<User> participants = chat.getParticipants();
 
@@ -88,12 +88,9 @@ public class MessageEncryption {
                 }
 
             }
-
-            //sendKey();
-
-
-            // get recipientDevice from chatid
-            // for every recipientDevice
+            if (recipients.length > 0){
+                //sendKey();
+            }
 
             if (!ConnectionTask.isInitialized()) {
                 ConnectionTask.initParams(context.getResources().getString(R.string.server_scheme),context.getResources().getString(R.string.server_host),context.getResources().getString(R.string.server_port));
