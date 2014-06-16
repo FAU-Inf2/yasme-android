@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.j256.ormlite.stmt.DeleteBuilder;
 
+import net.yasme.android.connection.ChatTask;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.exception.RestServiceException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,10 +20,25 @@ public class DatabaseManager {
     static private DatabaseManager instance;
     private static Boolean initialized = false;
 
-    static public void init(Context context) {
+    static public void init(Context context, long userId, String accessToken) {
         if (null == instance) {
             instance = new DatabaseManager(context);
         }
+
+        long numberOfChats = 16L;
+        Chat chat = null;
+        for(long i = 0; i < numberOfChats; i++) {
+            try {
+                chat = ChatTask.getInstance().getInfoOfChat(i, userId, accessToken);
+            } catch (RestServiceException e) {
+                e.printStackTrace();
+            }
+            if(chat != null) {
+                instance.addChat(chat);
+            }
+
+        }
+
         initialized = true;
     }
 

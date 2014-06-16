@@ -27,8 +27,8 @@ import java.util.ArrayList;
 
 public class YasmeHome extends Activity {
 
-	private String user_mail;
-	private long user_id;
+	private String userMail;
+	private long userId;
     private String accessToken;
     private User self;
 
@@ -47,17 +47,17 @@ public class YasmeHome extends Activity {
         }
 
 		SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
-		user_mail = storage.getString(Constants.USER_MAIL, "anonym@yasme.net");
-		user_id = storage.getLong(Constants.USER_ID, 0);
+		userMail = storage.getString(Constants.USER_MAIL, "anonym@yasme.net");
+		userId = storage.getLong(Constants.USER_ID, 0);
         accessToken = storage.getString("accessToken", null);
 
         //Initialize database (once in application)
         if(!DatabaseManager.isInitialized()) {
-            DatabaseManager.init(this);
+            DatabaseManager.init(this, userId, accessToken);
         }
 
         show_chatrooms();
-        new GetProfileDataTask().execute(Long.toString(user_id), accessToken);
+        new GetProfileDataTask().execute(Long.toString(userId), accessToken);
     }
 
 	@Override
@@ -86,19 +86,19 @@ public class YasmeHome extends Activity {
 
 	public void showStandardChat() {
 		Intent intent = new Intent(this, YasmeChat.class);
-		intent.putExtra(Constants.USER_MAIL, user_mail);
-		intent.putExtra(Constants.USER_ID, user_id);
+		intent.putExtra(Constants.USER_MAIL, userMail);
+		intent.putExtra(Constants.USER_ID, userId);
         intent.putExtra(Constants.CHAT_ID, (long)1);
         intent.putExtra(Constants.USER_NAME, self.getName());
 		startActivity(intent);
 	}
 
 
-    public void showChat(long chat_id) {
+    public void showChat(long chatId) {
         Intent intent = new Intent(this, YasmeChat.class);
-        intent.putExtra(Constants.USER_MAIL, user_mail);
-        intent.putExtra(Constants.USER_ID, user_id);
-        intent.putExtra(Constants.CHAT_ID, chat_id);
+        intent.putExtra(Constants.USER_MAIL, userMail);
+        intent.putExtra(Constants.USER_ID, userId);
+        intent.putExtra(Constants.CHAT_ID, chatId);
         intent.putExtra(Constants.USER_NAME, self.getName());
         startActivity(intent);
     }
@@ -156,7 +156,7 @@ public class YasmeHome extends Activity {
                 return;
             }
             TextView profileInfo = (TextView) findViewById(R.id.profileInfo);
-            profileInfo.setText(self.getName() + ": " + user_mail);
+            profileInfo.setText(self.getName() + ": " + userMail);
         }
     }
 
