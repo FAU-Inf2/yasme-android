@@ -461,6 +461,21 @@ public class YasmeLogin extends Activity {
 
             return true;
         }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            authTask = null;
+            showProgress(false);
+            if (success) {
+                Toast.makeText(getApplicationContext(), "UpdateDB successfull",
+                        Toast.LENGTH_SHORT
+                ).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "UpdateDB not successfull",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        }
     }
 
 
