@@ -9,10 +9,10 @@ public class MessageKey {
 										// Schluessels
 	private long recipientDevice = -1; // fuer Auswahl des DH-Anteils
 	// TODO: aus long chat muss Chat chat werden
-	private long chat = -1;
-	private String key = "";
+	private Chat chat = null;
+	private String messageKey = "";
 	// TODO IV hinzufuegen
-	private String iv = "";
+	private String initVector = "";
 	private byte encType = -1;
 	private long encInfoId = -1;
 	private String encInfo = "";
@@ -22,26 +22,27 @@ public class MessageKey {
 
 	/** Constructors **/
 	public MessageKey(long id, long creatorDevice, long recipientDevice,
-			long chat, String key, byte encType, long encInfoId,
-			String encInfo, String sign) {
+			Chat chat, String key, byte encType, long encInfoId,
+			String encInfo, String sign, long timestamp) {
 		this.id = id;
 		this.creatorDevice = creatorDevice;
 		this.recipientDevice = recipientDevice;
 		this.chat = chat;
-		this.key = key;
+		this.messageKey = key;
 		this.encType = encType;
 		this.encInfoId = encInfoId;
 		this.encInfo = encInfo;
 		this.sign = sign;
+        this.timestamp = timestamp;
 	}
 
 	public MessageKey(long id, long creatorDevice, long recipientDevice,
-			long chat, String key, byte encType, String sign) {
+			Chat chat, String key, byte encType, String sign) {
 		this.id = id;
 		this.creatorDevice = creatorDevice;
 		this.recipientDevice = recipientDevice;
 		this.chat = chat;
-		this.key = key;
+		this.messageKey = key;
 		this.encType = encType;
 		this.sign = sign;
 	}
@@ -63,12 +64,12 @@ public class MessageKey {
 		return recipientDevice;
 	}
 
-	public long getChat() {
+	public Chat getChat() {
 		return chat;
 	}
 
 	public String getKey() {
-		return key;
+		return messageKey;
 	}
 
 	public byte getEncType() {
@@ -100,12 +101,12 @@ public class MessageKey {
 		this.recipientDevice = recipient;
 	}
 
-	public void setChat(long chat) {
+	public void setChat(Chat chat) {
 		this.chat = chat;
 	}
 
 	public void setKey(String key) {
-		this.key = key;
+		this.messageKey = key;
 	}
 
 	public void setEncType(byte encType) {
@@ -134,10 +135,10 @@ public class MessageKey {
 		if (recipientDevice < 0) {
 			return false;
 		}
-		if (chat < 0) {
+		if (chat != null) {
 			return false;
 		}
-		if (key.length() <= 0) {
+		if (messageKey.length() <= 0) {
 			return false;
 		}
 		if (encType < 0) {
