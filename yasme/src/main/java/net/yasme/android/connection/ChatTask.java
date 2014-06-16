@@ -429,7 +429,7 @@ public class ChatTask extends  ConnectionTask{
     public boolean updateStatus(Chat chat, long userId, String accessToken) throws RestServiceException {
 
         try {
-            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + chat.getChatId() +"/properties").build();
+            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + chat.getId() +"/properties").build();
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpPut httpPut = new HttpPut(requestURI);

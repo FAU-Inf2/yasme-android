@@ -63,7 +63,7 @@ public class MessageEncryption {
     // Constructor fuer Chat-Verschluesselung--> holt bzw. generiert Key, falls noetig
     public MessageEncryption(Context context, Chat chat, long creator, String accessToken) {
 
-        new MessageEncryption(context, chat.getChatId());
+        new MessageEncryption(context, chat.getId());
         this.chat = chat;
         this.accessToken = accessToken;
 

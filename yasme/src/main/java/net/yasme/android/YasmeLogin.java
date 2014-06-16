@@ -447,7 +447,7 @@ public class YasmeLogin extends Activity {
 
             for(Chat chat : chats) {
                 for(Message msg : messages) {
-                    if(msg.getChat() == chat.getChatId()) {
+                    if(msg.getChat() == chat.getId()) {
                         chat.addMessage(msg);
                     }
                 }
