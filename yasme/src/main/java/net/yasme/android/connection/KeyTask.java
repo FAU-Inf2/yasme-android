@@ -4,6 +4,7 @@ import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
+import net.yasme.android.exception.MessageError;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.Error;
 
@@ -66,11 +67,22 @@ public class KeyTask extends ConnectionTask {
                     .withDefaultPrettyPrinter();
 
             JSONArray keys= new JSONArray();
+            System.out.println("[???] Key wird an Server gesendet für " + recipients.size() + " Users");
 
             //TODO: erzeuge JSON-Object-Array mit MessageKey pro Recipient
             for (long recipient: recipients){
+                System.out.println("[???] 1");
                 MessageKey messageKey = new MessageKey(keyId, creatorDevice, recipient, chat, key, encType,sign);
-                keys.put(ow.writeValueAsString(messageKey));
+                System.out.println("[???] 2");
+                System.out.println("[???] "+ ow.writeValueAsString(messageKey));
+                System.out.println("[???] "+ new StringEntity(ow.writeValueAsString(messageKey)));
+                System.out.println("[???] 3");
+
+
+
+                keys.put(new StringEntity(ow.writeValueAsString(messageKey)));
+                System.out.println("[???] User: "+ recipient);
+                System.out.println("[???] Key wird für " + recipient + " Server gesendet");
             }
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
@@ -125,7 +137,7 @@ public class KeyTask extends ConnectionTask {
         return false;
     }
 
-    public boolean deleteKey(long chatId, long keyId, long userId) {
+    public boolean deleteKey(long chatId, long keyId, long DeviceId) {
 
         try {
 
@@ -134,7 +146,7 @@ public class KeyTask extends ConnectionTask {
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpDelete httpDelete = new HttpDelete(requestURI);
 
-            httpDelete.setHeader("userId", Long.toString(userId));
+            httpDelete.setHeader("userId", Long.toString(DeviceId));
             httpDelete.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpDelete);

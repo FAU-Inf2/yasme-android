@@ -150,11 +150,12 @@ public class MessageTask extends  ConnectionTask {
                        //TODO: hole richtige Chatid
                        // long chatId = chat.getLong("chatId");
                         long chatId = 1;
+                        long keyId = obj.getLong("messageKeyId");
 
                         System.out.println("Sender: " + sender.toString());
 
                         messages.add(new Message(new User(sender.getString("name"),
-                                sender.getLong("id")), obj.getString("message"), chatId, obj.getLong("messageKeyId")));
+                                sender.getLong("id")), obj.getString("message"), chatId, keyId));
 
                         /* extracting Keys and save it */
                         JSONObject key;
@@ -177,8 +178,12 @@ public class MessageTask extends  ConnectionTask {
                             MessageEncryption keyStorage = new MessageEncryption(context, chatId);
 
                             keyStorage.saveKey(obj.getLong("messageKeyId"), keyBase64, ivBase64, timestamp);
+                            /*DEBUG*/
+                            System.out.println("[???] ein neuer Key wurde aus den Nachrichten extrahiert und gespeichert");
+                            /*DEBUG END*/
+                            //TODO: hier muss spaeter die DeviceId statt userUd uebergeben werden
+                            keyStorage.deleteKeyFromServer(keyId, userId);
 
-                            //TODO: schicke Delete-Request an Server
                         }
 
 

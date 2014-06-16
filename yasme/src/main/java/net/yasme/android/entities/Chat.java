@@ -81,6 +81,8 @@ public class Chat {
     }
 
     public ArrayList<User> getParticipants() {
+        User dummy = new User("Dummy", 444);
+        participants.add(dummy);
         return participants;
     }
 
@@ -275,32 +277,5 @@ public class Chat {
             }
         }
     }
-    /*
-    //Async-Task for getting Keys from server
-	//TODO: koennen mehrere Keys sein
-	//TODO: 
-	//TODO: Client muss letzte ID seiner Key-Id mitschicken
-	private class GetKeyTask extends AsyncTask<String, Void, Boolean> {
-		MessageKey messagekey;
 
-		protected Boolean doInBackground(String... params) {
-			
-			
-			try{
-				//get MessageKey-Object
-				keytask = new KeyTask(url);
-				//messagekey = keytask.getKey(Long.toString(creator), Long.toString(chatid.getId()), Long.toString(devid));
-				
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-			return true;
-		}
-
-		protected void onPostExecute(Boolean result) {
-			//safe new Key in Chat-Tabelle
-			
-		}
-	}
-	*/
 }
