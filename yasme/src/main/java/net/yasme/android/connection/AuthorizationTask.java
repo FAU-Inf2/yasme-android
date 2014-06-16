@@ -50,7 +50,9 @@ public class AuthorizationTask extends  ConnectionTask{
 
     public String[] loginUser(User user) throws RestServiceException {
 
+
         try {
+
             URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/in").build();
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();

@@ -7,11 +7,17 @@ import javax.crypto.spec.SecretKeySpec;
 import net.yasme.android.R;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.connection.KeyTask;
+import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.MessageKey;
+import net.yasme.android.entities.User;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Base64;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 //um den Schluessel zum Verschluesseln abzurufen muss bekannt sein, mit welcher KeyId der Chat verschluesselt wird
 //hier wird vorausgesetzt, dass zum Verschluesseln nur ein Key vorhanden is
@@ -33,9 +39,11 @@ public class MessageEncryption {
     long keyId; // contains the latest keyid for encryption
 
     long chatId;
+    Chat chat;
     long creatorDevice;
-    long recipientDevice;
+    ArrayList<Long> recipients = new ArrayList<Long>();
     Context context;
+    String accessToken;
 
     private String CURRENTKEY = "CurrentKey"; // tablename for "currentKey-Storage" per Chat
     private String KEYSTORAGE = "KeyStorage"; //tablename for "KeyStorage" per Chat
@@ -52,10 +60,12 @@ public class MessageEncryption {
         this.KEYSTORAGE = this.KEYSTORAGE + "_" + Long.toString(chatId);
     }
 
-    // TODO: aus long chatid muss Chat chat werden
     // Constructor fuer Chat-Verschluesselung--> holt bzw. generiert Key, falls noetig
-    public MessageEncryption(Context context, long chatid, long creator) {
-        new MessageEncryption(context, chatid);
+    public MessageEncryption(Context context, Chat chat, long creator, String accessToken) {
+
+        new MessageEncryption(context, chat.getId());
+        this.chat = chat;
+        this.accessToken = accessToken;
 
         SharedPreferences currentKeyPref = context.getSharedPreferences(
                 CURRENTKEY, Context.MODE_PRIVATE);
@@ -63,34 +73,45 @@ public class MessageEncryption {
         // if no old key for this chat, then generate a new one, beginning with
         // ID "1"
         if (!currentKeyPref.contains("keyId")) {
-
+            System.out.println("[???] Generate Key");
             aes = new AESEncryption("geheim");
+            /*
+            // TODO pro User alle Devices suchen und in recipients speichern
+            //suche alle Empfaenger des Schluessels
+            ArrayList<User> participants = chat.getParticipants();
 
-            // TODO Schluessel fuer jeden Empaenger an den Server senden
-            // get recipientDevice from chatid
-            // for every recipientDevice
+            for (User user: participants){
+                long userId = user.getId();
+                //nicht an sich selbst schicken
+                if (userId != creator){
+                   recipients.add(user.getId());
+                }
+
+            }
+            if (recipients.length > 0){
+                //sendKey();
+            }
 
             if (!ConnectionTask.isInitialized()) {
                 ConnectionTask.initParams(context.getResources().getString(R.string.server_scheme),context.getResources().getString(R.string.server_host),context.getResources().getString(R.string.server_port));
             }
 
-            //String serverUrl = context.getResources().getString(R.string.server_scheme) + context.getResources().getString(R.string.server_host) + ":" + context.getResources().getString(R.string.server_port);
-            sendKey(recipientDevice);
 
             //TODO: KeyId vom Server abspeichern und Timestamp
             keyId = 1L;
             long timestamp = 1;
-            saveKey(chatId, keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
+            saveKey(keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
 
             // ###DEBUG
             System.out.println("[???]: KeyID " + keyId + " fuer Chat " + chatId
                     + " wurde erstellt und gespeichert und an Server gesendet");
             // ###
+            */
         }
 
         // if old key is already available
         else {
-
+            System.out.println("[???] Load Key");
             // get needed Key from LocalStorage
             updateKey();
         }
@@ -98,29 +119,34 @@ public class MessageEncryption {
         // TODO:
         // What happens, if the needed key is not available
         // is this a real scenario?
+
     }
 
 
 
     //update Key for Encryption
     public void updateKey(){
+        try {
+            // check, which Key is need to encrypt
+            checkCurrentKeyId();
 
-        // check, which Key is need to encrypt
-        checkCurrentKeyId();
+            // get Key from storage
+            byte[][] keydata = getKeyfromLocalStorage(chatId, keyId);
+            // if Key is available
+            if (keydata != null) {
+                byte[] key = keydata[0];
+                byte[] iv = keydata[1];
 
-        // get Key from storage
-        byte[][] keydata = getKeyfromLocalStorage(chatId, keyId);
-        // if Key is available
-        if (keydata != null) {
-            byte[] key = keydata[0];
-            byte[] iv = keydata[1];
-
-            aes = new AESEncryption(key, iv);
-            // ###DEBUG
-            System.out.println("[???]: Key " + keyId + " fuer Chat "
-                    + chatId + " wurde geladen");
-            // /###
+                aes = new AESEncryption(key, iv);
+                // ###DEBUG
+                System.out.println("[???]: Key " + keyId + " fuer Chat "
+                        + chatId + " wurde geladen");
+                // /###
+            }
         }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            }
     }
 
     // check, which Key is need to encrypt
@@ -174,15 +200,13 @@ public class MessageEncryption {
     }
 
     // send Key to server
-    public boolean sendKey(long recipient) {
-
-        this.recipientDevice = recipient;
+    public boolean sendKey() {
         new SendKeyTask().execute();
         return true;
     }
 
     // save needed key for chatid, and save key for keyid
-    public void saveKey(long chatid, long keyid, String key, String iv, long timestamp) {
+    public void saveKey(long keyid, String key, String iv, long timestamp) {
         SharedPreferences keysPref = context.getSharedPreferences(KEYSTORAGE, Context.MODE_PRIVATE);
 
         SharedPreferences currentKeyPref = context.getSharedPreferences(
@@ -210,8 +234,13 @@ public class MessageEncryption {
     }
 
     public byte[][] getKeyfromLocalStorage(long chatid, long keyid) {
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                KEYSTORAGE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref;
+        try {
+            sharedPref = context.getSharedPreferences(
+                    KEYSTORAGE, Context.MODE_PRIVATE);
+        } catch (Exception e) {
+            return null;
+        }
         if (sharedPref.contains(Long.toString(keyid))) {
             String base64 = sharedPref.getString(Long.toString(keyid), "");
 
@@ -241,24 +270,18 @@ public class MessageEncryption {
 
     // Async-Task for sending Key to Server
     class SendKeyTask extends AsyncTask<String, Void, Boolean> {
-        String key;
 
         protected Boolean doInBackground(String... params) {
 
             try {
 
-                key = aes.getKeyinBase64() + "," + aes.getIVinBase64();
+                String keyBase64 = aes.getKeyinBase64() + "," + aes.getIVinBase64();
+                String sign = "";
                 byte encType = 1;
 
-                // setup MessageKey-Object
-                MessageKey keydata = new MessageKey(keyId, creatorDevice,
-                        recipientDevice, chatId, key, encType, "test");
-
-                // send MessageKey-Object
-                keytask = KeyTask.getInstance();
-
-                //TODO: AccessToken mit übergeben
-                keytask.saveKey(keydata,"0");
+                // send Key to all Recipients
+                keytask = KeyTask.getInstance(accessToken);
+                keytask.saveKey(keyId, creatorDevice, recipients, chat, keyBase64, encType, sign);
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
