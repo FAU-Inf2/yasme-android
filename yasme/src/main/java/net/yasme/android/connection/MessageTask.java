@@ -156,9 +156,15 @@ public class MessageTask extends  ConnectionTask {
                         messages.add(new Message(new User(sender.getString("name"),
                                 sender.getLong("id")), obj.getString("message"), chatId, obj.getLong("messageKeyId")));
 
-
                         /* extracting Keys and save it */
-                        JSONObject key = obj.getJSONObject("messageKey");
+                        JSONObject key;
+                        try {
+                            key = obj.getJSONObject("messageKey");
+                        } catch (Exception e) {
+                            key = null;
+                        }
+                        //JSONObject key = obj.getJSONObject("messageKey");
+
 
                         if (key != null){
                             String messageKey = key.getString("messageKey");

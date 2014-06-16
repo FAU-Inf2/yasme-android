@@ -234,8 +234,13 @@ public class MessageEncryption {
     }
 
     public byte[][] getKeyfromLocalStorage(long chatid, long keyid) {
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                KEYSTORAGE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref;
+        try {
+            sharedPref = context.getSharedPreferences(
+                    KEYSTORAGE, Context.MODE_PRIVATE);
+        } catch (Exception e) {
+            return null;
+        }
         if (sharedPref.contains(Long.toString(keyid))) {
             String base64 = sharedPref.getString(Long.toString(keyid), "");
 
