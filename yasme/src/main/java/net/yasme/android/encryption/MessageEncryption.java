@@ -286,7 +286,7 @@ public class MessageEncryption {
             try {
 
                 String keyBase64 = aes.getKeyinBase64() + "," + aes.getIVinBase64();
-                String sign = "";
+                String sign = "test";
                 byte encType = 1;
 
                 // send Key to all Recipients

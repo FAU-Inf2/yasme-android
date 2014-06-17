@@ -67,7 +67,6 @@ public class KeyTask extends ConnectionTask {
             ObjectWriter ow = new ObjectMapper().writer()
                     .withDefaultPrettyPrinter();
 
-            JSONArray keys= new JSONArray();
             System.out.println("[???] Key wird an Server gesendet für " + recipients.size() + " Users");
 
             int i = 0;
@@ -75,35 +74,26 @@ public class KeyTask extends ConnectionTask {
             //messageKey Array
             MessageKey[] messageKeys = new MessageKey[recipients.size()];
 
-
             //TODO: erzeuge JSON-Object-Array mit MessageKey pro Recipient
             for (long recipient: recipients){
-                System.out.println("[???] 1");
 
                 //MessageKey zu Array  hinzufügen
                 messageKeys[i++] = new MessageKey(keyId, new Device(creatorDevice),
-                        new Device(recipient), chat, key, encType,sign);
+                        new Device(recipient), chat, key, "DummyIV", encType,sign);
 
-                System.out.println("[???] 2");
-                //System.out.println("[???] "+ ow.writeValueAsString(messageKey));
-                //System.out.println("[???] "+ new StringEntity(ow.writeValueAsString(messageKey)));
-                System.out.println("[???] 3");
-
-                //keys.put(new StringEntity(ow.writeValueAsString(messageKeys)));
-                System.out.println("[???] User: "+ recipient);
                 System.out.println("[???] Key wird für " + recipient + " Server gesendet");
             }
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpPost httpPost = new HttpPost(requestURI);
 
-            System.out.println("[???] Sending Keys to Server:"+key.toString());
-
-            //StringEntity se = new StringEntity(keys.toString());
-
             //komplettes Array serialisieren
             StringEntity se = new StringEntity(ow.writeValueAsString(messageKeys));
             httpPost.setEntity(se);
+
+            System.out.println("[???] Sending keys to server: "+ ow.writeValueAsString(messageKeys));
+            System.out.println("[???] Key: "+ ow.writeValueAsString(messageKeys));
+
 
             httpPost.setHeader("Content-type", "application/json");
             httpPost.setHeader("Accept", "application/json");
@@ -114,8 +104,8 @@ public class KeyTask extends ConnectionTask {
             HttpResponse httpResponse = httpClient.execute(httpPost);
 
             /**DEBUG**/
-            System.out.println(httpResponse.getStatusLine().getStatusCode());
-            System.out.println(new BufferedReader(
+            System.out.println("[???]"+httpResponse.getStatusLine().getStatusCode());
+            System.out.println("[???]"+new BufferedReader(
                     new InputStreamReader(httpResponse.getEntity()
                             .getContent())
             ).readLine());
@@ -127,7 +117,7 @@ public class KeyTask extends ConnectionTask {
                     /**** DEBUG *******/
                     BufferedReader rd = new BufferedReader(new InputStreamReader(
                             httpResponse.getEntity().getContent()));
-                    System.out.println("[???]: " + rd.readLine());
+                    System.out.println("[???]: Response" + rd.readLine());
                     /**** DEBUG*END ***/
                     return true;
                 case 400:

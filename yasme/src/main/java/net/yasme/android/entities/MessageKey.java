@@ -24,13 +24,14 @@ public class MessageKey implements Serializable {
 
 	/** Constructors **/
 	public MessageKey(long id, Device creatorDevice, Device recipientDevice,
-			Chat chat, String key, byte encType, long encInfoId,
+			Chat chat, String key, String initVector, byte encType, long encInfoId,
 			String encInfo, String sign, long timestamp) {
 		this.id = id;
 		this.creatorDevice = creatorDevice;
 		this.recipientDevice = recipientDevice;
 		this.chat = chat;
 		this.messageKey = key;
+        this.initVector = initVector;
 		this.encType = encType;
 		this.encInfoId = encInfoId;
 		this.encInfo = encInfo;
@@ -39,12 +40,13 @@ public class MessageKey implements Serializable {
 	}
 
 	public MessageKey(long id, Device creatorDevice, Device recipientDevice,
-			Chat chat, String key, byte encType, String sign) {
+			Chat chat, String key, String initVector, byte encType, String sign) {
 		this.id = id;
 		this.creatorDevice = creatorDevice;
 		this.recipientDevice = recipientDevice;
 		this.chat = chat;
 		this.messageKey = key;
+        this.initVector = initVector;
 		this.encType = encType;
 		this.sign = sign;
 	}
@@ -133,24 +135,27 @@ public class MessageKey implements Serializable {
 		}
 
         //TODO: bitte überprüfen, ob meine Anpassung stimmt ;)
-		if (recipientDevice != null) {
-			return false;
+		if (recipientDevice == null || creatorDevice.getId() < 0) {
+            return false;
 		}
-		if (recipientDevice != null) {
-			return false;
+		if (creatorDevice == null || recipientDevice.getId() < 0) {
+            return false;
 		}
-		if (chat != null) {
-			return false;
+		if (chat == null  || chat.getId() < 0) {
+            return false;
 		}
 		if (messageKey.length() <= 0) {
-			return false;
+            return false;
 		}
 		if (encType < 0) {
-			return false;
+            return false;
 		}
 		if (sign.length() <= 0) {
-			return false;
+            return false;
 		}
+        if (initVector.length() <= 0) {
+            return false;
+        }
 		return true;
 	}
 }
