@@ -7,27 +7,27 @@
         android:orderInCategory="100"
         android:showAsAction="always"
         android:title="@string/action_chats"
-        android:icon="@drawable/chats"/>
+        android:icon="@drawable/ic_action_storage"/>
 
     <item
         android:id="@+id/action_chat"
         android:orderInCategory="200"
         android:showAsAction="always"
         android:title="@string/action_chat"
-        android:icon="@drawable/chat"/>
+        android:icon="@drawable/ic_action_chat"/>
 
     <item
         android:id="@+id/action_contacts"
         android:orderInCategory="300"
-        android:showAsAction="ifRoom"
+        android:showAsAction="never"
         android:title="@string/action_contacts"
-        android:icon="@drawable/contacts"/>
+        android:icon="@drawable/ic_action_cc_bcc"/>
 
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="400"
         android:showAsAction="never"
         android:title="@string/action_settings"
-        android:icon="@drawable/settings"/>
+        android:icon="@drawable/ic_action_settings"/>
 
 </menu>

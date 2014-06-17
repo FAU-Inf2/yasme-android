@@ -3,6 +3,7 @@ package net.yasme.android.encryption;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.transform.Result;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.ConnectionTask;
@@ -37,7 +38,6 @@ import java.util.ArrayList;
 public class MessageEncryption {
 
     long keyId; // contains the latest keyid for encryption
-
     long chatId;
     Chat chat;
     long creatorDevice;
@@ -63,7 +63,7 @@ public class MessageEncryption {
     // Constructor fuer Chat-Verschluesselung--> holt bzw. generiert Key, falls noetig
     public MessageEncryption(Context context, Chat chat, long creator, String accessToken) {
 
-        new MessageEncryption(context, chat.getId());
+        this(context, chat.getId());
         this.chat = chat;
         this.accessToken = accessToken;
 
@@ -71,25 +71,39 @@ public class MessageEncryption {
                 CURRENTKEY, Context.MODE_PRIVATE);
 
         // if no old key for this chat, then generate a new one, beginning with
-        // ID "1"
         if (!currentKeyPref.contains("keyId")) {
             System.out.println("[???] Generate Key");
             aes = new AESEncryption("geheim");
-            /*
+
             // TODO pro User alle Devices suchen und in recipients speichern
             //suche alle Empfaenger des Schluessels
             ArrayList<User> participants = chat.getParticipants();
+            if (participants != null) {
+                for (User user : participants) {
+                    long userId = user.getId();
+                    //nicht an sich selbst schicken
+                    if (userId != creator) {
+                        recipients.add(user.getId());
+                    }
 
-            for (User user: participants){
-                long userId = user.getId();
-                //nicht an sich selbst schicken
-                if (userId != creator){
-                   recipients.add(user.getId());
                 }
-
             }
-            if (recipients.length > 0){
-                //sendKey();
+            //TODO: If-Anweisung entfernen wenn participants in chat implementiert wurde
+            if (recipients.size() > 0){
+                sendKey();
+
+                //TODO: KeyId vom Server abspeichern und Timestamp
+                keyId = 1L;
+                long timestamp = 1;
+                saveKey(keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
+
+                // ###DEBUG
+                System.out.println("[???]: KeyID " + keyId + " fuer Chat " + chatId
+                        + " wurde erstellt und gespeichert und an Server gesendet");
+                // ###
+            }
+            else{
+                System.out.println("[???] No recipients in chat could be found. Key was not sent to server!");
             }
 
             if (!ConnectionTask.isInitialized()) {
@@ -97,16 +111,7 @@ public class MessageEncryption {
             }
 
 
-            //TODO: KeyId vom Server abspeichern und Timestamp
-            keyId = 1L;
-            long timestamp = 1;
-            saveKey(keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
 
-            // ###DEBUG
-            System.out.println("[???]: KeyID " + keyId + " fuer Chat " + chatId
-                    + " wurde erstellt und gespeichert und an Server gesendet");
-            // ###
-            */
         }
 
         // if old key is already available
@@ -205,15 +210,20 @@ public class MessageEncryption {
         return true;
     }
 
+    //delete a symmetric Key from server when the client got that key
+    public void deleteKeyFromServer(long keyId, long DeviceId){
+       new DeleteKeyTask().execute(keyId, DeviceId);
+    }
+
     // save needed key for chatid, and save key for keyid
     public void saveKey(long keyid, String key, String iv, long timestamp) {
-        SharedPreferences keysPref = context.getSharedPreferences(KEYSTORAGE, Context.MODE_PRIVATE);
 
-        SharedPreferences currentKeyPref = context.getSharedPreferences(
-                CURRENTKEY, Context.MODE_PRIVATE);
+        SharedPreferences keysPref = context.getSharedPreferences(KEYSTORAGE, Context.MODE_PRIVATE);
+        SharedPreferences currentKeyPref = context.getSharedPreferences(CURRENTKEY, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor keysEditor = keysPref.edit();
         SharedPreferences.Editor currentKeyEditor = currentKeyPref.edit();
+
         // safe Key+IV, which belongs to Key-Id
         keysEditor.putString(Long.toString(keyid), key + "," + iv);
 
@@ -223,7 +233,6 @@ public class MessageEncryption {
             currentKeyEditor.remove("keyId");
             currentKeyEditor.remove("timestamp");
         }
-
         // safe new Key-Id for this Chat-ID
         currentKeyEditor.putLong("keyId", keyid);
         currentKeyEditor.putLong("timestamp",timestamp);
@@ -282,6 +291,34 @@ public class MessageEncryption {
                 // send Key to all Recipients
                 keytask = KeyTask.getInstance(accessToken);
                 keytask.saveKey(keyId, creatorDevice, recipients, chat, keyBase64, encType, sign);
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            return true;
+        }
+
+        protected void onPostExecute(Boolean result) {
+
+        }
+    }
+
+    // Async-Task for sending Key to Server
+    class DeleteKeyTask extends AsyncTask<Long, Void, Boolean> {
+
+        protected Boolean doInBackground(Long... params) {
+
+            /**
+             * @param params [0] is keyId
+             *        params [1] is DeviceId from User
+             * @return Returns true if it was successful, otherwise false
+             */
+
+            try {
+
+               //delete Key
+                keytask = KeyTask.getInstance(accessToken);
+                keytask.deleteKey(chatId, params[0], params[1]);
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
