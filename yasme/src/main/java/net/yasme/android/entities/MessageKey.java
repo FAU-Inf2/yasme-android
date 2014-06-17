@@ -2,7 +2,9 @@ package net.yasme.android.entities;
 
 //creator --> de
 
-public class MessageKey {
+import java.io.Serializable;
+
+public class MessageKey implements Serializable {
 
 	private long id = -1;
 	private long creatorDevice = -1; // fuer Auswahl des oeffentlichen

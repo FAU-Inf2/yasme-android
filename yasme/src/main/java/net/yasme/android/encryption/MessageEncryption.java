@@ -71,7 +71,8 @@ public class MessageEncryption {
                 CURRENTKEY, Context.MODE_PRIVATE);
 
         // if no old key for this chat, then generate a new one, beginning with
-        if (!currentKeyPref.contains("keyId")) {
+        if (1==1){ //TODO: TEST
+        //if (!currentKeyPref.contains("keyId")) {
             System.out.println("[???] Generate Key");
             aes = new AESEncryption("geheim");
 
