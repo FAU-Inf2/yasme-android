@@ -14,6 +14,7 @@ public class DatabaseConstants {
     public static final String CHAT_NAME = "chatName";
     public static final String CHAT_STATUS = "chatStatus";
     public static final String MESSAGES = "messages";
+    public static final String PARTICIPANTS = "participants";
 
     //Message
     public static final String MESSAGE_ID = "messageId";

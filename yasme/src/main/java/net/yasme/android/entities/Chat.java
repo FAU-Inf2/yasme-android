@@ -2,6 +2,7 @@ package net.yasme.android.entities;
 
 import android.os.AsyncTask;
 
+import com.j256.ormlite.dao.BaseForeignCollection;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -26,16 +27,14 @@ public class Chat {
     @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
     private long id;
 
-    @DatabaseField
-    private ArrayList<User> participants = new ArrayList<User>();
+    @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS)
+    private ForeignCollection<User> participants;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_STATUS)
     private String status;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_NAME)
     private String name;
-
-    private User owner;
 
     @JsonIgnore
     @DatabaseField
@@ -49,7 +48,9 @@ public class Chat {
     @DatabaseField(columnName = DatabaseConstants.LAST_MESSAGE_ID)
     private long lastMessageID;
 
-    
+
+    private User owner;
+
     @JsonIgnore
     private User self; //<----??? only one User Object instead of userName, userId, etc.
 
@@ -75,6 +76,9 @@ public class Chat {
         messageTask = MessageTask.getInstance(activity);
 
         lastMessageID = 0L;
+
+        participants = (ForeignCollection<User>) new ArrayList<User>();
+        messages = (ForeignCollection<Message>) new ArrayList<Message>();
 
         // setup Encryption for this chat
         // TODO: DEVICE-ID statt USERID uebergeben
@@ -102,7 +106,7 @@ public class Chat {
     public ArrayList<User> getParticipants() {
         User dummy = new User("Dummy", 444);
         participants.add(dummy);
-        return participants;
+        return new ArrayList<User>(participants);
     }
 
     public String getStatus() {
@@ -153,7 +157,7 @@ public class Chat {
     }
 
     public void setParticipants(ArrayList<User> participants) {
-        this.participants = participants;
+        this.participants = (ForeignCollection<User>)participants;
     }
 
     public void setStatus(String status) {
