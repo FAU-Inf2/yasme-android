@@ -27,8 +27,11 @@ import java.security.cert.X509Certificate;
 
 public class HttpClient {
 
-    public static CloseableHttpClient createSSLClient() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+    public static CloseableHttpClient createSSLClient() {
 
+        SSLConnectionSocketFactory sslsf = null;
+
+        try {
 
     /*
     // << NEW
@@ -81,7 +84,10 @@ public class HttpClient {
      */
 
 
-       KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            KeyStore trustStore = null;
+
+            trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+
         /*
         FileInputStream instream = new FileInputStream(new File("my.keystore"));
         try {
@@ -91,18 +97,25 @@ public class HttpClient {
         }
         */
 
-        // Trust own CA and all self-signed certs
-        SSLContext sslcontext = SSLContexts.custom()
-                .loadTrustMaterial(trustStore, new TrustSelfSignedStrategy())
-                .build();
+            // Trust own CA and all self-signed certs
+            SSLContext sslcontext = SSLContexts.custom()
+                    .loadTrustMaterial(trustStore, new TrustSelfSignedStrategy())
+                    .build();
 
-        // Allow TLSv1 protocol only
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
-                sslcontext,
-                new String[]{"TLSv1"},
-                null,
-                SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            // Allow TLSv1 protocol only
+            sslsf = new SSLConnectionSocketFactory(
+                    sslcontext,
+                    new String[]{"TLSv1"},
+                    null,
+                    SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
         return HttpClients.custom().setSSLSocketFactory(sslsf).build();
     }
 }

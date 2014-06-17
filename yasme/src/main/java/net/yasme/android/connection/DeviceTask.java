@@ -94,12 +94,6 @@ public class DeviceTask extends  ConnectionTask {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -137,12 +131,6 @@ public class DeviceTask extends  ConnectionTask {
             e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.UNAUTHORIZED);
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -194,13 +182,7 @@ public class DeviceTask extends  ConnectionTask {
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
+        }  catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
@@ -246,12 +228,6 @@ public class DeviceTask extends  ConnectionTask {
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return false;

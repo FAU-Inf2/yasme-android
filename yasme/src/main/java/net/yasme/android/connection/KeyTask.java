@@ -146,14 +146,7 @@ public class KeyTask extends ConnectionTask {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
         }
-
         return false;
     }
 

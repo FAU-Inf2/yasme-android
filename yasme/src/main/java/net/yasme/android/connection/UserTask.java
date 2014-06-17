@@ -83,12 +83,6 @@ public class UserTask extends  ConnectionTask {
             e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -132,12 +126,6 @@ public class UserTask extends  ConnectionTask {
             e.printStackTrace();
         } catch (IOException e) {
              throw new RestServiceException(Error.CONNECTION_ERROR);
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
         return false;
     }
@@ -175,12 +163,6 @@ public class UserTask extends  ConnectionTask {
             e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
         return null;
     }

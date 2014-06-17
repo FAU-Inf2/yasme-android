@@ -101,13 +101,7 @@ public class ChatTask extends  ConnectionTask{
             e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
+        }  catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -161,13 +155,8 @@ public class ChatTask extends  ConnectionTask{
             e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
+
         return null;
     }
 
@@ -212,12 +201,6 @@ public class ChatTask extends  ConnectionTask{
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -261,13 +244,8 @@ public class ChatTask extends  ConnectionTask{
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
+
         return false;
 
     }
@@ -305,12 +283,6 @@ public class ChatTask extends  ConnectionTask{
             e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -364,12 +336,6 @@ public class ChatTask extends  ConnectionTask{
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
         return false;
     }
@@ -416,12 +382,6 @@ public class ChatTask extends  ConnectionTask{
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return false;
@@ -475,12 +435,6 @@ public class ChatTask extends  ConnectionTask{
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return false;

@@ -94,12 +94,6 @@ public class AuthorizationTask extends  ConnectionTask{
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -135,12 +129,6 @@ public class AuthorizationTask extends  ConnectionTask{
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
             e.printStackTrace();
         }
         return false;
