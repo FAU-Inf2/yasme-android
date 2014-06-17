@@ -13,6 +13,8 @@ import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseConstants;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import java.util.ArrayList;
 
 /**
@@ -34,25 +36,34 @@ public class Chat {
 
     private User owner;
 
+    @JsonIgnore
     @DatabaseField
     private int numberOfParticipants;
 
+    @JsonIgnore
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
     private ArrayList<Message> messages;
 
+    @JsonIgnore
     @DatabaseField(columnName = DatabaseConstants.LAST_MESSAGE_ID)
     private long lastMessageID;
 
+    @JsonIgnore
     private User self; //<----???
 
+    @JsonIgnore
     private MessageEncryption aes;
+    @JsonIgnore
     private MessageTask messageTask;
+    @JsonIgnore
     public YasmeChat activity;
+    @JsonIgnore
     private String accessToken;
 
     /**
      * Constructors *
      */
+    @JsonIgnore
     public Chat(long id, User user, YasmeChat activity) {
         this.id = id;
         this.self = user;
@@ -69,10 +80,16 @@ public class Chat {
         aes = new MessageEncryption(activity, this, creatorDevice, accessToken);
     }
 
+
+    public Chat(User owner, String status, String name) {
+        this.owner = owner;
+        this.status = status;
+        this.name = name;
+    }
+
     public Chat() {
         // ORMLite needs a no-arg constructor
     }
-
     /**
      * Getters *
      */
@@ -175,7 +192,7 @@ public class Chat {
 
         try {
 
-            if(ChatTask.getInstance().removePartipantFromChat(participant.getId(),id,self.getId(), accessToken))
+            if(ChatTask.getInstance().removePartipantFromChat(participant.getId(), id, self.getId(), accessToken))
                 this.participants.remove(participant);
 
         } catch (RestServiceException e) {

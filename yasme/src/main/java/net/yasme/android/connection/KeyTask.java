@@ -101,6 +101,12 @@ public class KeyTask extends ConnectionTask {
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
 
+            System.out.println(httpResponse.getStatusLine().getStatusCode());
+            System.out.println(new BufferedReader(
+                    new InputStreamReader(httpResponse.getEntity()
+                            .getContent())
+            ).readLine());
+
             switch (httpResponse.getStatusLine().getStatusCode()) {
 
                 case 200:
