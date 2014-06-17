@@ -40,7 +40,6 @@ public class Chat {
 
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
     private ForeignCollection<Message> messages;
-    //private ArrayList<Message> messages;
 
     @DatabaseField(columnName = DatabaseConstants.LAST_MESSAGE_ID)
     private long lastMessageID;

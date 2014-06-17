@@ -107,7 +107,7 @@ public class YasmeChat extends Activity {
 
 		chat.send(msg);
 		EditMessage.setText("");
-		EditMessage.requestFocus();
+		//EditMessage.requestFocus();
 	}
 
 	public void update(View view) {
@@ -156,6 +156,7 @@ public class YasmeChat extends Activity {
 
             row.setFocusableInTouchMode(true);
             row.requestFocus();
+            findViewById(R.id.text_message).requestFocus();
         }
 	}
 
