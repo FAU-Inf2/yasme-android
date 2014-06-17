@@ -73,6 +73,9 @@ public class DatabaseManager {
             chats = getHelper().getChatDao().queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.out.println("DB Access failed");
+            chats = null;
         }
 
         if(chats == null) {
@@ -91,9 +94,7 @@ public class DatabaseManager {
     public Chat getChat(long chatId) {
         Chat chat = null;
         try {
-            Long cId = chatId;
-            //TODO: conversion may cause overrun!
-            chat = getHelper().getChatDao().queryForId(cId.intValue());
+            chat = getHelper().getChatDao().queryForId(chatId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -108,7 +109,7 @@ public class DatabaseManager {
      */
     public void deleteChat(String chatName) {
         try {
-            DeleteBuilder<Chat, Integer> deleteBuilder = getHelper().getChatDao().deleteBuilder();
+            DeleteBuilder<Chat, Long> deleteBuilder = getHelper().getChatDao().deleteBuilder();
             deleteBuilder.where().eq(DatabaseConstants.CHAT_NAME, chatName);
             deleteBuilder.delete();
         } catch (SQLException e) {
@@ -122,7 +123,7 @@ public class DatabaseManager {
      *
      * @param chatId        ID (primary key) of chat
      */
-    public void deleteChat(int chatId) {
+    public void deleteChat(long chatId) {
         try {
             getHelper().getChatDao().deleteById(chatId);
         } catch (SQLException e) {

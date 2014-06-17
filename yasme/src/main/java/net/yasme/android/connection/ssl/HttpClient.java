@@ -44,7 +44,9 @@ public class HttpClient {
 
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
-            InputStream caInput = new BufferedInputStream(new FileInputStream("/local/yasme_ca.pem"));
+            InputStream caInput = Resources.getSystem().openRawResource(R.raw.yasme_ca);
+            //new BufferedInputStream(new FileInputStream("/local/yasme_ca.pem"));
+
 
             Certificate ca = cf.generateCertificate(caInput);
 

@@ -2,6 +2,7 @@ package net.yasme.android.entities;
 
 import android.os.AsyncTask;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -42,14 +43,15 @@ public class Chat {
 
     @JsonIgnore
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
-    private ArrayList<Message> messages;
+    private ForeignCollection<Message> messages;
 
     @JsonIgnore
     @DatabaseField(columnName = DatabaseConstants.LAST_MESSAGE_ID)
     private long lastMessageID;
 
+    
     @JsonIgnore
-    private User self; //<----???
+    private User self; //<----??? only one User Object instead of userName, userId, etc.
 
     @JsonIgnore
     private MessageEncryption aes;
@@ -120,7 +122,7 @@ public class Chat {
     }
 
     public ArrayList<Message> getMessages() {
-        return messages;
+        return new ArrayList<Message>(messages);
     }
 
     public long getLastMessageID() {
@@ -171,7 +173,7 @@ public class Chat {
     }
 
     public void setMessages(ArrayList<Message> messages) {
-        this.messages = messages;
+        this.messages = (ForeignCollection<Message>) messages;
     }
 
     public void setLastMessageID(long lastMessageID) {
@@ -181,7 +183,7 @@ public class Chat {
     public void addParticipant(User participant) {
 
         try {
-            if(ChatTask.getInstance().addParticipantToChat(participant.getId(),self.getId(), id, accessToken))
+            if(ChatTask.getInstance().addParticipantToChat(participant.getId(), self.getId(), id, accessToken))
                 this.participants.add(participant);
         } catch (RestServiceException e) {
             e.printStackTrace();
@@ -192,7 +194,7 @@ public class Chat {
 
         try {
 
-            if(ChatTask.getInstance().removePartipantFromChat(participant.getId(), id, self.getId(), accessToken))
+            if(ChatTask.getInstance().removePartipantFromChat(participant.getId(), id ,self.getId(), accessToken))
                 this.participants.remove(participant);
 
         } catch (RestServiceException e) {
@@ -294,5 +296,4 @@ public class Chat {
             }
         }
     }
-
 }
