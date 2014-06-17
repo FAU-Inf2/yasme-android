@@ -2,6 +2,7 @@ package net.yasme.android.connection;
 
 import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Device;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.MessageError;
@@ -69,18 +70,26 @@ public class KeyTask extends ConnectionTask {
             JSONArray keys= new JSONArray();
             System.out.println("[???] Key wird an Server gesendet für " + recipients.size() + " Users");
 
+            int i = 0;
+
+            //messageKey Array
+            MessageKey[] messageKeys = new MessageKey[recipients.size()];
+
+
             //TODO: erzeuge JSON-Object-Array mit MessageKey pro Recipient
             for (long recipient: recipients){
                 System.out.println("[???] 1");
-                MessageKey messageKey = new MessageKey(keyId, creatorDevice, recipient, chat, key, encType,sign);
+
+                //MessageKey zu Array  hinzufügen
+                messageKeys[i++] = new MessageKey(keyId, new Device(creatorDevice),
+                        new Device(recipient), chat, key, encType,sign);
+
                 System.out.println("[???] 2");
-                System.out.println("[???] "+ ow.writeValueAsString(messageKey));
-                System.out.println("[???] "+ new StringEntity(ow.writeValueAsString(messageKey)));
+                //System.out.println("[???] "+ ow.writeValueAsString(messageKey));
+                //System.out.println("[???] "+ new StringEntity(ow.writeValueAsString(messageKey)));
                 System.out.println("[???] 3");
 
-
-
-                keys.put(new StringEntity(ow.writeValueAsString(messageKey)));
+                //keys.put(new StringEntity(ow.writeValueAsString(messageKeys)));
                 System.out.println("[???] User: "+ recipient);
                 System.out.println("[???] Key wird für " + recipient + " Server gesendet");
             }
@@ -90,7 +99,10 @@ public class KeyTask extends ConnectionTask {
 
             System.out.println("[???] Sending Keys to Server:"+key.toString());
 
-            StringEntity se = new StringEntity(keys.toString());
+            //StringEntity se = new StringEntity(keys.toString());
+
+            //komplettes Array serialisieren
+            StringEntity se = new StringEntity(ow.writeValueAsString(messageKeys));
             httpPost.setEntity(se);
 
             httpPost.setHeader("Content-type", "application/json");
@@ -101,11 +113,13 @@ public class KeyTask extends ConnectionTask {
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
 
+            /**DEBUG**/
             System.out.println(httpResponse.getStatusLine().getStatusCode());
             System.out.println(new BufferedReader(
                     new InputStreamReader(httpResponse.getEntity()
                             .getContent())
             ).readLine());
+            /**DEBUG**/
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
 

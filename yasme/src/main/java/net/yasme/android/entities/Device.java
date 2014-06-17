@@ -28,6 +28,10 @@ public class Device {
 
     public Device(){}
 
+    public Device(long id){
+        this.id = id;
+    }
+
     public User getUser() { return this.user; }
 
     public void setId(long id) {

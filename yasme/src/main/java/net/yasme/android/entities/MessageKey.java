@@ -6,10 +6,13 @@ import java.io.Serializable;
 
 public class MessageKey implements Serializable {
 
+    public static MessageKey last;
+    private long uniqueId;  // for database storing
+
+
 	private long id = -1;
-	private long creatorDevice = -1; // fuer Auswahl des oeffentlichen
-										// Schluessels
-	private long recipientDevice = -1; // fuer Auswahl des DH-Anteils
+	private Device creatorDevice = null;   // fuer Auswahl des oeffentlichen									// Schluessels
+	private Device recipientDevice = null; // fuer Auswahl des DH-Anteils
 	private Chat chat = null;
 	private String messageKey = "";
 	private String initVector = "";
@@ -20,7 +23,7 @@ public class MessageKey implements Serializable {
 	private long timestamp = -1;
 
 	/** Constructors **/
-	public MessageKey(long id, long creatorDevice, long recipientDevice,
+	public MessageKey(long id, Device creatorDevice, Device recipientDevice,
 			Chat chat, String key, byte encType, long encInfoId,
 			String encInfo, String sign, long timestamp) {
 		this.id = id;
@@ -35,7 +38,7 @@ public class MessageKey implements Serializable {
         this.timestamp = timestamp;
 	}
 
-	public MessageKey(long id, long creatorDevice, long recipientDevice,
+	public MessageKey(long id, Device creatorDevice, Device recipientDevice,
 			Chat chat, String key, byte encType, String sign) {
 		this.id = id;
 		this.creatorDevice = creatorDevice;
@@ -55,11 +58,11 @@ public class MessageKey implements Serializable {
 		return id;
 	}
 
-	public long getCreator() {
+	public Device getCreator() {
 		return creatorDevice;
 	}
 
-	public long getRecipient() {
+	public Device getRecipient() {
 		return recipientDevice;
 	}
 
@@ -92,11 +95,11 @@ public class MessageKey implements Serializable {
 		this.id = id;
 	}
 
-	public void setCreator(long creator) {
+	public void setCreator(Device creator) {
 		this.creatorDevice = creator;
 	}
 
-	public void setRecipient(long recipient) {
+	public void setRecipient(Device recipient) {
 		this.recipientDevice = recipient;
 	}
 
@@ -128,10 +131,12 @@ public class MessageKey implements Serializable {
 		if (id < 0) {
 			return false;
 		}
-		if (creatorDevice < 0) {
+
+        //TODO: bitte überprüfen, ob meine Anpassung stimmt ;)
+		if (recipientDevice != null) {
 			return false;
 		}
-		if (recipientDevice < 0) {
+		if (recipientDevice != null) {
 			return false;
 		}
 		if (chat != null) {
