@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 public class Chat {
 
-    @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
+    @DatabaseField(columnName = DatabaseConstants.CHAT_ID)
     private long id;
 
     @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS)

@@ -23,6 +23,7 @@ public class DatabaseConstants {
     public static final String MESSAGE = "message";
 
     //User
+    public static final String CHATS = "chats";
     public static final String USER_ID = "userId";
     public static final String USER_MAIL = "userMail";
     public static final String USER_NAME = "userName";

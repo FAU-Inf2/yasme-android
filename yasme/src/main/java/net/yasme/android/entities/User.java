@@ -1,11 +1,14 @@
 package net.yasme.android.entities;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import net.yasme.android.storage.DatabaseConstants;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Stefan on 10.05.14.
@@ -25,7 +28,9 @@ public class User implements Serializable {
 
     private String pw;
 
-    // private List<Chat> chats = new ArrayList<Chat>();        // list of all chats the user participates
+    @ForeignCollectionField(columnName = DatabaseConstants.CHATS)
+    private ForeignCollection<Chat> chats;// = (ForeignCollection<Chat>) new  ArrayList<Chat>();
+    // list of all chats the user participates
 
 
     public User(String pw, String name, String email) {
@@ -52,13 +57,15 @@ public class User implements Serializable {
     }
 
     public User() {
+
     }
 
     /*
-    public List<Chat> getChats() {
-        return this.chats;
+     * Getters
+     */
+    public ArrayList<Chat> getChats() {
+        return new ArrayList<Chat>(chats);
     }
-    */
 
     public String getEmail() {
         return email;
@@ -76,11 +83,22 @@ public class User implements Serializable {
         return id;
     }
 
+
     /*
+     * Setters
+     */
+    public void addChat(Chat chat) {
+        this.chats.add(chat);
+    }
+
+    //TODO: Aufruf von setChat in addChat umwandeln
     public void setChat(Chat chat) {
         this.chats.add(chat);
     }
-    */
+
+    public void setChat(ArrayList<Chat> chats) {
+        this.chats = (ForeignCollection<Chat>)chats;
+    }
 
     public void setPw(String pw) {
         this.pw = pw;

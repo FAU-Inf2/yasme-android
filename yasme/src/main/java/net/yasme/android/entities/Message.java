@@ -18,8 +18,8 @@ public class Message implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.MESSAGE_ID, id = true)
     private long id;
 
-    @DatabaseField(canBeNull = true, foreign = true)
-    private long chat;
+    @DatabaseField(canBeNull = false, foreign = true)
+    private Chat chat;
 
     @DatabaseField(columnName = DatabaseConstants.SENDER, foreign = true)
     private User sender;
@@ -44,11 +44,12 @@ public class Message implements Serializable {
         this(sender, message, new Date(), chat, messageKeyId);
     }
 
-    public Message(User sender, String message, Date dateSent, long chat, long messageKeyId) {
+    public Message(User sender, String message, Date dateSent, long chatId, long messageKeyId) {
         this.sender = sender;
         this.message = message;
         this.dateSent = dateSent;
-        this.chat = chat;
+        this.chat = new Chat();
+        chat.setId(chatId);
         this.id = id++;
         this.messageKeyId = messageKeyId;
     }
@@ -73,7 +74,7 @@ public class Message implements Serializable {
     }
 
     public long getChat() {
-        return chat;
+        return chat.getId();
     }
 
     public long getId() {
@@ -85,10 +86,11 @@ public class Message implements Serializable {
     }
 
     /**
-     * Setters *
+     * Setters
      */
-    public void setChat(long chat) {
-        this.chat = chat;
+    public void setChat(long chatId) {
+        this.chat = new Chat();
+        this.chat.setId(chatId);
     }
 
     public void setMessage(String message) {
