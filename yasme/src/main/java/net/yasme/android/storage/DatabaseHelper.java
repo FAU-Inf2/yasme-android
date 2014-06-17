@@ -21,7 +21,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // the DAO object for chat
-    private Dao<Chat, Integer> chatDao = null;
+    private Dao<Chat, Long> chatDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, DatabaseConstants.DATABASE, null, DATABASE_VERSION);
@@ -55,7 +55,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      *
      * @return chatDao
      */
-    public Dao<Chat, Integer> getChatDao() {
+    public Dao<Chat, Long> getChatDao() {
         if (null == chatDao) {
             try {
                 chatDao = getDao(Chat.class);
@@ -64,5 +64,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
         }
         return chatDao;
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        chatDao = null;
     }
 }
