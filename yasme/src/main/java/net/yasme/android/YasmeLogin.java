@@ -78,7 +78,7 @@ public class YasmeLogin extends Activity {
         SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,
                 MODE_PRIVATE);
         email = storage.getString(Constants.USER_MAIL, "");
-        loginReturn[1] = storage.getString("accesToken1", null);
+        accessToken = storage.getString(Constants.ACCESSTOKEN, null);
 
         // Set up the login form.
         // email = getIntent().getStringExtra(USER_EMAIL);
@@ -303,9 +303,9 @@ public class YasmeLogin extends Activity {
         @Override
         protected Boolean doInBackground(String... params) {
             // TODO: ueberpruefen, ob user schon existiert
-            String name = params[0];
-            String email = params[1];
-            String password = params[2];
+            name = params[0];
+            email = params[1];
+            password = params[2];
             String password_check = params[3];
 
             if (!password.equals(password_check)) {
@@ -322,7 +322,6 @@ public class YasmeLogin extends Activity {
                     MODE_PRIVATE);
             SharedPreferences.Editor editor = storage.edit();
             editor.putLong(Constants.USER_ID, userId);
-            //editor.putString("accesToken", loginReturn[1]);
             editor.putString(Constants.USER_MAIL, email);
             editor.putString(Constants.USER_NAME, name);
             editor.putLong(Constants.LAST_MESSAGE_ID, 0L);
@@ -343,7 +342,11 @@ public class YasmeLogin extends Activity {
                                 R.string.registration_successful),
                         Toast.LENGTH_SHORT
                 ).show();
-                start();
+                //start();
+
+                //Login after registration was successfull
+                new UserLoginTask().execute((Void) null);
+
             } else {
                 Toast.makeText(
                         getApplicationContext(),
@@ -351,7 +354,6 @@ public class YasmeLogin extends Activity {
                                 R.string.registration_not_successful),
                         Toast.LENGTH_SHORT
                 ).show();
-                finish();
             }
         }
 
@@ -386,8 +388,8 @@ public class YasmeLogin extends Activity {
                 SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,
                         MODE_PRIVATE);
                 SharedPreferences.Editor editor = storage.edit();
-                editor.putLong(Constants.USER_ID, Long.parseLong(loginReturn[0]));
-                editor.putString("accesToken", loginReturn[1]);
+                editor.putLong(Constants.USER_ID, userId);
+                editor.putString(Constants.ACCESSTOKEN, accessToken);
                 editor.putString(Constants.USER_MAIL, email);
                 lastMessageId = storage.getLong(Constants.LAST_MESSAGE_ID, 0L);
                 editor.commit();
@@ -488,7 +490,7 @@ public class YasmeLogin extends Activity {
         SharedPreferences.Editor editor = storage.edit();
         editor.putString(Constants.USER_MAIL, email);
         editor.putLong(Constants.USER_ID, userId);
-        editor.putString("accesToken1", loginReturn[1]);
+        editor.putString(Constants.ACCESSTOKEN, accessToken);
 
         // Commit the edits!
         editor.commit();

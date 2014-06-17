@@ -11,5 +11,7 @@ public class Constants {
     public final static String CHAT_ID = "net.yasme.android.CHAT_ID";
     public final static String LAST_MESSAGE_ID = "net.yasme.android.LAST_MESSAGE_ID";
 
+    public final static String ACCESSTOKEN = "net.yasme.android.ACCESSTOKEN";
+
     public final static String STORAGE_PREFS = "net.yasme.android.STORAGE_PREFS";
 }
