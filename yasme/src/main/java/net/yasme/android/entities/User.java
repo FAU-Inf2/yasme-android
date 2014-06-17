@@ -1,18 +1,31 @@
 package net.yasme.android.entities;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+import net.yasme.android.storage.DatabaseConstants;
+
 import java.io.Serializable;
 
 /**
  * Created by Stefan on 10.05.14.
  */
 
+@DatabaseTable(tableName = "users")
 public class User implements Serializable {
 
+    @DatabaseField(columnName = DatabaseConstants.USER_ID, id = true)
     private long id;
-    private String pw;
+
+    @DatabaseField(columnName = DatabaseConstants.USER_MAIL)
     private String email;
+
+    @DatabaseField(columnName = DatabaseConstants.USER_NAME)
     private String name;
-   // private List<Chat> chats = new ArrayList<Chat>();        // list of all chats the user participates
+
+    private String pw;
+
+    // private List<Chat> chats = new ArrayList<Chat>();        // list of all chats the user participates
 
 
     public User(String pw, String name, String email) {

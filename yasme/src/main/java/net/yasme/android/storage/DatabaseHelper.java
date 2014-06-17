@@ -9,6 +9,8 @@ import com.j256.ormlite.table.TableUtils;
 import com.j256.ormlite.dao.Dao;
 
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Message;
+import net.yasme.android.entities.User;
 
 import java.sql.SQLException;
 
@@ -31,6 +33,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database,ConnectionSource connectionSource) {
         try {
             TableUtils.createTable(connectionSource, Chat.class);
+            TableUtils.createTable(connectionSource, Message.class);
+            TableUtils.createTable(connectionSource, User.class);
         } catch (SQLException e) {
             System.out.println("Can't create database");
             System.out.println(e.getMessage());
@@ -41,6 +45,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase db,ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
             TableUtils.dropTable(connectionSource, Chat.class, true);
+            TableUtils.dropTable(connectionSource, Message.class, true);
+            TableUtils.dropTable(connectionSource, User.class, true);
             onCreate(db, connectionSource);
         } catch (java.sql.SQLException e) {
             System.out.println("Can't drop databases");

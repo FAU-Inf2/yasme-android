@@ -169,7 +169,7 @@ public class YasmeHome extends Activity {
         //ChatTask chatTask;
         ArrayList<Chat> chatrooms = null;
         protected Boolean doInBackground(String... params) {
-            //chatrooms = DatabaseManager.getInstance().getAllChats();
+            chatrooms = DatabaseManager.getInstance().getAllChats();
             return chatrooms != null;
         }
 
