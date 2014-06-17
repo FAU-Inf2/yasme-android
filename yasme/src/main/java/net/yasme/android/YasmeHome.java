@@ -50,7 +50,7 @@ public class YasmeHome extends Activity {
 		SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
 		userMail = storage.getString(Constants.USER_MAIL, "anonym@yasme.net");
 		userId = storage.getLong(Constants.USER_ID, 0);
-        accessToken = storage.getString("accessToken", null);
+        accessToken = storage.getString(Constants.ACCESSTOKEN, null);
 
         //Initialize database (once in application)
         if(!DatabaseManager.isInitialized()) {

@@ -73,6 +73,9 @@ public class DatabaseManager {
             chats = getHelper().getChatDao().queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.out.println("DB Access failed");
+            chats = null;
         }
 
         if(chats == null) {

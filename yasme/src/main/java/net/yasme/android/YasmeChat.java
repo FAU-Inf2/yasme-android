@@ -57,7 +57,7 @@ public class YasmeChat extends Activity {
 		long chatId = intent.getLongExtra(Constants.CHAT_ID, 1);
 
         SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
-        accessToken = storage.getString("accessToken", null);
+        accessToken = storage.getString(Constants.ACCESSTOKEN, null);
 
         //Initialize database (once in application)
         if(!DatabaseManager.isInitialized()) {
@@ -154,12 +154,8 @@ public class YasmeChat extends Activity {
             row.addView(textView);
             layout.addView(row, layoutParams);
 
-            //if (iterator.hasNext()) {
-            //    msg = iterator.next();
-            //} else {
-                row.setFocusableInTouchMode(true);
-                row.requestFocus();
-            //}
+            row.setFocusableInTouchMode(true);
+            row.requestFocus();
         }
 	}
 

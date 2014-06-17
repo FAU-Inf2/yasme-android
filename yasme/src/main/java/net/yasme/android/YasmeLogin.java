@@ -451,6 +451,9 @@ public class YasmeLogin extends Activity {
             if (messages.isEmpty()) {
                 return false;
             }
+            if(chats == null) {
+                return false;
+            }
 
             for (Chat chat : chats) {
                 for (Message msg : messages) {
