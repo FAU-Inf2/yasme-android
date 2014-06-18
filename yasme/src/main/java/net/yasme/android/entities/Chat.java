@@ -25,11 +25,11 @@ import java.util.Collection;
  */
 public class Chat {
 
-    @DatabaseField(columnName = DatabaseConstants.CHAT_ID)
+    @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
     private long id;
 
     @JsonIgnore
-    @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS)
+    @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS, eager = true)
     private Collection<User> participants;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_STATUS)
