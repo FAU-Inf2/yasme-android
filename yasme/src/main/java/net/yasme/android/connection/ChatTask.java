@@ -164,7 +164,7 @@ public class ChatTask extends  ConnectionTask{
 
         try {
 
-            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + chatId+ "/info").build();
+            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + chatId + "/info").build();
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpGet httpGet = new HttpGet(requestURI);

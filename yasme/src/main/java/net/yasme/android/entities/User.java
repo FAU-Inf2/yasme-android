@@ -9,6 +9,7 @@ import net.yasme.android.storage.DatabaseConstants;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -31,9 +32,9 @@ public class User implements Serializable {
     private String pw;
 
 
-    @JsonIgnore
-    @ForeignCollectionField(columnName = DatabaseConstants.CHATS)
-    private ForeignCollection<Chat> chats;// = (ForeignCollection<Chat>) new  ArrayList<Chat>();
+    //@JsonIgnore
+    //@ForeignCollectionField(columnName = DatabaseConstants.CHATS)
+    // Collection<Chat> chats =  new  ArrayList<Chat>();
     //list of all chats the user participates
 
 
@@ -67,10 +68,10 @@ public class User implements Serializable {
     /*
      * Getters
      */
-    @JsonIgnore
-    public ArrayList<Chat> getChats() {
-        return new ArrayList<Chat>(chats);
-    }
+    //@JsonIgnore
+    //public ArrayList<Chat> getChats() {
+    //    return new ArrayList<Chat>(chats);
+    //}
 
     public String getEmail() {
         return email;
@@ -92,20 +93,20 @@ public class User implements Serializable {
     /*
      * Setters
      */
-    @JsonIgnore
-    public void addChat(Chat chat) {
-        this.chats.add(chat);
-    }
+    //@JsonIgnore
+    //public void addChat(Chat chat) {
+    //    this.chats.add(chat);
+    //}
 
     //TODO: Aufruf von setChat in addChat umwandeln
     //public void setChat(Chat chat) {
     //    this.chats.add(chat);
     //}
 
-    @JsonIgnore
-    public void setChat(ArrayList<Chat> chats) {
-        this.chats = (ForeignCollection<Chat>)chats;
-    }
+    //@JsonIgnore
+    //public void setChat(ArrayList<Chat> chats) {
+    //    this.chats = chats;
+    //}
 
     public void setPw(String pw) {
         this.pw = pw;
@@ -123,9 +124,9 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    @JsonIgnore
-    public void removeChat(Chat chat) {
-        chats.remove(chat);
-    }
+    //@JsonIgnore
+    //public void removeChat(Chat chat) {
+    //    chats.remove(chat);
+    //}
 }
 

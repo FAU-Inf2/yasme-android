@@ -18,6 +18,7 @@ import net.yasme.android.storage.DatabaseConstants;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by robert on 28.05.14.
@@ -29,7 +30,7 @@ public class Chat {
 
     @JsonIgnore
     @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS)
-    private ArrayList<User> participants;
+    private Collection<User> participants;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_STATUS)
     private String status;
@@ -43,7 +44,7 @@ public class Chat {
 
     @JsonIgnore
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
-    private ArrayList<Message> messages;
+    private Collection<Message> messages;
 
     @JsonIgnore
     @DatabaseField(columnName = DatabaseConstants.LAST_MESSAGE_ID)
