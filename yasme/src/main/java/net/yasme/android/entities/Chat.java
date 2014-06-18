@@ -23,12 +23,12 @@ import java.util.Collection;
 /**
  * Created by robert on 28.05.14.
  */
+@DatabaseTable(tableName = "chat")
 public class Chat {
 
-    @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
+    @DatabaseField(columnName = "chatId_id", id = true)
     private long id;
 
-    @JsonIgnore
     @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS, eager = true)
     private Collection<User> participants;
 
@@ -50,7 +50,7 @@ public class Chat {
     @DatabaseField(columnName = DatabaseConstants.LAST_MESSAGE_ID)
     private long lastMessageID;
 
-
+    @JsonIgnore
     private User owner;
 
     @JsonIgnore
@@ -96,6 +96,7 @@ public class Chat {
         this.name = name;
     }
 
+    @JsonIgnore
     public Chat() {
         // ORMLite needs a no-arg constructor
     }
@@ -107,7 +108,7 @@ public class Chat {
     }
 
     public ArrayList<User> getParticipants() {
-        User dummy = new User("Dummy", 10);
+        User dummy = new User("Dummy", 2);
         participants.add(dummy);
         return new ArrayList<User>(participants);
     }

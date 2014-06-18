@@ -25,8 +25,24 @@ public class DatabaseManager {
         if (null == instance) {
             instance = new DatabaseManager(context);
         }
-        GetSeedTask getSeedTask = new GetSeedTask();
-        getSeedTask.execute(Long.toString(userId), accessToken);
+        ChatTask chatTask = ChatTask.getInstance();
+
+        long numberOfChats = 15;
+        Chat chat = null;
+
+        for(long i = 1; i <= numberOfChats; i++) {
+            try {
+                chat = chatTask.getInfoOfChat(i, userId, accessToken);
+            } catch (RestServiceException e) {
+                e.printStackTrace();
+            }
+            if (chat != null) {
+                System.out.println("Inserted: " + chat.toString());
+                instance.addChat(chat);
+            } else {
+                break;
+            }
+        }
         initialized = true;
     }
 
@@ -70,15 +86,12 @@ public class DatabaseManager {
     public ArrayList<Chat> getAllChats() {
         List<Chat> chats = null;
         try {
-            System.out.println("DB Access GetChats0");
-            getHelper();
-            System.out.println("DB Access GetChats2");
-            getHelper().getChatDao();
-            System.out.println("DB Access GetChats3");
+            System.out.println("DB Access GetChats");
             chats = getHelper().getChatDao().queryForAll();
-            System.out.println("DB Access GetChats4");
+            System.out.println("DB Access after GetChats");
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("SQLException");
         } catch (NullPointerException e) {
             System.out.println("DB Access failed");
             chats = null;
@@ -148,30 +161,6 @@ public class DatabaseManager {
             getHelper().getChatDao().update(chat);
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-
-    public static class GetSeedTask extends AsyncTask<String, Void, Boolean> {
-
-        protected Boolean doInBackground(String... params) {
-            ChatTask chatTask = ChatTask.getInstance();
-
-            long numberOfChats = 16L;
-            Chat chat = null;
-            for(long i = 0; i < numberOfChats; i++) {
-                try {
-                    chat = chatTask.getInfoOfChat(i, Long.parseLong(params[0]), params[1]);
-                } catch (RestServiceException e) {
-                    e.printStackTrace();
-                }
-                if (chat != null) {
-                    instance.addChat(chat);
-                } else {
-                    break;
-                }
-            }
-            return true;
         }
     }
 }

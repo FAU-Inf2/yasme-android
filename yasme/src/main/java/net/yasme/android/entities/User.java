@@ -31,10 +31,11 @@ public class User implements Serializable {
 
     private String pw;
 
+    // only for client Database
     @JsonIgnore
-    @DatabaseField(foreign = true)
-    private Chat referenceChat;
-    //only for client Database
+    @DatabaseField(foreign = true, foreignAutoCreate=true, foreignAutoRefresh=true)
+    private Chat chatId;
+
 
     //@JsonIgnore
     //@ForeignCollectionField(columnName = DatabaseConstants.CHATS)
