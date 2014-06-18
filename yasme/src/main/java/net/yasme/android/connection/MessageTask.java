@@ -152,7 +152,6 @@ public class MessageTask extends  ConnectionTask {
                         } catch (Exception e) {
                             key = null;
                         }
-                        //JSONObject key = obj.getJSONObject("messageKey");
 
                         if (key != null){
                             String messageKey = key.getString("messageKey");

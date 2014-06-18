@@ -32,16 +32,14 @@ import java.util.ArrayList;
 //keyId		|	1							1	|	KEY, IV
 //Timestamp	| xxxxx							2	| 	KEY, IV
 
-//TODO: Bevor Nachrichten vom Server geholt werden, muessen neue Keys vom Server geholt werden und diese Tabellen aktualisiert werden
-//TODO: Wenn Schluessel empfangen wird, dann Befehl senden, dass Schluessel auf Server geloescht wird
 
 public class MessageEncryption {
 
     long keyId; // contains the latest keyid for encryption
     long chatId;
     Chat chat;
-    long creatorDevice;
-    ArrayList<Long> recipients = new ArrayList<Long>();
+    long creatorDevice; //TODO: make DEVICE
+    ArrayList<Long> recipients = new ArrayList<Long>(); //Send generated Key to this recipients
     Context context;
     String accessToken;
 
@@ -66,12 +64,13 @@ public class MessageEncryption {
         this(context, chat.getId());
         this.chat = chat;
         this.accessToken = accessToken;
+        this.creatorDevice = creator;
 
         SharedPreferences currentKeyPref = context.getSharedPreferences(
                 CURRENTKEY, Context.MODE_PRIVATE);
 
         // if no old key for this chat, then generate a new one, beginning with
-        if (1==1){ //TODO: TEST
+        if (1==1){ //TODO: TEST KEYSENDING
         //if (!currentKeyPref.contains("keyId")) {
             System.out.println("[???] Generate Key");
             aes = new AESEncryption("geheim");
@@ -90,6 +89,7 @@ public class MessageEncryption {
                 }
             }
             //TODO: If-Anweisung entfernen wenn participants in chat implementiert wurde
+            //TODO: If sendkey nicht erfolgreich, dann Devices pro User updaten und nochmal versuchen!!!
             if (recipients.size() > 0){
                 sendKey();
 

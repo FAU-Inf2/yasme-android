@@ -84,6 +84,7 @@ public class Chat {
         // setup Encryption for this chat
         // TODO: DEVICE-ID statt USERID uebergeben
         long creatorDevice = user.getId();
+        System.out.println("[???] User/Device: "+creatorDevice);
         aes = new MessageEncryption(activity, this, creatorDevice, accessToken);
     }
 
@@ -105,7 +106,7 @@ public class Chat {
     }
 
     public ArrayList<User> getParticipants() {
-        User dummy = new User("Dummy", 444);
+        User dummy = new User("Dummy", 2);
         participants.add(dummy);
         return new ArrayList<User>(participants);
     }

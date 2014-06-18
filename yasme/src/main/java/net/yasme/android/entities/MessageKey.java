@@ -60,11 +60,11 @@ public class MessageKey implements Serializable {
 		return id;
 	}
 
-	public Device getCreator() {
+	public Device getCreatorDevice() {
 		return creatorDevice;
 	}
 
-	public Device getRecipient() {
+	public Device getRecipientDevice() {
 		return recipientDevice;
 	}
 
@@ -92,16 +92,18 @@ public class MessageKey implements Serializable {
 		return sign;
 	}
 
+    public String getInitVector(){ return initVector; }
+
 	/** Setters **/
 	public void setId(long id) {
 		this.id = id;
 	}
 
-	public void setCreator(Device creator) {
+	public void setCreatorDevice(Device creator) {
 		this.creatorDevice = creator;
 	}
 
-	public void setRecipient(Device recipient) {
+	public void setRecipientDevice(Device recipient) {
 		this.recipientDevice = recipient;
 	}
 
@@ -112,6 +114,8 @@ public class MessageKey implements Serializable {
 	public void setKey(String key) {
 		this.messageKey = key;
 	}
+
+    public void setInitVector(String initVector) { this.initVector = initVector; }
 
 	public void setEncType(byte encType) {
 		this.encType = encType;

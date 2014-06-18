@@ -92,7 +92,7 @@ public class KeyTask extends ConnectionTask {
             httpPost.setEntity(se);
 
             System.out.println("[???] Sending keys to server: "+ ow.writeValueAsString(messageKeys));
-            System.out.println("[???] Key: "+ ow.writeValueAsString(messageKeys));
+            System.out.print("[???] Key: "+ ow.writeValueAsString(messageKeys).toString());
 
 
             httpPost.setHeader("Content-type", "application/json");
