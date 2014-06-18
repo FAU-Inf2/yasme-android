@@ -27,8 +27,9 @@ public class Chat {
     @DatabaseField(columnName = DatabaseConstants.CHAT_ID)
     private long id;
 
+    @JsonIgnore
     @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS)
-    private ForeignCollection<User> participants;
+    private ArrayList<User> participants;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_STATUS)
     private String status;
@@ -42,7 +43,7 @@ public class Chat {
 
     @JsonIgnore
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
-    private ForeignCollection<Message> messages;
+    private ArrayList<Message> messages;
 
     @JsonIgnore
     @DatabaseField(columnName = DatabaseConstants.LAST_MESSAGE_ID)
@@ -77,8 +78,8 @@ public class Chat {
 
         lastMessageID = 0L;
 
-        participants = (ForeignCollection<User>) new ArrayList<User>();
-        messages = (ForeignCollection<Message>) new ArrayList<Message>();
+        participants = new ArrayList<User>();
+        messages = new ArrayList<Message>();
 
         // setup Encryption for this chat
         // TODO: DEVICE-ID statt USERID uebergeben
@@ -157,7 +158,7 @@ public class Chat {
     }
 
     public void setParticipants(ArrayList<User> participants) {
-        this.participants = (ForeignCollection<User>)participants;
+        this.participants = participants;
     }
 
     public void setStatus(String status) {
@@ -177,7 +178,7 @@ public class Chat {
     }
 
     public void setMessages(ArrayList<Message> messages) {
-        this.messages = (ForeignCollection<Message>) messages;
+        this.messages = messages;
     }
 
     public void setLastMessageID(long lastMessageID) {
@@ -248,7 +249,7 @@ public class Chat {
                 update();
                 activity.getStatus().setText("Gesendet: " + msg);
             } else {
-                activity.getStatus().setText("Senden fehlgeschlagen");
+               activity.getStatus().setText("Senden fehlgeschlagen");
             }
         }
     }

@@ -376,6 +376,7 @@ public class YasmeLogin extends Activity {
                 loginReturn = AuthorizationTask.getInstance().loginUser(new User(email,
                         password));
 
+                System.out.println("LoginReturn:");
                 userId = Long.parseLong(loginReturn[0]);
                 accessToken = loginReturn[1];
 

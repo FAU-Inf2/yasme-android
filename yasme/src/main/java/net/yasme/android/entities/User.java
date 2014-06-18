@@ -10,6 +10,8 @@ import net.yasme.android.storage.DatabaseConstants;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * Created by Stefan on 10.05.14.
  */
@@ -28,9 +30,11 @@ public class User implements Serializable {
 
     private String pw;
 
+
+    @JsonIgnore
     @ForeignCollectionField(columnName = DatabaseConstants.CHATS)
     private ForeignCollection<Chat> chats;// = (ForeignCollection<Chat>) new  ArrayList<Chat>();
-    // list of all chats the user participates
+    //list of all chats the user participates
 
 
     public User(String pw, String name, String email) {
@@ -63,6 +67,7 @@ public class User implements Serializable {
     /*
      * Getters
      */
+    @JsonIgnore
     public ArrayList<Chat> getChats() {
         return new ArrayList<Chat>(chats);
     }
@@ -87,15 +92,17 @@ public class User implements Serializable {
     /*
      * Setters
      */
+    @JsonIgnore
     public void addChat(Chat chat) {
         this.chats.add(chat);
     }
 
     //TODO: Aufruf von setChat in addChat umwandeln
-    public void setChat(Chat chat) {
-        this.chats.add(chat);
-    }
+    //public void setChat(Chat chat) {
+    //    this.chats.add(chat);
+    //}
 
+    @JsonIgnore
     public void setChat(ArrayList<Chat> chats) {
         this.chats = (ForeignCollection<Chat>)chats;
     }
@@ -116,10 +123,9 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    /*
+    @JsonIgnore
     public void removeChat(Chat chat) {
         chats.remove(chat);
     }
-    */
 }
 

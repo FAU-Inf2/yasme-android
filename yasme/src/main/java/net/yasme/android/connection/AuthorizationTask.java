@@ -86,13 +86,17 @@ public class AuthorizationTask extends  ConnectionTask{
                     throw new RestServiceException(Error.UNAUTHORIZED);
 
                 default:
+                    System.out.println("[DEBUG] Login Error");
                     throw new RestServiceException(UserError.ERROR);
             }
         } catch (ClientProtocolException e) {
+            System.out.println("[DEBUG] Login ClientProtocolException");
             e.printStackTrace();
         } catch (IOException e) {
+            System.out.println("[DEBUG] Login RestServiceException");
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (URISyntaxException e) {
+            System.out.println("[DEBUG] Login URISyntaxException");
             e.printStackTrace();
         }
         return null;
