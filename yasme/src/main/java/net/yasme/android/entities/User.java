@@ -20,13 +20,13 @@ public class User implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.USER_ID, id = true)
     private long id;
 
+    private String pw;
+
     @DatabaseField(columnName = DatabaseConstants.USER_MAIL)
     private String email;
 
     @DatabaseField(columnName = DatabaseConstants.USER_NAME)
     private String name;
-
-    private String pw;
 
     @ForeignCollectionField(columnName = DatabaseConstants.CHATS)
     private ForeignCollection<Chat> chats;// = (ForeignCollection<Chat>) new  ArrayList<Chat>();
@@ -44,20 +44,18 @@ public class User implements Serializable {
         this.pw = pw;
     }
 
-    //TODO: changeOrder
-    public User(String name, long id){
+    public User(String name, long id) {
         this.name = name;
         this.id = id;
     }
 
-    public User(String name, String email, long id){
+    public User(String name, String email, long id) {
         this.name = name;
         this.email = email;
         this.id = id;
     }
 
     public User() {
-
     }
 
     /*
@@ -92,12 +90,12 @@ public class User implements Serializable {
     }
 
     //TODO: Aufruf von setChat in addChat umwandeln
-    public void setChat(Chat chat) {
+    public void Chat(Chat chat) {
         this.chats.add(chat);
     }
 
     public void setChat(ArrayList<Chat> chats) {
-        this.chats = (ForeignCollection<Chat>)chats;
+        this.chats = (ForeignCollection<Chat>) chats;
     }
 
     public void setPw(String pw) {
@@ -116,10 +114,8 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    /*
     public void removeChat(Chat chat) {
         chats.remove(chat);
     }
-    */
 }
 

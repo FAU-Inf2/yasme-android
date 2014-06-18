@@ -18,6 +18,7 @@ import net.yasme.android.storage.DatabaseConstants;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by robert on 28.05.14.
@@ -36,6 +37,8 @@ public class Chat {
     @DatabaseField(columnName = DatabaseConstants.CHAT_NAME)
     private String name;
 
+    private User owner;
+
     @JsonIgnore
     @DatabaseField
     private int numberOfParticipants;
@@ -48,11 +51,8 @@ public class Chat {
     @DatabaseField(columnName = DatabaseConstants.LAST_MESSAGE_ID)
     private long lastMessageID;
 
-
-    private User owner;
-
     @JsonIgnore
-    private User self; //<----??? only one User Object instead of userName, userId, etc.
+    private User self;
 
     @JsonIgnore
     private MessageEncryption aes;
@@ -96,6 +96,7 @@ public class Chat {
     public Chat() {
         // ORMLite needs a no-arg constructor
     }
+
     /**
      * Getters *
      */
@@ -137,8 +138,8 @@ public class Chat {
         return self;
     }
 
-    public boolean isOwner(long userId){
-        if(owner.getId() == userId){
+    public boolean isOwner(long userId) {
+        if (owner.getId() == userId) {
             return true;
         }
         return false;
@@ -157,7 +158,7 @@ public class Chat {
     }
 
     public void setParticipants(ArrayList<User> participants) {
-        this.participants = (ForeignCollection<User>)participants;
+        this.participants = (ForeignCollection<User>) participants;
     }
 
     public void setStatus(String status) {
@@ -187,7 +188,7 @@ public class Chat {
     public void addParticipant(User participant) {
 
         try {
-            if(ChatTask.getInstance().addParticipantToChat(participant.getId(), self.getId(), id, accessToken))
+            if (ChatTask.getInstance().addParticipantToChat(participant.getId(), self.getId(), id, accessToken))
                 this.participants.add(participant);
         } catch (RestServiceException e) {
             e.printStackTrace();
@@ -198,7 +199,7 @@ public class Chat {
 
         try {
 
-            if(ChatTask.getInstance().removePartipantFromChat(participant.getId(), id ,self.getId(), accessToken))
+            if (ChatTask.getInstance().removePartipantFromChat(participant.getId(), id, self.getId(), accessToken))
                 this.participants.remove(participant);
 
         } catch (RestServiceException e) {
@@ -233,7 +234,7 @@ public class Chat {
             String msg_encrypted = aes.encrypt(msg);
 
             // create Message
-            Message createdMessage = new Message(new User(uName, uMail,  uId),
+            Message createdMessage = new Message(new User(uName, uMail, uId),
                     msg_encrypted, id, aes.getKeyId());
             try {
                 result = messageTask.sendMessage(createdMessage, accessToken);
@@ -261,7 +262,7 @@ public class Chat {
 
         /**
          * @param params [0] is lastMessageID
-         *        params [1] is user_id
+         *               params [1] is user_id
          * @return Returns true if it was successful, otherwise false
          */
         protected Boolean doInBackground(Long... params) {
