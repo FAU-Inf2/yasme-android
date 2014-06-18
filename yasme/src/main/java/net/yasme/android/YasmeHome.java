@@ -11,7 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -89,16 +93,20 @@ public class YasmeHome extends Activity {
 
 
 	public void showStandardChat() {
+        /*
 		Intent intent = new Intent(this, YasmeChat.class);
 		intent.putExtra(Constants.USER_MAIL, userMail);
 		intent.putExtra(Constants.USER_ID, userId);
         intent.putExtra(Constants.CHAT_ID, (long)1);
         intent.putExtra(Constants.USER_NAME, self.getName());
 		startActivity(intent);
+		*/
+        showChat(1);
 	}
 
 
     public void showChat(long chatId) {
+        System.out.println("ShowChat: " + chatId);
         Intent intent = new Intent(this, YasmeChat.class);
         intent.putExtra(Constants.USER_MAIL, userMail);
         intent.putExtra(Constants.USER_ID, userId);
@@ -115,14 +123,6 @@ public class YasmeHome extends Activity {
 
     }
 
-    View.OnClickListener chatClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            //TODO: get chat_id from table row, maybe with Adapter class
-            long chat_id = 0;
-            showChat(chat_id);
-        }
-    };
 
 	/**
 	 * A placeholder fragment containing a simple view.
@@ -174,17 +174,20 @@ public class YasmeHome extends Activity {
         }
 
         protected void onPostExecute(final Boolean success) {
-            if(!success) {
+            /*
+            if(success) {
                 //TODO: Debug
                 System.out.println("Fehler bei Datenbankzugriff");
                 return;
             }
-            LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);
+
+            ListView list = (ListView) findViewById(R.id.chatroom_list);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT);
 
-            for (Chat chat : chatrooms) {
+            //for (Chat chat : chatrooms) {
+            for (int i=0; i < 10; i++) {
                 TextView name = new TextView((getApplicationContext()));
                 TextView status = new TextView((getApplicationContext()));
 
@@ -193,15 +196,39 @@ public class YasmeHome extends Activity {
                         RelativeLayout.LayoutParams.MATCH_PARENT,
                         RelativeLayout.LayoutParams.MATCH_PARENT));
 
-                name.setText(chat.getName());
-                status.setText(chat.getStatus());
+               // name.setText(chat.getName());
+                //status.setText(chat.getStatus());
+                name.setText("Name: " + String.valueOf(i));
+                status.setText("Status: " + String.valueOf(i));
 
                 row.setOnClickListener(chatClickListener);
 
                 row.addView(name);
-                row.addView(status);
-                table.addView(row, layoutParams);
+                //row.addView(status);
+                list.addView(row, layoutParams);
             }
+            */
+
+            ArrayList<String> vals = new ArrayList<>();
+            for (int i = 1; i <= 15; i++)
+            {
+                vals.add(String.valueOf(i));
+            }
+            ListAdapter adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, vals);
+            final ListView list = (ListView)findViewById(R.id.chatroom_list);
+
+            list.setAdapter(adapter);
+
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+                {
+                    Long chatId = Long.parseLong(list.getAdapter().getItem(position).toString());
+                    showChat(chatId);
+                }
+            });
+
         }
     }
 }

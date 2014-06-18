@@ -70,7 +70,13 @@ public class DatabaseManager {
     public ArrayList<Chat> getAllChats() {
         List<Chat> chats = null;
         try {
+            System.out.println("DB Access GetChats0");
+            getHelper();
+            System.out.println("DB Access GetChats2");
+            getHelper().getChatDao();
+            System.out.println("DB Access GetChats3");
             chats = getHelper().getChatDao().queryForAll();
+            System.out.println("DB Access GetChats4");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
@@ -79,7 +85,7 @@ public class DatabaseManager {
         }
 
         if(chats == null) {
-            return null;
+            return new ArrayList<Chat>();
         }
         ArrayList<Chat> chatsArray = new ArrayList(chats);
         return chatsArray;
