@@ -50,7 +50,6 @@ public class MessageTask extends  ConnectionTask {
 
     private MessageTask(Context context) {
 
-        //TODO: URI dynamisch auslesen
         try {
             this.uri = new URIBuilder().setScheme(serverScheme).
                     setHost(serverHost).setPort(serverPort).setPath("/msg").build();

@@ -26,19 +26,24 @@ public class Device {
         this.number = number;
     }
 
-    public Device(){}
+    public Device() {
+    }
 
-    public Device(long id){
+    public Device(long id) {
         this.id = id;
     }
 
-    public User getUser() { return this.user; }
+    public User getUser() {
+        return this.user;
+    }
 
     public void setId(long id) {
         this.id = id;
     }
 
-    public void setUser(User user) { this.user = user; }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public long getId() {
         return id;
@@ -64,7 +69,9 @@ public class Device {
         this.type = type;
     }
 
-    public void setNumber(String number) { this.number = number; }
+    public void setNumber(String number) {
+        this.number = number;
+    }
 
     public String getPublicKey() {
         return publicKey;

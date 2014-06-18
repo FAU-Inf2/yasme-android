@@ -12,9 +12,20 @@ public class DiffieHellmanPart {
     private String dh_p = "";
     private String dh_A = "";
 
-    public DiffieHellmanPart() { }
+    public DiffieHellmanPart() {
+    }
 
-    /** Getters **/
+    public DiffieHellmanPart(Device device, long dhId, String dh_g, String dh_p, String dh_A) {
+        this.device = device;
+        this.dhId = dhId;
+        this.dh_g = dh_g;
+        this.dh_p = dh_p;
+        this.dh_A = dh_A;
+    }
+
+    /**
+     * Getters *
+     */
     public long getId() {
         return id;
     }
@@ -40,7 +51,9 @@ public class DiffieHellmanPart {
     }
 
 
-    /** Setters **/
+    /**
+     * Setters *
+     */
     public void setId(long id) {
         this.id = id;
     }

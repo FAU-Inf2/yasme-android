@@ -39,7 +39,6 @@ public class UserTask extends  ConnectionTask {
 
     private UserTask() {
 
-        //TODO: URI dynamisch auslesen
         try {
             this.uri = new URIBuilder().setScheme(serverScheme).
                     setHost(serverHost).setPort(serverPort).setPath("/usr").build();
