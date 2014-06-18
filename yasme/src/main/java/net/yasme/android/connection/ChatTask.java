@@ -36,7 +36,7 @@ import java.util.List;
  * Created by florianwinklmeier on 03.06.14.
  */
 
-public class ChatTask extends  ConnectionTask{
+public class ChatTask extends ConnectionTask {
 
     private static ChatTask instance;
     private URI uri;
@@ -60,7 +60,7 @@ public class ChatTask extends  ConnectionTask{
 
     //TODO: ExceptionHandling verfeinern für ganze Klasse!
 
-    public List<Chat> getAllChatsForUser(long userId, String accessToken) throws RestServiceException{
+    public List<Chat> getAllChatsForUser(long userId, String accessToken) throws RestServiceException {
 
         List<Chat> chats = new ArrayList<Chat>();
 
@@ -78,7 +78,6 @@ public class ChatTask extends  ConnectionTask{
 
             HttpResponse httpResponse = httpClient.execute(httpGet);
 
-            System.out.println(httpResponse.getStatusLine().getStatusCode());
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 200:
                     JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
@@ -91,8 +90,8 @@ public class ChatTask extends  ConnectionTask{
                 case 401:
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
-                case 500:
-                    throw new RestServiceException(Error.ERROR);
+                case 404:
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 default:
                     throw new RestServiceException(Error.ERROR);
             }
@@ -101,12 +100,58 @@ public class ChatTask extends  ConnectionTask{
             e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
-        }  catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return chats;
+    }
+
+    public boolean deleteChat(long chatId, long userId, String accessToken)
+            throws RestServiceException {
+
+        // remember: only the owner can delete the chat
+
+        try {
+            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + chatId).build();
+
+            CloseableHttpClient httpClient = HttpClient.createSSLClient();
+            HttpDelete httpDelete = new HttpDelete(requestURI);
+
+            httpDelete.setHeader("Content-type", "application/json");
+            httpDelete.setHeader("Accept", "application/json");
+
+            httpDelete.setHeader("userId", Long.toString(userId));
+            httpDelete.setHeader("Authorization", accessToken);
+
+            HttpResponse httpResponse = httpClient.execute(httpDelete);
+
+            switch (httpResponse.getStatusLine().getStatusCode()) {
+                case 201:
+                    System.out.println("Chat deleted");
+                    return true;
+                case 401:
+                    System.out.println("[DEBUG] Unauthorized");
+                    throw new RestServiceException(Error.UNAUTHORIZED);
+                case 403:
+                    throw new RestServiceException(
+                            Error.ERROR);
+                case 404:
+                    throw new RestServiceException(
+                            Error.NOT_FOUND_EXCEPTION);
+                default:
+                    throw new RestServiceException(UserError.ERROR);
+            }
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public Long createChatwithPar(Chat chat, long userId, String accessToken) throws RestServiceException {
@@ -117,11 +162,8 @@ public class ChatTask extends  ConnectionTask{
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpPost httpPost = new HttpPost(requestURI);
 
-            ObjectWriter ow = new ObjectMapper().writer()
-                    .withDefaultPrettyPrinter();
-            String json = ow.writeValueAsString(chat);
-
-            StringEntity se = new StringEntity(json);
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            StringEntity se = new StringEntity(ow.writeValueAsString(chat));
             httpPost.setEntity(se);
 
             httpPost.setHeader("Content-type", "application/json");
@@ -138,6 +180,8 @@ public class ChatTask extends  ConnectionTask{
                             new InputStreamReader(httpResponse.getEntity()
                                     .getContent(), "UTF-8")
                     )).readLine());
+                case 400:
+                    throw new RestServiceException(Error.ERROR);
                 case 401:
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
@@ -162,9 +206,11 @@ public class ChatTask extends  ConnectionTask{
 
     public Chat getInfoOfChat(long chatId, long userId, String accessToken) throws RestServiceException {
 
+        // note: only a participant of the chat shall get the chat object
+
         try {
 
-            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + chatId+ "/info").build();
+            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + chatId + "/info").build();
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpGet httpGet = new HttpGet(requestURI);
@@ -177,7 +223,7 @@ public class ChatTask extends  ConnectionTask{
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 200:
-                    return new ObjectMapper().readValue(new BufferedReader (new InputStreamReader(httpResponse.getEntity()
+                    return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
                             .getContent())).readLine(), Chat.class);
                 case 401:
                     System.out.println("[DEBUG] Unauthorized");
@@ -188,9 +234,6 @@ public class ChatTask extends  ConnectionTask{
                 case 404:
                     throw new RestServiceException(
                             UserError.CHAT_NOT_FOUND_EXCEPTION);
-                case 500:
-                    throw new RestServiceException(
-                            Error.ERROR);
                 default:
                     throw new RestServiceException(UserError.ERROR);
             }
@@ -205,7 +248,7 @@ public class ChatTask extends  ConnectionTask{
         return null;
     }
 
-    public boolean addParticipantToChat(long participantId, long userId, long chatId, String accessToken)
+    public boolean addParticipantToChat(long participantId, long chatId, long userId, String accessToken)
             throws RestServiceException {
         try {
             URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/par/" + participantId + "/" + chatId).build();
@@ -245,15 +288,13 @@ public class ChatTask extends  ConnectionTask{
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
         return false;
-
     }
 
     public boolean changeOwnerOfChat(long chatId, long newOwnerId, long userId, String accessToken) throws RestServiceException {
 
         try {
-            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/"+chatId+"/owner/"+userId).build();
+            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + chatId + "/owner/" + newOwnerId).build();
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpPut httpPut = new HttpPut(requestURI);
 
@@ -272,6 +313,8 @@ public class ChatTask extends  ConnectionTask{
                 case 401:
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
+                case 403:
+                    throw new RestServiceException(Error.ERROR);
                 case 404:
                     throw new RestServiceException(Error.ERROR);
                 case 500:
@@ -313,8 +356,6 @@ public class ChatTask extends  ConnectionTask{
                 case 201:
                     System.out.println("User removed from Chat!");
                     return true;
-                case 400:
-                    throw new RestServiceException(Error.ERROR);
                 case 401:
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
@@ -360,7 +401,7 @@ public class ChatTask extends  ConnectionTask{
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 201:
-                    System.out.println("I´m out of Chat No. " +chatId);
+                    System.out.println("I´m out of Chat No. " + chatId);
                     return true;
                 case 401:
                     System.out.println("[DEBUG] Unauthorized");
@@ -390,7 +431,7 @@ public class ChatTask extends  ConnectionTask{
     public boolean updateStatus(Chat chat, long userId, String accessToken) throws RestServiceException {
 
         try {
-            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + chat.getId() +"/properties").build();
+            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + chat.getId() + "/properties").build();
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpPut httpPut = new HttpPut(requestURI);

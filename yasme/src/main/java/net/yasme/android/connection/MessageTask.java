@@ -68,8 +68,6 @@ public class MessageTask extends  ConnectionTask {
             HttpPost httpPost = new HttpPost(requestURI);
 
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-
-            System.out.println(ow.writeValueAsString(message));
             StringEntity se = new StringEntity(ow.writeValueAsString(message));
             httpPost.setEntity(se);
 
@@ -79,8 +77,6 @@ public class MessageTask extends  ConnectionTask {
             httpPost.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
-
-            System.out.println(httpResponse.getStatusLine().getStatusCode());
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 201:
@@ -110,7 +106,6 @@ public class MessageTask extends  ConnectionTask {
 
         try {
             URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + lastMessageId).build();
-
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpGet httpGet = new HttpGet(requestURI);
@@ -159,7 +154,6 @@ public class MessageTask extends  ConnectionTask {
                         }
                         //JSONObject key = obj.getJSONObject("messageKey");
 
-
                         if (key != null){
                             String messageKey = key.getString("messageKey");
                             String[] base64arr = messageKey.split(",");
@@ -176,17 +170,17 @@ public class MessageTask extends  ConnectionTask {
                             /*DEBUG END*/
                             //TODO: hier muss spaeter die DeviceId statt userUd uebergeben werden
                             keyStorage.deleteKeyFromServer(keyId, userId);
-
                         }
-
-
                     }
                     break;
+                case 400:
+                    System.out.println("[DEBUG] Bad Request");
+                    throw new RestServiceException(Error.ERROR);
                 case 401:
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
-                case 500:
-                    throw new RestServiceException(UserError.USER_NOT_FOUND);
+                case 404:
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 default:
                     throw new RestServiceException(Error.ERROR);
             }
@@ -199,10 +193,7 @@ public class MessageTask extends  ConnectionTask {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
         System.out.println("Number new Messages: " + messages.size());
         return messages;
     }
-
-
 }

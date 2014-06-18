@@ -28,7 +28,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-public class DeviceTask extends  ConnectionTask {
+public class DeviceTask extends ConnectionTask {
 
     private static DeviceTask instance;
     private URI uri;
@@ -73,9 +73,8 @@ public class DeviceTask extends  ConnectionTask {
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
 
-                case 201:
+                case 200:
                     System.out.println("[DEBUG] Device registration was successful");
-
                     return (new JSONObject((new BufferedReader(
                             new InputStreamReader(httpResponse.getEntity()
                                     .getContent())
@@ -101,8 +100,7 @@ public class DeviceTask extends  ConnectionTask {
     public Device getDevice(long deviceId, long userId, String accessToken) throws RestServiceException {
 
         try {
-            URI requestURI = new URIBuilder(uri).setPath(uri.getPath()+"/"+deviceId).build();
-
+            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + deviceId).build();
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpGet httpGet = new HttpGet(requestURI);
@@ -116,12 +114,12 @@ public class DeviceTask extends  ConnectionTask {
             switch (httpResponse.getStatusLine().getStatusCode()) {
 
                 case 200:
-                    return new ObjectMapper().readValue(new BufferedReader (new InputStreamReader(httpResponse.getEntity()
+                    return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
                             .getContent())).readLine(), Device.class);
                 case 401:
                     System.out.println("Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
-                case 500:
+                case 404:
                     throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 default:
                     throw new RestServiceException(Error.ERROR);
@@ -143,8 +141,7 @@ public class DeviceTask extends  ConnectionTask {
         ArrayList<Device> devices = new ArrayList<Device>();
 
         try {
-            URI requestURI = new URIBuilder(uri).setPath(uri.getPath()+"/all/"+userId).build();
-
+            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/all/" + userId).build();
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpGet httpGet = new HttpGet(requestURI);
@@ -155,8 +152,6 @@ public class DeviceTask extends  ConnectionTask {
             httpGet.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpGet);
-
-            System.out.println(httpResponse.getStatusLine().getStatusCode());
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
 
@@ -170,19 +165,17 @@ public class DeviceTask extends  ConnectionTask {
 
                     System.out.println("No.Devices: " + jsonArray.length());
                     break;
-
-                //TODO: ErrorCode vermutlich fehlerhaft
-                case 204:
-                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 case 401:
                     System.out.println("Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
+                case 204:
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 default:
                     throw new RestServiceException(Error.ERROR);
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        }  catch (ClientProtocolException e) {
+        } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
@@ -197,8 +190,7 @@ public class DeviceTask extends  ConnectionTask {
     public boolean deleteDevice(long deviceId, long userId, String accessToken) throws RestServiceException {
 
         try {
-
-            URI requestURI = new URIBuilder(uri).setPath(uri.getPath()+"/"+deviceId).build();
+            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + deviceId).build();
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpDelete httpDelete = new HttpDelete(requestURI);
@@ -208,10 +200,9 @@ public class DeviceTask extends  ConnectionTask {
 
             HttpResponse httpResponse = httpClient.execute(httpDelete);
 
-            System.out.println(httpResponse.getStatusLine().getStatusCode());
             switch (httpResponse.getStatusLine().getStatusCode()) {
 
-                case 201:
+                case 200:
                     System.out.println("[DEBUG] Device removed!");
                     return true;
                 case 401:
@@ -219,10 +210,12 @@ public class DeviceTask extends  ConnectionTask {
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 404:
                     throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
+                case 500:
+                    throw new RestServiceException(Error.ERROR);
                 default:
                     throw new RestServiceException(Error.ERROR);
-
             }
+
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {

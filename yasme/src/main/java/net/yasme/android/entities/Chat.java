@@ -188,7 +188,7 @@ public class Chat {
     public void addParticipant(User participant) {
 
         try {
-            if(ChatTask.getInstance().addParticipantToChat(participant.getId(), self.getId(), id, accessToken))
+            if(ChatTask.getInstance().addParticipantToChat(participant.getId(),id, self.getId(), accessToken))
                 this.participants.add(participant);
         } catch (RestServiceException e) {
             e.printStackTrace();
