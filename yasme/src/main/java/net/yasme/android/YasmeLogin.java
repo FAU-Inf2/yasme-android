@@ -317,16 +317,6 @@ public class YasmeLogin extends Activity {
             } catch (RestServiceException e) {
                 return false;
             }
-
-            SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,
-                    MODE_PRIVATE);
-            SharedPreferences.Editor editor = storage.edit();
-            editor.putLong(Constants.USER_ID, userId);
-            editor.putString(Constants.USER_MAIL, email);
-            editor.putString(Constants.USER_NAME, name);
-            editor.putLong(Constants.LAST_MESSAGE_ID, 0L);
-            editor.commit();
-
             return true;
         }
 
@@ -336,6 +326,13 @@ public class YasmeLogin extends Activity {
             showProgress(false);
 
             if (success) {
+                SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,
+                        MODE_PRIVATE);
+                SharedPreferences.Editor editor = storage.edit();
+                editor.putString(Constants.USER_NAME, name);
+                editor.putLong(Constants.LAST_MESSAGE_ID, 0L);
+                editor.commit();
+
                 Toast.makeText(
                         getApplicationContext(),
                         getResources().getString(
