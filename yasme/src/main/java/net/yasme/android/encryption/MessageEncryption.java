@@ -35,7 +35,8 @@ import java.util.ArrayList;
 
 public class MessageEncryption {
 
-    long keyId; // contains the latest keyid for encryption
+    long keyId = -1; // contains the latest keyid for encryption (get it from server, after sending the key)
+
     long chatId;
     Chat chat;
     long creatorDevice; //TODO: make DEVICE
@@ -82,7 +83,8 @@ public class MessageEncryption {
                 for (User user : participants) {
                     long userId = user.getId();
                     //nicht an sich selbst schicken
-                    if (userId != creator) {
+                    //TODO TEST
+                    if (1==1){//if (userId != creator) {
                         recipients.add(user.getId());
                     }
 
@@ -91,17 +93,20 @@ public class MessageEncryption {
             //TODO: If-Anweisung entfernen wenn participants in chat implementiert wurde
             //TODO: If sendkey nicht erfolgreich, dann Devices pro User updaten und nochmal versuchen!!!
             if (recipients.size() > 0){
-                sendKey();
+                 //send Key to server
+                 MessageKey resultMessageKey = sendKey();
 
-                //TODO: KeyId vom Server abspeichern und Timestamp
-                keyId = 1L;
-                long timestamp = 1;
-                saveKey(keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
+                //if server has successfully saved the key
+                if (resultMessageKey != null) {
+                    keyId = resultMessageKey.getId();
+                    long timestamp = resultMessageKey.getTimestamp();
+                    System.out.println("[???] Key wurde an Server gesendet, ID: "+keyId);
+                    saveKey(keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
+                    System.out.println("[???] Key wurde lokal gespeichert, ID: "+keyId);
+                }else {
+                    System.out.println("[???] Fehler beim Senden des Keys an den Server");
+                }
 
-                // ###DEBUG
-                System.out.println("[???]: KeyID " + keyId + " fuer Chat " + chatId
-                        + " wurde erstellt und gespeichert und an Server gesendet");
-                // ###
             }
             else{
                 System.out.println("[???] No recipients in chat could be found. Key was not sent to server!");
@@ -117,14 +122,12 @@ public class MessageEncryption {
 
         // if old key is already available
         else {
-            System.out.println("[???] Load Key");
             // get needed Key from LocalStorage
             updateKey();
+            // ###DEBUG
+            System.out.println("[???]: Key " + keyId + " fuer Chat " + chatId + " wurde geladen");
+            // /###
         }
-
-        // TODO:
-        // What happens, if the needed key is not available
-        // is this a real scenario?
 
     }
 
@@ -144,10 +147,6 @@ public class MessageEncryption {
                 byte[] iv = keydata[1];
 
                 aes = new AESEncryption(key, iv);
-                // ###DEBUG
-                System.out.println("[???]: Key " + keyId + " fuer Chat "
-                        + chatId + " wurde geladen");
-                // /###
             }
         }
         catch (Exception e){
@@ -206,9 +205,16 @@ public class MessageEncryption {
     }
 
     // send Key to server
-    public boolean sendKey() {
-        new SendKeyTask().execute();
-        return true;
+    public MessageKey sendKey() {
+       try{
+           SendKeyTask task = new SendKeyTask();
+           task.execute();
+           MessageKey result = task.get();
+           return result;
+       } catch (Exception e){
+           System.out.println(e.getMessage());
+       }
+        return null;
     }
 
     //delete a symmetric Key from server when the client got that key
@@ -279,24 +285,26 @@ public class MessageEncryption {
 
 
     // Async-Task for sending Key to Server
-    class SendKeyTask extends AsyncTask<String, Void, Boolean> {
+    class SendKeyTask extends AsyncTask<String, Void, MessageKey> {
 
-        protected Boolean doInBackground(String... params) {
+        protected MessageKey doInBackground(String... params) {
 
             try {
 
                 String keyBase64 = aes.getKeyinBase64() + "," + aes.getIVinBase64();
                 String sign = "test";
-                byte encType = 1;
+                //TODO: encTyoe je nach Verschluesselung anpassen
+                byte encType = 0;
 
                 // send Key to all Recipients
                 keytask = KeyTask.getInstance(accessToken);
-                keytask.saveKey(keyId, creatorDevice, recipients, chat, keyBase64, encType, sign);
+                MessageKey messageKey = keytask.saveKey(creatorDevice, recipients, chat, keyBase64, encType, sign);
 
+                return messageKey;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-            return true;
+            return null;
         }
 
         protected void onPostExecute(Boolean result) {
