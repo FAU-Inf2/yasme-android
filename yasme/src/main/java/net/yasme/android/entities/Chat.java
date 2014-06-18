@@ -107,7 +107,7 @@ public class Chat {
     }
 
     public ArrayList<User> getParticipants() {
-        User dummy = new User("Dummy", 2);
+        User dummy = new User("Dummy", 10);
         participants.add(dummy);
         return new ArrayList<User>(participants);
     }
@@ -238,6 +238,7 @@ public class Chat {
             // create Message
             Message createdMessage = new Message(new User(uName, uMail,  uId),
                     msg_encrypted, id, aes.getKeyId());
+            System.out.println("AES getKeyID: " + aes.getKeyId());
             try {
                 result = messageTask.sendMessage(createdMessage, accessToken);
             } catch (RestServiceException e) {
