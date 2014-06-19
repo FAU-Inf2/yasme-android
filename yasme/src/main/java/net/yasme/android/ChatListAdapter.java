@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import net.yasme.android.entities.Chat;
 
+import java.util.ArrayList;
+
 /**
  * Created by martin on 18.06.2014.
  */
@@ -18,9 +20,9 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 
     Context context;
     int layoutResourceId;
-    Chat[] chats = null;
+    ArrayList<Chat> chats = null;
 
-    public ChatListAdapter(Context context, int layoutResourceId, Chat[] chats) {
+    public ChatListAdapter(Context context, int layoutResourceId, ArrayList<Chat> chats) {
         super(context, layoutResourceId, chats);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -30,34 +32,51 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        WeatherHolder holder = null;
-
+        //ChatHolder holder = null;
+        /*
         if(row == null)
         {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
 
-            holder = new WeatherHolder();
-            //holder.imgIcon = (ImageView)row.findViewById(R.id.imgIcon);
-           // holder.txtTitle = (TextView)row.findViewById(R.id.txtTitle);
+            holder = new ChatHolder();
+            holder.iconView = (ImageView)row.findViewById(R.id.chatlist_item_icon);
+            holder.titleView = (TextView)row.findViewById(R.id.chatlist_item_title);
+            holder.subtitleView = (TextView)row.findViewById(R.id.chatlist_item_subtitle);
 
             row.setTag(holder);
         }
         else
         {
-            holder = (WeatherHolder)row.getTag();
+            holder = (ChatHolder)row.getTag();
         }
 
-        //Weather weather = data[position];
-        //holder.txtTitle.setText(weather.title);
-        //holder.imgIcon.setImageResource(weather.icon);
+        Chat chat = chats.get(position);
+        holder.titleView.setText(chat.getName());
+        holder.subtitleView.setText(chat.getNumberOfParticipants() + " Teilnehmer");
+        holder.iconView.setImageResource(R.drawable.ic_action_cc_bcc);
+        */
+
+        LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+        row = inflater.inflate(layoutResourceId, parent, false);
+        ImageView iconView = (ImageView)row.findViewById(R.id.chatlist_item_icon);
+        TextView titleView = (TextView)row.findViewById(R.id.chatlist_item_title);
+        TextView subtitleView = (TextView)row.findViewById(R.id.chatlist_item_subtitle);
+
+        Chat chat = chats.get(position);
+        titleView.setText(chat.getName());
+        subtitleView.setText(chat.getNumberOfParticipants() + " Teilnehmer");
+        iconView.setImageResource(R.drawable.ic_action_cc_bcc);
+        row.setTag(chat.getId());
 
         return row;
     }
-
-    static class WeatherHolder
+    /*
+    static class ChatHolder
     {
-        ImageView imgIcon;
-        TextView txtTitle;
+        ImageView iconView;
+        TextView titleView;
+        TextView subtitleView;
     }
+    */
 }
