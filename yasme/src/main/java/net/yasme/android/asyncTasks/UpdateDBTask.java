@@ -4,10 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import net.yasme.android.connection.MessageTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
-import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 
 import java.util.ArrayList;
@@ -59,11 +57,11 @@ public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            Toast.makeText(context.getApplicationContext(), "UpdateDB successfull",
+            Toast.makeText(context.getApplicationContext(), "[Debug] UpdateDB successfull",
                     Toast.LENGTH_SHORT
             ).show();
         } else {
-            Toast.makeText(context.getApplicationContext(), "UpdateDB not successfull",
+            Toast.makeText(context.getApplicationContext(), "[Debug] UpdateDB not successfull",
                     Toast.LENGTH_SHORT
             ).show();
         }
