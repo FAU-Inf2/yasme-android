@@ -52,9 +52,6 @@ public class Chat {
     private User owner;
 
     @JsonIgnore
-    private User self; //<----??? only one User Object instead of userName, userId, etc.
-
-    @JsonIgnore
     private MessageEncryption aes;
     @JsonIgnore
     private String accessToken;
@@ -65,7 +62,6 @@ public class Chat {
     @JsonIgnore
     public Chat(long id, User user, YasmeChat activity) {
         this.chatId = id;
-        this.self = user;
         accessToken = activity.accessToken;
 
         participants = new ArrayList<User>();
@@ -122,10 +118,6 @@ public class Chat {
         return new ArrayList<Message>(messages);
     }
 
-    public User getSelf() {
-        return self;
-    }
-
     public MessageEncryption getEncryption() {
         return aes;
     }
@@ -173,10 +165,9 @@ public class Chat {
         return false;
     }
 
-    public void addParticipant(User participant) {
-
+    public void addParticipant(User participant, long ownUserId) {
         try {
-            if(ChatTask.getInstance().addParticipantToChat(participant.getId(), chatId, self.getId(), accessToken))
+            if(ChatTask.getInstance().addParticipantToChat(participant.getId(), chatId, ownUserId, accessToken))
                 this.participants.add(participant);
         } catch (RestServiceException e) {
             e.printStackTrace();
@@ -187,13 +178,10 @@ public class Chat {
         messages.add(msg);
     }
 
-    public void removeParticipant(User participant) {
-
+    public void removeParticipant(User participant, long ownUserId) {
         try {
-
-            if(ChatTask.getInstance().removePartipantFromChat(participant.getId(), chatId ,self.getId(), accessToken))
+            if(ChatTask.getInstance().removePartipantFromChat(participant.getId(), chatId, ownUserId, accessToken))
                 this.participants.remove(participant);
-
         } catch (RestServiceException e) {
             e.printStackTrace();
         }

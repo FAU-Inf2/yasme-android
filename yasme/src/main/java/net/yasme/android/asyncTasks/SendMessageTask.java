@@ -1,11 +1,9 @@
 package net.yasme.android.asyncTasks;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import net.yasme.android.YasmeChat;
-import net.yasme.android.YasmeLogin;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
@@ -37,7 +35,8 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
      *              1 is userName
      *              2 is userMail
      *              3 is userId
-     *              4 is accessToken
+     *              4 is chatId
+     *              5 is accessToken
      * @return true on success and false on error
      */
     protected Boolean doInBackground(String... params) {
@@ -55,10 +54,10 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
         // create Message
         Message createdMessage = new Message(new User(uName, uMail,  uId),
-                msg_encrypted, chatId, aes.getKeyId());
+                msg_encrypted, Long.parseLong(params[4]), aes.getKeyId());
         System.out.println("AES getKeyID: " + aes.getKeyId());
         try {
-            result = messageTask.sendMessage(createdMessage, params[4]);
+            result = messageTask.sendMessage(createdMessage, params[5]);
         } catch (RestServiceException e) {
             System.out.println(e.getMessage());
         }
@@ -67,7 +66,6 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            update();
             activity.getStatus().setText("Gesendet: " + msg);
         } else {
             activity.getStatus().setText("Senden fehlgeschlagen");

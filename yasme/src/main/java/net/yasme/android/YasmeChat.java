@@ -50,7 +50,9 @@ public class YasmeChat extends Activity {
 		}
 
         if (!ConnectionTask.isInitialized()) {
-            ConnectionTask.initParams(getResources().getString(R.string.server_scheme),getResources().getString(R.string.server_host),getResources().getString(R.string.server_port));
+            ConnectionTask.initParams(getResources().getString(R.string.server_scheme),
+                    getResources().getString(R.string.server_host),
+                    getResources().getString(R.string.server_port));
         }
 
 		Intent intent = getIntent();
@@ -80,7 +82,7 @@ public class YasmeChat extends Activity {
         }
 
         sendTask = new SendMessageTask(getApplicationContext(), this, chat.getEncryption());
-        getTask = new GetMessageTask(getApplicationContext(), this, chat.getEncryption());
+        getTask = new GetMessageTask(getApplicationContext(), this, storage, chat.getEncryption());
 	}
 
 	@Override
@@ -114,13 +116,15 @@ public class YasmeChat extends Activity {
 			return;
 		}
 
-        sendTask.execute(msg, self.getName(), self.getEmail(), Long.toString(self.getId()));
+        sendTask.execute(msg, self.getName(), self.getEmail(), Long.toString(self.getId()),
+                Long.toString(chat.getId()), accessToken);
+        update(view);
 		EditMessage.setText("");
 	}
 
 	public void update(View view) {
 		status.setText("GET messages");
-        getTask.execute(Long.toString(lastMessageId), Long.toString(self.getId()), accessToken);
+        getTask.execute(Long.toString(self.getId()), accessToken);
 		status.setText("GET messages done");
 	}
 
