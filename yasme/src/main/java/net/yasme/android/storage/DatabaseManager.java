@@ -1,14 +1,11 @@
 package net.yasme.android.storage;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import com.j256.ormlite.stmt.DeleteBuilder;
 
-import net.yasme.android.asyncTasks.GetAllChatForUserTask;
-import net.yasme.android.connection.ChatTask;
+import net.yasme.android.asyncTasks.GetAllChatsForUserTask;
 import net.yasme.android.entities.Chat;
-import net.yasme.android.exception.RestServiceException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,7 +24,7 @@ public class DatabaseManager {
             instance = new DatabaseManager(context);
         }
 
-        new GetAllChatForUserTask(context).execute(Long.toString(userId), accessToken);
+        new GetAllChatsForUserTask(context).execute(Long.toString(userId), accessToken);
         initialized = true;
     }
 
@@ -149,7 +146,12 @@ public class DatabaseManager {
         }
     }
 
-    public Boolean existChat(long chatId) {
+    /**
+     *
+     * @param chatId    long
+     * @return true if chat with chatId exists, otherwise false
+     */
+    public Boolean existsChat(long chatId) {
         try {
             return getHelper().getChatDao().idExists(chatId);
         } catch (SQLException e) {

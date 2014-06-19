@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.Message;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 
@@ -14,10 +13,10 @@ import java.util.ArrayList;
 /**
  * Created by robert on 19.06.14.
  */
-public class GetAllChatForUserTask extends AsyncTask<String, Void, Boolean>{
+public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
     Context context;
 
-    public GetAllChatForUserTask(Context context) {
+    public GetAllChatsForUserTask(Context context) {
         this.context = context;
     }
 
@@ -39,7 +38,11 @@ public class GetAllChatForUserTask extends AsyncTask<String, Void, Boolean>{
             return false;
         }
         for(Chat chat: chats) {
-            dbManager.addChat(chat);
+            if(dbManager.existsChat(chat.getId())) {
+                dbManager.addChat(chat);
+            } else {
+                dbManager.updateChat(chat);
+            }
         }
         return true;
     }
