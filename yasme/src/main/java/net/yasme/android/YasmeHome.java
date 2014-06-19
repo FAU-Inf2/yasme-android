@@ -19,6 +19,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import net.yasme.android.asyncTasks.GetChatDataTask;
+import net.yasme.android.asyncTasks.GetProfileDataTask;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.connection.UserTask;
@@ -34,8 +36,7 @@ public class YasmeHome extends Activity {
 	private String userMail;
 	private long userId;
     private String accessToken;
-    private User selfProfile;
-    private User self;
+    public User self;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class YasmeHome extends Activity {
         self.setId(userId);
 
         show_chatrooms();
-        new GetProfileDataTask().execute(Long.toString(userId), accessToken);
+        new GetProfileDataTask(getApplicationContext(), this).execute(Long.toString(userId), accessToken, userMail);
     }
 
 	@Override
@@ -93,14 +94,6 @@ public class YasmeHome extends Activity {
 
 
 	public void showStandardChat() {
-        /*
-		Intent intent = new Intent(this, YasmeChat.class);
-		intent.putExtra(Constants.USER_MAIL, userMail);
-		intent.putExtra(Constants.USER_ID, userId);
-        intent.putExtra(Constants.CHAT_ID, (long)1);
-        intent.putExtra(Constants.USER_NAME, self.getName());
-		startActivity(intent);
-		*/
         showChat(1);
 	}
 
@@ -117,8 +110,8 @@ public class YasmeHome extends Activity {
 
 
     public void show_chatrooms() {
-
-        new GetChatDataTask().execute();
+        GetChatDataTask chatTask = new GetChatDataTask(getApplicationContext(), this);
+        chatTask.execute();
        // LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);
 
     }
@@ -129,106 +122,15 @@ public class YasmeHome extends Activity {
 	 */
 	public static class PlaceholderFragment extends Fragment {
 
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
-			return rootView;
-		}
-	}
-
-    public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
-
-        protected Boolean doInBackground(String... params) {
-            long user_id = Long.parseLong(params[0]);
-            String accessToken = params[1];
-            try {
-                selfProfile = UserTask.getInstance().getUserData(user_id, accessToken);
-            } catch (RestServiceException e) {
-                System.out.println(e.getMessage());
-                return false;
-            }
-            return selfProfile != null;
+        public PlaceholderFragment() {
         }
 
-        protected void onPostExecute(final Boolean success) {
-            if(!success) {
-                return;
-            }
-            self.setName(selfProfile.getName());
-            TextView profileInfo = (TextView) findViewById(R.id.profileInfo);
-            profileInfo.setText(selfProfile.getName() + ": " + userMail);
-        }
-    }
-
-    public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
-        //ChatTask chatTask;
-        ArrayList<Chat> chatrooms = null;
-        protected Boolean doInBackground(String... params) {
-            chatrooms = DatabaseManager.getInstance().getAllChats();
-            return chatrooms != null;
-        }
-
-        protected void onPostExecute(final Boolean success) {
-            /*
-            if(success) {
-                //TODO: Debug
-                System.out.println("Fehler bei Datenbankzugriff");
-                return;
-            }
-
-            ListView list = (ListView) findViewById(R.id.chatroom_list);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT);
-
-            //for (Chat chat : chatrooms) {
-            for (int i=0; i < 10; i++) {
-                TextView name = new TextView((getApplicationContext()));
-                TextView status = new TextView((getApplicationContext()));
-
-                RelativeLayout row = new RelativeLayout(getApplicationContext());
-                row.setLayoutParams(new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT));
-
-               // name.setText(chat.getName());
-                //status.setText(chat.getStatus());
-                name.setText("Name: " + String.valueOf(i));
-                status.setText("Status: " + String.valueOf(i));
-
-                row.setOnClickListener(chatClickListener);
-
-                row.addView(name);
-                //row.addView(status);
-                list.addView(row, layoutParams);
-            }
-            */
-
-            ArrayList<String> vals = new ArrayList<>();
-            for (int i = 1; i <= 15; i++)
-            {
-                vals.add(String.valueOf(i));
-            }
-            ListAdapter adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, vals);
-            final ListView list = (ListView)findViewById(R.id.chatroom_list);
-
-            list.setAdapter(adapter);
-
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-                {
-                    Long chatId = Long.parseLong(list.getAdapter().getItem(position).toString());
-                    showChat(chatId);
-                }
-            });
-
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_main, container,
+                    false);
+            return rootView;
         }
     }
 }
