@@ -91,6 +91,9 @@ public class YasmeChats extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+    public User getSelf() {
+        return self;
+    }
 
 	public void showStandardChat() {
         /*
