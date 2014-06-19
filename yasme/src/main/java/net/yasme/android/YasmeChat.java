@@ -6,7 +6,6 @@ import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
-import net.yasme.android.storage.DBChatTask;
 import net.yasme.android.storage.DatabaseManager;
 
 import android.app.ActionBar;
