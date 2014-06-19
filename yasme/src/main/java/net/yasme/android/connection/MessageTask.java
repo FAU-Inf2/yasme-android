@@ -135,15 +135,10 @@ public class MessageTask extends  ConnectionTask {
                         JSONObject sender = obj.getJSONObject("sender");
                         JSONObject chat = obj.getJSONObject("chat");
 
-                       //TODO: hole richtige Chatid
-                       // long chatId = chat.getLong("chatId");
-                        long chatId = 1;
+                        long chatId = chat.getLong("chatId");
                         long keyId = obj.getLong("messageKeyId");
 
                         System.out.println("Sender: " + sender.toString());
-
-                        messages.add(new Message(new User(sender.getString("name"),
-                                sender.getLong("id")), obj.getString("message"), chatId, keyId));
 
                         /* extracting Keys and save it */
                         JSONObject key;
@@ -170,6 +165,10 @@ public class MessageTask extends  ConnectionTask {
                             //TODO: hier muss spaeter die DeviceId statt userUd uebergeben werden
                             keyStorage.deleteKeyFromServer(keyId, userId);
                         }
+
+                        messages.add(new Message(new User(sender.getString("name"),
+                                sender.getLong("id")), obj.getString("message"), chatId, keyId));
+                        
                     }
                     break;
                 case 400:

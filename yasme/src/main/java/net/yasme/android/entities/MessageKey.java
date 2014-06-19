@@ -72,7 +72,7 @@ public class MessageKey implements Serializable {
 		return chat;
 	}
 
-	public String getKey() {
+	public String getMessageKey() {
 		return messageKey;
 	}
 
@@ -93,6 +93,8 @@ public class MessageKey implements Serializable {
 	}
 
     public String getInitVector(){ return initVector; }
+
+    public long getTimestamp() { return timestamp; }
 
 	/** Setters **/
 	public void setId(long id) {
@@ -132,6 +134,8 @@ public class MessageKey implements Serializable {
 	public void setSign(String sign) {
 		this.sign = sign;
 	}
+
+    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 
 	public Boolean isValid() {
 		if (id < 0) {

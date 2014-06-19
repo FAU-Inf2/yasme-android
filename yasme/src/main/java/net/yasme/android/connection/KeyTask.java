@@ -60,7 +60,7 @@ public class KeyTask extends ConnectionTask {
 
     //TODO: Exception Handling
 
-    public boolean saveKey(long keyId, long creatorDevice, ArrayList<Long> recipients,Chat chat, String key, byte encType, String sign ) throws RestServiceException {
+    public MessageKey saveKey(long creatorDevice, ArrayList<Long> recipients,Chat chat, String key, byte encType, String sign ) throws RestServiceException {
 
         URI requestURI = uri;
         try {
@@ -74,11 +74,10 @@ public class KeyTask extends ConnectionTask {
             //messageKey Array
             MessageKey[] messageKeys = new MessageKey[recipients.size()];
 
-            //TODO: erzeuge JSON-Object-Array mit MessageKey pro Recipient
             for (long recipient: recipients){
-
+                //TODO: Dummy_IV
                 //MessageKey zu Array  hinzufügen
-                messageKeys[i++] = new MessageKey(keyId, new Device(creatorDevice),
+                messageKeys[i++] = new MessageKey(0, new Device(creatorDevice),
                         new Device(recipient), chat, key, "DummyIV", encType,sign);
 
                 System.out.println("[???] Key wird für " + recipient + " Server gesendet");
@@ -92,7 +91,7 @@ public class KeyTask extends ConnectionTask {
             httpPost.setEntity(se);
 
             System.out.println("[???] Sending keys to server: "+ ow.writeValueAsString(messageKeys));
-            System.out.print("[???] Key: "+ ow.writeValueAsString(messageKeys).toString());
+            System.out.print("[???] Key: " + ow.writeValueAsString(messageKeys).toString());
 
 
             httpPost.setHeader("Content-type", "application/json");
@@ -105,21 +104,27 @@ public class KeyTask extends ConnectionTask {
 
             /**DEBUG**/
             System.out.println("[???]"+httpResponse.getStatusLine().getStatusCode());
-            System.out.println("[???]"+new BufferedReader(
-                    new InputStreamReader(httpResponse.getEntity()
-                            .getContent())
-            ).readLine());
             /**DEBUG**/
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
 
                 case 200:
-                    /**** DEBUG *******/
-                    BufferedReader rd = new BufferedReader(new InputStreamReader(
-                            httpResponse.getEntity().getContent()));
-                    System.out.println("[???]: Response" + rd.readLine());
-                    /**** DEBUG*END ***/
-                    return true;
+                    String json = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent())).readLine();
+                    /**DEBUG**/
+                    System.out.println("[DEBUG] getKeyRequest successful: " + json);
+                    /**DEBUG**/
+
+                    JSONObject obj = new JSONObject(json);
+
+                    long keyId = obj.getLong("id");
+                    long timestamp = obj.getLong("timestamp");
+
+                    //TODO: Dummy_IV
+                    MessageKey result = new MessageKey(keyId, new Device(creatorDevice), new Device(0), chat, key, "DummyIV", encType,sign);
+                    result.setTimestamp(timestamp);
+
+                    return result;
+
                 case 400:
                     throw new RestServiceException(Error.ERROR);
                 case 401:
@@ -136,8 +141,10 @@ public class KeyTask extends ConnectionTask {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     public boolean deleteKey(long chatId, long keyId, long DeviceId) {
