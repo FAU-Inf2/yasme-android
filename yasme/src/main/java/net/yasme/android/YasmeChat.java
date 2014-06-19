@@ -15,7 +15,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import net.yasme.android.asyncTasks.GetMessageTask;
 import net.yasme.android.asyncTasks.GetMessageTaskInChat;
 import net.yasme.android.asyncTasks.SendMessageTask;
 import net.yasme.android.connection.ConnectionTask;
@@ -65,16 +67,14 @@ public class YasmeChat extends Activity {
         storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
         accessToken = storage.getString(Constants.ACCESSTOKEN, null);
 
-        //Initialize database (once in application)
-        //if(!DatabaseManager.isInitialized()) {
-        //    DatabaseManager.init(this, userId, accessToken);
-        //}
-
         //trying to get chat with chatId from local DB
         try {
             chat = DatabaseManager.getInstance().getChat(chatId);
         } catch (NullPointerException e) {
             chat = null;
+            System.out.println("[Debug] Chat aus DB holen failed");
+            Toast.makeText(getApplicationContext(),
+                    "[Debug] Chat aus DB holen failed", Toast.LENGTH_SHORT).show();
         }
         if(chat == null) {
             chat = new Chat(chatId, new User(userName, userMail, userId), this);
@@ -85,6 +85,7 @@ public class YasmeChat extends Activity {
 	protected void onStart() {
 		super.onStart();
 		initializeViews();
+        updateViews(chat.getMessages());
 	}
 
 	@Override
@@ -119,7 +120,7 @@ public class YasmeChat extends Activity {
 
     public void asyncUpdate() {
         status.setText("GET messages");
-        new GetMessageTaskInChat(getApplicationContext(), this, chat.getEncryption(), storage)
+        new GetMessageTask(getApplicationContext(), storage)
                 .execute(Long.toString(self.getId()), accessToken);
         status.setText("GET messages done");
     }

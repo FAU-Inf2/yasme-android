@@ -67,7 +67,7 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            activity.asyncUpdate();
+            //activity.asyncUpdate();
             activity.getStatus().setText("Gesendet: " + msg);
         } else {
             activity.getStatus().setText("Senden fehlgeschlagen");

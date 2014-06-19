@@ -39,7 +39,6 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
         if(!success) {
             //TODO: Debug
             System.out.println("Fehler bei Datenbankzugriff");
-            //return;
         }
 
         //DEBUG

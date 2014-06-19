@@ -79,6 +79,7 @@ public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
             activity.updateViews(messages);
             new UpdateDBTask(context, messages).execute(Long.toString(lastMessageId),
                     Long.toString(userId), accessToken);
+            System.out.println("[Debug] after update the Database");
             lastMessageId = messages.size() + lastMessageId;
             SharedPreferences.Editor editor = storage.edit();
             editor.putLong(Constants.LAST_MESSAGE_ID, lastMessageId);
