@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import net.yasme.android.asyncTasks.GetMessageTask;
+import net.yasme.android.asyncTasks.SendMessageTask;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
@@ -26,13 +28,16 @@ import java.util.ArrayList;
 
 public class YasmeChat extends Activity {
 
+    SendMessageTask sendTask;
+    GetMessageTask getTask;
+
     private EditText EditMessage;
 	private TextView status;
-	private Chat chat;
-	private String userMail;
-    private String userName;
-    private long userId;
+
     public String accessToken;
+
+    private Chat chat;
+    private User self;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +54,12 @@ public class YasmeChat extends Activity {
         }
 
 		Intent intent = getIntent();
-		userMail = intent.getStringExtra(Constants.USER_MAIL);
-        userName = intent.getStringExtra(Constants.USER_NAME);
-		userId = intent.getLongExtra(Constants.USER_ID, 0);
+		String userMail = intent.getStringExtra(Constants.USER_MAIL);
+        String userName = intent.getStringExtra(Constants.USER_NAME);
+		long userId = intent.getLongExtra(Constants.USER_ID, 0);
 		long chatId = intent.getLongExtra(Constants.CHAT_ID, 1);
+
+        self = new User(userName, userMail, userId);
 
         SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
         accessToken = storage.getString(Constants.ACCESSTOKEN, null);
@@ -62,6 +69,7 @@ public class YasmeChat extends Activity {
             DatabaseManager.init(this, userId, accessToken);
         }
 
+        //trying to get chat with chatId from local DB
         try {
             chat = DatabaseManager.getInstance().getChat(chatId);
         } catch (NullPointerException e) {
@@ -70,6 +78,9 @@ public class YasmeChat extends Activity {
         if(chat == null) {
             chat = new Chat(chatId, new User(userName, userMail, userId), this);
         }
+
+        sendTask = new SendMessageTask(getApplicationContext(), this, chat.getEncryption());
+        getTask = new GetMessageTask(getApplicationContext(), this, chat.getEncryption());
 	}
 
 	@Override
@@ -91,7 +102,7 @@ public class YasmeChat extends Activity {
 	private void initializeViews() {
 		EditMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
-		status.setText("Eingeloggt: " + userMail);
+		status.setText("Eingeloggt: " + self.getName());
         status.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
 	}
 
@@ -103,14 +114,13 @@ public class YasmeChat extends Activity {
 			return;
 		}
 
-		chat.send(msg);
+        sendTask.execute(msg, self.getName(), self.getEmail(), Long.toString(self.getId()));
 		EditMessage.setText("");
-		//EditMessage.requestFocus();
 	}
 
 	public void update(View view) {
 		status.setText("GET messages");
-		chat.update();
+        getTask.execute(Long.toString(lastMessageId), Long.toString(self.getId()), accessToken);
 		status.setText("GET messages done");
 	}
 
@@ -143,7 +153,7 @@ public class YasmeChat extends Activity {
 
 
 
-            if (msg.getSender().getId() == userId) {
+            if (msg.getSender().getId() == self.getId()) {
                 textView.setGravity(Gravity.RIGHT);
                 row.setGravity(Gravity.RIGHT);
                 textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
