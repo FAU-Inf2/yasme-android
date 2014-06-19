@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import net.yasme.android.ChatListAdapter;
 import net.yasme.android.R;
 import net.yasme.android.YasmeChats;
 import net.yasme.android.entities.Chat;
@@ -35,47 +36,20 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
     }
 
     protected void onPostExecute(final Boolean success) {
-            /*
-            if(success) {
-                //TODO: Debug
-                System.out.println("Fehler bei Datenbankzugriff");
-                return;
-            }
 
-            ListView list = (ListView) findViewById(R.id.chatroom_list);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT);
-
-            //for (Chat chat : chatrooms) {
-            for (int i=0; i < 10; i++) {
-                TextView name = new TextView((getApplicationContext()));
-                TextView status = new TextView((getApplicationContext()));
-
-                RelativeLayout row = new RelativeLayout(getApplicationContext());
-                row.setLayoutParams(new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT));
-
-               // name.setText(chat.getName());
-                //status.setText(chat.getStatus());
-                name.setText("Name: " + String.valueOf(i));
-                status.setText("Status: " + String.valueOf(i));
-
-                row.setOnClickListener(chatClickListener);
-
-                row.addView(name);
-                //row.addView(status);
-                list.addView(row, layoutParams);
-            }
-            */
-
-        ArrayList<String> vals = new ArrayList<>();
-        for (int i = 1; i <= 15; i++)
-        {
-            vals.add(String.valueOf(i));
+        if(!success) {
+            //TODO: Debug
+            System.out.println("Fehler bei Datenbankzugriff");
+            //return;
         }
-        ListAdapter adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, vals);
+
+        //DEBUG
+        if (chatrooms.size() <= 0) {
+            System.out.println("Benutze Dummy-Liste");
+            createDummyChatroomList();
+        }
+
+        ListAdapter adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatrooms);
         final ListView list = (ListView)activity.findViewById(R.id.chatroom_list);
 
         list.setAdapter(adapter);
@@ -83,12 +57,24 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            public void onItemClick(AdapterView<?> parent, View view, int pos, long id)
             {
-                Long chatId = Long.parseLong(list.getAdapter().getItem(position).toString());
+                Long chatId = (Long)view.getTag();
                 activity.showChat(chatId);
             }
         });
 
+    }
+
+    protected void createDummyChatroomList() {
+        chatrooms = new ArrayList<Chat>();
+        for (int i = 1; i <= 15; i++)
+        {
+            Chat chat = new Chat();
+            chat.setId(i);
+            chat.setName("Chat " + i);
+            chat.setNumberOfParticipants(16-i);
+            chatrooms.add(chat);
+        }
     }
 }

@@ -26,6 +26,7 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.asyncTasks.GetChatDataTask;
 
 import java.util.ArrayList;
 
@@ -121,7 +122,7 @@ public class YasmeChats extends Activity {
 
     public void show_chatrooms() {
 
-        new GetChatDataTask(this).execute();
+        new GetChatDataTask(getApplicationContext(), this).execute();
        // LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);
 
     }
@@ -165,63 +166,6 @@ public class YasmeChats extends Activity {
             self.setName(selfProfile.getName());
             TextView profileInfo = (TextView) findViewById(R.id.profileInfo);
             profileInfo.setText(selfProfile.getName() + ": " + userMail);
-        }
-    }
-
-    public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
-        Activity activity;
-
-        public  GetChatDataTask(Activity activity) {
-            this.activity = activity;
-        }
-        //ChatTask chatTask;
-        ArrayList<Chat> chatrooms = null;
-        protected Boolean doInBackground(String... params) {
-            chatrooms = DatabaseManager.getInstance().getAllChats();
-            return chatrooms != null;
-        }
-
-        protected void onPostExecute(final Boolean success) {
-
-            if(!success) {
-                //TODO: Debug
-                System.out.println("Fehler bei Datenbankzugriff");
-                //return;
-            }
-
-            //DEBUG
-            if (chatrooms.size() <= 0) {
-                System.out.println("Benutze Dummy-Liste");
-                createDummyChatroomList();
-            }
-
-            ListAdapter adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatrooms);
-            final ListView list = (ListView)findViewById(R.id.chatroom_list);
-
-            list.setAdapter(adapter);
-
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int pos, long id)
-                {
-                    Long chatId = (Long)view.getTag();
-                    showChat(chatId);
-                }
-            });
-
-        }
-
-        protected void createDummyChatroomList() {
-            chatrooms = new ArrayList<Chat>();
-            for (int i = 1; i <= 15; i++)
-            {
-                Chat chat = new Chat();
-                chat.setId(i);
-                chat.setName("Chat " + i);
-                chat.setNumberOfParticipants(16-i);
-                chatrooms.add(chat);
-            }
         }
     }
 }
