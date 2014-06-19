@@ -46,6 +46,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
             for (Message msg : messages) {
                 if(msg.getChat() == chat.getId()) {
                     chat.addMessage(msg);
+                    System.out.println("[Debug] Message added to DB");
                 }
             }
             dbManager.updateChat(chat);

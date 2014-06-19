@@ -49,7 +49,6 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
 
     @Override
     protected void onPostExecute(final Boolean success) {
-
+        System.out.println("[Debug] GetAllChatsForUser hat geklappt");
     }
-
 }
