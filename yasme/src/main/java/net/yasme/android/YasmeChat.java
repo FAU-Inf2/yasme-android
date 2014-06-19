@@ -28,8 +28,7 @@ import java.util.ArrayList;
 
 public class YasmeChat extends Activity {
 
-    SendMessageTask sendTask;
-    GetMessageTask getTask;
+    SharedPreferences storage;
 
     private EditText EditMessage;
 	private TextView status;
@@ -63,13 +62,13 @@ public class YasmeChat extends Activity {
 
         self = new User(userName, userMail, userId);
 
-        SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
+        storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
         accessToken = storage.getString(Constants.ACCESSTOKEN, null);
 
         //Initialize database (once in application)
-        if(!DatabaseManager.isInitialized()) {
-            DatabaseManager.init(this, userId, accessToken);
-        }
+        //if(!DatabaseManager.isInitialized()) {
+        //    DatabaseManager.init(this, userId, accessToken);
+        //}
 
         //trying to get chat with chatId from local DB
         try {
@@ -80,9 +79,6 @@ public class YasmeChat extends Activity {
         if(chat == null) {
             chat = new Chat(chatId, new User(userName, userMail, userId), this);
         }
-
-        sendTask = new SendMessageTask(getApplicationContext(), this, chat.getEncryption());
-        getTask = new GetMessageTask(getApplicationContext(), this, storage, chat.getEncryption());
 	}
 
 	@Override
@@ -116,15 +112,23 @@ public class YasmeChat extends Activity {
 			return;
 		}
 
-        sendTask.execute(msg, self.getName(), self.getEmail(), Long.toString(self.getId()),
+        new SendMessageTask(getApplicationContext(), this, chat.getEncryption())
+                .execute(msg, self.getName(), self.getEmail(), Long.toString(self.getId()),
                 Long.toString(chat.getId()), accessToken);
-        update(view);
 		EditMessage.setText("");
 	}
 
+    public void asyncUpdate() {
+        status.setText("GET messages");
+        new GetMessageTask(getApplicationContext(), this, storage, chat.getEncryption())
+                .execute(Long.toString(self.getId()), accessToken);
+        status.setText("GET messages done");
+    }
+
 	public void update(View view) {
 		status.setText("GET messages");
-        getTask.execute(Long.toString(self.getId()), accessToken);
+        new GetMessageTask(getApplicationContext(), this, storage, chat.getEncryption())
+                .execute(Long.toString(self.getId()), accessToken);
 		status.setText("GET messages done");
 	}
 

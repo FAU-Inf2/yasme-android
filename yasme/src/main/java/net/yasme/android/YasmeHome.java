@@ -44,9 +44,9 @@ public class YasmeHome extends Activity {
         accessToken = storage.getString(Constants.ACCESSTOKEN, null);
 
         //Initialize database (once in application)
-        if(!DatabaseManager.isInitialized()) {
-            DatabaseManager.init(this, userId, accessToken);
-        }
+        //if(!DatabaseManager.isInitialized()) {
+        //    DatabaseManager.init(this, userId, accessToken);
+        //}
         self = new User();
         self.setEmail(userMail);
         self.setId(userId);

@@ -2,6 +2,7 @@ package net.yasme.android.asyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.view.View;
 
 import net.yasme.android.YasmeChat;
 import net.yasme.android.connection.MessageTask;
@@ -66,6 +67,7 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
     protected void onPostExecute(final Boolean success) {
         if (success) {
+            activity.asyncUpdate();
             activity.getStatus().setText("Gesendet: " + msg);
         } else {
             activity.getStatus().setText("Senden fehlgeschlagen");
