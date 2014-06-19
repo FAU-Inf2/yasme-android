@@ -26,7 +26,7 @@ import java.util.Collection;
 @DatabaseTable(tableName = "chat")
 public class Chat {
 
-    @DatabaseField(columnName = "chatId_id", id = true)
+    @DatabaseField(columnName = "chatId", id = true)
     private long id;
 
     @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS, eager = true)
