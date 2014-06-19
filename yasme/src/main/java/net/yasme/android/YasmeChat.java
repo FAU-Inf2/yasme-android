@@ -101,7 +101,6 @@ public class YasmeChat extends Activity {
 		EditMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
 		status.setText("Eingeloggt: " + self.getName());
-        status.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
 	}
 
 	public void send(View view) {
@@ -150,16 +149,6 @@ public class YasmeChat extends Activity {
                     + msg.getMessage());
             textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
             textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
-            //textView.setPadding(10,10,10,10);
-
-            //ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(textView.getLayoutParams());
-            //marginLayoutParams.setMargins(10,10,10,10);
-            //RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(marginLayoutParams);
-            //LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            //params.setMargins(10,10,10,10);
-            //extView.setLayoutParams(params);
-
-
 
             if (msg.getSender().getId() == self.getId()) {
                 textView.setGravity(Gravity.RIGHT);
