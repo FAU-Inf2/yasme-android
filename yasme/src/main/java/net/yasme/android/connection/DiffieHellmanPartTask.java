@@ -66,6 +66,7 @@ public class DiffieHellmanPartTask extends ConnectionTask{
             httpPost.setHeader("Accept", "application/json");
 
             httpPost.setHeader("userId", Long.toString(userId));
+            httpPost.setHeader("deviceId", Long.toString(userId));
             httpPost.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -104,6 +105,7 @@ public class DiffieHellmanPartTask extends ConnectionTask{
             httpGet.setHeader("accept", "application/json");
 
             httpGet.setHeader("userId", Long.toString(userId));
+            httpGet.setHeader("deviceId", Long.toString(userId));
             httpGet.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpGet);
