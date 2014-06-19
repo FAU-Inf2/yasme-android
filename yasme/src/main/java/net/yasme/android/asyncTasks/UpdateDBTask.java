@@ -17,14 +17,14 @@ import java.util.ArrayList;
  */
 public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
     Context context;
-
-    public UpdateDBTask(Context context) {
-        this.context = context;
-    }
-    DatabaseManager dbManager = DatabaseManager.getInstance();
-
     ArrayList<Message> messages;
-    ArrayList<Chat> chats = dbManager.getAllChats();
+
+    public UpdateDBTask(Context context, ArrayList<Message> messages) {
+        this.context = context;
+        this.messages = messages;
+    }
+
+    DatabaseManager dbManager = DatabaseManager.getInstance();
 
     /**
      * params[0] is lastMessageId
@@ -32,11 +32,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
      * params[2] is accessToken
      */
     protected Boolean doInBackground(String... params) {
-        try {
-            messages = MessageTask.getInstance(context.getApplicationContext()).getMessage(Long.parseLong(params[0]), Long.parseLong(params[1]), params[2]);
-        } catch (RestServiceException e) {
-            e.printStackTrace();
-        }
+        ArrayList<Chat> chats = dbManager.getAllChats();
 
         if (messages == null) {
             return false;

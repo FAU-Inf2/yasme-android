@@ -32,18 +32,24 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
     }
 
     ArrayList<Message> messages;
-    MessageTask messageTask = MessageTask.getInstance(activity);
+    MessageTask messageTask = MessageTask.getInstance(context);
     long lastMessageId;
+    long userId;
+    String accessToken;
 
     /**
-     * @param params 1 is user_id
-     *               2 is accessToken
+     * @param params
+     *              0 is userId
+     *              1 is accessToken
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
         lastMessageId = storage.getLong(Constants.LAST_MESSAGE_ID, 0L);
+        userId = Long.parseLong(params[0]);
+        accessToken = params[1];
+
         try {
-            messages = messageTask.getMessage(lastMessageId, Long.parseLong(params[0]), params[1]);
+            messages = messageTask.getMessage(lastMessageId, userId, accessToken);
         } catch (RestServiceException e) {
             e.printStackTrace();
         }
@@ -64,13 +70,19 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
     }
 
     /**
-     * Fills the TextViews with the messages
-     * - maybe this should be done also in doInBackground
+     * Fills the TextViews with the messages,
+     * updates Databse,
+     * stores lastMessageId
      */
     protected void onPostExecute(final Boolean success) {
         if (success) {
             activity.updateViews(messages);
+            new UpdateDBTask(context, messages).execute(Long.toString(lastMessageId),
+                    Long.toString(userId), accessToken);
             lastMessageId = messages.size() + lastMessageId;
+            SharedPreferences.Editor editor = storage.edit();
+            editor.putLong(Constants.LAST_MESSAGE_ID, lastMessageId);
+            editor.commit();
         } else {
             activity.getStatus().setText("Keine neuen Nachrichten");
         }
