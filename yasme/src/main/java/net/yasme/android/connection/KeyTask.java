@@ -97,7 +97,10 @@ public class KeyTask extends ConnectionTask {
             httpPost.setHeader("Content-type", "application/json");
             httpPost.setHeader("Accept", "application/json");
 
+            //TODO: userId != creatorDevice ???
             httpPost.setHeader("userId", Long.toString(creatorDevice));
+
+            httpPost.setHeader("deviceId", Long.toString(creatorDevice));
             httpPost.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -156,7 +159,10 @@ public class KeyTask extends ConnectionTask {
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpDelete httpDelete = new HttpDelete(requestURI);
 
+            //TODO: userId != deviceId !?
             httpDelete.setHeader("userId", Long.toString(DeviceId));
+
+            httpDelete.setHeader("deviceId", Long.toString(DeviceId));
             httpDelete.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpDelete);

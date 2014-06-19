@@ -74,6 +74,7 @@ public class MessageTask extends  ConnectionTask {
             httpPost.setHeader("Content-type", "application/json");
             httpPost.setHeader("Accept", "application/json");
             httpPost.setHeader("userId", Long.toString(message.getSender().getId()));
+            httpPost.setHeader("deviceId", Long.toString(message.getSender().getId()));
             httpPost.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -112,6 +113,7 @@ public class MessageTask extends  ConnectionTask {
 
             httpGet.setHeader("accept", "application/json");
             httpGet.setHeader("userId", Long.toString(userId));
+            httpGet.setHeader("deviceId", Long.toString(userId));
             httpGet.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpGet);
