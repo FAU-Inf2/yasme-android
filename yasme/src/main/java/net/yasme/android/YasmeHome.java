@@ -4,32 +4,18 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import net.yasme.android.asyncTasks.GetChatDataTask;
 import net.yasme.android.asyncTasks.GetProfileDataTask;
-import net.yasme.android.connection.ChatTask;
 import net.yasme.android.connection.ConnectionTask;
-import net.yasme.android.connection.UserTask;
-import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
-import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
-
-import java.util.ArrayList;
 
 public class YasmeHome extends Activity {
 
@@ -112,8 +98,6 @@ public class YasmeHome extends Activity {
     public void show_chatrooms() {
         GetChatDataTask chatTask = new GetChatDataTask(getApplicationContext(), this);
         chatTask.execute();
-       // LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);
-
     }
 
 

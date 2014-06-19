@@ -1,19 +1,5 @@
 package net.yasme.android;
 
-import net.yasme.android.asyncTasks.UpdateDBTask;
-import net.yasme.android.asyncTasks.UserLoginTask;
-import net.yasme.android.asyncTasks.UserRegistrationTask;
-import net.yasme.android.connection.AuthorizationTask;
-import net.yasme.android.connection.ChatTask;
-import net.yasme.android.connection.ConnectionTask;
-import net.yasme.android.connection.MessageTask;
-import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.Message;
-import net.yasme.android.entities.User;
-import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.connection.UserTask;
-import net.yasme.android.storage.DatabaseManager;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
@@ -21,7 +7,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -35,7 +20,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import net.yasme.android.asyncTasks.UserLoginTask;
+import net.yasme.android.asyncTasks.UserRegistrationTask;
+import net.yasme.android.connection.ConnectionTask;
 
 /**
  * Activity which displays a login screen to the user, offering registration as

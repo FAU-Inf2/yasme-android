@@ -1,14 +1,5 @@
 package net.yasme.android;
 
-import java.util.ArrayList;
-
-import net.yasme.android.connection.ConnectionTask;
-import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.Message;
-import net.yasme.android.entities.User;
-import net.yasme.android.storage.DatabaseManager;
-
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -24,6 +15,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Message;
+import net.yasme.android.entities.User;
+import net.yasme.android.storage.DatabaseManager;
+
+import java.util.ArrayList;
 
 public class YasmeChat extends Activity {
 
