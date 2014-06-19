@@ -19,6 +19,10 @@ public class GcmIntentService extends IntentService {
         super(name);
     }
 
+    public GcmIntentService() {
+        super("YASMEGcmIntentService");
+    }
+
     protected void onHandleIntent(Intent intent) {
 
     }
