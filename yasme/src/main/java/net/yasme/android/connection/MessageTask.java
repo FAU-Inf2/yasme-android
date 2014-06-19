@@ -135,7 +135,7 @@ public class MessageTask extends  ConnectionTask {
                         JSONObject sender = obj.getJSONObject("sender");
                         JSONObject chat = obj.getJSONObject("chat");
 
-                        long chatId = chat.getLong("chatId");
+                        long chatId = chat.getLong("id");
                         long keyId = obj.getLong("messageKeyId");
 
                         System.out.println("Sender: " + sender.toString());

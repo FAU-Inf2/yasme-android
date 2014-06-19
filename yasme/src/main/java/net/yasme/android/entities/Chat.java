@@ -26,8 +26,8 @@ import java.util.Collection;
 @DatabaseTable(tableName = "chat")
 public class Chat {
 
-    @DatabaseField(columnName = "chatId", id = true)
-    private long id;
+    @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
+    private long chatId;
 
     @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS, eager = true)
     private Collection<User> participants;
@@ -70,7 +70,7 @@ public class Chat {
      */
     @JsonIgnore
     public Chat(long id, User user, YasmeChat activity) {
-        this.id = id;
+        this.chatId = id;
         this.self = user;
         this.activity = activity;
         accessToken = activity.accessToken;
@@ -104,7 +104,7 @@ public class Chat {
      * Getters *
      */
     public long getId() {
-        return id;
+        return chatId;
     }
 
     public ArrayList<User> getParticipants() {
@@ -157,7 +157,7 @@ public class Chat {
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.chatId = id;
     }
 
     public void setParticipants(ArrayList<User> participants) {
@@ -191,7 +191,7 @@ public class Chat {
     public void addParticipant(User participant) {
 
         try {
-            if(ChatTask.getInstance().addParticipantToChat(participant.getId(),id, self.getId(), accessToken))
+            if(ChatTask.getInstance().addParticipantToChat(participant.getId(), chatId, self.getId(), accessToken))
                 this.participants.add(participant);
         } catch (RestServiceException e) {
             e.printStackTrace();
@@ -202,7 +202,7 @@ public class Chat {
 
         try {
 
-            if(ChatTask.getInstance().removePartipantFromChat(participant.getId(), id ,self.getId(), accessToken))
+            if(ChatTask.getInstance().removePartipantFromChat(participant.getId(), chatId ,self.getId(), accessToken))
                 this.participants.remove(participant);
 
         } catch (RestServiceException e) {
@@ -238,7 +238,7 @@ public class Chat {
 
             // create Message
             Message createdMessage = new Message(new User(uName, uMail,  uId),
-                    msg_encrypted, id, aes.getKeyId());
+                    msg_encrypted, chatId, aes.getKeyId());
             System.out.println("AES getKeyID: " + aes.getKeyId());
             try {
                 result = messageTask.sendMessage(createdMessage, accessToken);
