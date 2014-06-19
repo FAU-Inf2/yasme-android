@@ -1,5 +1,8 @@
 package net.yasme.android;
 
+import net.yasme.android.asyncTasks.UpdateDBTask;
+import net.yasme.android.asyncTasks.UserLoginTask;
+import net.yasme.android.asyncTasks.UserRegistrationTask;
 import net.yasme.android.connection.AuthorizationTask;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.connection.ConnectionTask;
@@ -44,8 +47,8 @@ public class YasmeLogin extends Activity {
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask authTask = null;
+    private UserRegistrationTask regTask = null;
 
-    protected String[] loginReturn = new String[2];
     protected String accessToken;
 
     // Values for name, email and password at the time of the login attempt.
@@ -64,6 +67,8 @@ public class YasmeLogin extends Activity {
     private View loginStatusView;
     private TextView loginStatusMessageView;
 
+    SharedPreferences storage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +80,7 @@ public class YasmeLogin extends Activity {
 
         // open storagePreferences
         // Restore preferencesNAME
-        SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,
+        storage = getSharedPreferences(Constants.STORAGE_PREFS,
                 MODE_PRIVATE);
         email = storage.getString(Constants.USER_MAIL, "");
         accessToken = storage.getString(Constants.ACCESSTOKEN, null);
@@ -120,6 +125,8 @@ public class YasmeLogin extends Activity {
                     }
                 }
         );
+
+        regTask = new UserRegistrationTask(getApplicationContext(), storage, this);
     }
 
     // TODO: Strings nach strings.xml bringen
@@ -163,8 +170,7 @@ public class YasmeLogin extends Activity {
                                 .toString();
 
                         //TODO: RSA-Keys erstellen und oeffentlichen Schluessel senden
-                        new UserRegistrationTask().execute(inputName,
-                                inputMail, inputPassword, inputPasswordCheck);
+                        regTask.execute(inputName, inputMail, inputPassword, inputPasswordCheck);
                     }
                 }
         );
@@ -197,25 +203,6 @@ public class YasmeLogin extends Activity {
             return;
         }
 
-        boolean cancel = validate();
-
-        //focusView = null; //Edit by Flo
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            loginStatusMessageView.setText(R.string.login_progress_signing_in);
-            showProgress(true);
-            authTask = new UserLoginTask();
-            authTask.execute((Void) null);
-        }
-    }
-
-    private boolean validate() {
         // Reset errors.
         emailView.setError(null);
         passwordView.setError(null);
@@ -243,13 +230,27 @@ public class YasmeLogin extends Activity {
             focusView = emailView;
             cancel = true;
         }
-        return cancel;
+
+        //focusView = null; //Edit by Flo
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            loginStatusMessageView.setText(R.string.login_progress_signing_in);
+            showProgress(true);
+            authTask = new UserLoginTask(getApplicationContext(), storage, this);
+            authTask.execute(email, password);
+        }
     }
 
     /**
      * Shows the progress UI and hides the login form.
      */
-    private void showProgress(final boolean show) {
+    public void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
@@ -286,201 +287,43 @@ public class YasmeLogin extends Activity {
         }
     }
 
-    public void start() {
-        Intent intent = new Intent(this, YasmeHome.class);
-        startActivity(intent);
-    }
+    public void onPostLoginExecute(Boolean success, long userId, String accessToken) {
+        this.userId = userId;
+        this.accessToken = accessToken;
 
-    /**
-     * Represents an asynchronous task used to register the user.
-     *
-     * @params params[0] is name
-     * @params params[1] is email
-     * @params params[2] is password
-     * @params params[3] is password_check
-     */
-    public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(String... params) {
-            // TODO: ueberpruefen, ob user schon existiert
-            name = params[0];
-            email = params[1];
-            password = params[2];
-            String password_check = params[3];
+        showProgress(false);
 
-            if (!password.equals(password_check)) {
-                return false;
-            }
-            try {
-                userId = UserTask.getInstance().registerUser(new User(password, name,
-                        email));
-            } catch (RestServiceException e) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            authTask = null;
-            showProgress(false);
-
-            if (success) {
-                SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,
-                        MODE_PRIVATE);
-                SharedPreferences.Editor editor = storage.edit();
-                editor.putString(Constants.USER_NAME, name);
-                editor.putLong(Constants.LAST_MESSAGE_ID, 0L);
-                editor.commit();
-
-                Toast.makeText(
-                        getApplicationContext(),
-                        getResources().getString(
-                                R.string.registration_successful),
-                        Toast.LENGTH_SHORT
-                ).show();
-                //start();
-
-                //Login after registration was successfull
-                new UserLoginTask().execute((Void) null);
-
-            } else {
-                Toast.makeText(
-                        getApplicationContext(),
-                        getResources().getString(
-                                R.string.registration_not_successful),
-                        Toast.LENGTH_SHORT
-                ).show();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            authTask = null;
-            showProgress(false);
+        if (success) {
+            Intent intent = new Intent(this, YasmeHome.class);
+            startActivity(intent);
+        } else {
+            passwordView.setError(getString(R.string.error_incorrect_password));
+            passwordView.requestFocus();
         }
     }
 
-    /**
-     * Represents an asynchronous login task used to authenticate the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-        long lastMessageId = 0;
+    public void onPostRegisterExecute(Boolean success, String email, String password) {
+        this.email = email;
+        this.password = password;
 
-        protected Boolean doInBackground(Void... params) {
-            try {
-                // DEBUG:
-                System.out.println("e-Mail: " + email + " " + "Passwort: "
-                        + password);
+        showProgress(false);
 
-                loginReturn = AuthorizationTask.getInstance().loginUser(new User(email,
-                        password));
-
-                System.out.println("LoginReturn:");
-                userId = Long.parseLong(loginReturn[0]);
-                accessToken = loginReturn[1];
-
-                System.out.println(loginReturn[0]);
-
-                // storage
-                SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,
-                        MODE_PRIVATE);
-                SharedPreferences.Editor editor = storage.edit();
-                editor.putLong(Constants.USER_ID, userId);
-                editor.putString(Constants.ACCESSTOKEN, accessToken);
-                editor.putString(Constants.USER_MAIL, email);
-                lastMessageId = storage.getLong(Constants.LAST_MESSAGE_ID, 0L);
-                editor.commit();
-
-                //Initialize database (once in application)
-                if (!DatabaseManager.isInitialized()) {
-                    DatabaseManager.init(getApplicationContext(), userId, accessToken);
-                }
-
-            } catch (RestServiceException e) {
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            authTask = null;
-            showProgress(false);
-            if (success) {
-                new UpdateDBTask().execute(Long.toString(lastMessageId), Long.toString(userId), accessToken);
-                start();
-            } else {
-                passwordView
-                        .setError(getString(R.string.error_incorrect_password));
-                passwordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            authTask = null;
-            showProgress(false);
+        if (success) {
+            Toast.makeText(
+                    getApplicationContext(),
+                    getResources().getString(
+                            R.string.registration_successful),
+                    Toast.LENGTH_SHORT
+            ).show();
+        } else {
+            Toast.makeText(
+                    getApplicationContext(),
+                    getResources().getString(
+                            R.string.registration_not_successful),
+                    Toast.LENGTH_SHORT
+            ).show();
         }
     }
-
-
-    public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
-        DatabaseManager dbManager = DatabaseManager.getInstance();
-
-        ArrayList<Message> messages;
-        ArrayList<Chat> chats = dbManager.getAllChats();
-
-        /**
-         * params[0] is lastMessageId
-         * params[1] is userId
-         */
-        protected Boolean doInBackground(String... params) {
-            try {
-                messages = MessageTask.getInstance(getApplicationContext()).getMessage(Long.parseLong(params[0]), Long.parseLong(params[1]), accessToken);
-            } catch (RestServiceException e) {
-                e.printStackTrace();
-            }
-
-            if (messages == null) {
-                return false;
-            }
-            if (messages.isEmpty()) {
-                return false;
-            }
-            if(chats == null) {
-                return false;
-            }
-
-            for (Chat chat : chats) {
-                for (Message msg : messages) {
-                    if(msg.getChat() == chat.getId()) {
-                        chat.addMessage(msg);
-                    }
-                }
-                dbManager.updateChat(chat);
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            authTask = null;
-            showProgress(false);
-            if (success) {
-                Toast.makeText(getApplicationContext(), "UpdateDB successfull",
-                        Toast.LENGTH_SHORT
-                ).show();
-            } else {
-                Toast.makeText(getApplicationContext(), "UpdateDB not successfull",
-                        Toast.LENGTH_SHORT
-                ).show();
-            }
-        }
-    }
-
 
     @Override
     protected void onStop() {
