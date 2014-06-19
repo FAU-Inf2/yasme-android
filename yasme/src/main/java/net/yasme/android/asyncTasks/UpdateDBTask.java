@@ -4,10 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import net.yasme.android.connection.MessageTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
-import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 
 import java.util.ArrayList;
@@ -17,14 +15,14 @@ import java.util.ArrayList;
  */
 public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
     Context context;
-
-    public UpdateDBTask(Context context) {
-        this.context = context;
-    }
-    DatabaseManager dbManager = DatabaseManager.getInstance();
-
     ArrayList<Message> messages;
-    ArrayList<Chat> chats = dbManager.getAllChats();
+
+    public UpdateDBTask(Context context, ArrayList<Message> messages) {
+        this.context = context;
+        this.messages = messages;
+    }
+
+    DatabaseManager dbManager = DatabaseManager.getInstance();
 
     /**
      * params[0] is lastMessageId
@@ -32,11 +30,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
      * params[2] is accessToken
      */
     protected Boolean doInBackground(String... params) {
-        try {
-            messages = MessageTask.getInstance(context.getApplicationContext()).getMessage(Long.parseLong(params[0]), Long.parseLong(params[1]), params[2]);
-        } catch (RestServiceException e) {
-            e.printStackTrace();
-        }
+        ArrayList<Chat> chats = dbManager.getAllChats();
 
         if (messages == null) {
             return false;
@@ -63,11 +57,11 @@ public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            Toast.makeText(context.getApplicationContext(), "UpdateDB successfull",
+            Toast.makeText(context.getApplicationContext(), "[Debug] UpdateDB successfull",
                     Toast.LENGTH_SHORT
             ).show();
         } else {
-            Toast.makeText(context.getApplicationContext(), "UpdateDB not successfull",
+            Toast.makeText(context.getApplicationContext(), "[Debug] UpdateDB not successfull",
                     Toast.LENGTH_SHORT
             ).show();
         }

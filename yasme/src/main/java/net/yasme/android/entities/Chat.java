@@ -1,18 +1,11 @@
 package net.yasme.android.entities;
 
-import android.os.AsyncTask;
-
-import com.j256.ormlite.dao.BaseForeignCollection;
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import net.yasme.android.YasmeChat;
-import net.yasme.android.asyncTasks.GetMessageTask;
-import net.yasme.android.asyncTasks.SendMessageTask;
 import net.yasme.android.connection.ChatTask;
-import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseConstants;
@@ -28,7 +21,7 @@ import java.util.Collection;
 @DatabaseTable(tableName = "chat")
 public class Chat {
 
-    @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
+    @DatabaseField(columnName = DatabaseConstants.CHAT_ID, generatedId = true)
     private long chatId;
 
     @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS, eager = true)
@@ -165,6 +158,10 @@ public class Chat {
         return false;
     }
 
+    // das wird so nicht funktionieren, da kommt dann ein NetworkOnMainThread
+    // Exception. Falls diese Methode benötigt wird,
+    // muss ein AsyncTask draus gemacht werden (ebenso die removeParticipant Methode)
+    // - robert
     public void addParticipant(User participant, long ownUserId) {
         try {
             if(ChatTask.getInstance().addParticipantToChat(participant.getId(), chatId, ownUserId, accessToken))

@@ -3,7 +3,6 @@ package net.yasme.android.asyncTasks;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import net.yasme.android.Constants;
 import net.yasme.android.YasmeChat;
@@ -19,13 +18,17 @@ import java.util.ArrayList;
  */
 // TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach
 // geloescht werden
-public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
+public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
     Context context;
+    YasmeChat activity;
     SharedPreferences storage;
+    MessageEncryption aes;
 
-    public GetMessageTask(Context context, SharedPreferences storage) {
+    public GetMessageTaskInChat(Context context, YasmeChat activity, MessageEncryption aes, SharedPreferences storage) {
         this.context = context;
+        this.activity = activity;
         this.storage = storage;
+        this.aes = aes;
     }
 
     ArrayList<Message> messages;
@@ -57,15 +60,23 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         if (messages.isEmpty()) {
             return false;
         }
+
+        // decrypt Messages
+        for (Message msg : messages) {
+            msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
+        }
+
         return true;
     }
 
     /**
+     * Fills the TextViews with the messages,
      * updates Database,
      * stores lastMessageId
      */
     protected void onPostExecute(final Boolean success) {
         if (success) {
+            activity.updateViews(messages);
             new UpdateDBTask(context, messages).execute(Long.toString(lastMessageId),
                     Long.toString(userId), accessToken);
             lastMessageId = messages.size() + lastMessageId;
@@ -73,7 +84,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
             editor.putLong(Constants.LAST_MESSAGE_ID, lastMessageId);
             editor.commit();
         } else {
-            Toast.makeText(context, "Keine neuen Nachrichten", Toast.LENGTH_SHORT).show();
+            activity.getStatus().setText("Keine neuen Nachrichten");
         }
     }
 }
