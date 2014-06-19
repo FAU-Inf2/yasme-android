@@ -9,7 +9,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import net.yasme.android.R;
-import net.yasme.android.YasmeHome;
+import net.yasme.android.YasmeChats;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.storage.DatabaseManager;
 
@@ -20,9 +20,9 @@ import java.util.ArrayList;
  */
 public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
     Context context;
-    YasmeHome activity;
+    YasmeChats activity;
 
-    public GetChatDataTask(Context context, YasmeHome activity) {
+    public GetChatDataTask(Context context, YasmeChats activity) {
         this.context = context;
         this.activity = activity;
     }

@@ -29,7 +29,7 @@ import net.yasme.android.storage.DatabaseManager;
 
 import java.util.ArrayList;
 
-public class YasmeHome extends Activity {
+public class YasmeChats extends Activity {
 
 	private String userMail;
 	private long userId;

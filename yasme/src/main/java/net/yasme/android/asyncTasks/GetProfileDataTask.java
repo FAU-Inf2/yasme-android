@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 import android.widget.TextView;
 
 import net.yasme.android.R;
-import net.yasme.android.YasmeHome;
+import net.yasme.android.YasmeChats;
 import net.yasme.android.connection.UserTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
@@ -17,9 +17,9 @@ import net.yasme.android.exception.RestServiceException;
 
 public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
     Context context;
-    YasmeHome activity;
+    YasmeChats activity;
 
-    public GetProfileDataTask(Context context, YasmeHome activity) {
+    public GetProfileDataTask(Context context, YasmeChats activity) {
         this.context = context;
         this.activity = activity;
     }

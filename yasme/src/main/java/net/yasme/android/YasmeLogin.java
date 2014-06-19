@@ -281,7 +281,7 @@ public class YasmeLogin extends Activity {
         showProgress(false);
 
         if (success) {
-            Intent intent = new Intent(this, YasmeHome.class);
+            Intent intent = new Intent(this, YasmeChats.class);
             startActivity(intent);
         } else {
             passwordView.setError(getString(R.string.error_incorrect_password));
