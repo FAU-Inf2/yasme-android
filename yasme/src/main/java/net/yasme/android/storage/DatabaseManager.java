@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.j256.ormlite.stmt.DeleteBuilder;
 
+import net.yasme.android.asyncTasks.GetAllChatForUserTask;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.exception.RestServiceException;
@@ -25,24 +26,8 @@ public class DatabaseManager {
         if (null == instance) {
             instance = new DatabaseManager(context);
         }
-        ChatTask chatTask = ChatTask.getInstance();
 
-        long numberOfChats = 15;
-        Chat chat = null;
-
-        for(long i = 1; i <= numberOfChats; i++) {
-            try {
-                chat = chatTask.getInfoOfChat(i, userId, accessToken);
-            } catch (RestServiceException e) {
-                e.printStackTrace();
-            }
-            if (chat != null) {
-                System.out.println("Inserted: " + chat.toString());
-                instance.addChat(chat);
-            } else {
-                break;
-            }
-        }
+        new GetAllChatForUserTask(context).execute(Long.toString(userId), accessToken);
         initialized = true;
     }
 
@@ -162,5 +147,14 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Boolean existChat(long chatId) {
+        try {
+            return getHelper().getChatDao().idExists(chatId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

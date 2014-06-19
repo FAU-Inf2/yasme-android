@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import net.yasme.android.asyncTasks.GetMessageTask;
 import net.yasme.android.asyncTasks.GetMessageTaskInChat;
 import net.yasme.android.asyncTasks.SendMessageTask;
 import net.yasme.android.connection.ConnectionTask;
@@ -119,7 +120,7 @@ public class YasmeChat extends Activity {
 
     public void asyncUpdate() {
         status.setText("GET messages");
-        new GetMessageTaskInChat(getApplicationContext(), this, chat.getEncryption(), storage)
+        new GetMessageTask(getApplicationContext(), storage)
                 .execute(Long.toString(self.getId()), accessToken);
         status.setText("GET messages done");
     }

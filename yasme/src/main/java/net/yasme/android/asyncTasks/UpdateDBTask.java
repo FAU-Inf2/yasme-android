@@ -30,6 +30,26 @@ public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
      * params[2] is accessToken
      */
     protected Boolean doInBackground(String... params) {
+        if(updateChats()) {
+            return updateMessages();
+        }
+        return false;
+    }
+
+    @Override
+    protected void onPostExecute(final Boolean success) {
+        if (success) {
+            Toast.makeText(context.getApplicationContext(), "[Debug] UpdateDB successfull",
+                    Toast.LENGTH_SHORT
+            ).show();
+        } else {
+            Toast.makeText(context.getApplicationContext(), "[Debug] UpdateDB not successfull",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
+    }
+
+    private Boolean updateMessages() {
         ArrayList<Chat> chats = dbManager.getAllChats();
 
         if (messages == null) {
@@ -50,20 +70,29 @@ public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
             }
             dbManager.updateChat(chat);
         }
-
         return true;
     }
 
-    @Override
-    protected void onPostExecute(final Boolean success) {
-        if (success) {
-            Toast.makeText(context.getApplicationContext(), "[Debug] UpdateDB successfull",
-                    Toast.LENGTH_SHORT
-            ).show();
-        } else {
-            Toast.makeText(context.getApplicationContext(), "[Debug] UpdateDB not successfull",
-                    Toast.LENGTH_SHORT
-            ).show();
-        }
+    private Boolean updateChats() {
+        //ChatTask chatTask = ChatTask.getInstance();
+
+        /*long numberOfChats = 15;
+        Chat chat = null;
+
+        for(long i = 1; i <= numberOfChats; i++) {
+            try {
+                chat = chatTask.getInfoOfChat(i, userId, accessToken);
+            } catch (RestServiceException e) {
+                e.printStackTrace();
+            }
+            if (chat != null) {
+                System.out.println("Inserted: " + chat.toString());
+                instance.addChat(chat);
+            } else {
+                break;
+            }
+        }*/
+        //TODO: geaenderte chats updaten
+        return true;
     }
 }

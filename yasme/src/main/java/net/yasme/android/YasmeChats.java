@@ -53,7 +53,8 @@ public class YasmeChats extends Activity {
         self.setId(userId);
 
         show_chatrooms();
-        new GetProfileDataTask(getApplicationContext(), this).execute(Long.toString(userId), accessToken, userMail);
+        new GetProfileDataTask(getApplicationContext(), this)
+                .execute(Long.toString(userId), accessToken, userMail);
     }
 
 	@Override

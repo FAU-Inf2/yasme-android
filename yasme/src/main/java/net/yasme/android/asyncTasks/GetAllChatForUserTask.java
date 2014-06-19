@@ -1,0 +1,52 @@
+package net.yasme.android.asyncTasks;
+
+import android.content.Context;
+import android.os.AsyncTask;
+
+import net.yasme.android.connection.ChatTask;
+import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Message;
+import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.DatabaseManager;
+
+import java.util.ArrayList;
+
+/**
+ * Created by robert on 19.06.14.
+ */
+public class GetAllChatForUserTask extends AsyncTask<String, Void, Boolean>{
+    Context context;
+
+    public GetAllChatForUserTask(Context context) {
+        this.context = context;
+    }
+
+    DatabaseManager dbManager = DatabaseManager.getInstance();
+    ArrayList<Chat> chats;
+
+    /**
+     *
+     * @param params
+     *              0 is userId
+     *              1 is accessToken
+     * @return
+     */
+    protected Boolean doInBackground(String... params) {
+        try {
+            chats = new ArrayList<Chat>(ChatTask.getInstance().getAllChatsForUser(Long.parseLong(params[0]), params[1]));
+        } catch (RestServiceException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        for(Chat chat: chats) {
+            dbManager.addChat(chat);
+        }
+        return true;
+    }
+
+    @Override
+    protected void onPostExecute(final Boolean success) {
+
+    }
+
+}
