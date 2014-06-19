@@ -4,31 +4,18 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import net.yasme.android.connection.ChatTask;
-import net.yasme.android.connection.ConnectionTask;
-import net.yasme.android.connection.UserTask;
-import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.User;
-import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.asyncTasks.GetChatDataTask;
-
-import java.util.ArrayList;
+import net.yasme.android.asyncTasks.GetProfileDataTask;
+import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.entities.User;
+import net.yasme.android.storage.DatabaseManager;
 
 public class YasmeChats extends Activity {
 
@@ -66,7 +53,7 @@ public class YasmeChats extends Activity {
         self.setId(userId);
 
         show_chatrooms();
-        new GetProfileDataTask().execute(Long.toString(userId), accessToken);
+        new GetProfileDataTask(getApplicationContext(), this).execute(Long.toString(userId), accessToken);
     }
 
 	@Override
@@ -97,14 +84,6 @@ public class YasmeChats extends Activity {
     }
 
 	public void showStandardChat() {
-        /*
-		Intent intent = new Intent(this, YasmeChat.class);
-		intent.putExtra(Constants.USER_MAIL, userMail);
-		intent.putExtra(Constants.USER_ID, userId);
-        intent.putExtra(Constants.CHAT_ID, (long)1);
-        intent.putExtra(Constants.USER_NAME, self.getName());
-		startActivity(intent);
-		*/
         showChat(1);
 	}
 
@@ -121,10 +100,7 @@ public class YasmeChats extends Activity {
 
 
     public void show_chatrooms() {
-
         new GetChatDataTask(getApplicationContext(), this).execute();
-       // LinearLayout table = (LinearLayout) findViewById(R.id.chatroom_list);
-
     }
 
 
@@ -144,29 +120,5 @@ public class YasmeChats extends Activity {
 			return rootView;
 		}
 	}
-
-    public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
-
-        protected Boolean doInBackground(String... params) {
-            long user_id = Long.parseLong(params[0]);
-            String accessToken = params[1];
-            try {
-                selfProfile = UserTask.getInstance().getUserData(user_id, accessToken);
-            } catch (RestServiceException e) {
-                System.out.println(e.getMessage());
-                return false;
-            }
-            return selfProfile != null;
-        }
-
-        protected void onPostExecute(final Boolean success) {
-            if(!success) {
-                return;
-            }
-            self.setName(selfProfile.getName());
-            TextView profileInfo = (TextView) findViewById(R.id.profileInfo);
-            profileInfo.setText(selfProfile.getName() + ": " + userMail);
-        }
-    }
 }
 
