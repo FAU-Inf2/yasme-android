@@ -10,10 +10,9 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import net.yasme.android.R;
-
-import net.yasme.android.contacts.dummy.DummyContent;
 
 public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener {
 
@@ -37,7 +36,8 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter mAdapter;
+    //private ListAdapter mAdapter;
+    private SimpleAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
     public static ContactListItemFragment newInstance(String param1, String param2) {
@@ -65,9 +65,12 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+         //mAdapter = new ArrayAdapter<ContactListContent.ContactListItem>(getActivity(),
+         //       android.R.layout.simple_list_item_1, android.R.id.text1,ContactListContent.ITEMS);
+
+        mAdapter = new SimpleAdapter(getActivity() ,
+                ContactListContent.LISTMAP, android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
+
     }
 
     @Override
@@ -108,7 +111,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
+            mListener.onFragmentInteraction(ContactListContent.ITEMS.get(position).id);
         }
     }
 
