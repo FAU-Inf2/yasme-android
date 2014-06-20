@@ -57,6 +57,8 @@
             android:name=".YasmeChat"
             android:label="@string/title_activity_chat"
             android:screenOrientation="portrait" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".YasmeChats"/>
         </activity>
         <activity
             android:name=".InviteToChat"

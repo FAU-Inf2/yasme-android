@@ -60,6 +60,8 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id)
             {
+                //Chat chat = ((ChatListAdapter)list.getAdapter()).getItem(pos);
+                //chat.getId();
                 Long chatId = (Long)view.getTag();
                 activity.showChat(chatId);
             }
