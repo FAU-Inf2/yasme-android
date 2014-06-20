@@ -20,7 +20,7 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // when anything changes in your database objects, we have to increase the database version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
 
     // the DAO object for chat
     private Dao<Chat, Long> chatDao = null;
@@ -30,11 +30,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase database,ConnectionSource connectionSource) {
+    public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
-            TableUtils.dropTable(connectionSource, Chat.class, true);
-            TableUtils.dropTable(connectionSource, Message.class, true);
-            TableUtils.dropTable(connectionSource, User.class, true);
             TableUtils.createTable(connectionSource, Chat.class);
             TableUtils.createTable(connectionSource, Message.class);
             TableUtils.createTable(connectionSource, User.class);
@@ -45,7 +42,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db,ConnectionSource connectionSource, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
             TableUtils.dropTable(connectionSource, Chat.class, true);
             TableUtils.dropTable(connectionSource, Message.class, true);

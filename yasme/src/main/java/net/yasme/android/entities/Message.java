@@ -18,10 +18,12 @@ public class Message implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.MESSAGE_ID, id = true)
     private long id;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(columnName = DatabaseConstants.CHAT, canBeNull = false, foreign = true,
+            foreignAutoCreate=true, foreignAutoRefresh=true)
     private Chat chat;
 
-    @DatabaseField(columnName = DatabaseConstants.SENDER, foreign = true)
+    @DatabaseField(columnName = DatabaseConstants.SENDER, foreign = true,
+            foreignAutoCreate=true, foreignAutoRefresh=true)
     private User sender;
 
     @DatabaseField(columnName = DatabaseConstants.DATE)

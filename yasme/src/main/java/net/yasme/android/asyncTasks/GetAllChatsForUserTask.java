@@ -37,11 +37,15 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
             System.out.println(e.getMessage());
             return false;
         }
+        if(chats == null || chats.isEmpty()) {
+            return false;
+        }
         for(Chat chat: chats) {
-            if(dbManager.existsChat(chat.getId())) {
-                dbManager.addChat(chat);
-            } else {
+            if(dbManager.createIfNotExists(chat) != null) {
                 dbManager.updateChat(chat);
+                System.out.println("[DEBUG] Chat upgedatet");
+            } else {
+                System.out.println("[DEBUG] Chat eingefuegt");
             }
         }
         return true;
@@ -49,6 +53,10 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
 
     @Override
     protected void onPostExecute(final Boolean success) {
-        System.out.println("[Debug] GetAllChatsForUser hat geklappt");
+        if(success) {
+            System.out.println("[Debug] GetAllChatsForUser hat geklappt");
+        } else {
+            System.out.println("[DEBUG] GetAllChatsForUser hat nicht geklappt!!");
+        }
     }
 }

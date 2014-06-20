@@ -23,7 +23,6 @@ public class YasmeChats extends Activity {
 	private String userMail;
 	private long userId;
     private String accessToken;
-    private User selfProfile;
     private User self;
 
 	@Override
@@ -53,7 +52,7 @@ public class YasmeChats extends Activity {
         self.setEmail(userMail);
         self.setId(userId);
 
-        show_chatrooms();
+        new GetChatDataTask(getApplicationContext(), this).execute();
         new GetProfileDataTask(getApplicationContext(), this)
                 .execute(Long.toString(userId), accessToken, userMail);
     }
@@ -107,12 +106,6 @@ public class YasmeChats extends Activity {
         intent.putExtra(Constants.USER_NAME, self.getName());
         startActivity(intent);
     }
-
-
-    public void show_chatrooms() {
-        new GetChatDataTask(getApplicationContext(), this).execute();
-    }
-
 
 	/**
 	 * A placeholder fragment containing a simple view.
