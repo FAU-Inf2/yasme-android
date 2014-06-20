@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import net.yasme.android.asyncTasks.GetChatDataTask;
 import net.yasme.android.asyncTasks.GetProfileDataTask;
 import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.contacts.YasmeContact;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 
@@ -77,6 +78,13 @@ public class YasmeChats extends Activity {
             showStandardChat();
             return true;
         }
+
+        if (id == R.id.action_contacts){
+            Intent intent = new Intent(this, YasmeContact.class);
+            startActivity(intent);
+            return true;
+        }
+
 		return super.onOptionsItemSelected(item);
 	}
 

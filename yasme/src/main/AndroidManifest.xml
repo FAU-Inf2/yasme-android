@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.yasme.android">
+    package="net.yasme.android" >
 
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="19"/>
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
-    <permission android:name="net.yasme.android.permission.C2D_MESSAGE"
+    <permission
+        android:name="net.yasme.android.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="net.yasme.android.permission.C2D_MESSAGE" />
 
     <application
@@ -17,12 +22,12 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-
         <receiver
-            android:name="net.yasme.android.gcm.GcmBroadcastReceiver"
+            android:name=".gcm.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="net.yasme.android" />
             </intent-filter>
         </receiver>
@@ -30,9 +35,9 @@
         <service android:name=".gcm.GcmIntentService" />
 
         <activity
-            android:screenOrientation="portrait"
-            android:name="net.yasme.android.YasmeLogin"
+            android:name=".YasmeLogin"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,14 +46,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:screenOrientation="portrait"
             android:name=".YasmeChats"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:screenOrientation="portrait"
-            android:name="net.yasme.android.YasmeChat"
-            android:label="@string/title_activity_chat" >
+            android:name=".YasmeChat"
+            android:label="@string/title_activity_chat"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".contacts.YasmeContact"
+            android:label="@string/title_activity_yasme_contact" >
         </activity>
     </application>
 
