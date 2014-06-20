@@ -16,14 +16,14 @@ public class DatabaseConstants {
     public static final String PARTICIPANTS = "participants";
 
     //Message
-    public static final String MESSAGE_ID = "messageId_id";
+    public static final String MESSAGE_ID = "messageId";
     public static final String CHAT = "chat";
     public static final String SENDER = "sender";
     public static final String DATE = "date";
     public static final String MESSAGE = "message";
 
     //User
-    public static final String USER_ID = "userId_id";
+    public static final String USER_ID = "userId";
     public static final String USER_MAIL = "userMail";
     public static final String USER_NAME = "userName";
 
