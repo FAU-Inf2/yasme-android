@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.GetAllUsersTask;
+import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.entities.User;
 
 import java.util.ArrayList;
@@ -40,6 +41,15 @@ public class InviteToChat extends Activity implements OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_to_chat);
+
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new PlaceholderFragment()).commit();
+        }
+
+        if (!ConnectionTask.isInitialized()) {
+            ConnectionTask.initParams(getResources().getString(R.string.server_scheme),getResources().getString(R.string.server_host),getResources().getString(R.string.server_port));
+        }
 
         findViewsById();
 
@@ -61,8 +71,15 @@ public class InviteToChat extends Activity implements OnClickListener{
      * @param users list
      */
     public void updateChatPartnersList(List<User> users) {
+        if (null == chatPartners || null == startChat) {
+            findViewsById();
+        }
+
         this.users = users;
-        String[] userNames = users.toArray(new String[users.size()]);
+        String[] userNames = new String[users.size()];
+        for (int i=0; i<users.size(); i++) {
+            userNames[i] = users.get(i).getName();
+        }
         arrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_multiple_choice, userNames);
         chatPartners.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
