@@ -38,7 +38,7 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
             return false;
         }
         if(chats == null || chats.isEmpty()) {
-            System.out.println("[DEBUG] getAllChatsForUser hat nicht geklappt!!");
+            return false;
         }
         for(Chat chat: chats) {
             if(dbManager.createIfNotExists(chat) != null) {
@@ -53,6 +53,10 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
 
     @Override
     protected void onPostExecute(final Boolean success) {
-        System.out.println("[Debug] GetAllChatsForUser hat geklappt");
+        if(success) {
+            System.out.println("[Debug] GetAllChatsForUser hat geklappt");
+        } else {
+            System.out.println("[DEBUG] GetAllChatsForUser hat nicht geklappt!!");
+        }
     }
 }

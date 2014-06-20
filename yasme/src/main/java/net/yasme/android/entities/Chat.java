@@ -12,6 +12,7 @@ import net.yasme.android.storage.DatabaseConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -19,7 +20,7 @@ import java.util.Collection;
  * Created by robert on 28.05.14.
  */
 @DatabaseTable(tableName = "chat")
-public class Chat {
+public class Chat implements Serializable {
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
     private long chatId;
@@ -33,7 +34,7 @@ public class Chat {
     @DatabaseField(columnName = DatabaseConstants.CHAT_NAME)
     private String name;
 
-    @JsonIgnore
+    //@JsonIgnore
     @DatabaseField
     private int numberOfParticipants;
 
@@ -41,7 +42,7 @@ public class Chat {
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
     private Collection<Message> messages;
 
-    @JsonIgnore
+    //@JsonIgnore
     private User owner;
 
     @JsonIgnore
@@ -67,17 +68,29 @@ public class Chat {
         aes = new MessageEncryption(activity, this, creatorDevice, accessToken);
     }
 
-
+    @JsonIgnore
     public Chat(User owner, String status, String name) {
         this.owner = owner;
         this.status = status;
         this.name = name;
     }
 
+    public Chat(long id, ArrayList<User> participants, String status, String name,
+                User owner, int numberOfParticipants) {
+        this.chatId = id;
+        this.participants = participants;
+        this.status = status;
+        this.name = name;
+        this.owner = owner;
+        this.numberOfParticipants = numberOfParticipants;
+    }
+
+
     @JsonIgnore
     public Chat() {
         // ORMLite needs a no-arg constructor
     }
+
     /**
      * Getters *
      */
@@ -107,10 +120,12 @@ public class Chat {
         return numberOfParticipants;
     }
 
+    @JsonIgnore
     public ArrayList<Message> getMessages() {
         return new ArrayList<Message>(messages);
     }
 
+    @JsonIgnore
     public MessageEncryption getEncryption() {
         return aes;
     }
@@ -143,6 +158,7 @@ public class Chat {
         this.numberOfParticipants = numberOfParticipants;
     }
 
+    @JsonIgnore
     public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;
     }
@@ -151,6 +167,7 @@ public class Chat {
      * Other Methods
      */
 
+    @JsonIgnore
     public boolean isOwner(long userId){
         if(owner.getId() == userId){
             return true;
@@ -162,6 +179,7 @@ public class Chat {
     // Exception. Falls diese Methode benötigt wird,
     // muss ein AsyncTask draus gemacht werden (ebenso die removeParticipant Methode)
     // - robert
+    @JsonIgnore
     public void addParticipant(User participant, long ownUserId) {
         try {
             if(ChatTask.getInstance().addParticipantToChat(participant.getId(), chatId, ownUserId, accessToken))
@@ -171,10 +189,12 @@ public class Chat {
         }
     }
 
+    @JsonIgnore
     public void addMessage(Message msg) {
         messages.add(msg);
     }
 
+    @JsonIgnore
     public void removeParticipant(User participant, long ownUserId) {
         try {
             if(ChatTask.getInstance().removePartipantFromChat(participant.getId(), chatId, ownUserId, accessToken))

@@ -66,12 +66,13 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
 
     protected void createDummyChatroomList() {
         chatrooms = new ArrayList<Chat>();
-        for (int i = 1; i <= 15; i++)
+        int number = 10;
+        for (int i = 1; i < number; i++)
         {
             Chat chat = new Chat();
             chat.setId(i);
             chat.setName("Chat " + i);
-            chat.setNumberOfParticipants(16-i);
+            chat.setNumberOfParticipants(number-i);
             chatrooms.add(chat);
         }
     }
