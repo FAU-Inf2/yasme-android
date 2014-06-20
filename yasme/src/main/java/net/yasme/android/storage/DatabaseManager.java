@@ -148,15 +148,27 @@ public class DatabaseManager {
 
     /**
      *
-     * @param chatId    long
+     * @param chat    Chat
      * @return true if chat with chatId exists, otherwise false
      */
-    public Boolean existsChat(long chatId) {
+    public Chat createIfNotExists(Chat chat) {
         try {
-            return getHelper().getChatDao().idExists(chatId);
+            return getHelper().getChatDao().createIfNotExists(chat);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
+    }
+
+    /**
+     * @return the number of Chats stored in the database or -1 on error
+     */
+    public long getNumberOfChats() {
+        try {
+            return getHelper().getChatDao().countOf();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }

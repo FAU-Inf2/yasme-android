@@ -38,9 +38,7 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
             return false;
         }
         for(Chat chat: chats) {
-            if(dbManager.existsChat(chat.getId())) {
-                dbManager.addChat(chat);
-            } else {
+            if(dbManager.createIfNotExists(chat) != null) {
                 dbManager.updateChat(chat);
             }
         }
