@@ -74,7 +74,8 @@ public class YasmeChats extends Activity {
 			return true;
 		}
         if (id == R.id.action_chat) {
-            showStandardChat();
+            Intent intent = new Intent(this, InviteToChat.class);
+            startActivity(intent);
             return true;
         }
 		return super.onOptionsItemSelected(item);

@@ -1,6 +1,7 @@
 package net.yasme.android.connection;
 
 import net.yasme.android.connection.ssl.HttpClient;
+import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
@@ -15,6 +16,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,6 +27,8 @@ import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserTask extends  ConnectionTask {
 
