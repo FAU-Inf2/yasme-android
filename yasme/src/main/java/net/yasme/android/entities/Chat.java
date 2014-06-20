@@ -15,6 +15,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by robert on 28.05.14.
@@ -23,7 +24,7 @@ import java.util.Collection;
 public class Chat implements Serializable {
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
-    private long chatId;
+    private long id;
 
     @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS, eager = true)
     private Collection<User> participants;
@@ -34,16 +35,14 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.CHAT_NAME)
     private String name;
 
-    //@JsonIgnore
+    private User owner;
+
     @DatabaseField
     private int numberOfParticipants;
 
     @JsonIgnore
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
     private Collection<Message> messages;
-
-    //@JsonIgnore
-    private User owner;
 
     @JsonIgnore
     private MessageEncryption aes;
@@ -55,7 +54,7 @@ public class Chat implements Serializable {
      */
     @JsonIgnore
     public Chat(long id, User user, YasmeChat activity) {
-        this.chatId = id;
+        this.id = id;
         accessToken = activity.accessToken;
 
         participants = new ArrayList<User>();
@@ -64,20 +63,19 @@ public class Chat implements Serializable {
         // setup Encryption for this chat
         // TODO: DEVICE-ID statt USERID uebergeben
         long creatorDevice = user.getId();
-        System.out.println("[???] User/Device: "+creatorDevice);
+        System.out.println("[???] User/Device: " + creatorDevice);
         aes = new MessageEncryption(activity, this, creatorDevice, accessToken);
     }
 
-    @JsonIgnore
     public Chat(User owner, String status, String name) {
         this.owner = owner;
         this.status = status;
         this.name = name;
     }
 
-    public Chat(long id, ArrayList<User> participants, String status, String name,
+    public Chat(long id, List<User> participants, String status, String name,
                 User owner, int numberOfParticipants) {
-        this.chatId = id;
+        this.id = id;
         this.participants = participants;
         this.status = status;
         this.name = name;
@@ -85,8 +83,6 @@ public class Chat implements Serializable {
         this.numberOfParticipants = numberOfParticipants;
     }
 
-
-    @JsonIgnore
     public Chat() {
         // ORMLite needs a no-arg constructor
     }
@@ -95,7 +91,7 @@ public class Chat implements Serializable {
      * Getters *
      */
     public long getId() {
-        return chatId;
+        return id;
     }
 
     public ArrayList<User> getParticipants() {
@@ -135,7 +131,7 @@ public class Chat implements Serializable {
      */
 
     public void setId(long id) {
-        this.chatId = id;
+        this.id = id;
     }
 
     public void setParticipants(ArrayList<User> participants) {
@@ -168,8 +164,8 @@ public class Chat implements Serializable {
      */
 
     @JsonIgnore
-    public boolean isOwner(long userId){
-        if(owner.getId() == userId){
+    public boolean isOwner(long userId) {
+        if (owner.getId() == userId) {
             return true;
         }
         return false;
@@ -182,7 +178,7 @@ public class Chat implements Serializable {
     @JsonIgnore
     public void addParticipant(User participant, long ownUserId) {
         try {
-            if(ChatTask.getInstance().addParticipantToChat(participant.getId(), chatId, ownUserId, accessToken))
+            if (ChatTask.getInstance().addParticipantToChat(participant.getId(), id, ownUserId, accessToken))
                 this.participants.add(participant);
         } catch (RestServiceException e) {
             e.printStackTrace();
@@ -197,7 +193,7 @@ public class Chat implements Serializable {
     @JsonIgnore
     public void removeParticipant(User participant, long ownUserId) {
         try {
-            if(ChatTask.getInstance().removePartipantFromChat(participant.getId(), chatId, ownUserId, accessToken))
+            if (ChatTask.getInstance().removePartipantFromChat(participant.getId(), id, ownUserId, accessToken))
                 this.participants.remove(participant);
         } catch (RestServiceException e) {
             e.printStackTrace();

@@ -33,7 +33,7 @@ public class User implements Serializable {
 
     // only for client Database
     @JsonIgnore
-    @DatabaseField(foreign = true, foreignAutoCreate=true, foreignAutoRefresh=true)
+    @DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Chat chatId;
 
 
@@ -55,12 +55,12 @@ public class User implements Serializable {
     }
 
     //TODO: changeOrder
-    public User(String name, long id){
+    public User(String name, long id) {
         this.name = name;
         this.id = id;
     }
 
-    public User(String name, String email, long id){
+    public User(String name, String email, long id) {
         this.name = name;
         this.email = email;
         this.id = id;
