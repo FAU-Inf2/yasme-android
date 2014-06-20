@@ -37,9 +37,15 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
             System.out.println(e.getMessage());
             return false;
         }
+        if(chats == null || chats.isEmpty()) {
+            System.out.println("[DEBUG] getAllChatsForUser hat nicht geklappt!!");
+        }
         for(Chat chat: chats) {
             if(dbManager.createIfNotExists(chat) != null) {
                 dbManager.updateChat(chat);
+                System.out.println("[DEBUG] Chat upgedatet");
+            } else {
+                System.out.println("[DEBUG] Chat eingefuegt");
             }
         }
         return true;

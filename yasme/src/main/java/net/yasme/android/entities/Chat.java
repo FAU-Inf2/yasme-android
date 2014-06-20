@@ -21,7 +21,7 @@ import java.util.Collection;
 @DatabaseTable(tableName = "chat")
 public class Chat {
 
-    @DatabaseField(columnName = DatabaseConstants.CHAT_ID, allowGeneratedIdInsert = true, generatedId = true)
+    @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
     private long chatId;
 
     @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS, eager = true)
