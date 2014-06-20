@@ -2,6 +2,7 @@ package net.yasme.android.asyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -38,11 +39,13 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
 
         if(!success) {
             //TODO: Debug
+            Log.e(this.getClass().getName(), "Fehler bei Datenbankzugriff");
             System.out.println("Fehler bei Datenbankzugriff");
         }
 
         //DEBUG
         if (chatrooms.size() <= 0) {
+            Log.d(this.getClass().getSimpleName(), "Benutze Dummy-Liste");
             System.out.println("Benutze Dummy-Liste");
             createDummyChatroomList();
         }
