@@ -39,42 +39,44 @@ android {
         androidTest {
             java.srcDirs = ['src/test/java']
         }
-            packagingOptions {
-                exclude 'META-INF/DEPENDENCIES'
-                exclude 'META-INF/NOTICE'
-                exclude 'META-INF/LICENSE'
-                exclude 'META-INF/LICENSE.txt'
-                exclude 'META-INF/NOTICE.txt'
-                exclude 'META-INF/ASL2.0'
-            }
+        packagingOptions {
+            exclude 'META-INF/DEPENDENCIES'
+            exclude 'META-INF/NOTICE'
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'META-INF/NOTICE.txt'
+            exclude 'META-INF/ASL2.0'
         }
     }
+}
 
-    dependencies {
-        //TODO libs directory not needed anymore?
-        //compile fileTree(dir: 'libs', include: ['*.jar'])
-        compile 'com.j256.ormlite:ormlite-core:4.48'
-        compile 'com.j256.ormlite:ormlite-android:4.48'
-        compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
-        compile 'org.apache.httpcomponents:httpclient:4.3.4'
-        compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.0'
-        compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.3'
-        compile "com.google.android.gms:play-services:3.1.+"
-        compile 'com.android.support:support-v4:+'
-    }
+dependencies {
+    //TODO libs directory not needed anymore?
+    //compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.3'
+    compile 'com.j256.ormlite:ormlite-core:4.48'
+    compile 'com.j256.ormlite:ormlite-android:4.48'
+    compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+    compile 'org.apache.httpcomponents:httpclient:4.3.4'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.0'
+    compile 'com.google.android.gms:play-services:3.1.+'
+    compile 'com.android.support:support-v4:+'
+    compile 'com.android.support:support-v13:19.+'
+}
 
-    allprojects {
-        afterEvaluate { project ->
-            def propsFile = rootProject.file('keystore.properties')
-            def configName = 'release'
 
-            if (propsFile.exists() && android.signingConfigs.hasProperty(configName)) {
-                def props = new Properties()
-                props.load(new FileInputStream(propsFile))
-                android.signingConfigs[configName].storeFile = file(props['storeFile'])
-                android.signingConfigs[configName].storePassword = props['storePassword']
-                android.signingConfigs[configName].keyAlias = props['keyAlias']
-                android.signingConfigs[configName].keyPassword = props['keyPassword']
-            }
+allprojects {
+    afterEvaluate { project ->
+        def propsFile = rootProject.file('keystore.properties')
+        def configName = 'release'
+
+        if (propsFile.exists() && android.signingConfigs.hasProperty(configName)) {
+            def props = new Properties()
+            props.load(new FileInputStream(propsFile))
+            android.signingConfigs[configName].storeFile = file(props['storeFile'])
+            android.signingConfigs[configName].storePassword = props['storePassword']
+            android.signingConfigs[configName].keyAlias = props['keyAlias']
+            android.signingConfigs[configName].keyPassword = props['keyPassword']
         }
     }
+}

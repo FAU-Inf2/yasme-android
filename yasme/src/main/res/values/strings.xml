@@ -21,7 +21,11 @@
     <string name="type_text">Hier Nachricht eingeben</string>
     <string name="title_activity_yasme_login">YasmeLogin</string>
     <string name="title_activity_invite_to_chat">Invite to chat</string>
+    <string name="title_activity_yasme_contact">YasmeContact</string>
+    <string name="title_section1">All Contacts</string>
+    <string name="title_section2">Search Contact</string>
     <string name="hello_world">Hello world!</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Invite to chat -->
     <string name="start_chat">Chat!</string>
