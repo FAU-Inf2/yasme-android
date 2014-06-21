@@ -141,7 +141,7 @@ public class DeviceTask extends ConnectionTask {
         ArrayList<Device> devices = new ArrayList<Device>();
 
         try {
-            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/all/" + userId).build();
+            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/all").build();
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
             HttpGet httpGet = new HttpGet(requestURI);
@@ -163,12 +163,12 @@ public class DeviceTask extends ConnectionTask {
                         devices.add(new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
                                 toString(), Device.class));
 
-                    System.out.println("No.Devices: " + jsonArray.length());
+                    System.out.println("[DEBUG] No.Devices: " + jsonArray.length());
                     break;
                 case 401:
                     System.out.println("Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
-                case 204:
+                case 404:
                     throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 default:
                     throw new RestServiceException(Error.ERROR);
