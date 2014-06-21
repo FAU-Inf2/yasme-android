@@ -15,15 +15,14 @@ import java.util.Date;
 @DatabaseTable(tableName = "messages")
 public class Message implements Serializable {
 
-    @DatabaseField(columnName = DatabaseConstants.MESSAGE_ID, id = true)
+    @DatabaseField(columnName = DatabaseConstants.MESSAGE_ID, allowGeneratedIdInsert = true, id = true)
     private long id;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT, canBeNull = false, foreign = true,
             foreignAutoCreate=true, foreignAutoRefresh=true)
     private Chat chat;
 
-    @DatabaseField(columnName = DatabaseConstants.SENDER, foreign = true,
-            foreignAutoCreate=true, foreignAutoRefresh=true)
+    @DatabaseField(columnName = DatabaseConstants.SENDER, foreign = true)
     private User sender;
 
     @DatabaseField(columnName = DatabaseConstants.DATE)

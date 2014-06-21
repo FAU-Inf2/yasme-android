@@ -33,7 +33,7 @@ public class User implements Serializable {
 
     // only for client Database
     @JsonIgnore
-    @DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+    @DatabaseField(columnName = DatabaseConstants.CHAT_ID, foreign = true)
     private Chat chatId;
 
 

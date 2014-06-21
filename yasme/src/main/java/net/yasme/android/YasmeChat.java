@@ -22,6 +22,7 @@ import net.yasme.android.asyncTasks.GetMessageTask;
 import net.yasme.android.asyncTasks.GetMessageTaskInChat;
 import net.yasme.android.asyncTasks.SendMessageTask;
 import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
@@ -40,6 +41,8 @@ public class YasmeChat extends Activity {
 
     private Chat chat;
     private User self;
+
+    MessageEncryption aes;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,7 @@ public class YasmeChat extends Activity {
         if(chat == null) {
             chat = new Chat(chatId, new User(userName, userMail, userId), this);
         }
+        aes = new MessageEncryption(getApplicationContext(), chat, userId, accessToken);
 	}
 
 	@Override
@@ -108,7 +112,7 @@ public class YasmeChat extends Activity {
 	}
 
 	public void send(View view) {
-		String msg = EditMessage.getText().toString();
+		String msg = aes.encrypt(EditMessage.getText().toString());
 
 		if (msg.isEmpty()) {
 			status.setText("Nichts eingegeben");
@@ -136,7 +140,11 @@ public class YasmeChat extends Activity {
 	}
 
 	public void updateViews(ArrayList<Message> messages) {
+        if(messages == null) {
+            status.setText("Keine Nachrichten zum Ausgeben");
+        }
         for (Message msg : messages) {
+            msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
             TextView textView = new TextView(getApplicationContext());
 
             LinearLayout layout = (LinearLayout) findViewById(R.id.scrollLayout);

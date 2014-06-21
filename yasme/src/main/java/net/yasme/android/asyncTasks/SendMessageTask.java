@@ -51,7 +51,8 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         boolean result = false;
 
         // encrypt Message
-        String msg_encrypted = aes.encrypt(msg);
+        //String msg_encrypted = aes.encrypt(msg);
+        String msg_encrypted = msg;
 
         // create Message
         Message createdMessage = new Message(new User(uName, uMail,  uId),
