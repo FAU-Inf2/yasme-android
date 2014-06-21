@@ -316,8 +316,9 @@ public class LoginActivity extends AbstractYasmeActivity {
         return true;
     }
 
-    public void onPostDevReExecute(Boolean success, long deviceId){
+    public void onPostDeviceRegExecute(Boolean success, long deviceId){
         if(success){
+            Log.d(this.getClass().getSimpleName(),"[DEBUG] Login after device registration");
             Intent intent = new Intent(this, ChatListActivity.class);
             startActivity(intent);
         }
