@@ -297,6 +297,14 @@ public class YasmeLogin extends Activity {
         }
     }
 
+    /*
+    * This method checks if there is a device in the DB
+    * */
+    public boolean deviceCheck(){
+        //try to load device from DB
+        return true;
+    }
+
     public void onPostLoginExecute(Boolean success, long userId, String accessToken) {
         this.userId = userId;
         this.accessToken = accessToken;
@@ -304,8 +312,15 @@ public class YasmeLogin extends Activity {
         showProgress(false);
 
         if (success) {
-            Intent intent = new Intent(this, YasmeChats.class);
-            startActivity(intent);
+            // check if there is a device in the Database
+            if(deviceCheck() == true) {
+                Log.d(this.getClass().getSimpleName(),"[DEBUG] Device exists in Database");
+                Intent intent = new Intent(this, YasmeChats.class);
+                startActivity(intent);
+            }else{
+                // TODO register device
+                Log.d(this.getClass().getSimpleName(),"[DEBUG] Device does not exist in Database");
+            }
         } else {
             passwordView.setError(getString(R.string.error_incorrect_password));
             passwordView.requestFocus();
