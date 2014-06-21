@@ -3,5 +3,5 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.yasme.android.InviteToChat"
+    tools:context="net.yasme.android.ui.InviteToChatActivity"
     tools:ignore="MergeRootFrame" />

@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
-import net.yasme.android.Constants;
-import net.yasme.android.YasmeChat;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
@@ -20,11 +20,11 @@ import java.util.ArrayList;
 // geloescht werden
 public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
     Context context;
-    YasmeChat activity;
+    ChatActivity activity;
     SharedPreferences storage;
     MessageEncryption aes;
 
-    public GetMessageTaskInChat(Context context, YasmeChat activity, MessageEncryption aes, SharedPreferences storage) {
+    public GetMessageTaskInChat(Context context, ChatActivity activity, MessageEncryption aes, SharedPreferences storage) {
         this.context = context;
         this.activity = activity;
         this.storage = storage;
@@ -44,7 +44,7 @@ public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
-        lastMessageId = storage.getLong(Constants.LAST_MESSAGE_ID, 0L);
+        lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
         userId = Long.parseLong(params[0]);
         accessToken = params[1];
 
@@ -82,7 +82,7 @@ public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
             System.out.println("[Debug] after update the Database");
             lastMessageId = messages.size() + lastMessageId;
             SharedPreferences.Editor editor = storage.edit();
-            editor.putLong(Constants.LAST_MESSAGE_ID, lastMessageId);
+            editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
             editor.commit();
         } else {
             activity.getStatus().setText("Keine neuen Nachrichten");

@@ -8,9 +8,9 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import net.yasme.android.ChatListAdapter;
+import net.yasme.android.ui.ChatListAdapter;
 import net.yasme.android.R;
-import net.yasme.android.YasmeChats;
+import net.yasme.android.ui.ChatListActivity;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.storage.DatabaseManager;
 
@@ -21,9 +21,9 @@ import java.util.ArrayList;
  */
 public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
     Context context;
-    YasmeChats activity;
+    ChatListActivity activity;
 
-    public GetChatDataTask(Context context, YasmeChats activity) {
+    public GetChatDataTask(Context context, ChatListActivity activity) {
         this.context = context;
         this.activity = activity;
     }

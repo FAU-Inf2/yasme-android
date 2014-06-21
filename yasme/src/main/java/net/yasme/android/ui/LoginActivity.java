@@ -1,4 +1,4 @@
-package net.yasme.android;
+package net.yasme.android.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -24,18 +24,17 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import net.yasme.android.R;
 import net.yasme.android.asyncTasks.UserLoginTask;
 import net.yasme.android.asyncTasks.UserRegistrationTask;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.gcm.CloudMessaging;
 
-import java.io.IOException;
-
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class YasmeLogin extends Activity {
+public class LoginActivity extends AbstractYasmeActivity {
 
     //GCM
     CloudMessaging cloudMessaging;
@@ -89,16 +88,12 @@ public class YasmeLogin extends Activity {
         }
         //GCM End
 
-        if (!ConnectionTask.isInitialized()) {
-            ConnectionTask.initParams(getResources().getString(R.string.server_scheme), getResources().getString(R.string.server_host), getResources().getString(R.string.server_port));
-        }
-
         // open storagePreferences
         // Restore preferencesNAME
-        storage = getSharedPreferences(Constants.STORAGE_PREFS,
+        storage = getSharedPreferences(STORAGE_PREFS,
                 MODE_PRIVATE);
-        email = storage.getString(Constants.USER_MAIL, "");
-        accessToken = storage.getString(Constants.ACCESSTOKEN, null);
+        email = storage.getString(USER_MAIL, "");
+        accessToken = storage.getString(ACCESSTOKEN, null);
 
         // Set up the login form.
         // email = getIntent().getStringExtra(USER_EMAIL);
@@ -320,7 +315,7 @@ public class YasmeLogin extends Activity {
             // check if there is a device in the Database
             if(deviceCheck() == true) {
                 Log.d(this.getClass().getSimpleName(),"[DEBUG] Device exists in Database");
-                Intent intent = new Intent(this, YasmeChats.class);
+                Intent intent = new Intent(this, ChatListActivity.class);
                 startActivity(intent);
             }else{
                 // TODO register device
@@ -365,12 +360,12 @@ public class YasmeLogin extends Activity {
     protected void onStop() {
         super.onStop();
 
-        SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS,
+        SharedPreferences storage = getSharedPreferences(STORAGE_PREFS,
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = storage.edit();
-        editor.putString(Constants.USER_MAIL, email);
-        editor.putLong(Constants.USER_ID, userId);
-        editor.putString(Constants.ACCESSTOKEN, accessToken);
+        editor.putString(USER_MAIL, email);
+        editor.putLong(USER_ID, userId);
+        editor.putString(ACCESSTOKEN, accessToken);
 
         // Commit the edits!
         editor.commit();

@@ -1,4 +1,4 @@
-package net.yasme.android;
+package net.yasme.android.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import net.yasme.android.R;
 import net.yasme.android.entities.Chat;
 
 import java.util.ArrayList;

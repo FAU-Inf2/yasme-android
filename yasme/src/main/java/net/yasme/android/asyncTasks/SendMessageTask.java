@@ -2,9 +2,8 @@ package net.yasme.android.asyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.view.View;
 
-import net.yasme.android.YasmeChat;
+import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
@@ -16,10 +15,10 @@ import net.yasme.android.exception.RestServiceException;
  */
 public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
     Context context;
-    YasmeChat activity;
+    ChatActivity activity;
     MessageEncryption aes;
 
-    public SendMessageTask(Context context, YasmeChat activity, MessageEncryption aes) {
+    public SendMessageTask(Context context, ChatActivity activity, MessageEncryption aes) {
         this.context = context;
         this.activity = activity;
         this.aes = aes;

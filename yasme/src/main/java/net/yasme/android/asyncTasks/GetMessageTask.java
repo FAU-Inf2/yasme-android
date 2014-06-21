@@ -5,10 +5,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import net.yasme.android.Constants;
-import net.yasme.android.YasmeChat;
+import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.connection.MessageTask;
-import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
 import net.yasme.android.exception.RestServiceException;
 
@@ -41,7 +39,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
-        lastMessageId = storage.getLong(Constants.LAST_MESSAGE_ID, 0L);
+        lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
         userId = Long.parseLong(params[0]);
         accessToken = params[1];
 
@@ -70,7 +68,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
                     Long.toString(userId), accessToken);
             lastMessageId = messages.size() + lastMessageId;
             SharedPreferences.Editor editor = storage.edit();
-            editor.putLong(Constants.LAST_MESSAGE_ID, lastMessageId);
+            editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
             editor.commit();
         } else {
             Toast.makeText(context, "Keine neuen Nachrichten", Toast.LENGTH_SHORT).show();
