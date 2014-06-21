@@ -62,9 +62,9 @@ public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
         }
 
         // decrypt Messages
-        for (Message msg : messages) {
-            msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
-        }
+        //for (Message msg : messages) {
+        //    msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
+        //}
 
         return true;
     }
