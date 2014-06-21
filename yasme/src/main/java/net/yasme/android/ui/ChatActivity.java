@@ -1,6 +1,5 @@
-package net.yasme.android;
+package net.yasme.android.ui;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.yasme.android.R;
 import net.yasme.android.asyncTasks.GetMessageTask;
 import net.yasme.android.asyncTasks.GetMessageTaskInChat;
 import net.yasme.android.asyncTasks.SendMessageTask;
@@ -30,11 +30,11 @@ import net.yasme.android.storage.DatabaseManager;
 
 import java.util.ArrayList;
 
-public class YasmeChat extends Activity {
+public class ChatActivity extends AbstractYasmeActivity {
 
     SharedPreferences storage;
 
-    private EditText EditMessage;
+    private EditText editMessage;
 	private TextView status;
 
     public String accessToken;
@@ -56,22 +56,18 @@ public class YasmeChat extends Activity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 
-        if (!ConnectionTask.isInitialized()) {
-            ConnectionTask.initParams(getResources().getString(R.string.server_scheme),
-                    getResources().getString(R.string.server_host),
-                    getResources().getString(R.string.server_port));
-        }
+
 
 		Intent intent = getIntent();
-		String userMail = intent.getStringExtra(Constants.USER_MAIL);
-        String userName = intent.getStringExtra(Constants.USER_NAME);
-		long userId = intent.getLongExtra(Constants.USER_ID, 0);
-		long chatId = intent.getLongExtra(Constants.CHAT_ID, 1);
+		String userMail = intent.getStringExtra(USER_MAIL);
+        String userName = intent.getStringExtra(USER_NAME);
+		long userId = intent.getLongExtra(USER_ID, 0);
+		long chatId = intent.getLongExtra(CHAT_ID, 1);
 
         self = new User(userName, userMail, userId);
 
-        storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
-        accessToken = storage.getString(Constants.ACCESSTOKEN, null);
+        storage = getSharedPreferences(STORAGE_PREFS, 0);
+        accessToken = storage.getString(ACCESSTOKEN, null);
 
         //trying to get chat with chatId from local DB
         try {
@@ -106,13 +102,13 @@ public class YasmeChat extends Activity {
 	}
 
 	private void initializeViews() {
-		EditMessage = (EditText) findViewById(R.id.text_message);
+		editMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
 		status.setText("Eingeloggt: " + self.getName());
 	}
 
 	public void send(View view) {
-		String msg = aes.encrypt(EditMessage.getText().toString());
+		String msg = aes.encrypt(editMessage.getText().toString());
 
 		if (msg.isEmpty()) {
 			status.setText("Nichts eingegeben");
@@ -122,7 +118,7 @@ public class YasmeChat extends Activity {
         new SendMessageTask(getApplicationContext(), this, chat.getEncryption())
                 .execute(msg, self.getName(), self.getEmail(), Long.toString(self.getId()),
                         Long.toString(chat.getId()), accessToken);
-		EditMessage.setText("");
+		editMessage.setText("");
 	}
 
     public void asyncUpdate() {

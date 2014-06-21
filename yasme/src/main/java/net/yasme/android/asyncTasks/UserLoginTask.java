@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
-import net.yasme.android.Constants;
-import net.yasme.android.YasmeLogin;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.LoginActivity;
 import net.yasme.android.connection.AuthorizationTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
@@ -20,9 +20,9 @@ import net.yasme.android.storage.DatabaseManager;
 public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
     Context context;
     SharedPreferences storage;
-    YasmeLogin activity;
+    LoginActivity activity;
 
-    public UserLoginTask(Context context, SharedPreferences storage, YasmeLogin activity) {
+    public UserLoginTask(Context context, SharedPreferences storage, LoginActivity activity) {
         this.context = context;
         this.storage = storage;
         this.activity = activity;
@@ -58,14 +58,14 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
             // storage
             SharedPreferences.Editor editor = storage.edit();
-            editor.putLong(Constants.USER_ID, userId);
-            editor.putString(Constants.ACCESSTOKEN, accessToken);
-            editor.putString(Constants.USER_MAIL, email);
+            editor.putLong(AbstractYasmeActivity.USER_ID, userId);
+            editor.putString(AbstractYasmeActivity.ACCESSTOKEN, accessToken);
+            editor.putString(AbstractYasmeActivity.USER_MAIL, email);
 
             //lastMessageId = storage.getLong(Constants.LAST_MESSAGE_ID, 0L);
 
             //Zum debuggen:
-            editor.putLong(Constants.LAST_MESSAGE_ID, 0L);
+            editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
             editor.commit();
 

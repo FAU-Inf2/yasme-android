@@ -1,4 +1,4 @@
-package net.yasme.android.contacts;
+package net.yasme.android.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,11 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import net.yasme.android.R;
+import net.yasme.android.contacts.ContactListContent;
 
 public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener {
 

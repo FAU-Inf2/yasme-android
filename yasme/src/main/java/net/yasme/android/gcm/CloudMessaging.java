@@ -11,8 +11,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import net.yasme.android.Constants;
-import net.yasme.android.YasmeLogin;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.LoginActivity;
 
 import java.io.IOException;
 
@@ -75,7 +75,7 @@ public class CloudMessaging {
 
     public String getRegistrationId() {
         final SharedPreferences prefs = getGCMPreferences(context);
-        String registrationId = prefs.getString(Constants.PROPERTY_REG_ID, "");
+        String registrationId = prefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID, "");
         if (registrationId.isEmpty()) {
             Log.i(TAG, "Registration not found.");
             return "";
@@ -83,7 +83,7 @@ public class CloudMessaging {
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing regID is not guaranteed to work with the new
         // app version.
-        int registeredVersion = prefs.getInt(Constants.PROPERTY_APP_VERSION, Integer.MIN_VALUE);
+        int registeredVersion = prefs.getInt(AbstractYasmeActivity.PROPERTY_APP_VERSION, Integer.MIN_VALUE);
         int currentVersion = getAppVersion(context);
         if (registeredVersion != currentVersion) {
             Log.i(TAG, "App version changed.");
@@ -95,7 +95,7 @@ public class CloudMessaging {
     public SharedPreferences getGCMPreferences(Context context) {
         // This sample app persists the registration ID in shared preferences, but
         // how you store the regID in your app is up to you.
-        return context.getSharedPreferences(YasmeLogin.class.getSimpleName(),
+        return context.getSharedPreferences(LoginActivity.class.getSimpleName(),
                 Context.MODE_PRIVATE);
     }
 
@@ -148,8 +148,8 @@ public class CloudMessaging {
         int appVersion = getAppVersion(context);
         Log.i(TAG, "Saving regId on app version " + appVersion);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(Constants.PROPERTY_REG_ID, regId);
-        editor.putInt(Constants.PROPERTY_APP_VERSION, appVersion);
+        editor.putString(AbstractYasmeActivity.PROPERTY_REG_ID, regId);
+        editor.putInt(AbstractYasmeActivity.PROPERTY_APP_VERSION, appVersion);
         editor.commit();
     }
 

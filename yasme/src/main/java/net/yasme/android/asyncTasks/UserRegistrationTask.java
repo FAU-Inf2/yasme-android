@@ -3,11 +3,9 @@ package net.yasme.android.asyncTasks;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
-import net.yasme.android.Constants;
-import net.yasme.android.R;
-import net.yasme.android.YasmeLogin;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.LoginActivity;
 import net.yasme.android.connection.UserTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
@@ -21,9 +19,9 @@ import net.yasme.android.exception.RestServiceException;
 public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
     Context context;
     SharedPreferences storage;
-    YasmeLogin activity;
+    LoginActivity activity;
 
-    public UserRegistrationTask(Context context, SharedPreferences storage, YasmeLogin activity) {
+    public UserRegistrationTask(Context context, SharedPreferences storage, LoginActivity activity) {
         this.context = context;
         this.storage = storage;
         this.activity = activity;
@@ -63,8 +61,8 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         if(success) {
             SharedPreferences.Editor editor = storage.edit();
-            editor.putString(Constants.USER_NAME, name);
-            editor.putLong(Constants.LAST_MESSAGE_ID, 0L);
+            editor.putString(AbstractYasmeActivity.USER_NAME, name);
+            editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
             editor.commit();
 
             //Login after registration was successfull

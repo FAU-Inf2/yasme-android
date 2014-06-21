@@ -1,4 +1,4 @@
-package net.yasme.android.contacts.dummy;
+package net.yasme.android.dummy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,10 +1,9 @@
 package net.yasme.android.asyncTasks;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
-import net.yasme.android.InviteToChat;
+import net.yasme.android.ui.InviteToChatActivity;
 import net.yasme.android.connection.SearchTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
@@ -17,14 +16,14 @@ import java.util.List;
 public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
 
     protected Context context;
-    protected InviteToChat activity;
+    protected InviteToChatActivity activity;
 
     protected SearchTask searchTask = SearchTask.getInstance();
     private long userId;
     private String accessToken;
     private List<User> allUsers;
 
-    public GetAllUsersTask(Context context, InviteToChat activity) {
+    public GetAllUsersTask(Context context, InviteToChatActivity activity) {
         this.context = context;
         this.activity = activity;
     }

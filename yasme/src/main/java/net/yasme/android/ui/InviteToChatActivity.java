@@ -1,9 +1,7 @@
-package net.yasme.android;
+package net.yasme.android.ui;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
@@ -12,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -27,7 +24,7 @@ import net.yasme.android.entities.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InviteToChat extends Activity implements OnClickListener{
+public class InviteToChatActivity extends AbstractYasmeActivity implements OnClickListener{
 
     private long userId;
     private String accessToken;
@@ -47,15 +44,11 @@ public class InviteToChat extends Activity implements OnClickListener{
                     .add(R.id.container, new PlaceholderFragment()).commit();
         }
 
-        if (!ConnectionTask.isInitialized()) {
-            ConnectionTask.initParams(getResources().getString(R.string.server_scheme),getResources().getString(R.string.server_host),getResources().getString(R.string.server_port));
-        }
-
         findViewsById();
 
-        SharedPreferences storage = getSharedPreferences(Constants.STORAGE_PREFS, 0);
-        userId = storage.getLong(Constants.USER_ID, 0);
-        accessToken = storage.getString(Constants.ACCESSTOKEN, null);
+        SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
+        userId = storage.getLong(USER_ID, 0);
+        accessToken = storage.getString(ACCESSTOKEN, null);
 
         new GetAllUsersTask(getApplicationContext(), this).execute(Long.toString(userId), accessToken);
     }

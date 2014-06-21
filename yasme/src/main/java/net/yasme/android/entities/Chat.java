@@ -4,7 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import net.yasme.android.YasmeChat;
+import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.exception.RestServiceException;
@@ -53,7 +53,7 @@ public class Chat implements Serializable {
      * Constructors *
      */
     @JsonIgnore
-    public Chat(long id, User user, YasmeChat activity) {
+    public Chat(long id, User user, ChatActivity activity) {
         this.id = id;
         accessToken = activity.accessToken;
 

@@ -1,10 +1,9 @@
 package net.yasme.android.asyncTasks;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
-import net.yasme.android.YasmeLogin;
+import net.yasme.android.ui.LoginActivity;
 
 import net.yasme.android.connection.DeviceTask;
 import net.yasme.android.entities.Device;
@@ -16,9 +15,9 @@ import net.yasme.android.exception.RestServiceException;
  */
 public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
     Context context;
-    YasmeLogin activity;
+    LoginActivity activity;
 
-    public DeviceRegistrationTask(Context context, YasmeLogin activity){
+    public DeviceRegistrationTask(Context context, LoginActivity activity){
         this.context = context;
         this.activity = activity;
 
