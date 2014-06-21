@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -20,15 +21,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
 import net.yasme.android.asyncTasks.UserLoginTask;
 import net.yasme.android.asyncTasks.UserRegistrationTask;
 import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.gcm.CloudMessaging;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
 public class YasmeLogin extends Activity {
+
+    //GCM
+    CloudMessaging cloudMessaging;
+    String regid;
+    GoogleCloudMessaging gcm;
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -56,10 +65,24 @@ public class YasmeLogin extends Activity {
 
     SharedPreferences storage;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //GCM Begin
+        cloudMessaging = CloudMessaging.getInstance(this);
+
+        if (cloudMessaging.checkPlayServices()) {
+            gcm = GoogleCloudMessaging.getInstance(this);
+            regid = cloudMessaging.getRegistrationId();
+
+            if (regid.isEmpty()) {
+                cloudMessaging.registerInBackground();
+            }
+        } else {
+            Log.i(cloudMessaging.TAG, "No valid Google Play Services APK found.");
+        }
+        //GCM End
 
         if (!ConnectionTask.isInitialized()) {
             ConnectionTask.initParams(getResources().getString(R.string.server_scheme), getResources().getString(R.string.server_host), getResources().getString(R.string.server_port));
@@ -310,6 +333,12 @@ public class YasmeLogin extends Activity {
                     Toast.LENGTH_SHORT
             ).show();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cloudMessaging.checkPlayServices();
     }
 
     @Override
