@@ -17,6 +17,7 @@ public abstract class AbstractYasmeActivity  extends Activity {
     public final static String USER_NAME = "net.yasme.android.USER_NAME";
     public final static String USER_MAIL = "net.yasme.android.USER_MAIL";
     public final static String USER_PW = "net.yasme.android.USER_PW";
+    public final static String DEVICE_ID = "net.yasme.android.DEVICE_ID";
 
     public final static String CHAT_ID = "net.yasme.android.CHAT_ID";
     public final static String LAST_MESSAGE_ID = "net.yasme.android.LAST_MESSAGE_ID";
