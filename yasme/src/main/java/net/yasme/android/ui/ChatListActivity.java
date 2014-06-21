@@ -1,6 +1,5 @@
 package net.yasme.android.ui;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,8 +13,6 @@ import android.view.ViewGroup;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.GetChatDataTask;
 import net.yasme.android.asyncTasks.GetProfileDataTask;
-import net.yasme.android.connection.ConnectionTask;
-import net.yasme.android.contacts.YasmeContact;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 
@@ -77,7 +74,7 @@ public class ChatListActivity extends AbstractYasmeActivity {
         }
 
         if (id == R.id.action_contacts){
-            Intent intent = new Intent(this, YasmeContact.class);
+            Intent intent = new Intent(this, ContactActivity.class);
             startActivity(intent);
             return true;
         }

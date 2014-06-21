@@ -1,4 +1,4 @@
-package net.yasme.android.contacts;
+package net.yasme.android.ui;
 
 import java.util.Locale;
 
@@ -10,16 +10,15 @@ import android.app.FragmentTransaction;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
 import net.yasme.android.R;
 
-public class YasmeContact extends Activity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener {
+public class ContactActivity extends Activity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -135,7 +134,7 @@ public class YasmeContact extends Activity implements ActionBar.TabListener, Con
                 case 0:
                     return new ContactListItemFragment();
                 case 1:
-                    return new SearchContact();
+                    return new SearchContactFragment();
             }
 
             return PlaceholderFragment.newInstance(position + 1);
