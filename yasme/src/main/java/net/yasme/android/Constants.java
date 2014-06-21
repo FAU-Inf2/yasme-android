@@ -14,4 +14,7 @@ public class Constants {
     public final static String ACCESSTOKEN = "net.yasme.android.ACCESSTOKEN";
 
     public final static String STORAGE_PREFS = "net.yasme.android.STORAGE_PREFS";
+
+    public static final String PROPERTY_REG_ID = "registration_id";
+    public static final String PROPERTY_APP_VERSION = "appVersion";
 }

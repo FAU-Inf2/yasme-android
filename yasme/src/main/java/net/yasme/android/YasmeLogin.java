@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -28,6 +29,8 @@ import net.yasme.android.asyncTasks.UserRegistrationTask;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.gcm.CloudMessaging;
 
+import java.io.IOException;
+
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
@@ -38,6 +41,7 @@ public class YasmeLogin extends Activity {
     CloudMessaging cloudMessaging;
     String regid;
     GoogleCloudMessaging gcm;
+    //GCMEND
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -76,8 +80,9 @@ public class YasmeLogin extends Activity {
             gcm = GoogleCloudMessaging.getInstance(this);
             regid = cloudMessaging.getRegistrationId();
 
+            System.out.println("[DEBUG] Empty?" + regid.isEmpty());
             if (regid.isEmpty()) {
-                cloudMessaging.registerInBackground();
+                registerInBackground();
             }
         } else {
             Log.i(cloudMessaging.TAG, "No valid Google Play Services APK found.");
@@ -369,5 +374,20 @@ public class YasmeLogin extends Activity {
 
         // Commit the edits!
         editor.commit();
+    }
+
+    public void registerInBackground() {
+
+        new AsyncTask<Void, Void, String>() {
+
+            protected String doInBackground(Void[] params) {
+                return cloudMessaging.registerInBackground();
+            }
+
+            protected void onPostExecute(String msg) {
+                //mDisplay.append(msg + "\n");
+            }
+
+        }.execute(null, null, null);
     }
 }
