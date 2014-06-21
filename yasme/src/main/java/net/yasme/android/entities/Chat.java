@@ -55,7 +55,7 @@ public class Chat implements Serializable {
     @JsonIgnore
     public Chat(long id, User user, ChatActivity activity) {
         this.id = id;
-        accessToken = activity.accessToken;
+        accessToken = activity.getAccessToken();
 
         participants = new ArrayList<User>();
         messages = new ArrayList<Message>();

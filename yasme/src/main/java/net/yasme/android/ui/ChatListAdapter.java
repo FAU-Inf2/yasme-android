@@ -2,6 +2,7 @@ package net.yasme.android.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,4 +81,15 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         TextView subtitleView;
     }
     */
+
+    public void updateChats(ArrayList<Chat> updatedChats) {
+        // This:
+        // chats = updatedChats;
+        // does not work. No update at runtime!
+        chats.clear();
+        for (int i=0; i < updatedChats.size(); i++) {
+            chats.add(updatedChats.get(i));
+        }
+        Log.d(this.getClass().getSimpleName(), "Chats updated: " + this.chats.size());
+    }
 }

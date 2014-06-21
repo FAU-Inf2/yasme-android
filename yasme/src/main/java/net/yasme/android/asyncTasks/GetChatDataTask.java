@@ -1,18 +1,12 @@
 package net.yasme.android.asyncTasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
-import net.yasme.android.ui.ChatListAdapter;
-import net.yasme.android.R;
-import net.yasme.android.ui.ChatListActivity;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.ChatListAdapter;
+import net.yasme.android.ui.ChatListFragment;
 
 import java.util.ArrayList;
 
@@ -20,19 +14,18 @@ import java.util.ArrayList;
  * Created by robert on 19.06.14.
  */
 public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
-    Context context;
-    ChatListActivity activity;
+    ChatListFragment fragment;
+    int layoutId;
 
-    public GetChatDataTask(Context context, ChatListActivity activity) {
-        this.context = context;
-        this.activity = activity;
+    public GetChatDataTask(ChatListFragment fragment) {
+        this.fragment = fragment;
     }
 
-    ArrayList<Chat> chatrooms = null;
+    ArrayList<Chat> chatRooms = null;
 
     protected Boolean doInBackground(String... params) {
-        chatrooms = DatabaseManager.getInstance().getAllChats();
-        return chatrooms != null;
+        chatRooms = DatabaseManager.getInstance().getAllChats();
+        return chatRooms != null;
     }
 
     protected void onPostExecute(final Boolean success) {
@@ -44,33 +37,21 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
         }
 
         //DEBUG
-        if (chatrooms.size() <= 0) {
+        if (chatRooms.size() <= 0) {
             Log.d(this.getClass().getSimpleName(), "Benutze Dummy-Liste");
             System.out.println("Benutze Dummy-Liste");
-            createDummyChatroomList();
+            createDummyChatRoomList();
         }
 
-        ListAdapter adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatrooms);
-        final ListView list = (ListView)activity.findViewById(R.id.chatroom_list);
-
-        list.setAdapter(adapter);
-
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int pos, long id)
-            {
-                //Chat chat = ((ChatListAdapter)list.getAdapter()).getItem(pos);
-                //chat.getId();
-                Long chatId = (Long)view.getTag();
-                activity.showChat(chatId);
-            }
-        });
-
+        ChatListAdapter adapter = (ChatListAdapter)fragment.getListAdapter();
+        //fragment.setListAdapter(adapter);
+        Log.d(this.getClass().getSimpleName(), "UpdateMessages: " + chatRooms.size());
+        adapter.updateChats(chatRooms);
+        adapter.notifyDataSetChanged();
     }
 
-    protected void createDummyChatroomList() {
-        chatrooms = new ArrayList<Chat>();
+    protected void createDummyChatRoomList() {
+        chatRooms = new ArrayList<Chat>();
         int number = 10;
         for (int i = 1; i < number; i++)
         {
@@ -78,7 +59,8 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
             chat.setId(i);
             chat.setName("Chat " + i);
             chat.setNumberOfParticipants(number-i);
-            chatrooms.add(chat);
+            chatRooms.add(chat);
         }
     }
 }
+

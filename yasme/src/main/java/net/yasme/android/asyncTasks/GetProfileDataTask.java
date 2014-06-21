@@ -43,7 +43,7 @@ public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
         if(!success) {
             return;
         }
-        activity.getSelf().setName(selfProfile.getName());
+        activity.getSelfUser().setName(selfProfile.getName());
         TextView profileInfo = (TextView) activity.findViewById(R.id.profileInfo);
         profileInfo.setText(selfProfile.getName() + ": " + userMail);
     }

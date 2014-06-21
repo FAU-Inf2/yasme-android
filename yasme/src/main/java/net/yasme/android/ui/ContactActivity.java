@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 
 import net.yasme.android.R;
 
-public class ContactActivity extends Activity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener {
+public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide

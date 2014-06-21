@@ -36,10 +36,7 @@ public class ChatActivity extends AbstractYasmeActivity {
     private EditText editMessage;
 	private TextView status;
 
-    public String accessToken;
-
     private Chat chat;
-    private User self;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,18 +50,8 @@ public class ChatActivity extends AbstractYasmeActivity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 
-
-
 		Intent intent = getIntent();
-		String userMail = intent.getStringExtra(USER_MAIL);
-        String userName = intent.getStringExtra(USER_NAME);
-		long userId = intent.getLongExtra(USER_ID, 0);
 		long chatId = intent.getLongExtra(CHAT_ID, 1);
-
-        self = new User(userName, userMail, userId);
-
-        storage = getSharedPreferences(STORAGE_PREFS, 0);
-        accessToken = storage.getString(ACCESSTOKEN, null);
 
         //trying to get chat with chatId from local DB
         try {
@@ -76,7 +63,7 @@ public class ChatActivity extends AbstractYasmeActivity {
                     "[Debug] Chat aus DB holen failed", Toast.LENGTH_SHORT).show();
         }
         if(chat == null) {
-            chat = new Chat(chatId, new User(userName, userMail, userId), this);
+            chat = new Chat(chatId, selfUser, this);
         }
 	}
 
@@ -100,7 +87,7 @@ public class ChatActivity extends AbstractYasmeActivity {
 	private void initializeViews() {
 		editMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
-		status.setText("Eingeloggt: " + self.getName());
+		status.setText("Eingeloggt: " + selfUser.getName());
 	}
 
 	public void send(View view) {
@@ -112,7 +99,7 @@ public class ChatActivity extends AbstractYasmeActivity {
 		}
 
         new SendMessageTask(getApplicationContext(), this, chat.getEncryption())
-                .execute(msg, self.getName(), self.getEmail(), Long.toString(self.getId()),
+                .execute(msg, selfUser.getName(), selfUser.getEmail(), Long.toString(selfUser.getId()),
                         Long.toString(chat.getId()), accessToken);
 		editMessage.setText("");
 	}
@@ -120,14 +107,14 @@ public class ChatActivity extends AbstractYasmeActivity {
     public void asyncUpdate() {
         status.setText("GET messages");
         new GetMessageTask(getApplicationContext(), storage)
-                .execute(Long.toString(self.getId()), accessToken);
+                .execute(Long.toString(selfUser.getId()), accessToken);
         status.setText("GET messages done");
     }
 
 	public void update(View view) {
 		status.setText("GET messages");
         new GetMessageTaskInChat(getApplicationContext(), this, chat.getEncryption(), storage)
-                .execute(Long.toString(self.getId()), accessToken);
+                .execute(Long.toString(selfUser.getId()), accessToken);
 		status.setText("GET messages done");
 	}
 
@@ -150,7 +137,7 @@ public class ChatActivity extends AbstractYasmeActivity {
             textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
             textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
 
-            if (msg.getSender().getId() == self.getId()) {
+            if (msg.getSender().getId() == selfUser.getId()) {
                 textView.setGravity(Gravity.RIGHT);
                 row.setGravity(Gravity.RIGHT);
                 textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
