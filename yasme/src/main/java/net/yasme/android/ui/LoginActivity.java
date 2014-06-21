@@ -25,9 +25,11 @@ import android.widget.Toast;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import net.yasme.android.R;
+import net.yasme.android.asyncTasks.DeviceRegistrationTask;
 import net.yasme.android.asyncTasks.UserLoginTask;
 import net.yasme.android.asyncTasks.UserRegistrationTask;
 import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.entities.Device;
 import net.yasme.android.gcm.CloudMessaging;
 
 /**
@@ -47,6 +49,7 @@ public class LoginActivity extends AbstractYasmeActivity {
      */
     private UserLoginTask authTask = null;
     private UserRegistrationTask regTask = null;
+    private DeviceRegistrationTask devRegTask = null;
 
     protected String accessToken;
 
@@ -302,16 +305,22 @@ public class LoginActivity extends AbstractYasmeActivity {
     * */
     public boolean deviceCheck(){
         //try to load device from shared preferences
-        SharedPreferences prefs = getSharedPreferences(STORAGE_PREFS,
+        SharedPreferences prefs = getSharedPreferences(DEVICE_PREFS,
                 MODE_PRIVATE);
         long deviceId = prefs.getLong(DEVICE_ID,-1);
         if(deviceId == -1){
-            // TODO change to true
-            //return false;
+            return false;
 
         }
         Log.d(this.getClass().getSimpleName(),"[DEBUG] deviceId is" + deviceId);
         return true;
+    }
+
+    public void onPostDevReExecute(Boolean success, long deviceId){
+        if(success){
+            Intent intent = new Intent(this, ChatListActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void onPostLoginExecute(Boolean success, long userId, String accessToken) {
@@ -329,6 +338,10 @@ public class LoginActivity extends AbstractYasmeActivity {
             }else{
                 // TODO register device
                 Log.d(this.getClass().getSimpleName(),"[DEBUG] Device does not exist in Database");
+                Log.d(this.getClass().getSimpleName(),"[DEBUG] Starting task to register device");
+                devRegTask = new DeviceRegistrationTask(getApplicationContext(), storage, this);
+                devRegTask.execute(this.accessToken,Long.toString(this.userId));
+
             }
         } else {
             passwordView.setError(getString(R.string.error_incorrect_password));
