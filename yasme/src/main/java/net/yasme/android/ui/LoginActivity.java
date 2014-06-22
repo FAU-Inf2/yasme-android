@@ -295,6 +295,9 @@ public class LoginActivity extends AbstractYasmeActivity {
     * This method checks if there is a device in the DB
     * */
     public boolean deviceCheck() {
+        Log.d(this.getClass().getSimpleName(), "[DEBUG] MODEL is " + Build.MODEL);
+        Log.d(this.getClass().getSimpleName(), "[DEBUG] DEVICE is " + Build.DEVICE);
+        Log.d(this.getClass().getSimpleName(), "[DEBUG] PRODUCT is " + Build.PRODUCT);
         //try to load device from shared preferences
         SharedPreferences prefs = getSharedPreferences(DEVICE_PREFS,
                 MODE_PRIVATE);
