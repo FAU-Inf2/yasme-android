@@ -30,4 +30,12 @@
     <!-- Invite to chat -->
     <string name="button_start_chat">Chat!</string>
     <string name="toast_no_selection">Mark the users with whom you want to chat</string>
+
+    <!-- Contacts -->
+    <string-array name="search_spinner_content">
+        <item>Search By Name</item>
+        <item>Search By E-Mail</item>
+        <item>Search By Phone Number</item>
+    </string-array>
+
 </resources>

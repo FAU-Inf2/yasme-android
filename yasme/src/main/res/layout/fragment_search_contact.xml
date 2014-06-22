@@ -5,16 +5,40 @@
     tools:context=".contacts.SearchContact">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textView"
-        android:layout_gravity="center" />
+        <TableRow
+            android:layout_width="wrap_content">
+            <Spinner
+                android:id="@+id/search_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="10mm">
+            </Spinner>
+        </TableRow>
+        <TableRow
+            android:layout_width="wrap_content">
+            <EditText
+                android:text="search here"
+                android:layout_width="wrap_content"
+                android:layout_height="15mm"
+                android:id="@+id/search_text" />
+        </TableRow>
+        <TableRow
+            android:layout_width="wrap_content">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="10mm"
+                android:text="Search"
+                android:id="@+id/search_button" />
+        </TableRow>
+
+        <ListView
+            android:layout_marginTop="5mm"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/search_listView"></ListView>
+    </TableLayout>
 
 </FrameLayout>
