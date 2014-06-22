@@ -18,12 +18,14 @@ public class Device {
     private User user;
     private String number;  // optional
     private String publicKey;
+    private String product; // end-to-end visible product name
 
-    public Device(User user, Platform platform, String type, String number) {
+    public Device(User user, Platform platform, String type, String number, String product) {
         this.user = user;
         this.platform = platform;
         this.type = type;
         this.number = number;
+        this.product = product;
     }
 
     public Device() {
@@ -37,9 +39,13 @@ public class Device {
         return this.user;
     }
 
+    public String getProduct(){return this.product;}
+
     public void setId(long id) {
         this.id = id;
     }
+
+    public void setProduct(String product){this.product = product;}
 
     public void setUser(User user) {
         this.user = user;

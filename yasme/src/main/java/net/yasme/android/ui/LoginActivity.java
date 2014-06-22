@@ -298,6 +298,7 @@ public class LoginActivity extends AbstractYasmeActivity {
         Log.d(this.getClass().getSimpleName(), "[DEBUG] MODEL is " + Build.MODEL);
         Log.d(this.getClass().getSimpleName(), "[DEBUG] DEVICE is " + Build.DEVICE);
         Log.d(this.getClass().getSimpleName(), "[DEBUG] PRODUCT is " + Build.PRODUCT);
+        Log.d(this.getClass().getSimpleName(), "[DEBUG] BRAND is " + Build.BRAND);
         //try to load device from shared preferences
         SharedPreferences prefs = getSharedPreferences(DEVICE_PREFS,
                 MODE_PRIVATE);
