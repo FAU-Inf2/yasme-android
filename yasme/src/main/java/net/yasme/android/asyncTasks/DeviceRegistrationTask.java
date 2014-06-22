@@ -31,6 +31,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
     /*
     * @params params[0] is accessToken
     * @params params[1] is userId
+    * @param params[2] ist product
     * */
 
 
@@ -39,21 +40,23 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         String accessToken = params[0];
         long userId = Long.parseLong(params[1]);
 
+        // the product : e.g Google Nexus
+        String product = params[2];
+
         long deviceIdFromServer;
 
         //register device through REST-Call
         // create a new device to be registered
 
         // user which want to register the device
+        // ignore the name user, the server will set the right values according to the userId
         User user = new User("user",userId);
 
         // indicates if its a smartphone or a tablet
         String type = "smartphone";
 
-        // the phone number
+        // TODO the phone number
         String number = "00000000";
-
-        String product = "pro";
 
         Device deviceToBeRegistered = new Device(user,Device.Platform.ANDROID,type,number,product);
 
@@ -79,10 +82,10 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
             // store to SharedPreferences
             SharedPreferences.Editor editor = prefs.edit();
             editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
+            editor.commit();
             Log.d(this.getClass().getSimpleName(),"[DEBUG] Device stored to SharedPreferences");
             activity.onPostDeviceRegExecute(success,deviceId);
         }
-
 
     }
 

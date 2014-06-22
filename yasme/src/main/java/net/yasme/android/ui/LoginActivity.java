@@ -313,7 +313,6 @@ public class LoginActivity extends AbstractYasmeActivity {
         long deviceId = prefs.getLong(DEVICE_ID, -1);
         if (deviceId == -1) {
             return false;
-
         }
         // TODO devices from server
         // TODO use case : plain app + old user + old device
