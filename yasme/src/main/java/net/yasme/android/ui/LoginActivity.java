@@ -22,8 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.DeviceRegistrationTask;
 import net.yasme.android.asyncTasks.UserLoginTask;
@@ -38,18 +36,13 @@ import net.yasme.android.gcm.CloudMessaging;
  */
 public class LoginActivity extends AbstractYasmeActivity {
 
-    //GCM
-    CloudMessaging cloudMessaging;
-    String regid;
-    GoogleCloudMessaging gcm;
-    //GCMEND
-
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask authTask = null;
     private UserRegistrationTask regTask = null;
     private DeviceRegistrationTask devRegTask = null;
+    private CloudMessaging cloudMessaging = null;
 
     protected String accessToken;
 
@@ -79,9 +72,7 @@ public class LoginActivity extends AbstractYasmeActivity {
         cloudMessaging = CloudMessaging.getInstance(this);
 
         if (cloudMessaging.checkPlayServices()) {
-            gcm = GoogleCloudMessaging.getInstance(this);
-            regid = cloudMessaging.getRegistrationId();
-
+            String regid = cloudMessaging.getRegistrationId();
             System.out.println("[DEBUG] Empty?" + regid.isEmpty());
             if (regid.isEmpty()) {
                 registerInBackground();
@@ -303,22 +294,22 @@ public class LoginActivity extends AbstractYasmeActivity {
     /*
     * This method checks if there is a device in the DB
     * */
-    public boolean deviceCheck(){
+    public boolean deviceCheck() {
         //try to load device from shared preferences
         SharedPreferences prefs = getSharedPreferences(DEVICE_PREFS,
                 MODE_PRIVATE);
-        long deviceId = prefs.getLong(DEVICE_ID,-1);
-        if(deviceId == -1){
+        long deviceId = prefs.getLong(DEVICE_ID, -1);
+        if (deviceId == -1) {
             return false;
 
         }
-        Log.d(this.getClass().getSimpleName(),"[DEBUG] deviceId is" + deviceId);
+        Log.d(this.getClass().getSimpleName(), "[DEBUG] deviceId is" + deviceId);
         return true;
     }
 
-    public void onPostDeviceRegExecute(Boolean success, long deviceId){
-        if(success){
-            Log.d(this.getClass().getSimpleName(),"[DEBUG] Login after device registration");
+    public void onPostDeviceRegExecute(Boolean success, long deviceId) {
+        if (success) {
+            Log.d(this.getClass().getSimpleName(), "[DEBUG] Login after device registration");
             Intent intent = new Intent(this, ChatListActivity.class);
             startActivity(intent);
         }
@@ -332,16 +323,16 @@ public class LoginActivity extends AbstractYasmeActivity {
 
         if (success) {
             // check if there is a device in the Database
-            if(deviceCheck() == true) {
-                Log.d(this.getClass().getSimpleName(),"[DEBUG] Device exists in Database");
+            if (deviceCheck() == true) {
+                Log.d(this.getClass().getSimpleName(), "[DEBUG] Device exists in Database");
                 Intent intent = new Intent(this, ChatListActivity.class);
                 startActivity(intent);
-            }else{
+            } else {
                 // TODO register device
-                Log.d(this.getClass().getSimpleName(),"[DEBUG] Device does not exist in Database");
-                Log.d(this.getClass().getSimpleName(),"[DEBUG] Starting task to register device");
+                Log.d(this.getClass().getSimpleName(), "[DEBUG] Device does not exist in Database");
+                Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device");
                 devRegTask = new DeviceRegistrationTask(getApplicationContext(), storage, this);
-                devRegTask.execute(this.accessToken,Long.toString(this.userId));
+                devRegTask.execute(this.accessToken, Long.toString(this.userId));
 
             }
         } else {
@@ -403,8 +394,12 @@ public class LoginActivity extends AbstractYasmeActivity {
             }
 
             protected void onPostExecute(String msg) {
-                //mDisplay.append(msg + "\n");
+                //Zu diesem Zeitpunkt ist die RegId bereits als SharedPref.
+                // in AbstractYasmeActivity.PROPERTY_REG_ID abgelegt.
+                System.out.println(msg);
+
             }
+
 
         }.execute(null, null, null);
     }

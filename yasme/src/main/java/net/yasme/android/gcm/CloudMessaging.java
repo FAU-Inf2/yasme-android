@@ -23,28 +23,15 @@ import java.io.IOException;
 
 public class CloudMessaging {
 
+
+    public static final String TAG = "YasmeGCM";
+
+
     private static CloudMessaging instance;
     private Activity activity;
-
-    public static final String EXTRA_MESSAGE = "message";
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-
-    /**
-     * Substitute you own sender ID here. This is the project number you got
-     * from the API Console, as described in "Getting Started."
-     */
-    String SENDER_ID = "104759172131";
-
-    /**
-     * Tag used on log messages.
-     */
-
-    public static final String TAG = "GCMDemo";
-
-    GoogleCloudMessaging gcm;
-    Context context;
-
-    String regid;
+    private GoogleCloudMessaging gcm;
+    private Context context;
+    private String regid;
 
     public static CloudMessaging getInstance(Activity activity) {
         if (instance == null) {
@@ -56,6 +43,7 @@ public class CloudMessaging {
     private CloudMessaging(Activity activity) {
         this.activity = activity;
         this.context = activity.getApplicationContext();
+        this.gcm = GoogleCloudMessaging.getInstance(activity);
     }
 
     public boolean checkPlayServices() {
@@ -63,7 +51,7 @@ public class CloudMessaging {
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, activity,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                        AbstractYasmeActivity.PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
                 Log.i(TAG, "This device is not supported.");
                 activity.finish();
@@ -93,19 +81,16 @@ public class CloudMessaging {
     }
 
     public SharedPreferences getGCMPreferences(Context context) {
-        // This sample app persists the registration ID in shared preferences, but
-        // how you store the regID in your app is up to you.
         return context.getSharedPreferences(LoginActivity.class.getSimpleName(),
                 Context.MODE_PRIVATE);
     }
 
-    public static int getAppVersion(Context context) {
+    public int getAppVersion(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0);
             return packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            // should never happen
             throw new RuntimeException("Could not get package name: " + e);
         }
     }
@@ -117,20 +102,12 @@ public class CloudMessaging {
             if (gcm == null) {
                 gcm = GoogleCloudMessaging.getInstance(context);
             }
-            regid = gcm.register(SENDER_ID);
+            regid = gcm.register(AbstractYasmeActivity.SENDER_ID);
             msg = "Device registered, registration ID=" + regid;
 
             System.out.println("Device registered, registration ID=" + regid);
 
-            // You should send the registration ID to your server over HTTP,
-            // so it can use GCM/HTTP or CCS to send messages to your app.
-            // The request to your server should be authenticated if your app
-            // is using accounts.
             sendRegistrationIdToBackend();
-
-            // For this demo: we don't need to send it because the device
-            // will send upstream messages to a server that echo back the
-            // message using the 'from' address in the message.
 
             // Persist the regID - no need to register again.
             storeRegistrationId(context, regid);
@@ -154,6 +131,6 @@ public class CloudMessaging {
     }
 
     private void sendRegistrationIdToBackend() {
-        // Your implementation here.
+
     }
 }
