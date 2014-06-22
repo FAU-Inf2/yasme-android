@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class ContactListContent {
 
-    public static List<ContactListItem> ITEMS = new ArrayList<ContactListItem>();
+    public List<ContactListItem> items = new ArrayList<ContactListItem>();
 
     public static Map<String, ContactListItem> ITEM_MAP = new HashMap<String, ContactListItem>();
 
@@ -39,6 +39,7 @@ public class ContactListContent {
         map.put("name", item.content);
         map.put("mail", item.subContent);
         listMap.add(map);
+        items.add(item);
     }
 
     public List<Map<String,String>> getMap(){

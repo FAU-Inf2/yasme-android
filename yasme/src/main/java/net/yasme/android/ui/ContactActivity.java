@@ -124,6 +124,9 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
     @Override
     public void onFragmentInteraction(String id) {
 
+        System.out.println("---------- in der Activity mit id: "+id+" ---------------");
+
+
     }
 
     /**
