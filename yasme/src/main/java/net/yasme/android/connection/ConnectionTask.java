@@ -3,12 +3,9 @@ package net.yasme.android.connection;
 import net.yasme.android.connection.ssl.HttpClient;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -19,8 +16,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-
-import static net.yasme.android.connection.ConnectionTask.Request.*;
 
 /**
  * Created by martin on 14.06.2014.
@@ -53,8 +48,10 @@ public class ConnectionTask {
      * Session Params
      */
     protected URI uri;
-    protected long userId;
-    protected String accessToken;
+    protected static String userId;
+    protected static String accessToken;
+    protected static boolean initializedSession = false;
+
 
     public static void initParams(String serverScheme, String serverHost, String serverPort) {
 
@@ -62,12 +59,20 @@ public class ConnectionTask {
         ConnectionTask.serverHost = serverHost;
         ConnectionTask.serverPort = Integer.parseInt(serverPort);
         ConnectionTask.initialized = true;
+        ConnectionTask.initializedSession = false;
         buildURI();
 
         ConnectionTask.httpClient = HttpClient.createSSLClient();
         ConnectionTask.objectWriter = new ObjectMapper().writer()
                 .withDefaultPrettyPrinter();
     }
+
+    public static void initSession(long userId, String accessToken) {
+        ConnectionTask.userId = Long.toString(userId);
+        ConnectionTask.accessToken = accessToken;
+        ConnectionTask.initializedSession = true;
+    }
+
 
     public static boolean isInitialized() {
         return initialized;
@@ -119,6 +124,11 @@ public class ConnectionTask {
 
         requestBase.setHeader("Content-type", "application/json");
         requestBase.setHeader("Accept", "application/json");
+
+        if(initializedSession) {
+            requestBase.setHeader("userId", ConnectionTask.userId);
+            requestBase.setHeader("Authorization", accessToken);
+        }
 
         return httpClient.execute(requestBase);
     }

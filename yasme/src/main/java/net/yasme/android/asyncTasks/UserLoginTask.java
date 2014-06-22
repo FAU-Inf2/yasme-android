@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
+import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.LoginActivity;
 import net.yasme.android.connection.AuthorizationTask;
@@ -53,6 +54,9 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             System.out.println("LoginReturn:");
             userId = Long.parseLong(loginReturn[0]);
             accessToken = loginReturn[1];
+
+            //initConnection Session
+            ConnectionTask.initSession(userId,accessToken);
 
             System.out.println(loginReturn[0]);
 
