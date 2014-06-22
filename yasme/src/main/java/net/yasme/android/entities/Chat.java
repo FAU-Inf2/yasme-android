@@ -155,6 +155,10 @@ public class Chat implements Serializable {
         this.numberOfParticipants = numberOfParticipants;
     }
 
+    public void setEncryption(MessageEncryption aes) {
+        this.aes = aes;
+    }
+
     @JsonIgnore
     public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;

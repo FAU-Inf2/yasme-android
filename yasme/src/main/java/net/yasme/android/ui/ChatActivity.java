@@ -69,8 +69,11 @@ public class ChatActivity extends AbstractYasmeActivity {
         if(chat == null) {
             chat = new Chat(chatId, selfUser, this);
         }
+
+        //DEBUG, TODO: encryption speichern und auslesen
         aes = new MessageEncryption(getApplicationContext(), chat, selfUser.getId(), accessToken);
-	}
+        chat.setEncryption(aes);
+    }
 
 	@Override
 	protected void onStart() {

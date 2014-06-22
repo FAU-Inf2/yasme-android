@@ -2,6 +2,7 @@ package net.yasme.android.asyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.connection.MessageTask;
@@ -61,14 +62,14 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         try {
             result = messageTask.sendMessage(createdMessage, params[5]);
         } catch (RestServiceException e) {
-            System.out.println(e.getMessage());
+            Log.w(this.getClass().getSimpleName(), e.getMessage());
         }
         return result;
     }
 
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            //activity.asyncUpdate();
+            activity.asyncUpdate();
             activity.getStatus().setText("Gesendet: " + msg);
         } else {
             activity.getStatus().setText("Senden fehlgeschlagen");
