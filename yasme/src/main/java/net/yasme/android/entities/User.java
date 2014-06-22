@@ -35,7 +35,7 @@ public class User implements Serializable {
     // only for client Database
     @JsonIgnore
     @DatabaseField(columnName = DatabaseConstants.CHAT_ID, foreign = true)
-    private Chat chatId;
+    private Chat chat;
 
 
     //@JsonIgnore

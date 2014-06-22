@@ -5,23 +5,28 @@ package net.yasme.android.asyncTasks;
  */
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
 import net.yasme.android.R;
+import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.ChatListActivity;
 import net.yasme.android.connection.UserTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.ui.ChatListFragment;
 
 
 public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
     Context context;
-    ChatListActivity activity;
+    ChatListFragment activity;
+    SharedPreferences storage;
 
-    public GetProfileDataTask(Context context, ChatListActivity activity) {
+    public GetProfileDataTask(Context context, ChatListFragment activity, SharedPreferences storage) {
         this.context = context;
         this.activity = activity;
+        this.storage = storage;
     }
 
     User selfProfile;
@@ -43,8 +48,8 @@ public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
         if(!success) {
             return;
         }
-        activity.getSelfUser().setName(selfProfile.getName());
-        TextView profileInfo = (TextView) activity.findViewById(R.id.profileInfo);
-        profileInfo.setText(selfProfile.getName() + ": " + userMail);
+        SharedPreferences.Editor editor = storage.edit();
+        editor.putString(AbstractYasmeActivity.USER_NAME, selfProfile.getName());
+        editor.commit();
     }
 }

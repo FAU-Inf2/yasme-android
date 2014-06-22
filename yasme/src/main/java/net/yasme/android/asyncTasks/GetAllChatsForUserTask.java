@@ -1,12 +1,15 @@
 package net.yasme.android.asyncTasks;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 import java.util.ArrayList;
 
@@ -41,11 +44,30 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
             return false;
         }
         for(Chat chat: chats) {
+            Chat chatInfo;
+            try {
+                chatInfo = ChatTask.getInstance().getInfoOfChat(chat.getId(), Long.parseLong(params[0]), params[1]);
+            } catch (RestServiceException e) {
+                chatInfo = null;
+                Log.w(this.getClass().getSimpleName(), e.getMessage());
+            }
+            if(chatInfo != null) {
+                if(chat.getNumberOfParticipants() != chatInfo.getNumberOfParticipants()) {
+                    chat.setNumberOfParticipants(chatInfo.getNumberOfParticipants());
+                    chat.setParticipants(chatInfo.getParticipants());
+                }
+                if(chatInfo.getStatus() != null) {
+                    chat.setStatus(chatInfo.getStatus());
+                }
+            } else {
+                Log.d(this.getClass().getSimpleName(),
+                        "Fehler bei getInfoOfChat " + Long.toString(chatInfo.getId()));
+            }
             if(dbManager.createIfNotExists(chat) != null) {
                 dbManager.updateChat(chat);
-                System.out.println("[DEBUG] Chat upgedatet");
+                Log.i(this.getClass().getSimpleName(), "Chat upgedatet");
             } else {
-                System.out.println("[DEBUG] Chat eingefuegt");
+                Log.i(this.getClass().getSimpleName(), "Neuer Chat eingefuegt");
             }
         }
         return true;

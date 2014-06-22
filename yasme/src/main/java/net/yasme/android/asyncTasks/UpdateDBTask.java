@@ -2,6 +2,7 @@ package net.yasme.android.asyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import net.yasme.android.entities.Chat;
@@ -33,12 +34,15 @@ public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
         ArrayList<Chat> chats = dbManager.getAllChats();
 
         if (messages == null) {
+            Log.d(this.getClass().getSimpleName(), "messages sind null");
             return false;
         }
         if (messages.isEmpty()) {
+            Log.d(this.getClass().getSimpleName(), "messages sind empty");
             return false;
         }
         if(chats == null) {
+            Log.d(this.getClass().getSimpleName(), "chats sind null");
             return false;
         }
 
@@ -46,7 +50,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
             for (Message msg : messages) {
                 if(msg.getChat() == chat.getId()) {
                     chat.addMessage(msg);
-                    System.out.println("[Debug] Message added to DB");
+                    Log.d(this.getClass().getSimpleName(), "Message added to DB");
                 }
             }
             dbManager.updateChat(chat);
@@ -57,13 +61,9 @@ public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            Toast.makeText(context.getApplicationContext(), "[Debug] UpdateDB successfull",
-                    Toast.LENGTH_SHORT
-            ).show();
+            Log.i(this.getClass().getSimpleName(), "UpdateDB successfull");
         } else {
-            Toast.makeText(context.getApplicationContext(), "[Debug] UpdateDB not successfull",
-                    Toast.LENGTH_SHORT
-            ).show();
+            Log.w(this.getClass().getSimpleName(), "UpdateDB not successfull");
         }
     }
 }

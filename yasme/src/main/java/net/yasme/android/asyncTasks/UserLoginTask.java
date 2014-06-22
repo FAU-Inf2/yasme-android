@@ -66,9 +66,8 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             editor.putString(AbstractYasmeActivity.ACCESSTOKEN, accessToken);
             editor.putString(AbstractYasmeActivity.USER_MAIL, email);
 
-            //lastMessageId = storage.getLong(Constants.LAST_MESSAGE_ID, 0L);
+            lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
-            //Zum debuggen:
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
             editor.commit();

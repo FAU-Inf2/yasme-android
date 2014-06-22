@@ -58,12 +58,13 @@ public class ChatActivity extends AbstractYasmeActivity {
 		long chatId = intent.getLongExtra(CHAT_ID, 1);
 
         storage = getSharedPreferences(AbstractYasmeActivity.STORAGE_PREFS, MODE_PRIVATE);
+
         //trying to get chat with chatId from local DB
         try {
             chat = DatabaseManager.getInstance().getChat(chatId);
         } catch (NullPointerException e) {
             chat = null;
-            Log.w(this.getClass().getSimpleName(), "[Debug] Chat aus DB holen failed");
+            Log.w(this.getClass().getSimpleName(), "Chat aus DB holen failed");
         }
         if(chat == null) {
             chat = new Chat(chatId, selfUser, this);
@@ -91,7 +92,8 @@ public class ChatActivity extends AbstractYasmeActivity {
 	private void initializeViews() {
 		editMessage = (EditText) findViewById(R.id.text_message);
 		status = (TextView) findViewById(R.id.text_status);
-		status.setText("Eingeloggt: " + selfUser.getName());
+		status.setText("Eingeloggt: " +
+                storage.getString(AbstractYasmeActivity.USER_NAME, "anonym"));
 	}
 
 	public void send(View view) {
@@ -124,7 +126,7 @@ public class ChatActivity extends AbstractYasmeActivity {
 
 	public void updateViews(ArrayList<Message> messages) {
         if(messages == null) {
-            status.setText("Keine Nachrichten zum Ausgeben");
+            Log.d(this.getClass().getSimpleName(), "Keine Nachrichten zum Ausgeben");
         }
         for (Message msg : messages) {
             msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));

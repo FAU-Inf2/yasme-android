@@ -3,6 +3,7 @@ package net.yasme.android.asyncTasks;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import net.yasme.android.ui.AbstractYasmeActivity;
@@ -67,6 +68,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
             new UpdateDBTask(context, messages).execute(Long.toString(lastMessageId),
                     Long.toString(userId), accessToken);
             lastMessageId = messages.size() + lastMessageId;
+            Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
             SharedPreferences.Editor editor = storage.edit();
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
             editor.commit();

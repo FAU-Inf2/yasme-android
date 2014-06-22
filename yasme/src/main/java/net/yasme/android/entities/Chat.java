@@ -26,7 +26,7 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
     private long id;
 
-    @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS, eager = true)
+    @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS)
     private Collection<User> participants;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_STATUS)
@@ -94,9 +94,11 @@ public class Chat implements Serializable {
     }
 
     public ArrayList<User> getParticipants() {
-        User dummy = new User("Dummy", 2);
+        /*User dummy = new User("Dummy", 2);
         participants.add(dummy);
         return new ArrayList<User>(participants);
+        */
+        return new ArrayList<>(participants);
     }
 
     public String getStatus() {
