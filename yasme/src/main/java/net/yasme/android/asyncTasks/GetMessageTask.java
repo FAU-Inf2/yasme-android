@@ -67,12 +67,14 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         if (success) {
             new UpdateDBTask(context, messages).execute(Long.toString(lastMessageId),
                     Long.toString(userId), accessToken);
+            Log.d(this.getClass().getSimpleName(), "After update the Database");
             lastMessageId = messages.size() + lastMessageId;
             Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
             SharedPreferences.Editor editor = storage.edit();
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
             editor.commit();
         } else {
+            Log.i(this.getClass().getSimpleName(), "Keine neuen Nachrichten");
             Toast.makeText(context, "Keine neuen Nachrichten", Toast.LENGTH_SHORT).show();
         }
     }

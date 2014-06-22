@@ -115,16 +115,13 @@ public class ChatActivity extends AbstractYasmeActivity {
 
     public void asyncUpdate() {
         status.setText("GET messages");
-        new GetMessageTask(getApplicationContext(), storage)
+        new GetMessageTaskInChat(getApplicationContext(), this, chat.getEncryption(), storage)
                 .execute(Long.toString(selfUser.getId()), accessToken);
         status.setText("GET messages done");
     }
 
 	public void update(View view) {
-		status.setText("GET messages");
-        new GetMessageTaskInChat(getApplicationContext(), this, chat.getEncryption(), storage)
-                .execute(Long.toString(selfUser.getId()), accessToken);
-		status.setText("GET messages done");
+		asyncUpdate();
 	}
 
 	public void updateViews(ArrayList<Message> messages) {

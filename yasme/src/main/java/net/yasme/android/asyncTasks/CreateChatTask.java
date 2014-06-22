@@ -26,6 +26,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
     private long userId;
     private String accessToken;
     private long newChatId = -1;
+    private Chat chat;
 
     public CreateChatTask(Context context, InviteToChatFragment fragment, List<User> selectedUsers) {
         this.context = context;
@@ -45,7 +46,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
         userId = Long.parseLong(params[0]);
         accessToken = params[1];
 
-        Chat chat = databaseManager.getChat(selectedUsers);
+        chat = databaseManager.getChat(selectedUsers);
         if (null != chat) {
             newChatId = chat.getId();
         } else {
@@ -81,13 +82,14 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
      * Invokes the fragment's method to show the chat activity
      */
     protected void onPostExecute(final Boolean success) {
-        // TODO store new chat in DB
         if (newChatId == -1) {
             // Something went wrong
             Log.e(this.getClass().getSimpleName(), "newChatId is still -1.");
         }
 
         if (success) {
+            // TODO store new chat in DB - this should work
+            databaseManager.addChat(chat);
             fragment.startChat(newChatId);
         }
     }

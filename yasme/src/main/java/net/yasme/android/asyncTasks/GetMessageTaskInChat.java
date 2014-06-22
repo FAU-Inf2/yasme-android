@@ -3,6 +3,7 @@ package net.yasme.android.asyncTasks;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.ChatActivity;
@@ -79,12 +80,15 @@ public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
             activity.updateViews(messages);
             new UpdateDBTask(context, messages).execute(Long.toString(lastMessageId),
                     Long.toString(userId), accessToken);
-            System.out.println("[Debug] after update the Database");
+
+            Log.d(this.getClass().getSimpleName(), "After update the Database");
             lastMessageId = messages.size() + lastMessageId;
+            Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
             SharedPreferences.Editor editor = storage.edit();
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
             editor.commit();
         } else {
+            Log.i(this.getClass().getSimpleName(), "Keine neuen Nachrichten");
             activity.getStatus().setText("Keine neuen Nachrichten");
         }
     }

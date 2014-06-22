@@ -112,12 +112,21 @@ public class DatabaseManager {
      * @return chat if existent, null otherwise
      */
     public Chat getChat(List<User> users) {
-        // TODO
-
-        List<Chat> chats = getAllChats();
+         List<Chat> chats = getAllChats();
         if (null == chats) {
             return null;
         }
+        List<Chat> matchingChats;
+        Chat search = new Chat(0, users, null, null, null, 0);
+        try {
+            matchingChats = getHelper().getChatDao().queryForMatchingArgs(search);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //TODO: Rueckgabetyp in Liste von Chats aendern
+        //return matchingChats;
+
 
         //for (Chat chat : chats) {
         //    List<User> participants = chat.getParticipants();
