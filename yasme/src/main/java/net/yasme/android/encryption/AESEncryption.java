@@ -14,7 +14,11 @@ import android.util.Base64;
 
 public class AESEncryption {
 
-	private SecretKey key = null;
+    private static final int KEYSIZE = 16; //in Byte --> 128 Bit
+    private static final String HASH_ALG = "SHA-256";
+    private static final String MODE = "AES/CBC/PKCS5Padding";
+
+    private SecretKey key = null;
 	private IvParameterSpec iv = null;
 
 	public AESEncryption() {
@@ -39,7 +43,7 @@ public class AESEncryption {
 	public IvParameterSpec generateIV() {
 		// random IV
 		// SecureRandom random = new SecureRandom();
-		// byte INITIAL_IV[] = new byte[16];
+		// byte INITIAL_IV[] = new byte[KEYSIZE];
 		// generate random 16 byte IV, AES is always 16bytes
 		// random.nextBytes(INITIAL_IV);
 
@@ -55,7 +59,7 @@ public class AESEncryption {
 		SecretKey keySpec = null;
 		try {
 			SecureRandom sr = new SecureRandom();
-			byte[] key = new byte[16];
+			byte[] key = new byte[KEYSIZE];
 			sr.nextBytes(key);
 			keySpec = new SecretKeySpec(key, "AES");
 		} catch (Exception e) {
@@ -69,9 +73,9 @@ public class AESEncryption {
 		SecretKey keySpec = null;
 		try {
 			byte[] pw = (password).getBytes("UTF-8");
-			MessageDigest sha = MessageDigest.getInstance("SHA-256");
+			MessageDigest sha = MessageDigest.getInstance(HASH_ALG);
 			pw = sha.digest(pw);
-			pw = Arrays.copyOf(pw, 16); // use only the first 128Bits
+			pw = Arrays.copyOf(pw, KEYSIZE); // use only the first 128Bits
 			keySpec = new SecretKeySpec(pw, "AES");
 		} catch (Exception e) {
 		}
@@ -122,7 +126,7 @@ public class AESEncryption {
 		try {
 			
 			Cipher cipher;
-			cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher = Cipher.getInstance(MODE);
 			cipher.init(Cipher.ENCRYPT_MODE, key, iv);		
 			encrypted = cipher.doFinal(text.getBytes("UTF-8"));
 				
@@ -143,7 +147,7 @@ public class AESEncryption {
 			byte[] encrypted_decode = Base64.decode(encrypted.getBytes("UTF-8"), Base64.DEFAULT);
 			
 			Cipher cipher;
-			cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher = Cipher.getInstance(MODE);
 			cipher.init(Cipher.DECRYPT_MODE, key, iv);		
 			decrypted = cipher.doFinal(encrypted_decode);
 			

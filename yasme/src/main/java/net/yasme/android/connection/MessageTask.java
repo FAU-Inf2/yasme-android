@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.encryption.MessageEncryption;
+import net.yasme.android.encryption.MessageSignatur;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
@@ -33,6 +34,7 @@ import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class MessageTask extends  ConnectionTask {
@@ -151,7 +153,14 @@ public class MessageTask extends  ConnectionTask {
                         }
 
                         if (key != null){
-                            String messageKey = key.getString("messageKey");
+
+                            String messageKeyEncrypted = key.getString("messageKey");
+                            //decrypt the key with RSA
+                            //TODO: statt userId deviceId uebergeben
+                            MessageSignatur rsa = new MessageSignatur(context, userId);
+                            String messageKey = rsa.decrypt(messageKeyEncrypted);
+
+
                             String[] base64arr = messageKey.split(",");
                             String keyBase64 = base64arr[0];
                             String ivBase64 = base64arr[1];
@@ -162,15 +171,17 @@ public class MessageTask extends  ConnectionTask {
 
                             keyStorage.saveKey(obj.getLong("messageKeyId"), keyBase64, ivBase64, timestamp);
                             /*DEBUG*/
-                            System.out.println("[???] ein neuer Key wurde aus den Nachrichten extrahiert und gespeichert");
+                            System.out.println("[???] Key " +keyId+ " aus den Nachrichten extrahiert und gespeichert");
                             /*DEBUG END*/
                             //TODO: hier muss spaeter die DeviceId statt userUd uebergeben werden
                             keyStorage.deleteKeyFromServer(keyId, userId);
+                        } else {
+                            System.out.println("[???] Es wurde kein Key in der Message gefunden");
                         }
 
                         messages.add(new Message(new User(sender.getString("name"),
                                 sender.getLong("id")), obj.getString("message"), chatId, keyId));
-                        
+
                     }
                     break;
                 case 400:

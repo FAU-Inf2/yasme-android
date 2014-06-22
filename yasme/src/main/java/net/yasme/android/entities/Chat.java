@@ -63,7 +63,6 @@ public class Chat implements Serializable {
         // setup Encryption for this chat
         // TODO: DEVICE-ID statt USERID uebergeben
         long creatorDevice = user.getId();
-        System.out.println("[???] User/Device: " + creatorDevice);
         aes = new MessageEncryption(activity, this, creatorDevice, accessToken);
     }
 
