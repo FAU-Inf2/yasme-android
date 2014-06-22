@@ -1,6 +1,8 @@
 package net.yasme.android.ui;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,7 +14,16 @@ import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import net.yasme.android.R;
+import net.yasme.android.connection.SearchTask;
 import net.yasme.android.contacts.ContactListContent;
+import net.yasme.android.entities.User;
+import net.yasme.android.exception.RestServiceException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener {
 
@@ -26,6 +37,11 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private Long userId;
+    private String accessToken;
+
+    private ContactListContent contactListContent;
 
     /**
      * The fragment's ListView/GridView.
@@ -65,11 +81,23 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        Bundle b = this.getArguments();
+        userId = b.getLong("userId");
+        accessToken = b.getString("accessToken");
+
          //mAdapter = new ArrayAdapter<ContactListContent.ContactListItem>(getActivity(),
          //       android.R.layout.simple_list_item_1, android.R.id.text1,ContactListContent.ITEMS);
 
-        mAdapter = new SimpleAdapter(getActivity() ,
-                ContactListContent.LISTMAP, android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
+        contactListContent = new ContactListContent();
+
+
+        DownloadAllUsers task = new DownloadAllUsers();
+        task.execute();
+
+        mAdapter = new SimpleAdapter((ContactActivity)getActivity() ,
+                contactListContent.getMap(), android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
+
+
 
     }
 
@@ -143,4 +171,34 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
         public void onFragmentInteraction(String id);
     }
 
+
+
+    private class DownloadAllUsers extends AsyncTask<String,Void,List<User>>{
+
+        @Override
+        protected List<User> doInBackground(String... params) {
+
+            SearchTask search = SearchTask.getInstance();
+            List<User> userList = null;
+
+            try {
+                userList = search.getAllUsers(userId, accessToken);
+            }catch (RestServiceException rse){
+                rse.getMessage();
+                rse.printStackTrace();
+            }
+
+            return userList;
+        }
+
+
+        protected void onPostExecute(List<User> userList){
+            for(User u: userList){
+               contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail()));
+            }
+
+            mAdapter.notifyDataSetChanged();
+        }
+
+    }
 }

@@ -7,6 +7,8 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -34,11 +36,20 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+    Long userId;
+    String accessToken;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
+
+
+        SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
+        userId = storage.getLong(USER_ID, 0);
+        accessToken = storage.getString(ACCESSTOKEN, null);
 
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
@@ -132,7 +143,12 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
 
             switch (position){
                 case 0:
-                    return new ContactListItemFragment();
+                    ContactListItemFragment clif = new ContactListItemFragment();
+                    Bundle b = new Bundle();
+                    b.putString("accessToken", accessToken);
+                    b.putLong("userId", userId);
+                    clif.setArguments(b);
+                    return clif;
                 case 1:
                     return new SearchContactFragment();
             }
