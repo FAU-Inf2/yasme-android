@@ -143,17 +143,19 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+            Bundle b = new Bundle();
+            b.putString("accessToken", accessToken);
+            b.putLong("userId", userId);
 
             switch (position){
                 case 0:
                     ContactListItemFragment clif = new ContactListItemFragment();
-                    Bundle b = new Bundle();
-                    b.putString("accessToken", accessToken);
-                    b.putLong("userId", userId);
                     clif.setArguments(b);
                     return clif;
                 case 1:
-                    return new SearchContactFragment();
+                    SearchContactFragment scf = new SearchContactFragment();
+                    scf.setArguments(b);
+                    return scf;
             }
 
             return PlaceholderFragment.newInstance(position + 1);
