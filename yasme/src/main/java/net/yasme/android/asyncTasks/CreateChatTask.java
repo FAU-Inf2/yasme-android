@@ -2,6 +2,7 @@ package net.yasme.android.asyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.entities.Chat;
@@ -81,6 +82,10 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
      */
     protected void onPostExecute(final Boolean success) {
         // TODO store new chat in DB
+        if (newChatId == -1) {
+            // Something went wrong
+            Log.e(this.getClass().getSimpleName(), "newChatId is still -1.");
+        }
 
         if (success) {
             fragment.startChat(newChatId);
