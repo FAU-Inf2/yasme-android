@@ -2,6 +2,7 @@ package net.yasme.android.ui;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
@@ -24,7 +25,52 @@ import net.yasme.android.entities.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InviteToChatActivity extends AbstractYasmeActivity implements OnClickListener{
+public class InviteToChatActivity extends AbstractYasmeActivity { // implements OnClickListener{
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_invite_to_chat);
+
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new InviteToChatFragment()).commit();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_chat) {
+            Intent intent = new Intent(this, InviteToChatActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        if (id == R.id.action_contacts){
+            Intent intent = new Intent(this, ContactActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+/*
 
     private long userId;
     private String accessToken;
@@ -59,10 +105,10 @@ public class InviteToChatActivity extends AbstractYasmeActivity implements OnCli
         startChat = (Button) findViewById(R.id.inviteToChat_startChat);
     }
 
-    /**
+    **
      * Will be called by the GetAllUsersTask after the list of users has been retrieved
      * @param users list
-     */
+
     public void updateChatPartnersList(List<User> users) {
         if (null == chatPartners || null == startChat) {
             findViewsById();
@@ -101,7 +147,7 @@ public class InviteToChatActivity extends AbstractYasmeActivity implements OnCli
 
         // Start new start and activity
 
-        /*
+        //
         String[] outputStrArr = new String[selectedItems.size()];
 
         for (int i = 0; i < selectedItems.size(); i++) {
@@ -120,7 +166,7 @@ public class InviteToChatActivity extends AbstractYasmeActivity implements OnCli
 
         // start the ResultActivity
         startActivity(intent);
-        */
+
     }
 
 
@@ -143,9 +189,6 @@ public class InviteToChatActivity extends AbstractYasmeActivity implements OnCli
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     public static class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() {
@@ -157,5 +200,5 @@ public class InviteToChatActivity extends AbstractYasmeActivity implements OnCli
             View rootView = inflater.inflate(R.layout.fragment_invite_to_chat, container, false);
             return rootView;
         }
-    }
+    }*/
 }
