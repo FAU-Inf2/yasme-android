@@ -52,6 +52,8 @@ public class LoginActivity extends AbstractYasmeActivity {
     private String password;
     private long userId;
 
+    private String deviceProduct;
+
     // focusView for validate()
     private View focusView = null;
 
@@ -295,10 +297,16 @@ public class LoginActivity extends AbstractYasmeActivity {
     * This method checks if there is a device in the DB
     * */
     public boolean deviceCheck() {
+
+        //set the deviceProduct
+        this.deviceProduct = Build.MANUFACTURER + " " + Build.MODEL ;
         Log.d(this.getClass().getSimpleName(), "[DEBUG] MODEL is " + Build.MODEL);
         Log.d(this.getClass().getSimpleName(), "[DEBUG] DEVICE is " + Build.DEVICE);
         Log.d(this.getClass().getSimpleName(), "[DEBUG] PRODUCT is " + Build.PRODUCT);
+        Log.d(this.getClass().getSimpleName(), "[DEBUG] MANUFACTURER is " + Build.MANUFACTURER);
         Log.d(this.getClass().getSimpleName(), "[DEBUG] BRAND is " + Build.BRAND);
+
+        Log.d(this.getClass().getSimpleName(), "[DEBUG] NOW is " + this.deviceProduct);
         //try to load device from shared preferences
         SharedPreferences prefs = getSharedPreferences(DEVICE_PREFS,
                 MODE_PRIVATE);
@@ -307,6 +315,9 @@ public class LoginActivity extends AbstractYasmeActivity {
             return false;
 
         }
+        // TODO devices from server
+        // TODO use case : plain app + old user + old device
+
         Log.d(this.getClass().getSimpleName(), "[DEBUG] deviceId is" + deviceId);
         return true;
     }
@@ -336,7 +347,7 @@ public class LoginActivity extends AbstractYasmeActivity {
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device does not exist in Database");
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device");
                 devRegTask = new DeviceRegistrationTask(getApplicationContext(), storage, this);
-                devRegTask.execute(this.accessToken, Long.toString(this.userId));
+                devRegTask.execute(this.accessToken, Long.toString(this.userId),this.deviceProduct);
 
             }
         } else {

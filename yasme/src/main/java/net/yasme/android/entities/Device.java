@@ -18,7 +18,7 @@ public class Device {
     private User user;
     private String number;  // optional
     private String publicKey;
-    private String product; // end-to-end visible product name
+    private String product; // product name e.g. Google Nexux 5
 
     public Device(User user, Platform platform, String type, String number, String product) {
         this.user = user;
