@@ -3,8 +3,12 @@ package net.yasme.android.connection;
 import net.yasme.android.connection.ssl.HttpClient;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -15,6 +19,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+
+import static net.yasme.android.connection.ConnectionTask.Request.*;
 
 /**
  * Created by martin on 14.06.2014.
@@ -87,21 +93,26 @@ public class ConnectionTask {
             e.printStackTrace();
         }
 
-        System.out.println(requestURI);
+        HttpEntityEnclosingRequestBase requestBase = null;
 
-
-        //TODO: switch/case über Request Methoden
-        /*
         switch (request) {
-            case Request.POST.:
+            case POST:
                 requestBase = new HttpPost();
+                break;
+            case PUT:
+                requestBase = new HttpPut();
+                break;
+            case DELETE:
+                //requestBase = new HttpDelete();
+                break;
+            case GET:
+                //requestBase = new HttpGet();
                 break;
             default:
                 break;
         }
-        */
 
-        HttpEntityEnclosingRequestBase requestBase = new HttpPost(requestURI);
+        requestBase.setURI(requestURI);
 
         if (contentValue != null)
             requestBase.setEntity(new StringEntity(objectToJsonMapper(contentValue)));

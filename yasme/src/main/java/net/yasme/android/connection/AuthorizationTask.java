@@ -29,7 +29,6 @@ import java.security.NoSuchAlgorithmException;
 public class AuthorizationTask extends  ConnectionTask{
 
     private static AuthorizationTask instance;
-    private URI uri;
 
     public static AuthorizationTask getInstance() {
         if (instance == null) {
@@ -41,8 +40,7 @@ public class AuthorizationTask extends  ConnectionTask{
     private AuthorizationTask() {
 
         try {
-            this.uri = new URIBuilder().setScheme(serverScheme).
-                    setHost(serverHost).setPort(serverPort).setPath("/sign").build();
+            this.uri = new URIBuilder(baseURI).setPath("/sign").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -50,26 +48,10 @@ public class AuthorizationTask extends  ConnectionTask{
 
     public String[] loginUser(User user) throws RestServiceException {
 
-
         try {
 
-            URI requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/in").build();
+            HttpResponse httpResponse = executeRequest(Request.POST,"in",null,user);
 
-            CloseableHttpClient httpClient = HttpClient.createSSLClient();
-            HttpPost httpPost = new HttpPost(requestURI);
-
-            ObjectWriter ow = new ObjectMapper().writer()
-                    .withDefaultPrettyPrinter();
-
-            StringEntity se = new StringEntity(ow.writeValueAsString(user));
-            httpPost.setEntity(se);
-
-            httpPost.setHeader("Content-type", "application/json");
-            httpPost.setHeader("Accept", "application/json");
-
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-
-            System.out.println(httpResponse.getStatusLine().getStatusCode());
             switch (httpResponse.getStatusLine().getStatusCode()) {
 
                 case 200:
@@ -95,10 +77,8 @@ public class AuthorizationTask extends  ConnectionTask{
         } catch (IOException e) {
             System.out.println("[DEBUG] Login RestServiceException");
             throw new RestServiceException(Error.CONNECTION_ERROR);
-        } catch (URISyntaxException e) {
-            System.out.println("[DEBUG] Login URISyntaxException");
-            e.printStackTrace();
         }
+
         return null;
     }
 
