@@ -53,7 +53,9 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         // the phone number
         String number = "00000000";
 
-        Device deviceToBeRegistered = new Device(user,Device.Platform.ANDROID,type,number);
+        String product = "pro";
+
+        Device deviceToBeRegistered = new Device(user,Device.Platform.ANDROID,type,number,product);
 
         // make the REST-Call
         try{
