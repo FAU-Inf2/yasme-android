@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,19 +57,18 @@ public class ChatActivity extends AbstractYasmeActivity {
 		Intent intent = getIntent();
 		long chatId = intent.getLongExtra(CHAT_ID, 1);
 
+        storage = getSharedPreferences(AbstractYasmeActivity.STORAGE_PREFS, MODE_PRIVATE);
         //trying to get chat with chatId from local DB
         try {
             chat = DatabaseManager.getInstance().getChat(chatId);
         } catch (NullPointerException e) {
             chat = null;
-            System.out.println("[Debug] Chat aus DB holen failed");
-            Toast.makeText(getApplicationContext(),
-                    "[Debug] Chat aus DB holen failed", Toast.LENGTH_SHORT).show();
+            Log.w(this.getClass().getSimpleName(), "[Debug] Chat aus DB holen failed");
         }
         if(chat == null) {
             chat = new Chat(chatId, selfUser, this);
         }
-        aes = new MessageEncryption(getApplicationContext(), chat, userId, accessToken);
+        aes = new MessageEncryption(getApplicationContext(), chat, selfUser.getId(), accessToken);
 	}
 
 	@Override

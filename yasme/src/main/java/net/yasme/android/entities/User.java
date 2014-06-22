@@ -20,7 +20,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @DatabaseTable(tableName = "users")
 public class User implements Serializable {
 
-    @DatabaseField(columnName = DatabaseConstants.USER_ID, id = true)
+    @DatabaseField(columnName = DatabaseConstants.USER_ID,
+            allowGeneratedIdInsert = true, generatedId = true)
     private long id;
 
     @DatabaseField(columnName = DatabaseConstants.USER_MAIL)
