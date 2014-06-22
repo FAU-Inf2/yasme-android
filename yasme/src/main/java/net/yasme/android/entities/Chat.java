@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by robert on 28.05.14.
  */
-@DatabaseTable(tableName = "chat")
+@DatabaseTable(tableName = DatabaseConstants.CHAT_TABLE)
 public class Chat implements Serializable {
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
@@ -134,7 +134,7 @@ public class Chat implements Serializable {
         this.id = id;
     }
 
-    public void setParticipants(ArrayList<User> participants) {
+    public void setParticipants(List<User> participants) {
         this.participants = participants;
     }
 

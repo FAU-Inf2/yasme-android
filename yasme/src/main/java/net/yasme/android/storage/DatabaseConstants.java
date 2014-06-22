@@ -9,6 +9,7 @@ public class DatabaseConstants {
     public static final String DATABASE = "net.yasme.android.DATABASE";
 
     //Chat
+    public static final String CHAT_TABLE = "chat";
     public static final String CHAT_ID = "chatId";
     public static final String CHAT_NAME = "chatName";
     public static final String CHAT_STATUS = "chatStatus";

@@ -13,7 +13,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="@string/start_chat" />
+        android:text="@string/button_start_chat" />
 
     <ListView
         android:id="@+id/inviteToChat_usersList"

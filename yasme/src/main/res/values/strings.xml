@@ -28,6 +28,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Invite to chat -->
-    <string name="start_chat">Chat!</string>
-
+    <string name="button_start_chat">Chat!</string>
+    <string name="toast_no_selection">Mark the users with whom you want to chat</string>
 </resources>

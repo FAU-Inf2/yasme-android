@@ -1,11 +1,14 @@
 package net.yasme.android.storage;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.j256.ormlite.stmt.DeleteBuilder;
 
 import net.yasme.android.asyncTasks.GetAllChatsForUserTask;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.User;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -100,6 +103,53 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return chat;
+    }
+
+
+    /**
+     * Retrieves the chat which all given users (and no one else) participate in
+     * @param users list of users who have joined the chat
+     * @return chat if existent, null otherwise
+     */
+    public Chat getChat(List<User> users) {
+        // TODO
+
+        List<Chat> chats = getAllChats();
+        if (null == chats) {
+            return null;
+        }
+
+        //for (Chat chat : chats) {
+        //    List<User> participants = chat.getParticipants();
+        //
+        //    if (users.size() != participants.size()) {
+        //        // Different number of participants. It's not this chat.
+        //        continue;
+        //    }
+        //
+        //    // Assume that we will find the exact list of participants in this chat
+        //    boolean foundChat = true;
+        //    for (int i=0; i<users.size() && foundChat; i++) {
+        //        User user = users.get(i);
+        //        boolean foundUser = false;
+        //        for (int j=0; j<participants.size() && !foundUser; j++) {
+        //            User participant = participants.get(j);
+        //            foundUser |= participant.getId() == user.getId();
+        //        }
+
+                // Let's see if we found the current user
+        //        if (!foundUser) {
+                    // Next chat.. It's not this one
+        //            foundChat = false;
+        //        }
+        //    }
+
+        //   if (foundChat) {
+        //       return chat;
+        //   }
+        //}
+
+        return null;
     }
 
     /**
