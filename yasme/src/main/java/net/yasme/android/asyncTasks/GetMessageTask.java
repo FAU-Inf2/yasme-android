@@ -28,7 +28,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
     }
 
     ArrayList<Message> messages;
-    MessageTask messageTask = MessageTask.getInstance(context);
+
     long lastMessageId;
     long userId;
     String accessToken;
@@ -43,6 +43,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
         userId = Long.parseLong(params[0]);
         accessToken = params[1];
+        MessageTask messageTask = MessageTask.getInstance(context);
 
         try {
             messages = messageTask.getMessage(lastMessageId, userId, accessToken);
