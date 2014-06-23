@@ -50,7 +50,7 @@ public class AuthorizationTask extends  ConnectionTask{
 
         try {
 
-            HttpResponse httpResponse = executeRequest(Request.POST,"in",null,user);
+            HttpResponse httpResponse = executeEntityRequest(Request.POST,"in",user);
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
 

@@ -3,9 +3,12 @@ package net.yasme.android.connection;
 import net.yasme.android.connection.ssl.HttpClient;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -60,7 +63,7 @@ public class ConnectionTask {
         ConnectionTask.serverPort = Integer.parseInt(serverPort);
         ConnectionTask.initialized = true;
         ConnectionTask.initializedSession = false;
-        buildURI();
+        buildBaseURI();
 
         ConnectionTask.httpClient = HttpClient.createSSLClient();
         ConnectionTask.objectWriter = new ObjectMapper().writer()
@@ -78,25 +81,10 @@ public class ConnectionTask {
         return initialized;
     }
 
-    private static void buildURI() {
-        try {
-            ConnectionTask.baseURI = new URIBuilder().setScheme(ConnectionTask.serverScheme).
-                    setHost(ConnectionTask.serverHost).setPort(ConnectionTask.serverPort).build();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public HttpResponse executeRequest(Request request, String path, Map<String, String> header,
-                                       Object contentValue) throws IOException {
+    public HttpResponse executeEntityRequest(Request request, String path, Object contentValue) throws IOException {
 
-        URI requestURI = null;
-
-        try {
-            requestURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + path).build();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        URI requestURI = buildRessourceURI(path);
 
         HttpEntityEnclosingRequestBase requestBase = null;
 
@@ -107,14 +95,9 @@ public class ConnectionTask {
             case PUT:
                 requestBase = new HttpPut();
                 break;
-            case DELETE:
-                //requestBase = new HttpDelete();
-                break;
-            case GET:
-                //requestBase = new HttpGet();
-                break;
             default:
-                break;
+                System.out.println("Request not supported!");
+                return null;
         }
 
         requestBase.setURI(requestURI);
@@ -125,7 +108,7 @@ public class ConnectionTask {
         requestBase.setHeader("Content-type", "application/json");
         requestBase.setHeader("Accept", "application/json");
 
-        if(initializedSession) {
+        if (initializedSession) {
             requestBase.setHeader("userId", ConnectionTask.userId);
             requestBase.setHeader("Authorization", accessToken);
         }
@@ -133,7 +116,67 @@ public class ConnectionTask {
         return httpClient.execute(requestBase);
     }
 
-    static <T> String objectToJsonMapper(T object) throws IOException {
+    public HttpResponse executeBaseRequest(Request request, String path)
+            throws IOException {
+
+        URI requestURI = buildRessourceURI(path);
+
+        HttpRequestBase requestBase = null;
+
+        switch (request) {
+            case POST:
+                requestBase = new HttpPost();
+                break;
+            case PUT:
+                requestBase = new HttpPut();
+                break;
+            case DELETE:
+                requestBase = new HttpDelete();
+                break;
+            case GET:
+                requestBase = new HttpGet();
+                break;
+            default:
+                System.out.println("Request not supported!");
+                return null;
+        }
+
+        requestBase.setURI(requestURI);
+
+        requestBase.setHeader("Content-type", "application/json");
+        requestBase.setHeader("Accept", "application/json");
+
+        System.out.println(initializedSession + " " + userId + " " + accessToken);
+        if (initializedSession) {
+            requestBase.setHeader("userId", ConnectionTask.userId);
+            requestBase.setHeader("Authorization", accessToken);
+            System.out.println("[DEBUG] TRUE" + userId + " " + accessToken );
+        }
+
+        return httpClient.execute(requestBase);
+    }
+
+    private static <T> String objectToJsonMapper(T object) throws IOException {
         return objectWriter.writeValueAsString(object);
+    }
+
+    private static void buildBaseURI() {
+        try {
+            ConnectionTask.baseURI = new URIBuilder().setScheme(ConnectionTask.serverScheme).
+                    setHost(ConnectionTask.serverHost).setPort(ConnectionTask.serverPort).build();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private URI buildRessourceURI(String path) {
+
+        URI ressourceURI = null;
+        try {
+            ressourceURI = new URIBuilder(uri).setPath(uri.getPath() + "/" + path).build();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return ressourceURI;
     }
 }
