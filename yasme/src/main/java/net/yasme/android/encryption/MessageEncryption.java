@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.util.Base64;
 
 import java.lang.reflect.Array;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 //um den Schluessel zum Verschluesseln abzurufen muss bekannt sein, mit welcher KeyId der Chat verschluesselt wird
@@ -232,15 +233,20 @@ public class MessageEncryption {
         // safe Key+IV, which belongs to Key-Id
         keysEditor.putString(Long.toString(keyid), key + "," + iv);
 
-        //delete old key, which was needed for encryption
-        //TODO: ueberpruefen, ob der abzuspeichernde Key neuer oder älter ist
+        //delete old key, which was needed for encryption, if it is older than the new one
         if (currentKeyPref.contains("keyId")) {
-            currentKeyEditor.remove("keyId");
-            currentKeyEditor.remove("timestamp");
+            long old_ts = currentKeyPref.getLong("timestamp", 0);
+            if(new Timestamp(timestamp).after(new Timestamp(old_ts))){
+                currentKeyEditor.remove("keyId");
+                currentKeyEditor.remove("timestamp");
+
+                // safe new Key-Id for this Chat-ID
+                currentKeyEditor.putLong("keyId", keyid);
+                currentKeyEditor.putLong("timestamp",timestamp);
+            }
+
         }
-        // safe new Key-Id for this Chat-ID
-        currentKeyEditor.putLong("keyId", keyid);
-        currentKeyEditor.putLong("timestamp",timestamp);
+
 
         keysEditor.commit();
         currentKeyEditor.commit();
