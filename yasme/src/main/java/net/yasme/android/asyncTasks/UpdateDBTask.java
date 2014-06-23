@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by robert on 19.06.14.
  */
-public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
+public class UpdateDBTask extends AsyncTask<String, Void, Integer> {
     Context context;
     ArrayList<Message> messages;
 
@@ -30,20 +30,18 @@ public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
      * params[1] is userId
      * params[2] is accessToken
      */
-    protected Boolean doInBackground(String... params) {
+    protected Integer doInBackground(String... params) {
         ArrayList<Chat> chats = dbManager.getAllChats();
 
         if (messages == null) {
             Log.d(this.getClass().getSimpleName(), "messages sind null");
-            return false;
+            return 1;
         }
         if (messages.isEmpty()) {
-            Log.d(this.getClass().getSimpleName(), "messages sind empty");
-            return false;
+            return 0;
         }
         if(chats == null) {
-            Log.d(this.getClass().getSimpleName(), "chats sind null");
-            return false;
+            return -1;
         }
 
         for (Chat chat : chats) {
@@ -55,15 +53,21 @@ public class UpdateDBTask extends AsyncTask<String, Void, Boolean> {
             }
             dbManager.updateChat(chat);
         }
-        return true;
+        return 1;
     }
 
     @Override
-    protected void onPostExecute(final Boolean success) {
-        if (success) {
+    protected void onPostExecute(final Integer success) {
+        if (success == 1) {
             Log.i(this.getClass().getSimpleName(), "UpdateDB successfull");
         } else {
             Log.w(this.getClass().getSimpleName(), "UpdateDB not successfull");
+            if(success == -1) {
+                Log.d(this.getClass().getSimpleName(), "chats sind null");
+            }
+            if (success == 0) {
+                Log.d(this.getClass().getSimpleName(), "messages sind empty");
+            }
         }
     }
 }

@@ -52,9 +52,10 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
                 Log.w(this.getClass().getSimpleName(), e.getMessage());
             }
             if(chatInfo != null) {
-                if(chat.getNumberOfParticipants() != chatInfo.getNumberOfParticipants()) {
+                if(chat.getNumberOfParticipants() == chatInfo.getNumberOfParticipants()) {
                     chat.setNumberOfParticipants(chatInfo.getNumberOfParticipants());
                     chat.setParticipants(chatInfo.getParticipants());
+                    Log.d(this.getClass().getSimpleName(), "Participants geupdatet");
                 }
                 if(chatInfo.getStatus() != null) {
                     chat.setStatus(chatInfo.getStatus());
