@@ -109,14 +109,14 @@ public class DatabaseManager {
     /**
      * Retrieves the chat which all given users (and no one else) participate in
      * @param users list of users who have joined the chat
-     * @return chat if existent, null otherwise
+     * @return list of chats if existent, null or an empty list otherwise
      */
-    public Chat getChat(List<User> users) {
-         List<Chat> chats = getAllChats();
-        if (null == chats) {
-            return null;
-        }
-        List<Chat> matchingChats;
+    public List<Chat> getChats(List<User> users) {
+        //List<Chat> chats = getAllChats();
+        //if (null == chats) {
+        //    return null;
+        //}
+        List<Chat> matchingChats = null;
         Chat search = new Chat(0, users, null, null, null, 0);
         try {
             matchingChats = getHelper().getChatDao().queryForMatchingArgs(search);
@@ -125,7 +125,7 @@ public class DatabaseManager {
         }
 
         //TODO: Rueckgabetyp in Liste von Chats aendern
-        //return matchingChats;
+        return matchingChats;
 
 
         //for (Chat chat : chats) {
@@ -158,7 +158,7 @@ public class DatabaseManager {
         //   }
         //}
 
-        return null;
+        // return null;
     }
 
     /**

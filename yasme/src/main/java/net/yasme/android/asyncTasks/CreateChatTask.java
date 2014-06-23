@@ -26,7 +26,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
     private long userId;
     private String accessToken;
     private long newChatId = -1;
-    private Chat chat;
+    private Chat newChat;
 
     public CreateChatTask(Context context, InviteToChatFragment fragment, List<User> selectedUsers) {
         this.context = context;
@@ -46,9 +46,10 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
         userId = Long.parseLong(params[0]);
         accessToken = params[1];
 
-        chat = databaseManager.getChat(selectedUsers);
-        if (null != chat) {
-            newChatId = chat.getId();
+        List<Chat> matchingChats = databaseManager.getChats(selectedUsers);
+        if (null != matchingChats && matchingChats.size() > 0) {
+            // Take first chat
+            newChatId = matchingChats.get(0).getId();
         } else {
             // No chat found in database. Create a new one
 
@@ -62,11 +63,11 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
                 }
             }
 
-            chat = new Chat(owner, "Created: " + new Date().toString(), name);
-            chat.setParticipants(selectedUsers);
-            chat.setNumberOfParticipants(selectedUsers.size());
+            newChat = new Chat(owner, "Created: " + new Date().toString(), name);
+            newChat.setParticipants(selectedUsers);
+            newChat.setNumberOfParticipants(selectedUsers.size());
             try {
-                newChatId = ChatTask.getInstance().createChatwithPar(chat, userId, accessToken);
+                newChatId = ChatTask.getInstance().createChatwithPar(newChat, userId, accessToken);
             } catch (RestServiceException e) {
                 // TODO
                 e.printStackTrace();
@@ -88,8 +89,10 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
         }
 
         if (success) {
-            // TODO store new chat in DB - this should work
-            databaseManager.addChat(chat);
+            // If a new chat was created, store it in the internal database
+            if (null != newChat) {
+                databaseManager.addChat(newChat);
+            }
             fragment.startChat(newChatId);
         }
     }
