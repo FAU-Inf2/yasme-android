@@ -6,8 +6,8 @@
         android:id="@+id/action_add_chat"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:title="@string/action_chats"
-        android:icon="@drawable/ic_action_chat"/>
+        android:title="@string/action_add_chat"
+        android:icon="@drawable/ic_action_add_group"/>
 
     <item
         android:id="@+id/action_contacts"
