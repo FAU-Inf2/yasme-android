@@ -26,8 +26,6 @@ public class DatabaseManager {
         if (null == instance) {
             instance = new DatabaseManager(context);
         }
-
-        new GetAllChatsForUserTask(context).execute(Long.toString(userId), accessToken);
         initialized = true;
     }
 
