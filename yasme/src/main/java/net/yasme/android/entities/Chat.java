@@ -94,10 +94,11 @@ public class Chat implements Serializable {
     }
 
     public ArrayList<User> getParticipants() {
-        /*User dummy = new User("Dummy", 2);
+       /*
+        User dummy = new User("Dummy", 12);
         participants.add(dummy);
         return new ArrayList<User>(participants);
-        */
+*/
         return new ArrayList<>(participants);
     }
 

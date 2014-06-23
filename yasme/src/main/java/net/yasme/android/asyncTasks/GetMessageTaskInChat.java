@@ -17,8 +17,7 @@ import java.util.ArrayList;
 /**
  * Created by robert on 19.06.14.
  */
-// TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach
-// geloescht werden
+
 public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
     Context context;
     ChatActivity activity;

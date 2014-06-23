@@ -22,8 +22,6 @@ public class AESEncryption {
 	private IvParameterSpec iv = null;
 
 	public AESEncryption() {
-		// generate AES-Key and Inital-Vector, if necessary
-		// otherwise get it from store (NOT YET IMPLEMENTED)
 		key = generateKey();
 		iv = generateIV();
 	}

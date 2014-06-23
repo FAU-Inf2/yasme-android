@@ -75,13 +75,14 @@ public class KeyTask extends ConnectionTask {
             for (long recipient: recipients){
 
                 //encrypt the key with RSA
+                /*
                 MessageSignatur rsa = new MessageSignatur(context, creatorDevice);
                 PublicKey pubKey = rsa.getPubKeyFromUser(recipient);
                 String keyEncrypted = rsa.encrypt(key, pubKey);
-
+                */
                 //TODO: Dummy_IV
                 messageKeys[i++] = new MessageKey(0, new Device(creatorDevice),
-                        new Device(recipient), chat, keyEncrypted, "DummyIV", encType,sign);
+                        new Device(recipient), chat, key, "DummyIV", encType,sign);
 
                 System.out.println("[???] Key gesendet für User " + recipient);
             }
