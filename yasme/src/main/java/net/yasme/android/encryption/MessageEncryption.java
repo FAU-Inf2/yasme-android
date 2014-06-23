@@ -224,7 +224,6 @@ public class MessageEncryption {
 
     // save needed key for chatid, and save key for keyid
     public void saveKey(long keyid, String key, String iv, long timestamp) {
-
         SharedPreferences keysPref = context.getSharedPreferences(KEYSTORAGE, Context.MODE_PRIVATE);
         SharedPreferences currentKeyPref = context.getSharedPreferences(CURRENTKEY, Context.MODE_PRIVATE);
 

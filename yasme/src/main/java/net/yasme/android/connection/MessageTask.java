@@ -153,7 +153,6 @@ public class MessageTask extends ConnectionTask {
                             MessageSignatur rsa = new MessageSignatur(context, userId);
                             String messageKey = rsa.decrypt(messageKeyEncrypted);
 
-
                             String[] base64arr = messageKey.split(",");
                             String keyBase64 = base64arr[0];
                             String ivBase64 = base64arr[1];

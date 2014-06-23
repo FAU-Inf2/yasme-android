@@ -2,7 +2,6 @@ package net.yasme.android.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,8 +25,6 @@ import net.yasme.android.R;
 import net.yasme.android.asyncTasks.DeviceRegistrationTask;
 import net.yasme.android.asyncTasks.UserLoginTask;
 import net.yasme.android.asyncTasks.UserRegistrationTask;
-import net.yasme.android.connection.ConnectionTask;
-import net.yasme.android.entities.Device;
 import net.yasme.android.gcm.CloudMessaging;
 
 /**
@@ -195,7 +192,7 @@ public class LoginActivity extends AbstractYasmeActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.yasme_login, menu);
+        getMenuInflater().inflate(R.menu.login, menu);
         return true;
     }
 

@@ -1,8 +1,11 @@
 package net.yasme.android.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.ConnectionTask;
@@ -36,6 +39,8 @@ public abstract class AbstractYasmeActivity  extends Activity {
     protected User selfUser;
     protected String accessToken;
 
+
+
     protected SharedPreferences storage;
 
     @Override
@@ -68,6 +73,36 @@ public abstract class AbstractYasmeActivity  extends Activity {
 
     }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        Intent intent;
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case android.R.id.home:
+                if (NavUtils.getParentActivityName(this) != null) {
+                    NavUtils.navigateUpFromSameTask(this);
+                }
+                return true;
+            case R.id.action_settings:
+                // TODO: Settings
+                return true;
+            case R.id.action_chats:
+                intent = new Intent(this, ChatListActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_contacts:
+                intent = new Intent(this, ContactActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+
     public User getSelfUser() {
         return selfUser;
     }
@@ -83,4 +118,9 @@ public abstract class AbstractYasmeActivity  extends Activity {
     public String getAccessToken() {
         return accessToken;
     }
+
+    public SharedPreferences getStorage() {
+        return storage;
+    }
+
 }

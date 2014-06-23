@@ -2,7 +2,6 @@ package net.yasme.android.ui;
 
 import java.util.Locale;
 
-import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -45,7 +44,6 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
-
 
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
         userId = storage.getLong(USER_ID, 0);
@@ -90,7 +88,7 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.yasme_contact, menu);
+        getMenuInflater().inflate(R.menu.contact, menu);
         return true;
     }
 
@@ -100,7 +98,9 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_search_contact) {
+            Intent intent = new Intent(this, InviteToChatActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

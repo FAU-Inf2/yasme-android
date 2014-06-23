@@ -1,29 +1,11 @@
 package net.yasme.android.ui;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.view.View.OnClickListener;
-import android.widget.Toast;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.GetAllUsersTask;
-import net.yasme.android.connection.ConnectionTask;
-import net.yasme.android.entities.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InviteToChatActivity extends AbstractYasmeActivity { // implements OnClickListener{
 
@@ -31,6 +13,8 @@ public class InviteToChatActivity extends AbstractYasmeActivity { // implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_to_chat);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
@@ -41,7 +25,7 @@ public class InviteToChatActivity extends AbstractYasmeActivity { // implements 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.chatlist, menu);
         return true;
     }
 
@@ -51,21 +35,6 @@ public class InviteToChatActivity extends AbstractYasmeActivity { // implements 
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == R.id.action_chat) {
-            Intent intent = new Intent(this, InviteToChatActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.action_contacts){
-            Intent intent = new Intent(this, ContactActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

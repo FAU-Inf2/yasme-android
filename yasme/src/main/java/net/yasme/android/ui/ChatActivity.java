@@ -176,15 +176,7 @@ public class ChatActivity extends AbstractYasmeActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int itemId = item.getItemId();
-        switch (itemId) {
-            case android.R.id.home:
-                if (NavUtils.getParentActivityName(this) != null) {
-                    NavUtils.navigateUpFromSameTask(this);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
 	}
 
 	/**

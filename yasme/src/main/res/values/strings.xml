@@ -7,6 +7,8 @@
     <!-- Menu -->
     <string name="action_chats">Chats</string>
     <string name="action_chat">Chat</string>
+    <string name="action_add_chat">Add chat</string>
+    <string name="action_search_contact">Search contact</string>
     <string name="action_contacts">Contacts</string>
 
     <!-- Home -->
