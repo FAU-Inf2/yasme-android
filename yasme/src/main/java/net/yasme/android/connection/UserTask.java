@@ -1,11 +1,9 @@
 package net.yasme.android.connection;
 
 import net.yasme.android.connection.ssl.HttpClient;
-import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.exception.UserError;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -16,19 +14,12 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserTask extends  ConnectionTask {
 
@@ -71,16 +62,16 @@ public class UserTask extends  ConnectionTask {
             System.out.println(httpResponse.getStatusLine().getStatusCode());
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
-                case 201:
+                case 200:
                     return Long.parseLong(new BufferedReader(new InputStreamReader(httpResponse
                             .getEntity().getContent(), "UTF-8")).readLine());
                 case 401:
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 500:
-                    throw new RestServiceException(UserError.REGISTRATION_FAILED);
+                    throw new RestServiceException(Error.REGISTRATION_FAILED);
                 default:
-                    throw new RestServiceException(UserError.ERROR);
+                    throw new RestServiceException(Error.ERROR);
             }
 
         } catch (ClientProtocolException e) {
@@ -120,10 +111,10 @@ public class UserTask extends  ConnectionTask {
                 case 401:
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
-                case 500:
-                    throw new RestServiceException(UserError.USER_NOT_FOUND);
+                case 404:
+                    throw new RestServiceException(Error.USER_NOT_FOUND);
                 default:
-                    throw new RestServiceException(UserError.ERROR);
+                    throw new RestServiceException(Error.ERROR);
             }
 
         } catch (ClientProtocolException e) {
@@ -158,9 +149,9 @@ public class UserTask extends  ConnectionTask {
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 404:
-                    throw new RestServiceException(UserError.USER_NOT_FOUND);
+                    throw new RestServiceException(Error.USER_NOT_FOUND);
                 default:
-                    throw new RestServiceException(UserError.ERROR);
+                    throw new RestServiceException(Error.ERROR);
             }
 
         } catch (IllegalStateException e) {

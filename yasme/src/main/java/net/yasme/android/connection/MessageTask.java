@@ -1,18 +1,15 @@
 package net.yasme.android.connection;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.encryption.MessageSignatur;
 import net.yasme.android.entities.Message;
-import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.Error;
-import net.yasme.android.exception.MessageError;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.exception.UserError;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -31,13 +28,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.util.ArrayList;
 
-public class MessageTask extends  ConnectionTask {
+public class MessageTask extends ConnectionTask {
 
     private static MessageTask instance;
     private URI uri;
@@ -89,15 +82,15 @@ public class MessageTask extends  ConnectionTask {
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 500:
-                    throw new RestServiceException(MessageError.SEND_MESSAGE_FAILED);
+                    throw new RestServiceException(Error.SEND_MESSAGE_FAILED);
                 default:
-                    throw new RestServiceException(MessageError.ERROR);
+                    throw new RestServiceException(Error.ERROR);
             }
 
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            throw new RestServiceException(Error.CONNECTION_ERROR);
+            throw new RestServiceException(Error.SEND_MESSAGE_FAILED);
         }
         return false;
     }
@@ -131,7 +124,7 @@ public class MessageTask extends  ConnectionTask {
                     System.out.println("[DEBUG] getMessageRequest successful: " + json);
 
                     if (jsonArray.length() == 0)
-                        throw new RestServiceException(MessageError.GET_NO_NEW_MESSAGE);
+                        throw new RestServiceException(Error.GET_NO_NEW_MESSAGE);
 
                     for (int i = 0; i < jsonArray.length(); i++) {
 
@@ -152,7 +145,7 @@ public class MessageTask extends  ConnectionTask {
                             key = null;
                         }
 
-                        if (key != null){
+                        if (key != null) {
 
                             String messageKeyEncrypted = key.getString("messageKey");
                             //decrypt the key with RSA
@@ -171,7 +164,7 @@ public class MessageTask extends  ConnectionTask {
 
                             keyStorage.saveKey(obj.getLong("messageKeyId"), keyBase64, ivBase64, timestamp);
                             /*DEBUG*/
-                            System.out.println("[???] Key " +keyId+ " aus den Nachrichten extrahiert und gespeichert");
+                            System.out.println("[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
                             /*DEBUG END*/
                             //TODO: hier muss spaeter die DeviceId statt userUd uebergeben werden
                             keyStorage.deleteKeyFromServer(keyId, userId);
@@ -184,14 +177,16 @@ public class MessageTask extends  ConnectionTask {
 
                     }
                     break;
+
                 case 400:
                     System.out.println("[DEBUG] Bad Request");
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.BAD_REQUEST);
                 case 401:
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 404:
-                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
+                    throw new RestServiceException(Error.USER_NOT_FOUND);
+
                 default:
                     throw new RestServiceException(Error.ERROR);
             }

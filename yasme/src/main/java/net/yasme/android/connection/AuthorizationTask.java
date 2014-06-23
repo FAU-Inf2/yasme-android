@@ -4,29 +4,23 @@ import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.exception.UserError;
+
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by florianwinklmeier on 04.06.14.
  */
 
-public class AuthorizationTask extends  ConnectionTask{
+public class AuthorizationTask extends ConnectionTask {
 
     private static AuthorizationTask instance;
 
@@ -49,28 +43,24 @@ public class AuthorizationTask extends  ConnectionTask{
     public String[] loginUser(User user) throws RestServiceException {
 
         try {
-
-            HttpResponse httpResponse = executeEntityRequest(Request.POST,"in",user);
+            HttpResponse httpResponse = executeEntityRequest(Request.POST, "in", user);
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
-
                 case 200:
                     Header userID = httpResponse.getFirstHeader("userId");
                     Header token = httpResponse.getFirstHeader("Authorization");
-
                     // DEBUG:
                     System.out.println("[DEBUG] Login successful - UserId: "
                             + userID.getValue());
                     return new String[]{userID.getValue(), token.getValue()};
-
                 case 401:
                     System.out.println("[DEBUG] Unauthorized");
-                    throw new RestServiceException(Error.UNAUTHORIZED);
-
+                    throw new RestServiceException(Error.LOGIN_FAILED);
                 default:
                     System.out.println("[DEBUG] Login Error");
-                    throw new RestServiceException(UserError.ERROR);
+                    throw new RestServiceException(Error.LOGIN_FAILED);
             }
+
         } catch (ClientProtocolException e) {
             System.out.println("[DEBUG] Login ClientProtocolException");
             e.printStackTrace();
@@ -105,7 +95,7 @@ public class AuthorizationTask extends  ConnectionTask{
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 default:
-                    throw new RestServiceException(UserError.ERROR);
+                    throw new RestServiceException(Error.ERROR);
             }
 
         } catch (ClientProtocolException e) {

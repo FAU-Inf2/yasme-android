@@ -7,23 +7,18 @@ import net.yasme.android.encryption.MessageSignatur;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.MessageKey;
-import net.yasme.android.entities.User;
-import net.yasme.android.exception.MessageError;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.Error;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,9 +27,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.ArrayList;
 
@@ -65,7 +57,6 @@ public class KeyTask extends ConnectionTask {
         }
     }
 
-    //TODO: Exception Handling
 
     public MessageKey saveKey(long creatorDevice, ArrayList<Long> recipients,Chat chat, String key, byte encType, String sign ) throws RestServiceException {
 
@@ -138,13 +129,13 @@ public class KeyTask extends ConnectionTask {
                     return result;
 
                 case 400:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.BAD_REQUEST);
                 case 401:
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 403:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.FORBIDDEN);
                 case 406:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.NOT_ACCEPTABLE);
                 default:
                     throw new RestServiceException(Error.ERROR);
             }
@@ -159,7 +150,7 @@ public class KeyTask extends ConnectionTask {
         return null;
     }
 
-    public boolean deleteKey(long chatId, long keyId, long DeviceId) {
+    public boolean deleteKey(long chatId, long keyId, long DeviceId) throws RestServiceException {
 
         try {
 
@@ -183,14 +174,16 @@ public class KeyTask extends ConnectionTask {
                 case 401:
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 404:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 case 405:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.UNAUTHORIZED);
                 default:
                     throw new RestServiceException(Error.ERROR);
             }
 
-        } catch (Exception e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         return false;

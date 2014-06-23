@@ -2,10 +2,8 @@ package net.yasme.android.connection;
 
 import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.Device;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.exception.UserError;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -26,9 +24,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +86,7 @@ public class ChatTask extends ConnectionTask {
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 404:
-                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
+                    throw new RestServiceException(Error.USER_NOT_FOUND);
                 default:
                     throw new RestServiceException(Error.ERROR);
             }
@@ -135,13 +130,12 @@ public class ChatTask extends ConnectionTask {
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 403:
-                    throw new RestServiceException(
-                            Error.ERROR);
+                    throw new RestServiceException(Error.FORBIDDEN);
                 case 404:
                     throw new RestServiceException(
                             Error.NOT_FOUND_EXCEPTION);
                 default:
-                    throw new RestServiceException(UserError.ERROR);
+                    throw new RestServiceException(Error.ERROR);
             }
 
         } catch (ClientProtocolException e) {
@@ -181,16 +175,16 @@ public class ChatTask extends ConnectionTask {
                                     .getContent(), "UTF-8")
                     )).readLine());
                 case 400:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.BAD_REQUEST);
                 case 401:
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 403:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.FORBIDDEN);
                 case 404:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 case 500:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.SERVER_ERROR);
                 default:
                     throw new RestServiceException(Error.ERROR);
             }
@@ -230,12 +224,11 @@ public class ChatTask extends ConnectionTask {
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 403:
                     throw new RestServiceException(
-                            Error.ERROR);
+                            Error.FORBIDDEN);
                 case 404:
-                    throw new RestServiceException(
-                            UserError.CHAT_NOT_FOUND_EXCEPTION);
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 default:
-                    throw new RestServiceException(UserError.ERROR);
+                    throw new RestServiceException(Error.ERROR);
             }
 
         } catch (IllegalStateException e) {
@@ -273,13 +266,13 @@ public class ChatTask extends ConnectionTask {
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 403:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.FORBIDDEN);
                 case 404:
-                    throw new RestServiceException(UserError.USER_NOT_FOUND);
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 case 500:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.SERVER_ERROR);
                 default:
-                    throw new RestServiceException(UserError.ERROR);
+                    throw new RestServiceException(Error.ERROR);
             }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
@@ -314,11 +307,11 @@ public class ChatTask extends ConnectionTask {
                     System.out.println("[DEBUG] Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 403:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.FORBIDDEN);
                 case 404:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 case 500:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.SERVER_ERROR);
                 default:
                     throw new RestServiceException(Error.ERROR);
             }
@@ -368,7 +361,7 @@ public class ChatTask extends ConnectionTask {
                 case 500:
                     throw new RestServiceException(Error.ERROR);
                 default:
-                    throw new RestServiceException(UserError.ERROR);
+                    throw new RestServiceException(Error.ERROR);
             }
 
         } catch (ClientProtocolException e) {
@@ -408,14 +401,14 @@ public class ChatTask extends ConnectionTask {
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 403:
                     throw new RestServiceException(
-                            Error.ERROR);
+                            Error.FORBIDDEN);
                 case 404:
                     throw new RestServiceException(
                             Error.NOT_FOUND_EXCEPTION);
                 case 500:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.SERVER_ERROR);
                 default:
-                    throw new RestServiceException(UserError.ERROR);
+                    throw new RestServiceException(Error.ERROR);
             }
 
         } catch (ClientProtocolException e) {
@@ -461,14 +454,14 @@ public class ChatTask extends ConnectionTask {
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 403:
                     throw new RestServiceException(
-                            Error.ERROR);
+                            Error.FORBIDDEN);
                 case 404:
                     throw new RestServiceException(
-                            UserError.CHAT_NOT_FOUND_EXCEPTION);
+                            Error.NOT_FOUND_EXCEPTION);
                 case 500:
-                    throw new RestServiceException(Error.STORE_FAILED_EXCEPTION);
+                    throw new RestServiceException(Error.SERVER_ERROR);
                 default:
-                    throw new RestServiceException(UserError.ERROR);
+                    throw new RestServiceException(Error.ERROR);
             }
 
         } catch (ClientProtocolException e) {

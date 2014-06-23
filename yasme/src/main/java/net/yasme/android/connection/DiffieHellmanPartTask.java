@@ -79,8 +79,10 @@ public class DiffieHellmanPartTask extends ConnectionTask{
                 case 401:
                     System.out.println("Unauthorized");
                     throw new RestServiceException(net.yasme.android.exception.Error.UNAUTHORIZED);
+                case 403:
+                    throw new RestServiceException(Error.FORBIDDEN);
                 case 405:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.STORE_FAILED_EXCEPTION);
                 default:
                     throw new RestServiceException(Error.ERROR);
             }

@@ -82,6 +82,8 @@ public class DeviceTask extends ConnectionTask {
                 case 401:
                     System.out.println("Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
+                case 404:
+                    throw new RestServiceException(Error.USER_NOT_FOUND);
                 case 500:
                     throw new RestServiceException(Error.STORE_FAILED_EXCEPTION);
                 default:
@@ -119,6 +121,8 @@ public class DeviceTask extends ConnectionTask {
                 case 401:
                     System.out.println("Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
+                case 403:
+                    throw new RestServiceException(Error.FORBIDDEN);
                 case 404:
                     throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 default:
@@ -128,7 +132,7 @@ public class DeviceTask extends ConnectionTask {
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            throw new RestServiceException(Error.UNAUTHORIZED);
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -169,7 +173,7 @@ public class DeviceTask extends ConnectionTask {
                     System.out.println("Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
                 case 404:
-                    throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
+                    throw new RestServiceException(Error.USER_NOT_FOUND);
                 default:
                     throw new RestServiceException(Error.ERROR);
             }
@@ -208,10 +212,12 @@ public class DeviceTask extends ConnectionTask {
                 case 401:
                     System.out.println("Unauthorized");
                     throw new RestServiceException(Error.UNAUTHORIZED);
+                case 403:
+                    throw new RestServiceException(Error.FORBIDDEN);
                 case 404:
                     throw new RestServiceException(Error.NOT_FOUND_EXCEPTION);
                 case 500:
-                    throw new RestServiceException(Error.ERROR);
+                    throw new RestServiceException(Error.SERVER_ERROR);
                 default:
                     throw new RestServiceException(Error.ERROR);
             }
