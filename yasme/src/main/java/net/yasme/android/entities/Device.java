@@ -19,13 +19,15 @@ public class Device {
     private String number;  // optional
     private String publicKey;
     private String product; // product name e.g. Google Nexux 5
+    private String googleRegId;
 
-    public Device(User user, Platform platform, String type, String number, String product) {
+    public Device(User user, Platform platform, String type, String number, String product, String googleRegId) {
         this.user = user;
         this.platform = platform;
         this.type = type;
         this.number = number;
         this.product = product;
+        this.googleRegId = googleRegId;
     }
 
     public Device() {
@@ -38,6 +40,8 @@ public class Device {
     public User getUser() {
         return this.user;
     }
+
+    public String getGoogleRegId(){return this.googleRegId;}
 
     public String getProduct(){return this.product;}
 
@@ -70,6 +74,8 @@ public class Device {
     public void setPlatform(Platform platform) {
         this.platform = platform;
     }
+
+    public void setGoogleRegId(String googleRegId){this.googleRegId = googleRegId;}
 
     public void setType(String type) {
         this.type = type;

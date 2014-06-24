@@ -314,7 +314,7 @@ public class LoginActivity extends AbstractYasmeActivity {
         // TODO devices from server
         // TODO use case : plain app + old user + old device
 
-        Log.d(this.getClass().getSimpleName(), "[DEBUG] deviceId is" + deviceId);
+        Log.d(this.getClass().getSimpleName(), "[DEBUG] deviceId is " + deviceId);
         return true;
     }
 

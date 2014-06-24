@@ -55,11 +55,13 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         // indicates if its a smartphone or a tablet
         String type = "smartphone";
 
+        String reg = "reg";
+
         // TODO the phone number
         String number = "00000000";
         Log.d(this.getClass().getSimpleName(),"[DEBUG] product name: " + product);
 
-        Device deviceToBeRegistered = new Device(user,Device.Platform.ANDROID,type,number,product);
+        Device deviceToBeRegistered = new Device(user,Device.Platform.ANDROID,type,number,product,reg);
 
         // make the REST-Call
         try{
