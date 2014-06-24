@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">Yasme</string>
-    <string name="action_settings">Settings</string>
 
     <!-- Menu -->
     <string name="action_chats">Chats</string>
@@ -40,5 +39,8 @@
         <item>Search By E-Mail</item>
         <item>Search By Phone Number</item>
     </string-array>
+
+    <!-- Settings -->
+    <string name="action_settings">Settings</string>
 
 </resources>

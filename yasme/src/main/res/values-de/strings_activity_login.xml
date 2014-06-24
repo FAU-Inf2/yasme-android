@@ -1,8 +1,7 @@
 <resources>
 
-    <string name="title_activity_login">Login</string>
-
     <!-- Strings related to login -->
+    <string name="title_activity_login">Login</string>
     <string name="prompt_email">E-Mail</string>
     <string name="prompt_password">Passwort</string>
     <string name="action_sign_in">Einloggen</string>
@@ -25,6 +24,5 @@
     <string name="registration_repeat_password">Passwort erneut eingeben</string>
     <string name="registration_button_ok">Registrieren</string>
     <string name="registration_button_cancel">Abbrechen</string>
-
 
 </resources>
