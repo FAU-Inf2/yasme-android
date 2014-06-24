@@ -77,7 +77,7 @@ public class LoginActivity extends AbstractYasmeActivity {
                 registerInBackground();
             }
         } else {
-            Log.i(cloudMessaging.TAG, "No valid Google Play Services APK found.");
+            Log.i(AbstractYasmeActivity.TAG, "No valid Google Play Services APK found.");
         }
         //GCM End
 
