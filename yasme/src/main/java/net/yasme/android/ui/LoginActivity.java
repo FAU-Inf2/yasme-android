@@ -135,7 +135,7 @@ public class LoginActivity extends AbstractYasmeActivity {
     // TODO: Strings nach strings.xml bringen
     private void registerDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Enter the values");
+        alert.setTitle(getString(R.string.registration_title));
 
         LinearLayout list = new LinearLayout(this);
         list.setOrientation(LinearLayout.VERTICAL);
@@ -143,25 +143,25 @@ public class LoginActivity extends AbstractYasmeActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
         final EditText name = new EditText(this);
-        name.setHint("Name");
+        name.setHint(R.string.registration_name);
         list.addView(name, layoutParams);
         final EditText mail = new EditText(this);
         mail.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
-        mail.setHint("E-Mail");
+        mail.setHint(R.string.registration_email);
         list.addView(mail, layoutParams);
         final EditText password = new EditText(this);
         password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
-        password.setHint("Passwort");
+        password.setHint(R.string.registration_password);
         list.addView(password, layoutParams);
         final EditText password_check = new EditText(this);
         password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
-        password_check.setHint("Passwort");
+        password_check.setHint(R.string.registration_repeat_password);
         list.addView(password_check, layoutParams);
         alert.setView(list);
         //TODO: Input type seems to change nothing??
 
         // "OK" button to save the values
-        alert.setPositiveButton("Register now!",
+        alert.setPositiveButton(R.string.registration_button_ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
@@ -179,7 +179,7 @@ public class LoginActivity extends AbstractYasmeActivity {
         );
 
         // "Cancel" button
-        alert.setNegativeButton("Cancel",
+        alert.setNegativeButton(R.string.registration_button_cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     }

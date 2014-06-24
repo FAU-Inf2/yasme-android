@@ -17,4 +17,13 @@
     <string name="registration_successful">Registration successful!</string>
     <string name="default_password">password</string>
 
+    <!-- Strings related to registration -->
+    <string name="registration_title">Please enter values</string>
+    <string name="registration_name">Name</string>
+    <string name="registration_email">E-Mail</string>
+    <string name="registration_password">Password</string>
+    <string name="registration_repeat_password">Repeat password</string>
+    <string name="registration_button_ok">Register now!</string>
+    <string name="registration_button_cancel">Cancel</string>
+
 </resources>
