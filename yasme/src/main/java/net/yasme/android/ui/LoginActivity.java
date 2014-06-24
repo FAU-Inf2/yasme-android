@@ -411,7 +411,6 @@ public class LoginActivity extends AbstractYasmeActivity {
 
             }
 
-
         }.execute(null, null, null);
     }
 }
