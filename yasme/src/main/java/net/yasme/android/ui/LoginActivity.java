@@ -347,7 +347,7 @@ public class LoginActivity extends AbstractYasmeActivity {
 
             }
         } else {
-            passwordView.setError(getString(R.string.error_incorrect_password));
+            passwordView.setError(getString(R.string.error_incorrect_user_or_password));
             passwordView.requestFocus();
         }
     }

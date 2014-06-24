@@ -3,7 +3,7 @@
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">EMail</string>
+    <string name="prompt_email">E-Mail</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_register">Register</string>
@@ -11,10 +11,10 @@
     <string name="action_forgot_password">Recover lost password</string>
     <string name="login_progress_signing_in">Signing in&#8230;</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_incorrect_user_or_password">Username or password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="registration_not_successful">Fehler bei der Registrierung!</string>
-    <string name="registration_successful">Registrierung erfolgreich abgeschlossen</string>
+    <string name="registration_not_successful">Registration error!</string>
+    <string name="registration_successful">Registration successful!</string>
     <string name="default_password">password</string>
 
 </resources>

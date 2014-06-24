@@ -1,0 +1,20 @@
+<resources>
+
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">E-Mail</string>
+    <string name="prompt_password">Passwort</string>
+    <string name="action_sign_in">Einloggen</string>
+    <string name="action_register">Registrieren</string>
+    <string name="action_sign_in_short">Einloggen</string>
+    <string name="action_forgot_password">Passwort zurücksetzen</string>
+    <string name="login_progress_signing_in">Bitte warten &#8230;</string>
+    <string name="error_invalid_password">Das eingegebene Passwort ist zu kurz</string>
+    <string name="error_incorrect_user_or_password">Benutzername oder Passwort falsch</string>
+    <string name="error_field_required">Dieses Feld ist erforderlich</string>
+    <string name="registration_not_successful">Fehler bei der Registrierung!</string>
+    <string name="registration_successful">Registrierung erfolgreich abgeschlossen</string>
+    <string name="default_password">password</string>
+
+</resources>

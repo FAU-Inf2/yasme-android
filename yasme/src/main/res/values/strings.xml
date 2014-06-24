@@ -14,16 +14,16 @@
     <!-- Home -->
     <string name="title_activity_home">Yasme Home</string>
     <string name="button_showChat">TestChat</string>
-    <string name="usr_name_hint">Benutzername</string>
+    <string name="usr_name_hint">Username</string>
 
     <!-- Chat -->
-    <string name="title_activity_chat">ChatActivity</string>
-    <string name="button_send">Sende</string>
+    <string name="title_activity_chat">Yasme</string>
+    <string name="button_send">Send</string>
     <string name="button_update">Update</string>
-    <string name="type_text">Hier Nachricht eingeben</string>
-    <string name="title_activity_yasme_login">YasmeLogin</string>
+    <string name="type_text">Enter text here</string>
+    <string name="title_activity_yasme_login">Login</string>
     <string name="title_activity_invite_to_chat">Invite to chat</string>
-    <string name="title_activity_yasme_contact">YasmeContact</string>
+    <string name="title_activity_yasme_contact">Contacts</string>
     <string name="title_section1">All Contacts</string>
     <string name="title_section2">Search Contact</string>
     <string name="hello_world">Hello world!</string>
