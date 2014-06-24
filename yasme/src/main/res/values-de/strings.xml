@@ -34,6 +34,7 @@
     <string name="toast_no_selection">Mit wem willst du chatten?</string>
 
     <!-- Contacts -->
+    <string name="button_search">Suche</string>
     <string-array name="search_spinner_content">
         <item>Nach Namen suchen</item>
         <item>Nach E-Mail suchen</item>

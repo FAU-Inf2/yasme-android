@@ -29,7 +29,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="10mm"
-                android:text="Search"
+                android:text="@string/button_search"
                 android:id="@+id/search_button" />
         </TableRow>
 
