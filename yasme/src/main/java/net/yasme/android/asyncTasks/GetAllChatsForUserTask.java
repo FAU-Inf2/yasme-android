@@ -7,6 +7,7 @@ import android.util.Log;
 
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
@@ -52,10 +53,15 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
                 Log.w(this.getClass().getSimpleName(), e.getMessage());
             }
             if(chatInfo != null) {
-                if(chat.getNumberOfParticipants() != chatInfo.getNumberOfParticipants()) {
-                    chat.setNumberOfParticipants(chatInfo.getNumberOfParticipants());
-                    chat.setParticipants(chatInfo.getParticipants());
+                ArrayList<User> participants = chatInfo.getParticipants();
+                for(User user : participants) {
+                    dbManager.addUser(user);
                 }
+                //if(chat.getNumberOfParticipants() != chatInfo.getNumberOfParticipants()) { //TODO
+                    chat.setNumberOfParticipants(chatInfo.getNumberOfParticipants());
+                    chat.setParticipants(participants);
+                    Log.d(this.getClass().getSimpleName(), "Participants geupdatet");
+                //}
                 if(chatInfo.getStatus() != null) {
                     chat.setStatus(chatInfo.getStatus());
                 }

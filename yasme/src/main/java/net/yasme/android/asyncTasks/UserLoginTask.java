@@ -87,8 +87,10 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         if(success) {
-            new UpdateDBTask(context, null)
-                    .execute(Long.toString(lastMessageId), Long.toString(userId), accessToken);
+            //new UpdateDBTask(context, null)
+            //        .execute(Long.toString(lastMessageId), Long.toString(userId), accessToken);
+            new GetAllChatsForUserTask(context).execute(Long.toString(userId), accessToken);
+            new GetMessageTask(context, storage).execute(Long.toString(userId), accessToken);
         }
         activity.onPostLoginExecute(success, userId, accessToken);
     }

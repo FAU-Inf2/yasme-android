@@ -26,8 +26,6 @@ public class DatabaseManager {
         if (null == instance) {
             instance = new DatabaseManager(context);
         }
-
-        new GetAllChatsForUserTask(context).execute(Long.toString(userId), accessToken);
         initialized = true;
     }
 
@@ -229,5 +227,54 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return -1;
+    }
+
+
+    /**
+     * User methods
+     */
+    /**
+     * Adds one user to database (using createIfNotExists)
+     */
+    public void addUser(User u) {
+        try {
+            getHelper().getUserDao().createIfNotExists(u);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * This function will delete a user with userId
+     * from table
+     *
+     * @param userId        ID (primary key) of user
+     */
+    public void deleteUser(long userId) {
+        try {
+            getHelper().getUserDao().deleteById(userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This function will get all participants of one chat
+     * @param chatId    long
+     * @return participants of chat with chatId or null on error
+     */
+    public ArrayList<User> getParticipantsFromDB(long chatId) {
+        ArrayList<User> participants = null;
+        List<ChatUser> matching = null;
+        try {
+            Chat chat = getHelper().getChatDao().queryForId(chatId);
+            matching = getHelper().getChatUserDao().
+                    queryForEq(DatabaseConstants.CHAT_FIELD_NAME, chat);
+        } catch (SQLException e) {
+            return null;
+        }
+        for(ChatUser current : matching) {
+            participants.add(current.user);
+        }
+        return participants;
     }
 }
