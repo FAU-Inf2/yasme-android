@@ -22,7 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.DeviceRegistrationTask;
+import net.yasme.android.asyncTasks.YasmeDeviceRegistrationTask;
 import net.yasme.android.asyncTasks.UserLoginTask;
 import net.yasme.android.asyncTasks.UserRegistrationTask;
 import net.yasme.android.gcm.CloudMessaging;
@@ -38,7 +38,7 @@ public class LoginActivity extends AbstractYasmeActivity {
      */
     private UserLoginTask authTask = null;
     private UserRegistrationTask regTask = null;
-    private DeviceRegistrationTask devRegTask = null;
+    private YasmeDeviceRegistrationTask yasmeDevRegTask = null;
     private CloudMessaging cloudMessaging = null;
 
     protected String accessToken;
@@ -293,7 +293,7 @@ public class LoginActivity extends AbstractYasmeActivity {
     /*
     * This method checks if there is a device in the DB
     * */
-    public boolean deviceCheck() {
+    public boolean yasmeDeviceCheck() {
 
         //set the deviceProduct
         this.deviceProduct = Build.MANUFACTURER + " " + Build.MODEL ;
@@ -318,9 +318,9 @@ public class LoginActivity extends AbstractYasmeActivity {
         return true;
     }
 
-    public void onPostDeviceRegExecute(Boolean success, long deviceId) {
+    public void onPostYasmeDeviceRegExecute(Boolean success, long deviceId) {
         if (success) {
-            Log.d(this.getClass().getSimpleName(), "[DEBUG] Login after device registration");
+            Log.d(this.getClass().getSimpleName(), "[DEBUG] Login after device registration at yasme server");
             Intent intent = new Intent(this, ChatListActivity.class);
             startActivity(intent);
         }
@@ -334,16 +334,16 @@ public class LoginActivity extends AbstractYasmeActivity {
 
         if (success) {
             // check if there is a device in the Database
-            if (deviceCheck() == true) {
+            if (yasmeDeviceCheck() == true) {
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device exists in Database");
                 Intent intent = new Intent(this, ChatListActivity.class);
                 startActivity(intent);
             } else {
                 // TODO register device
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device does not exist in Database");
-                Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device");
-                devRegTask = new DeviceRegistrationTask(getApplicationContext(), storage, this);
-                devRegTask.execute(this.accessToken, Long.toString(this.userId),this.deviceProduct);
+                Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device at yasme server");
+                yasmeDevRegTask = new YasmeDeviceRegistrationTask(getApplicationContext(), storage, this);
+                yasmeDevRegTask.execute(this.accessToken, Long.toString(this.userId),this.deviceProduct);
 
             }
         } else {
