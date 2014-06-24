@@ -144,6 +144,7 @@ public class ChatFragment extends Fragment {
                 .execute(msg, activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), Long.toString(activity.getSelfUser().getId()),
                         Long.toString(chat.getId()), activity.getAccessToken());
         editMessage.setText("");
+        update(view);
     }
 
     public void asyncUpdate() {
@@ -162,6 +163,7 @@ public class ChatFragment extends Fragment {
             Log.d(this.getClass().getSimpleName(), "Keine Nachrichten zum Ausgeben");
         }
         for (Message msg : messages) {
+
             msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
             TextView textView = new TextView(activity.getApplicationContext());
 
@@ -193,6 +195,4 @@ public class ChatFragment extends Fragment {
             editMessage.requestFocus();
         }
     }
-
-
 }
