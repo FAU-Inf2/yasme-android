@@ -53,7 +53,6 @@ public class ChatActivity extends AbstractYasmeActivity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.singleFragmentContainer, new ChatFragment()).commit();
 		}
-        chat.setParticipants(DatabaseManager.getInstance().getParticipantsFromDB(chatId));
     }
 
 	@Override
