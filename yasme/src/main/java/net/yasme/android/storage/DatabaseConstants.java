@@ -28,4 +28,8 @@ public class DatabaseConstants {
     public static final String USER_MAIL = "userMail";
     public static final String USER_NAME = "userName";
 
+    //ChatUser
+    public static final String USER_FIELD_NAME = "userObject";
+    public static final String CHAT_FIELD_NAME = "chatObject";
+
 }

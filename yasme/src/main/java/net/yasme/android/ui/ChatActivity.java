@@ -66,6 +66,7 @@ public class ChatActivity extends AbstractYasmeActivity {
             chat = null;
             Log.w(this.getClass().getSimpleName(), "Chat aus DB holen failed");
         }
+        chat.setParticipants(DatabaseManager.getInstance().getParticipantsFromDB(chatId));
         if(chat == null) {
             chat = new Chat(chatId, selfUser, this);
         }

@@ -1,9 +1,12 @@
 package net.yasme.android.entities;
 
+import android.util.Log;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.encryption.MessageEncryption;
@@ -26,7 +29,7 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
     private long id;
 
-    @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS)
+//    @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS)
     private Collection<User> participants;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_STATUS)
@@ -94,11 +97,15 @@ public class Chat implements Serializable {
     }
 
     public ArrayList<User> getParticipants() {
-       /*
-        User dummy = new User("Dummy", 12);
-        participants.add(dummy);
-        return new ArrayList<User>(participants);
-*/
+        if(participants == null) {
+            participants = DatabaseManager.getInstance().getParticipantsFromDB(id);
+        }
+        if(participants == null) {
+            participants = new ArrayList<User>();
+            User dummy = new User("Dummy", 12);
+            participants.add(dummy);
+            Log.d(this.getClass().getSimpleName(), "Dummy-User hinzugefuegt");
+        }
         return new ArrayList<>(participants);
     }
 
