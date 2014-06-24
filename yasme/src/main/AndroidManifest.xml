@@ -9,10 +9,9 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <permission
-        android:name="net.yasme.android.permission.C2D_MESSAGE"
+        android:name=".gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-
-    <uses-permission android:name="net.yasme.android.permission.C2D_MESSAGE" />
+    <uses-permission android:name=".gcm.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
@@ -21,11 +20,11 @@
         android:theme="@style/AppTheme" >
 
         <receiver
-            android:name="net.yasme.android.gcm.GcmBroadcastReceiver"
+            android:name=".gcm.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="net.yasme.android" />
+                <category android:name=".gcm" />
             </intent-filter>
         </receiver>
 

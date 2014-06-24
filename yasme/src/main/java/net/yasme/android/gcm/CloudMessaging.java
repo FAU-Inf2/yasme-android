@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,15 +24,13 @@ import java.io.IOException;
 
 public class CloudMessaging {
 
-
-    public static final String TAG = "YasmeGCM";
-
-
     private static CloudMessaging instance;
+
     private Activity activity;
     private GoogleCloudMessaging gcm;
     private Context context;
     private String regid;
+
 
     public static CloudMessaging getInstance(Activity activity) {
         if (instance == null) {
@@ -53,7 +52,7 @@ public class CloudMessaging {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, activity,
                         AbstractYasmeActivity.PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Log.i(TAG, "This device is not supported.");
+                Log.i(AbstractYasmeActivity.TAG, "This device is not supported.");
                 activity.finish();
             }
             return false;
@@ -65,7 +64,7 @@ public class CloudMessaging {
         final SharedPreferences prefs = getGCMPreferences(context);
         String registrationId = prefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID, "");
         if (registrationId.isEmpty()) {
-            Log.i(TAG, "Registration not found.");
+            Log.i(AbstractYasmeActivity.TAG, "Registration not found.");
             return "";
         }
         // Check if app was updated; if so, it must clear the registration ID
@@ -74,7 +73,7 @@ public class CloudMessaging {
         int registeredVersion = prefs.getInt(AbstractYasmeActivity.PROPERTY_APP_VERSION, Integer.MIN_VALUE);
         int currentVersion = getAppVersion(context);
         if (registeredVersion != currentVersion) {
-            Log.i(TAG, "App version changed.");
+            Log.i(AbstractYasmeActivity.TAG, "App version changed.");
             return "";
         }
         return registrationId;
@@ -123,7 +122,7 @@ public class CloudMessaging {
     private void storeRegistrationId(Context context, String regId) {
         final SharedPreferences prefs = getGCMPreferences(context);
         int appVersion = getAppVersion(context);
-        Log.i(TAG, "Saving regId on app version " + appVersion);
+        Log.i(AbstractYasmeActivity.TAG, "Saving regId on app version " + appVersion);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(AbstractYasmeActivity.PROPERTY_REG_ID, regId);
         editor.putInt(AbstractYasmeActivity.PROPERTY_APP_VERSION, appVersion);
@@ -132,5 +131,23 @@ public class CloudMessaging {
 
     private void sendRegistrationIdToBackend() {
 
+    }
+
+    public boolean sendMessage(){
+
+        try {
+            Bundle data = new Bundle();
+
+            data.putString("my_message", "Hello World");
+            data.putString("my_action",
+                    "com.google.android.gcm.demo.app.ECHO_NOW");
+            //String id = Integer.toString(msgId.incrementAndGet());
+            gcm.send(regid + "@gcm.googleapis.com", "1", data);
+            System.out.println("Sent message");
+            return true;
+        } catch (IOException ex) {
+           System.out.println("Error :" + ex.getMessage());
+        }
+        return false;
     }
 }

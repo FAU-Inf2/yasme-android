@@ -35,6 +35,7 @@ public abstract class AbstractYasmeActivity  extends Activity {
     public static final String PROPERTY_APP_VERSION = "appVersion";
     public static final String SENDER_ID = "104759172131";
     public static final  int   PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    public static final String TAG = "YasmeGCM";
 
     protected User selfUser;
     protected String accessToken;
