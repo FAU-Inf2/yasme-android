@@ -45,122 +45,15 @@ public class ChatActivity extends AbstractYasmeActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_chat);
+		setContentView(R.layout.activity_with_single_fragment);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+					.add(R.id.singleFragmentContainer, new ChatFragment()).commit();
 		}
-
-		Intent intent = getIntent();
-		long chatId = intent.getLongExtra(CHAT_ID, 1);
-
-        storage = getSharedPreferences(AbstractYasmeActivity.STORAGE_PREFS, MODE_PRIVATE);
-
-        //trying to get chat with chatId from local DB
-        try {
-            chat = DatabaseManager.getInstance().getChat(chatId);
-        } catch (NullPointerException e) {
-            chat = null;
-            Log.w(this.getClass().getSimpleName(), "Chat aus DB holen failed");
-        }
-        if(chat == null) {
-            chat = new Chat(chatId, selfUser, this);
-        }
-
-        //DEBUG, TODO: encryption speichern und auslesen
-        aes = new MessageEncryption(getApplicationContext(), chat, selfUser.getId(), accessToken);
-        chat.setEncryption(aes);
     }
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		initializeViews();
-        updateViews(chat.getMessages());
-	}
-
-	@Override
-	protected void onStop() {
-        DatabaseManager.getInstance().updateChat(chat);
-		super.onStop();
-	}
-
-	public TextView getStatus() {
-		return status;
-	}
-
-	private void initializeViews() {
-		editMessage = (EditText) findViewById(R.id.text_message);
-		status = (TextView) findViewById(R.id.text_status);
-		status.setText("Eingeloggt: " +
-                storage.getString(AbstractYasmeActivity.USER_NAME, "anonym"));
-	}
-
-	public void send(View view) {
-		String msg = aes.encrypt(editMessage.getText().toString());
-
-		if (msg.isEmpty()) {
-			status.setText("Nichts eingegeben");
-			return;
-		}
-
-        new SendMessageTask(getApplicationContext(), this, chat.getEncryption())
-                .execute(msg, selfUser.getName(), selfUser.getEmail(), Long.toString(selfUser.getId()),
-                        Long.toString(chat.getId()), accessToken);
-		editMessage.setText("");
-	}
-
-    public void asyncUpdate() {
-        status.setText("GET messages");
-        new GetMessageTaskInChat(getApplicationContext(), this, chat.getEncryption(), storage)
-                .execute(Long.toString(selfUser.getId()), accessToken);
-        status.setText("GET messages done");
-    }
-
-	public void update(View view) {
-		asyncUpdate();
-	}
-
-	public void updateViews(ArrayList<Message> messages) {
-        if(messages == null) {
-            Log.d(this.getClass().getSimpleName(), "Keine Nachrichten zum Ausgeben");
-        }
-        for (Message msg : messages) {
-            msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
-            TextView textView = new TextView(getApplicationContext());
-
-            LinearLayout layout = (LinearLayout) findViewById(R.id.scrollLayout);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT);
-
-            RelativeLayout row = new RelativeLayout(getApplicationContext());
-            row.setLayoutParams(new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT));
-
-            textView.setText(msg.getSender().getName() + ": "
-                    + msg.getMessage());
-            textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
-            textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
-
-            if (msg.getSender().getId() == selfUser.getId()) {
-                textView.setGravity(Gravity.RIGHT);
-                row.setGravity(Gravity.RIGHT);
-                textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
-                textView.setTextColor(getResources().getColor(R.color.chat_text_color_self));
-            }
-            row.addView(textView);
-            layout.addView(row, layoutParams);
-
-            row.setFocusableInTouchMode(true);
-            row.requestFocus();
-            findViewById(R.id.text_message).requestFocus();
-        }
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -177,22 +70,5 @@ public class ChatActivity extends AbstractYasmeActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int itemId = item.getItemId();
         return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_chat, container,
-					false);
-			return rootView;
-		}
 	}
 }

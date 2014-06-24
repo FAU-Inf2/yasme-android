@@ -11,6 +11,7 @@ import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.ui.ChatFragment;
 
 import java.util.ArrayList;
 
@@ -20,13 +21,13 @@ import java.util.ArrayList;
 
 public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
     Context context;
-    ChatActivity activity;
+    ChatFragment fragment;
     SharedPreferences storage;
     MessageEncryption aes;
 
-    public GetMessageTaskInChat(Context context, ChatActivity activity, MessageEncryption aes, SharedPreferences storage) {
+    public GetMessageTaskInChat(Context context, ChatFragment fragment, MessageEncryption aes, SharedPreferences storage) {
         this.context = context;
-        this.activity = activity;
+        this.fragment = fragment;
         this.storage = storage;
         this.aes = aes;
     }
@@ -76,7 +77,7 @@ public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
      */
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            activity.updateViews(messages);
+            fragment.updateViews(messages);
             new UpdateDBTask(context, messages).execute(Long.toString(lastMessageId),
                     Long.toString(userId), accessToken);
 
@@ -88,7 +89,7 @@ public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
             editor.commit();
         } else {
             Log.i(this.getClass().getSimpleName(), "Keine neuen Nachrichten");
-            activity.getStatus().setText("Keine neuen Nachrichten");
+            fragment.getStatus().setText("Keine neuen Nachrichten");
         }
     }
 }

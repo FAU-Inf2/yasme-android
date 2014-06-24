@@ -17,22 +17,21 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/button_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:onClick="update"
         android:text="@string/button_update" />
 
     <ScrollView
-        android:id="@+id/scrollView1"
+        android:id="@+id/messageScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/text_message"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/button1"
+        android:layout_below="@+id/button_update"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -48,15 +47,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/scrollView1"
-        android:onClick="send"
+        android:layout_alignRight="@+id/messageScrollView"
         android:text="@string/button_send" />
 
     <EditText
         android:id="@+id/text_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/scrollView1"
+        android:layout_alignLeft="@+id/messageScrollView"
         android:layout_alignParentBottom="true"
         android:layout_alignTop="@+id/button_send"
         android:layout_toLeftOf="@+id/button_send"

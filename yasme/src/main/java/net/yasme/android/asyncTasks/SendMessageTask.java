@@ -10,6 +10,7 @@ import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.ui.ChatFragment;
 
 /**
  * Created by robert on 19.06.14.
@@ -18,11 +19,13 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
     Context context;
     ChatActivity activity;
     MessageEncryption aes;
+    ChatFragment fragment;
 
-    public SendMessageTask(Context context, ChatActivity activity, MessageEncryption aes) {
+    public SendMessageTask(Context context, ChatActivity activity, ChatFragment fragment, MessageEncryption aes) {
         this.context = context;
         this.activity = activity;
         this.aes = aes;
+        this.fragment = fragment;
     }
 
     MessageTask messageTask = MessageTask.getInstance(activity);
@@ -70,9 +73,9 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         if (success) {
             //activity.asyncUpdate();
-            activity.getStatus().setText("Gesendet: " + msg);
+            fragment.getStatus().setText("Gesendet: " + msg);
         } else {
-            activity.getStatus().setText("Senden fehlgeschlagen");
+            fragment.getStatus().setText("Senden fehlgeschlagen");
         }
     }
 }

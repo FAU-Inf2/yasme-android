@@ -35,19 +35,12 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
-    Long userId;
-    String accessToken;
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
-
-        SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, 0);
-        userId = storage.getLong(USER_ID, 0);
-        accessToken = storage.getString(ACCESSTOKEN, null);
 
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
@@ -145,7 +138,7 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
             // Return a PlaceholderFragment (defined as a static inner class below).
             Bundle b = new Bundle();
             b.putString("accessToken", accessToken);
-            b.putLong("userId", userId);
+            b.putLong("userId", selfUser.getId());
 
             switch (position){
                 case 0:

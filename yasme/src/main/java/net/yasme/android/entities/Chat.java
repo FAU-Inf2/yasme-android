@@ -4,6 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.encryption.MessageEncryption;
@@ -53,7 +54,7 @@ public class Chat implements Serializable {
      * Constructors *
      */
     @JsonIgnore
-    public Chat(long id, User user, ChatActivity activity) {
+    public Chat(long id, User user, AbstractYasmeActivity activity) {
         this.id = id;
         accessToken = activity.getAccessToken();
 
@@ -99,7 +100,7 @@ public class Chat implements Serializable {
         participants.add(dummy);
         return new ArrayList<User>(participants);
 */
-        return new ArrayList<>(participants);
+        return new ArrayList<User>(participants);
     }
 
     public String getStatus() {
@@ -107,6 +108,21 @@ public class Chat implements Serializable {
     }
 
     public String getName() {
+        if (name == null) {
+            name = "";
+        }
+        if (name.length() <= 0) {
+            try {
+                for (int i=0; i < getParticipants().size(); i++) {
+                    if (name.length() <= 0) {
+                        name += ", ";
+                    }
+                    name += getParticipants().get(i).getName();
+                }
+            } catch (Exception e) {
+
+            }
+        }
         return name;
     }
 
