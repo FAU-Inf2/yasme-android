@@ -10,6 +10,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
+
+/*
+# KeyVerteilung:
+# Bei Anmeldung schickt User RSA-Key an Server, sein Device benachrichtigt alle bekannten Kontake
+# bei Hinzufuegen eines neuen Kontakts wird dieser ebenfalls benachrichtigt
+# --> Kontakt holt Key vom Server
+#
+# ansonsten beim Nachrichten senden/empfangen, AsyncTask, falls Key nicht vorhanden sein sollte
+ */
+
 public class MessageSignatur {
 
     private String RSAKEYSTORAGE = "rsaKeyStorage"; //Storage for Private and Public Keys from user

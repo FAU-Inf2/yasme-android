@@ -307,7 +307,7 @@ public class MessageEncryption {
 
                 return messageKey;
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println("Fail to send key: "+e.getMessage());
             }
             return null;
         }
