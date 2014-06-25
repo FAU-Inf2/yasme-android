@@ -4,7 +4,6 @@ import android.content.Context;
 
 import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.encryption.MessageEncryption;
-import net.yasme.android.encryption.MessageSignatur;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.Error;

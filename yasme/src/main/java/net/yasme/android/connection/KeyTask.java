@@ -3,7 +3,6 @@ package net.yasme.android.connection;
 import android.content.Context;
 
 import net.yasme.android.connection.ssl.HttpClient;
-import net.yasme.android.encryption.MessageSignatur;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.MessageKey;
@@ -27,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class KeyTask extends ConnectionTask {
