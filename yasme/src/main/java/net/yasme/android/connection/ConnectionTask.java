@@ -146,11 +146,10 @@ public class ConnectionTask {
         requestBase.setHeader("Content-type", "application/json");
         requestBase.setHeader("Accept", "application/json");
 
-        System.out.println(initializedSession + " " + userId + " " + accessToken);
         if (initializedSession) {
             requestBase.setHeader("userId", ConnectionTask.userId);
             requestBase.setHeader("Authorization", accessToken);
-            System.out.println("[DEBUG] TRUE" + userId + " " + accessToken );
+            System.out.println("[DEBUG] SESSION_INIT :  " + initializedSession + " ID: " + userId + " Token:" + accessToken);
         }
 
         return httpClient.execute(requestBase);
