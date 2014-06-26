@@ -50,6 +50,22 @@ public class DatabaseManager {
 
     /******* CRUD functions ******/
 
+    public List<User> getParticipantsForChat(long chatId) {
+        List<User> insert = null;
+        try {
+            Chat c = new Chat();
+            c.setId(chatId);
+            List<ChatUser> temp = getHelper().getChatUserDao().queryForMatchingArgs(new ChatUser(c, null));
+            insert = new ArrayList<User>();
+            for(ChatUser cu : temp) {
+                insert.add(cu.user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return insert;
+    }
+
     /**
      * Adds one chat to database
      */
@@ -72,26 +88,25 @@ public class DatabaseManager {
     public ArrayList<Chat> getAllChats() {
         List<Chat> chats = null;
         try {
-            System.out.println("DB Access GetChats");
             chats = getHelper().getChatDao().queryForAll();
-            System.out.println("DB Access after GetChats");
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("SQLException");
         } catch (NullPointerException e) {
-            System.out.println("DB Access failed");
             chats = null;
         }
 
         if(chats == null) {
             return new ArrayList<Chat>();
         }
+        for(Chat chat : chats) {
+            chat.setParticipants(getParticipantsForChat(chat.getId()));
+        }
         ArrayList<Chat> chatsArray = new ArrayList(chats);
         return chatsArray;
     }
 
     /**
-     * This function will return one chats from database with chatId
+     * This function will return one chat from database with chatId
      *
      * @param chatId        ID (primary key) of chat
      * @return chat with chatID or null if chat not exists
@@ -103,17 +118,7 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        try {
-            List<ChatUser> temp = getHelper().getChatUserDao().
-                    queryForEq(DatabaseConstants.CHAT_FIELD_NAME, chat);
-            List<User> insert = new ArrayList<>();
-            for(ChatUser cu : temp) {
-                insert.add(cu.user);
-            }
-            chat.setParticipants(insert);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
         return chat;
     }
 
@@ -130,6 +135,9 @@ public class DatabaseManager {
             matchingChats = getHelper().getChatDao().queryForMatchingArgs(search);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        for(Chat chat : matchingChats) {
+            chat.setParticipants(getParticipantsForChat(chat.getId()));
         }
         return matchingChats;
     }

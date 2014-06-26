@@ -37,14 +37,13 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
             System.out.println("Fehler bei Datenbankzugriff");
         }
 
-        /*
+
         //DEBUG
         if (chatRooms.size() <= 0) {
             Log.d(this.getClass().getSimpleName(), "Benutze Dummy-Liste");
-            System.out.println("Benutze Dummy-Liste");
             createDummyChatRoomList();
         }
-        */
+
 
         ChatListAdapter adapter = (ChatListAdapter)fragment.getListAdapter();
         //fragment.setListAdapter(adapter);
