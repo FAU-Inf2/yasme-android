@@ -34,7 +34,6 @@ import java.util.List;
 public class ChatTask extends ConnectionTask {
 
     private static ChatTask instance;
-    private URI uri;
 
     public static ChatTask getInstance() {
         if (instance == null) {
@@ -46,20 +45,18 @@ public class ChatTask extends ConnectionTask {
     private ChatTask() {
 
         try {
-            this.uri = new URIBuilder().setScheme(serverScheme).
-                    setHost(serverHost).setPort(serverPort).setPath("/chat").build();
+            this.uri = new URIBuilder(baseURI).setPath("/chat").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
-
-    //TODO: ExceptionHandling verfeinern für ganze Klasse!
 
     public List<Chat> getAllChatsForUser(long userId, String accessToken) throws RestServiceException {
 
         List<Chat> chats = new ArrayList<Chat>();
 
         try {
+            /*
             URI requestURI = uri;
 
             CloseableHttpClient httpClient = HttpClient.createSSLClient();
@@ -72,6 +69,9 @@ public class ChatTask extends ConnectionTask {
             httpGet.setHeader("Authorization", accessToken);
 
             HttpResponse httpResponse = httpClient.execute(httpGet);
+            */
+
+            HttpResponse httpResponse = executeBaseRequest(Request.GET,"");
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 200:

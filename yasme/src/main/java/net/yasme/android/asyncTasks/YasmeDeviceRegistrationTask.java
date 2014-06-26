@@ -31,7 +31,8 @@ public class YasmeDeviceRegistrationTask extends AsyncTask<String, Void, Boolean
     /*
     * @params params[0] is accessToken
     * @params params[1] is userId
-    * @param params[2] ist product
+    * @param params[2] is product
+    * @param params[3] is regId
     * */
 
 
@@ -42,6 +43,10 @@ public class YasmeDeviceRegistrationTask extends AsyncTask<String, Void, Boolean
 
         // the product : e.g Google Nexus
         String product = params[2];
+
+        // regId from google for push
+
+        String regId = params[3];
 
         long deviceIdFromServer;
 
@@ -55,13 +60,12 @@ public class YasmeDeviceRegistrationTask extends AsyncTask<String, Void, Boolean
         // indicates if its a smartphone or a tablet
         String type = "smartphone";
 
-        String reg = "reg";
-
         // TODO the phone number
         String number = "00000000";
+
         Log.d(this.getClass().getSimpleName(),"[DEBUG] product name: " + product);
 
-        Device deviceToBeRegistered = new Device(user,Device.Platform.ANDROID,type,number,product,reg);
+        Device deviceToBeRegistered = new Device(user,Device.Platform.ANDROID,type,number,product,regId);
 
         // make the REST-Call
         try{

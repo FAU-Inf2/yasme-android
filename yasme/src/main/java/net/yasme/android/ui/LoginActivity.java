@@ -49,7 +49,9 @@ public class LoginActivity extends AbstractYasmeActivity {
     private String password;
     private long userId;
 
+    // values for devices google + yasme server
     private String deviceProduct;
+    private String googleRegId;
 
     // focusView for validate()
     private View focusView = null;
@@ -305,9 +307,17 @@ public class LoginActivity extends AbstractYasmeActivity {
 
         Log.d(this.getClass().getSimpleName(), "[DEBUG] NOW is " + this.deviceProduct);
         //try to load device from shared preferences
-        SharedPreferences prefs = getSharedPreferences(DEVICE_PREFS,
+        SharedPreferences devicePrefs = getSharedPreferences(DEVICE_PREFS,
                 MODE_PRIVATE);
-        long deviceId = prefs.getLong(DEVICE_ID, -1);
+        long deviceId = devicePrefs.getLong(DEVICE_ID, -1);
+
+        // load regId
+        SharedPreferences pushPrefs = getSharedPreferences(LoginActivity.class.getSimpleName(),MODE_PRIVATE);
+
+        String regId = pushPrefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID,null);
+        this.googleRegId = regId;
+        // TODO proper check
+
         if (deviceId == -1) {
             return false;
         }
@@ -343,7 +353,7 @@ public class LoginActivity extends AbstractYasmeActivity {
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device does not exist in Database");
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device at yasme server");
                 yasmeDevRegTask = new YasmeDeviceRegistrationTask(getApplicationContext(), storage, this);
-                yasmeDevRegTask.execute(this.accessToken, Long.toString(this.userId),this.deviceProduct);
+                yasmeDevRegTask.execute(this.accessToken, Long.toString(this.userId),this.deviceProduct,this.googleRegId);
 
             }
         } else {

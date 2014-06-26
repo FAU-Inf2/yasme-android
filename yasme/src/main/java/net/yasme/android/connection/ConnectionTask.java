@@ -1,6 +1,7 @@
 package net.yasme.android.connection;
 
 import net.yasme.android.connection.ssl.HttpClient;
+import net.yasme.android.exception.RestServiceException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -18,7 +19,6 @@ import org.codehaus.jackson.map.ObjectWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 
 /**
  * Created by martin on 14.06.2014.
@@ -38,7 +38,6 @@ public class ConnectionTask {
     protected static String serverScheme;
     protected static String serverHost;
     protected static int serverPort;
-    protected static boolean initialized = false;
     protected static URI baseURI;
 
     /*
@@ -53,6 +52,8 @@ public class ConnectionTask {
     protected URI uri;
     protected static String userId;
     protected static String accessToken;
+
+    protected static boolean initialized = false;
     protected static boolean initializedSession = false;
 
 
@@ -81,8 +82,16 @@ public class ConnectionTask {
         return initialized;
     }
 
+    private static void buildBaseURI() {
+        try {
+            ConnectionTask.baseURI = new URIBuilder().setScheme(ConnectionTask.serverScheme).
+                    setHost(ConnectionTask.serverHost).setPort(ConnectionTask.serverPort).build();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
-    public HttpResponse executeEntityRequest(Request request, String path, Object contentValue) throws IOException {
+    public HttpResponse executeEntityRequest(Request request, String path, Object contentValue) throws IOException, RestServiceException {
 
         URI requestURI = buildRessourceURI(path);
 
@@ -113,7 +122,7 @@ public class ConnectionTask {
             requestBase.setHeader("Authorization", accessToken);
         }
 
-        return httpClient.execute(requestBase);
+        return executeRequest(requestBase);
     }
 
     public HttpResponse executeBaseRequest(Request request, String path)
@@ -146,27 +155,17 @@ public class ConnectionTask {
         requestBase.setHeader("Content-type", "application/json");
         requestBase.setHeader("Accept", "application/json");
 
-        System.out.println(initializedSession + " " + userId + " " + accessToken);
         if (initializedSession) {
             requestBase.setHeader("userId", ConnectionTask.userId);
             requestBase.setHeader("Authorization", accessToken);
-            System.out.println("[DEBUG] TRUE" + userId + " " + accessToken );
+            System.out.println("[DEBUG] SESSION_INIT :  " + initializedSession + " ID: " + userId + " Token:" + accessToken);
         }
 
         return httpClient.execute(requestBase);
     }
 
-    private static <T> String objectToJsonMapper(T object) throws IOException {
+    private <T> String objectToJsonMapper(T object) throws IOException {
         return objectWriter.writeValueAsString(object);
-    }
-
-    private static void buildBaseURI() {
-        try {
-            ConnectionTask.baseURI = new URIBuilder().setScheme(ConnectionTask.serverScheme).
-                    setHost(ConnectionTask.serverHost).setPort(ConnectionTask.serverPort).build();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
     }
 
     private URI buildRessourceURI(String path) {
@@ -178,5 +177,19 @@ public class ConnectionTask {
             e.printStackTrace();
         }
         return ressourceURI;
+    }
+
+    private HttpResponse executeRequest(HttpRequestBase requestBase) throws IOException, RestServiceException {
+
+        HttpResponse httpResponse = httpClient.execute(requestBase);
+
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+
+        if(statusCode == 200 || statusCode == 201)
+            return httpResponse;
+        else
+            return httpResponse;
+
+        //TODO: Exception Handling einheitlich hier im else Zweig implementieren
     }
 }

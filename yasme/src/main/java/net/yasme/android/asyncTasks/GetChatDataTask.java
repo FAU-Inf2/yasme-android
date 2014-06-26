@@ -3,6 +3,7 @@ package net.yasme.android.asyncTasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.yasme.android.controller.FragmentObserver2;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.ChatListAdapter;
