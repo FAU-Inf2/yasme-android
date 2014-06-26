@@ -237,15 +237,20 @@ public class MessageEncryption {
         //delete old key, which was needed for encryption, if it is older than the new one
         if (currentKeyPref.contains("keyId")) {
             long old_ts = currentKeyPref.getLong("timestamp", 0);
+
+            //if new timestamp is after old timestamp, replace old key by new key
             if(new Timestamp(timestamp).after(new Timestamp(old_ts))){
                 currentKeyEditor.remove("keyId");
                 currentKeyEditor.remove("timestamp");
-
                 // safe new Key-Id for this Chat-ID
                 currentKeyEditor.putLong("keyId", keyid);
                 currentKeyEditor.putLong("timestamp",timestamp);
             }
 
+        }else{
+            // safe new Key-Id for this Chat-ID
+            currentKeyEditor.putLong("keyId", keyid);
+            currentKeyEditor.putLong("timestamp",timestamp);
         }
 
 
