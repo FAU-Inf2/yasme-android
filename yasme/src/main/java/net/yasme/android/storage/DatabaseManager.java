@@ -56,6 +56,9 @@ public class DatabaseManager {
     public void addChat(Chat c) {
         try {
             getHelper().getChatDao().create(c);
+            for(User user : c.getParticipants()) {
+                getHelper().getChatUserDao().createIfNotExists(new ChatUser(c, user));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -97,6 +100,17 @@ public class DatabaseManager {
         Chat chat = null;
         try {
             chat = getHelper().getChatDao().queryForId(chatId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            List<ChatUser> temp = getHelper().getChatUserDao().
+                    queryForEq(DatabaseConstants.CHAT_FIELD_NAME, chat);
+            List<User> insert = new ArrayList<>();
+            for(ChatUser cu : temp) {
+                insert.add(cu.user);
+            }
+            chat.setParticipants(insert);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -276,5 +290,19 @@ public class DatabaseManager {
             participants.add(current.user);
         }
         return participants;
+    }
+
+    /**
+     * This function will get all participants with contactFlag = true
+     * @return contacts or null on error
+     */
+    public List<User> getContactsFromDB() {
+        List<User> contacts;
+        try {
+            contacts = getHelper().getUserDao().queryForEq(DatabaseConstants.CONTACT, 1);
+        } catch (SQLException e) {
+            contacts = null;
+        }
+        return contacts;
     }
 }

@@ -48,6 +48,9 @@ public class Chat implements Serializable {
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
     private Collection<Message> messages;
 
+    @DatabaseField(columnName = DatabaseConstants.CONTACT)
+    private int conatactFlag = 0;
+
     @JsonIgnore
     private MessageEncryption aes;
     @JsonIgnore
@@ -98,9 +101,6 @@ public class Chat implements Serializable {
     }
 
     public ArrayList<User> getParticipants() {
-        if(participants == null) {
-            participants = DatabaseManager.getInstance().getParticipantsFromDB(id);
-        }
         if(participants == null) {
             participants = new ArrayList<User>();
             User dummy = new User("Dummy", 12);
@@ -227,5 +227,13 @@ public class Chat implements Serializable {
         } catch (RestServiceException e) {
             e.printStackTrace();
         }
+    }
+
+    public void addToContacts() {
+        conatactFlag = 1;
+    }
+
+    public void removeFromContacts() {
+        conatactFlag = 0;
     }
 }

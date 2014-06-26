@@ -70,9 +70,9 @@ public class ChatFragment extends Fragment {
            }
            if(chat == null) {
                chat = new Chat(chatId, activity.getSelfUser(), activity);
-           } else {
+           }/* else {
                chat.setParticipants(DatabaseManager.getInstance().getParticipantsFromDB(chatId));
-           }
+           }*/
 
            //DEBUG, TODO: encryption speichern und auslesen
            aes = new MessageEncryption(activity.getApplicationContext(), chat, activity.getSelfUser().getId(), activity.getAccessToken());
