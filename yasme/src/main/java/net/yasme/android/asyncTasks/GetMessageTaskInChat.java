@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.ui.AbstractYasmeActivity;
-import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
@@ -78,7 +77,7 @@ public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         if (success) {
             fragment.updateViews(messages);
-            new UpdateDBTask(context, messages).execute(Long.toString(lastMessageId),
+            new UpdateDBMessagesTask(messages).execute(Long.toString(lastMessageId),
                     Long.toString(userId), accessToken);
 
             Log.d(this.getClass().getSimpleName(), "After update the Database");

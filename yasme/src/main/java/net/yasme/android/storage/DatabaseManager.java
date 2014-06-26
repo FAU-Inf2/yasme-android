@@ -124,10 +124,6 @@ public class DatabaseManager {
      * @return list of chats if existent, null or an empty list otherwise
      */
     public List<Chat> getChats(List<User> users) {
-        //List<Chat> chats = getAllChats();
-        //if (null == chats) {
-        //    return null;
-        //}
         List<Chat> matchingChats = null;
         Chat search = new Chat(0, users, null, null, null, 0);
         try {
@@ -135,42 +131,7 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        //TODO: Rueckgabetyp in Liste von Chats aendern
         return matchingChats;
-
-
-        //for (Chat chat : chats) {
-        //    List<User> participants = chat.getParticipants();
-        //
-        //    if (users.size() != participants.size()) {
-        //        // Different number of participants. It's not this chat.
-        //        continue;
-        //    }
-        //
-        //    // Assume that we will find the exact list of participants in this chat
-        //    boolean foundChat = true;
-        //    for (int i=0; i<users.size() && foundChat; i++) {
-        //        User user = users.get(i);
-        //        boolean foundUser = false;
-        //        for (int j=0; j<participants.size() && !foundUser; j++) {
-        //            User participant = participants.get(j);
-        //            foundUser |= participant.getId() == user.getId();
-        //        }
-
-                // Let's see if we found the current user
-        //        if (!foundUser) {
-                    // Next chat.. It's not this one
-        //            foundChat = false;
-        //        }
-        //    }
-
-        //   if (foundChat) {
-        //       return chat;
-        //   }
-        //}
-
-        // return null;
     }
 
     /**
@@ -231,6 +192,14 @@ public class DatabaseManager {
         return null;
     }
 
+    public void createOrUpdateChat(Chat chat) {
+        try {
+            getHelper().getChatDao().createOrUpdate(chat);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * @return the number of Chats stored in the database or -1 on error
      */
@@ -243,6 +212,26 @@ public class DatabaseManager {
         return -1;
     }
 
+    /**
+     * ChatUser methods
+     */
+    public void createChatUser(ChatUser cu) {
+        try {
+            getHelper().getChatUserDao().create(cu);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteChatUser(ChatUser cu) {
+        try {
+            getHelper().getChatUserDao().delete(cu);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     /**
      * User methods
@@ -250,7 +239,7 @@ public class DatabaseManager {
     /**
      * Adds one user to database (using createIfNotExists)
      */
-    public void addUser(User u) {
+    public void createUserIfNotExists(User u) {
         try {
             getHelper().getUserDao().createIfNotExists(u);
         } catch (SQLException e) {

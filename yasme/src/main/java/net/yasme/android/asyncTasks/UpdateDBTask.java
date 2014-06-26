@@ -1,73 +1,117 @@
 package net.yasme.android.asyncTasks;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
+import net.yasme.android.connection.ChatTask;
+import net.yasme.android.connection.MessageTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.User;
+import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.ChatUser;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by robert on 19.06.14.
+ * Created by robert on 26.06.14.
  */
-public class UpdateDBTask extends AsyncTask<String, Void, Integer> {
-    Context context;
-    ArrayList<Message> messages;
+public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
 
-    public UpdateDBTask(Context context, ArrayList<Message> messages) {
-        this.context = context;
-        this.messages = messages;
+    DatabaseManager dbManager;
+    ChatTask chatTask;
+    MessageTask messageTask;
+    SharedPreferences storage;
+    long lastMessageId;
+
+    public UpdateDBTask(Context context, SharedPreferences storage) { //TODO: context entfernen
+        dbManager = DatabaseManager.getInstance();
+        chatTask = ChatTask.getInstance();
+        messageTask = MessageTask.getInstance(context);
+        this.storage = storage;
+        lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
     }
 
-    DatabaseManager dbManager = DatabaseManager.getInstance();
-
     /**
-     * params[0] is lastMessageId
-     * params[1] is userId
-     * params[2] is accessToken
-     */
+    * @param params
+    *              0 is userId
+    *              1 is accessToken
+    * @return Returns true if it was successful, otherwise false
+    */
+
+    @Override
     protected Integer doInBackground(String... params) {
-        ArrayList<Chat> chats = dbManager.getAllChats();
+        List<Chat> serverChats = null;
+        List<Message> serverMessages = null;
 
-        if (messages == null) {
-            Log.d(this.getClass().getSimpleName(), "messages sind null");
-            return 1;
-        }
-        if (messages.isEmpty()) {
-            return 0;
-        }
-        if(chats == null) {
-            return -1;
-        }
+        long userId = Long.parseLong(params[0]);
+        String accessToken = params[1];
 
-        for (Chat chat : chats) {
-            for (Message msg : messages) {
-                if(msg.getChat() == chat.getId()) {
-                    chat.addMessage(msg);
-                    Log.d(this.getClass().getSimpleName(), "Message added to DB");
+        try {
+            serverChats = chatTask.getAllChatsForUser(userId, accessToken);
+        } catch (RestServiceException e) {
+            Log.w(this.getClass().getSimpleName(), e.getMessage());
+            return -2;
+        }
+        try {
+            serverMessages = messageTask.getMessage(lastMessageId, userId, accessToken);
+        } catch (RestServiceException e) {
+            Log.w(this.getClass().getSimpleName(), e.getMessage());
+            return -2;
+        }
+        lastMessageId = serverMessages.size() + lastMessageId;
+
+        //Neue Chats einfuegen, neue Nachrichten einfuegen, dann updaten
+        for(Chat chat : serverChats) {
+            Chat chatWithInfo = null;
+
+            //Infos fuer jeden chat abrufen
+            try {
+                chatWithInfo = chatTask.getInfoOfChat(chat.getId(), userId, accessToken);
+            } catch (RestServiceException e) {
+                Log.w(this.getClass().getSimpleName(), e.getMessage());
+                return -2;
+            }
+            chat.setStatus(chatWithInfo.getStatus());
+            //chat.setName(chatWithInfo.getStatus()); //TODO: ChatName in Info??
+
+            //Participants in DB speichern, Beziehungstabelle aktualisieren
+            for(User user : chat.getParticipants()) {
+                dbManager.createUserIfNotExists(user);
+                dbManager.createChatUser(new ChatUser(chat, user));
+                Log.d(this.getClass().getSimpleName(), "User and ChatUser added to DB");
+            }
+
+            Log.d(this.getClass().getSimpleName(), "created chat");
+            for (Message message : serverMessages) {
+                if(message.getChat() == chat.getId()) {
+                    chat.addMessage(message);
                 }
             }
-            dbManager.updateChat(chat);
+            dbManager.createOrUpdateChat(chat);
+            Log.d(this.getClass().getSimpleName(), "updated chat");
         }
-        return 1;
+
+        return 0;
     }
 
     @Override
-    protected void onPostExecute(final Integer success) {
-        if (success == 1) {
-            Log.i(this.getClass().getSimpleName(), "UpdateDB successfull");
+    protected void onPostExecute(final Integer result) {
+        if(result == 0) {
+
+        } else if(result == -2) {
+
         } else {
-            Log.w(this.getClass().getSimpleName(), "UpdateDB not successfull");
-            if(success == -1) {
-                Log.d(this.getClass().getSimpleName(), "chats sind null");
-            }
-            if (success == 0) {
-                Log.d(this.getClass().getSimpleName(), "messages sind empty");
-            }
+
         }
+        Log.d(this.getClass().getSimpleName(), "new lastMessageId: " + Long.toString(lastMessageId));
+        SharedPreferences.Editor editor = storage.edit();
+        editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
+        editor.commit();
     }
+
 }
