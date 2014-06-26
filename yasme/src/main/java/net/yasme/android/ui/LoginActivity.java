@@ -44,10 +44,9 @@ public class LoginActivity extends AbstractYasmeActivity {
     protected String accessToken;
 
     // Values for name, email and password at the time of the login attempt.
-    private String name;
-    private String email;
-    private String password;
-    private long userId;
+    private String emailTmp;
+    private String passwordTmp;
+    private long userIdTmp;
 
     // values for devices google + yasme server
     private String deviceProduct;
@@ -62,8 +61,6 @@ public class LoginActivity extends AbstractYasmeActivity {
     private View loginFormView;
     private View loginStatusView;
     private TextView loginStatusMessageView;
-
-    SharedPreferences storage;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,13 +84,13 @@ public class LoginActivity extends AbstractYasmeActivity {
         // Restore preferencesNAME
         storage = getSharedPreferences(STORAGE_PREFS,
                 MODE_PRIVATE);
-        email = storage.getString(USER_MAIL, "");
-        accessToken = storage.getString(ACCESSTOKEN, null);
+        emailTmp = getSelfUser().getEmail();
+        accessToken = getAccessToken();
 
         // Set up the login form.
         // email = getIntent().getStringExtra(USER_EMAIL);
         emailView = (EditText) findViewById(R.id.email);
-        emailView.setText(email);
+        emailView.setText(emailTmp);
 
         passwordView = (EditText) findViewById(R.id.password);
         passwordView
@@ -134,7 +131,6 @@ public class LoginActivity extends AbstractYasmeActivity {
         regTask = new UserRegistrationTask(getApplicationContext(), storage, this);
     }
 
-    // TODO: Strings nach strings.xml bringen
     private void registerDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle(getString(R.string.registration_title));
@@ -213,24 +209,24 @@ public class LoginActivity extends AbstractYasmeActivity {
         passwordView.setError(null);
 
         // Store values at the time of the login attempt.
-        email = emailView.getText().toString();
-        password = passwordView.getText().toString();
+        emailTmp = emailView.getText().toString();
+        passwordTmp = passwordView.getText().toString();
 
         boolean cancel = false;
 
         // Check for a valid password.
-        if (TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(passwordTmp)) {
             passwordView.setError(getString(R.string.error_field_required));
             focusView = passwordView;
             cancel = true;
-        } else if (password.length() < 4) {
+        } else if (passwordTmp.length() < 4) {
             passwordView.setError(getString(R.string.error_invalid_password));
             focusView = passwordView;
             cancel = true;
         }
 
         // Check for a valid name.
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(emailTmp)) {
             emailView.setError(getString(R.string.error_field_required));
             focusView = emailView;
             cancel = true;
@@ -248,7 +244,7 @@ public class LoginActivity extends AbstractYasmeActivity {
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
             authTask = new UserLoginTask(getApplicationContext(), storage, this);
-            authTask.execute(email, password);
+            authTask.execute(emailTmp, passwordTmp);
         }
     }
 
@@ -312,6 +308,7 @@ public class LoginActivity extends AbstractYasmeActivity {
         long deviceId = devicePrefs.getLong(DEVICE_ID, -1);
 
         // load regId
+        //TODO: SharedPrefs umbenennen und als String in der AbstractYasmeActivity speichern
         SharedPreferences pushPrefs = getSharedPreferences(LoginActivity.class.getSimpleName(),MODE_PRIVATE);
 
         String regId = pushPrefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID,null);
@@ -337,8 +334,10 @@ public class LoginActivity extends AbstractYasmeActivity {
     }
 
     public void onPostLoginExecute(Boolean success, long userId, String accessToken) {
-        this.userId = userId;
-        this.accessToken = accessToken;
+        getSelfUser().setId(userId);
+        SharedPreferences.Editor editor = getStorage().edit();
+        editor.putString(AbstractYasmeActivity.ACCESSTOKEN, accessToken);
+        editor.commit();
 
         showProgress(false);
 
@@ -353,7 +352,7 @@ public class LoginActivity extends AbstractYasmeActivity {
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device does not exist in Database");
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device at yasme server");
                 yasmeDevRegTask = new YasmeDeviceRegistrationTask(getApplicationContext(), storage, this);
-                yasmeDevRegTask.execute(this.accessToken, Long.toString(this.userId),this.deviceProduct,this.googleRegId);
+                yasmeDevRegTask.execute(this.accessToken, Long.toString(userId),this.deviceProduct,this.googleRegId);
 
             }
         } else {
@@ -363,12 +362,11 @@ public class LoginActivity extends AbstractYasmeActivity {
     }
 
     public void onPostRegisterExecute(Boolean success, String email, String password) {
-        this.email = email;
-        this.password = password;
 
         showProgress(false);
 
         if (success) {
+            getSelfUser().setEmail(email);
             Toast.makeText(
                     getApplicationContext(),
                     getResources().getString(
@@ -398,8 +396,8 @@ public class LoginActivity extends AbstractYasmeActivity {
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS,
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = storage.edit();
-        editor.putString(USER_MAIL, email);
-        editor.putLong(USER_ID, userId);
+        editor.putString(USER_MAIL, getSelfUser().getEmail());
+        editor.putLong(USER_ID, getSelfUser().getId());
         editor.putString(ACCESSTOKEN, accessToken);
 
         // Commit the edits!
