@@ -71,7 +71,7 @@ public class ChatTask extends ConnectionTask {
             HttpResponse httpResponse = httpClient.execute(httpGet);
             */
 
-            HttpResponse httpResponse = executeBaseRequest(Request.GET,"");
+            HttpResponse httpResponse = executeBaseRequest(Request.GET, "");
 
             switch (httpResponse.getStatusLine().getStatusCode()) {
                 case 200:

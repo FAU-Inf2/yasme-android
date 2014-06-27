@@ -58,7 +58,6 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
                     dbManager.createUserIfNotExists(user);
                 }
                 //if(chat.getNumberOfParticipants() != chatInfo.getNumberOfParticipants()) { //TODO
-                    chat.setNumberOfParticipants(chatInfo.getNumberOfParticipants());
                     chat.setParticipants(participants);
                     Log.d(this.getClass().getSimpleName(), "Participants geupdatet");
                 //}

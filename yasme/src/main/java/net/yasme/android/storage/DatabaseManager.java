@@ -130,7 +130,7 @@ public class DatabaseManager {
      */
     public List<Chat> getChats(List<User> users) {
         List<Chat> matchingChats = null;
-        Chat search = new Chat(0, users, null, null, null, 0);
+        Chat search = new Chat(0, users, null, null, null);
         try {
             matchingChats = getHelper().getChatDao().queryForMatchingArgs(search);
         } catch (SQLException e) {

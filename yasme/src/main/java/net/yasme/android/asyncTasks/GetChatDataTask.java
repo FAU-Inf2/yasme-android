@@ -60,7 +60,6 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
             Chat chat = new Chat();
             chat.setId(i);
             chat.setName("Chat " + i);
-            chat.setNumberOfParticipants(number-i);
             chatRooms.add(chat);
         }
     }

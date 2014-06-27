@@ -6,15 +6,14 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
-import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,13 +23,14 @@ import java.util.List;
 /**
  * Created by robert on 28.05.14.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @DatabaseTable(tableName = DatabaseConstants.CHAT_TABLE)
 public class Chat implements Serializable {
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
     private long id;
 
-//    @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS)
+    //    @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS)
     private Collection<User> participants;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_STATUS)
@@ -40,9 +40,6 @@ public class Chat implements Serializable {
     private String name;
 
     private User owner;
-
-    @DatabaseField
-    private int numberOfParticipants;
 
     @JsonIgnore
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
@@ -77,16 +74,16 @@ public class Chat implements Serializable {
         this.owner = owner;
         this.status = status;
         this.name = name;
+        this.participants = new ArrayList<User>();
     }
 
     public Chat(long id, List<User> participants, String status, String name,
-                User owner, int numberOfParticipants) {
+                User owner) {
         this.id = id;
         this.participants = participants;
         this.status = status;
         this.name = name;
         this.owner = owner;
-        this.numberOfParticipants = numberOfParticipants;
     }
 
     public Chat() {
@@ -101,11 +98,11 @@ public class Chat implements Serializable {
     }
 
     public ArrayList<User> getParticipants() {
-        if(participants == null) {
+        if (participants == null) {
             participants = new ArrayList<User>();
             User dummy = new User("Dummy", 12);
             participants.add(dummy);
-            Log.d(this.getClass().getSimpleName(), "Dummy-User hinzugefuegt");
+            //Log.d(this.getClass().getSimpleName(), "Dummy-User hinzugefuegt");
         }
         return new ArrayList<User>(participants);
     }
@@ -120,7 +117,7 @@ public class Chat implements Serializable {
         }
         if (name.length() <= 0) {
             try {
-                for (int i=0; i < getParticipants().size(); i++) {
+                for (int i = 0; i < getParticipants().size(); i++) {
                     if (name.length() <= 0) {
                         name += ", ";
                     }
@@ -138,7 +135,11 @@ public class Chat implements Serializable {
     }
 
     public int getNumberOfParticipants() {
-        return numberOfParticipants;
+
+        if (participants != null)
+            return participants.size();
+
+        return 0;
     }
 
     @JsonIgnore
@@ -148,7 +149,8 @@ public class Chat implements Serializable {
 
     @JsonIgnore
     public MessageEncryption getEncryption() {
-        if (aes == null) System.out.println("[DEBUG] Chat wurde erstellt ohne gueltiges Encryption-Object --> Class: Chat.getEncryption())");
+        if (aes == null)
+            System.out.println("[DEBUG] Chat wurde erstellt ohne gueltiges Encryption-Object --> Class: Chat.getEncryption())");
         return aes;
     }
 
@@ -174,10 +176,6 @@ public class Chat implements Serializable {
 
     public void setOwner(User owner) {
         this.owner = owner;
-    }
-
-    public void setNumberOfParticipants(int numberOfParticipants) {
-        this.numberOfParticipants = numberOfParticipants;
     }
 
     public void setEncryption(MessageEncryption aes) {
