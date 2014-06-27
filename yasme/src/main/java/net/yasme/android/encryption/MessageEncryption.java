@@ -307,7 +307,7 @@ public class MessageEncryption {
                 byte encType = 0;
 
                 // send Key to all Recipients
-                keytask = KeyTask.getInstance(accessToken, context);
+                keytask = KeyTask.getInstance(context);
                 MessageKey messageKey = keytask.saveKey(creatorDevice, recipients, chat, keyBase64, encType, sign);
 
                 return messageKey;
@@ -336,7 +336,7 @@ public class MessageEncryption {
             try {
 
                //delete Key
-                keytask = KeyTask.getInstance(accessToken, context);
+                keytask = KeyTask.getInstance(context);
                 keytask.deleteKey(chatId, params[0], params[1]);
 
             } catch (Exception e) {

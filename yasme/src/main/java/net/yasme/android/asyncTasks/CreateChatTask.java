@@ -66,7 +66,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
             newChat = new Chat(owner, "Created: " + new Date().toString(), name);
             newChat.setParticipants(selectedUsers);
             try {
-                newChatId = ChatTask.getInstance().createChatwithPar(newChat, userId, accessToken);
+                newChatId = ChatTask.getInstance().createChatwithPar(newChat);
             } catch (RestServiceException e) {
                 // TODO
                 e.printStackTrace();

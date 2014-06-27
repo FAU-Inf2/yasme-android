@@ -36,7 +36,7 @@ public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
         String accessToken = params[1];
         userMail = params[2];
         try {
-            selfProfile = UserTask.getInstance().getUserData(user_id, accessToken);
+            selfProfile = UserTask.getInstance().getUserData();
         } catch (RestServiceException e) {
             System.out.println(e.getMessage());
             return false;

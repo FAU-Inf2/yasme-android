@@ -12,7 +12,6 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
@@ -21,19 +20,17 @@ import net.yasme.android.exception.Error;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-/**
- * Created by martin on 14.06.2014.
- */
 public class ConnectionTask {
 
     public enum Request {
         POST,
         PUT,
         DELETE,
-        GET;
+        GET
     }
 
     /*
@@ -57,7 +54,6 @@ public class ConnectionTask {
     /*
      * Connection Objects
      */
-    protected static CloseableHttpClient httpClient;
     protected static ObjectWriter objectWriter;
 
     /*
@@ -77,7 +73,6 @@ public class ConnectionTask {
 
         buildBaseURI();
 
-        ConnectionTask.httpClient = HttpClient.createSSLClient();
         ConnectionTask.objectWriter = new ObjectMapper().writer()
                 .withDefaultPrettyPrinter();
     }
@@ -107,9 +102,7 @@ public class ConnectionTask {
         }
     }
 
-    public HttpResponse executeRequest(Request request, String path, Object contentValue) throws IOException, RestServiceException {
-
-        URI requestURI = buildRequestURI(path);
+    public HttpResponse executeRequest(Request request, String path, Object contentValue) throws RestServiceException {
 
         HttpEntityEnclosingRequestBase requestBase;
 
@@ -125,19 +118,21 @@ public class ConnectionTask {
                 return null;
         }
 
-        requestBase.setURI(requestURI);
+        requestBase.setURI(buildRequestURI(path));
         addRequestHeader(requestBase);
 
-        if (contentValue != null)
-            requestBase.setEntity(new StringEntity(objectToJsonMapper(contentValue)));
-
+        if (contentValue != null) {
+            try {
+                requestBase.setEntity(new StringEntity(objectToJsonMapper(contentValue)));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
         return executeRequest(requestBase);
     }
 
     public HttpResponse executeRequest(Request request, String path)
-            throws IOException, RestServiceException {
-
-        URI requestURI = buildRequestURI(path);
+            throws RestServiceException {
 
         HttpRequestBase requestBase;
 
@@ -159,16 +154,25 @@ public class ConnectionTask {
                 return null;
         }
 
-        requestBase.setURI(requestURI);
+        requestBase.setURI(buildRequestURI(path));
         addRequestHeader(requestBase);
         return executeRequest(requestBase);
     }
 
-    private <T> String objectToJsonMapper(T object) throws IOException {
-        return objectWriter.writeValueAsString(object);
+    private <T> String objectToJsonMapper(T object) {
+        String result = null;
+        try {
+            result = objectWriter.writeValueAsString(object);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     private URI buildRequestURI(String path) {
+
+        if (path.equals(""))
+            return uri;
 
         URI ressourceURI = null;
         try {
@@ -189,6 +193,7 @@ public class ConnectionTask {
         if (initializedSession) {
             requestBase.setHeader("userId", userId);
             requestBase.setHeader("Authorization", accessToken);
+
             //TODO: Change with real DeviceId
             requestBase.setHeader("deviceId", ConnectionTask.userId);
 
@@ -196,16 +201,24 @@ public class ConnectionTask {
         }
     }
 
-    private HttpResponse executeRequest(HttpRequestBase requestBase) throws IOException, RestServiceException {
+    private HttpResponse executeRequest(HttpRequestBase requestBase) throws RestServiceException {
 
-        HttpResponse httpResponse = httpClient.execute(requestBase);
+        HttpResponse httpResponse;
 
-        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        try {
+            httpResponse = HttpClient.createSSLClient().execute(requestBase);
+            int statusCode = httpResponse.getStatusLine().getStatusCode();
 
-        if (statusCode == 200 || statusCode == 201)
-            return httpResponse;
-        else
-            throw new RestServiceException((new BufferedReader(new InputStreamReader(
-                    httpResponse.getEntity().getContent(), "UTF-8"))).readLine(), statusCode);
+            System.out.println("[DEBUG] StatusCode: " + statusCode);
+
+            if (statusCode == 200 || statusCode == 201)
+                return httpResponse;
+            else
+                throw new RestServiceException((new BufferedReader(new InputStreamReader(
+                        httpResponse.getEntity().getContent(), "UTF-8"))).readLine(), statusCode);
+
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        }
     }
 }

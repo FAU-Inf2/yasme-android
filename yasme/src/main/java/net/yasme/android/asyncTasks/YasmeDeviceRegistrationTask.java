@@ -69,7 +69,7 @@ public class YasmeDeviceRegistrationTask extends AsyncTask<String, Void, Boolean
 
         // make the REST-Call
         try{
-            deviceIdFromServer = DeviceTask.getInstance().registerDevice(deviceToBeRegistered,accessToken);
+            deviceIdFromServer = DeviceTask.getInstance().registerDevice(deviceToBeRegistered);
             deviceId = deviceIdFromServer;
         }catch(RestServiceException e){
             // if error occurs return false

@@ -48,7 +48,7 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
         for(Chat chat: chats) {
             Chat chatInfo;
             try {
-                chatInfo = ChatTask.getInstance().getInfoOfChat(chat.getId(), Long.parseLong(params[0]), params[1]);
+                chatInfo = ChatTask.getInstance().getInfoOfChat(chat.getId());
             } catch (RestServiceException e) {
                 chatInfo = null;
                 Log.w(this.getClass().getSimpleName(), e.getMessage());

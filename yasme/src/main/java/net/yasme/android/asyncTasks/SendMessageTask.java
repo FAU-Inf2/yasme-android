@@ -51,8 +51,6 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         String uMail = params[2];
         long uId = Long.parseLong(params[3]);
 
-        boolean result = false;
-
         // encrypt Message
         //String msg_encrypted = aes.encrypt(msg); //TODO: evtl. loeschen
         String msg_encrypted = msg;
@@ -63,11 +61,12 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         Message createdMessage = new Message(user, msg_encrypted, Long.parseLong(params[4]), aesId);
         System.out.println("AES getKeyID: " + aes.getKeyId());
         try {
-            result = messageTask.sendMessage(createdMessage, params[5]);
+            messageTask.sendMessage(createdMessage);
+            return true;
         } catch (RestServiceException e) {
             Log.w(this.getClass().getSimpleName(), e.getMessage());
         }
-        return result;
+        return false;
     }
 
     protected void onPostExecute(final Boolean success) {

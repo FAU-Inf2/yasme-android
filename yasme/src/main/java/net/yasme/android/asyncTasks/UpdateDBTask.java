@@ -71,7 +71,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
 
             //Infos fuer jeden chat abrufen
             try {
-                chatWithInfo = chatTask.getInfoOfChat(chat.getId(), userId, accessToken);
+                chatWithInfo = chatTask.getInfoOfChat(chat.getId());
             } catch (RestServiceException e) {
                 Log.w(this.getClass().getSimpleName(), e.getMessage());
                 return -2;
