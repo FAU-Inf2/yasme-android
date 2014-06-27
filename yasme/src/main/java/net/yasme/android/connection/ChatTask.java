@@ -123,7 +123,7 @@ public class ChatTask extends ConnectionTask {
         return false;
     }
 
-    public Long createChatwithPar(Chat chat, long userId, String accessToken) throws RestServiceException {
+    public Long createChatWithPar(Chat chat, long userId, String accessToken) throws RestServiceException {
 
         URI requestURI = uri;
 
