@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import net.yasme.android.R;
 import net.yasme.android.asyncTasks.YasmeDeviceRegistrationTask;
 import net.yasme.android.asyncTasks.UserLoginTask;
 import net.yasme.android.asyncTasks.UserRegistrationTask;
+import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.gcm.CloudMessaging;
 
 /**
@@ -65,6 +67,10 @@ public class LoginActivity extends AbstractYasmeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //temporäre Lösung:
+        HttpClient.context = this.getApplicationContext();
+
 
         //GCM Begin
         cloudMessaging = CloudMessaging.getInstance(this);

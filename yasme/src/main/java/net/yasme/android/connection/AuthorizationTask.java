@@ -2,12 +2,9 @@ package net.yasme.android.connection;
 
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
-
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
-
-import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
@@ -44,7 +41,7 @@ public class AuthorizationTask extends ConnectionTask {
         return new String[]{userID.getValue(), token.getValue()};
     }
 
-    public void logoutUser(long userId, String accessToken)
+    public void logoutUser()
             throws RestServiceException {
         executeRequest(Request.POST, "out");
         System.out.println("[DEBUG] Signed out successful");

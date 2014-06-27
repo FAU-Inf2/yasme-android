@@ -45,7 +45,6 @@ public class ChatTask extends ConnectionTask {
         List<Chat> chats = new ArrayList<Chat>();
 
         try {
-
             HttpResponse httpResponse = executeRequest(Request.GET, "");
             JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine());
@@ -53,13 +52,11 @@ public class ChatTask extends ConnectionTask {
             for (int i = 0; i < jsonArray.length(); i++)
                 chats.add(new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
                         toString(), Chat.class));
-
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return chats;
     }
 
@@ -87,7 +84,6 @@ public class ChatTask extends ConnectionTask {
     public Chat getInfoOfChat(long chatId) throws RestServiceException {
 
         // note: only a participant of the chat shall get the chat object
-
         String path = "/" + chatId + "/info";
         HttpResponse httpResponse = executeRequest(Request.GET, path);
 

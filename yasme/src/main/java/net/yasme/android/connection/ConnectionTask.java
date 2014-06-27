@@ -216,7 +216,6 @@ public class ConnectionTask {
             else
                 throw new RestServiceException((new BufferedReader(new InputStreamReader(
                         httpResponse.getEntity().getContent(), "UTF-8"))).readLine(), statusCode);
-
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         }
