@@ -45,6 +45,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
 
     @Override
     protected Integer doInBackground(String... params) {
+        Log.d(this.getClass().getSimpleName(), "beginn");
         List<Chat> serverChats = null;
         List<Message> serverMessages = null;
 
@@ -93,16 +94,16 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
             }
             dbManager.createOrUpdateChat(chat);
         }
-
+        Log.d(this.getClass().getSimpleName(), "ende");
         return 0;
     }
 
     @Override
     protected void onPostExecute(final Integer result) {
         if(result == 0) {
-
+            Log.d(this.getClass().getSimpleName(), "Update DB erfolgreich");
         } else if(result == -2) {
-
+            Log.d(this.getClass().getSimpleName(), "SQL Exception");
         } else {
 
         }
