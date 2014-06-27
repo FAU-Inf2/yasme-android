@@ -3,10 +3,10 @@ package net.yasme.android.storage;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.j256.ormlite.stmt.DeleteBuilder;
 
-import net.yasme.android.asyncTasks.GetAllChatsForUserTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 
@@ -69,11 +69,11 @@ public class DatabaseManager {
     /**
      * Adds one chat to database
      */
-    public void addChat(Chat c) {
+    public void createChat(Chat c) {
         try {
             getHelper().getChatDao().create(c);
             for(User user : c.getParticipants()) {
-                getHelper().getChatUserDao().createIfNotExists(new ChatUser(c, user));
+                getHelper().getChatUserDao().create(new ChatUser(c, user));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -115,6 +115,10 @@ public class DatabaseManager {
         Chat chat = null;
         try {
             chat = getHelper().getChatDao().queryForId(chatId);
+            if(chat == null) {
+                return null;
+            }
+            chat.setParticipants(getParticipantsForChat(chat.getId()));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -143,36 +147,6 @@ public class DatabaseManager {
     }
 
     /**
-     * This function will delete chat with chatName
-     * from table
-     *
-     * @param chatName    the name of the chat
-     */
-    public void deleteChat(String chatName) {
-        try {
-            DeleteBuilder<Chat, Long> deleteBuilder = getHelper().getChatDao().deleteBuilder();
-            deleteBuilder.where().eq(DatabaseConstants.CHAT_NAME, chatName);
-            deleteBuilder.delete();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * This function will delete a chat with chatId
-     * from table
-     *
-     * @param chatId        ID (primary key) of chat
-     */
-    public void deleteChat(long chatId) {
-        try {
-            getHelper().getChatDao().deleteById(chatId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * This function will update a chat
      * in table
      *
@@ -180,65 +154,79 @@ public class DatabaseManager {
      */
     public void updateChat(Chat chat) {
         try {
+            List<User> dBParticipants = getParticipantsFromDB(chat.getId());
+            if(dBParticipants == null) {
+                Log.e(this.getClass().getSimpleName(), "Error: Kein Teilnehmer in DB vorhanden");
+                return;
+            }
+            for(User u : dBParticipants) {
+                if(!chat.getParticipants().contains(u)) {
+                    Chat queryChat = new Chat();
+                    queryChat.setId(chat.getId());
+                    ChatUser queryChatUser = new ChatUser(queryChat, u);
+                    deleteChatUser(queryChatUser);
+                }
+            }
+            for(User u: chat.getParticipants()) {
+                if(!dBParticipants.contains(u)) {
+                    Chat queryChat = new Chat();
+                    queryChat.setId(chat.getId());
+                    ChatUser queryChatUser = new ChatUser(queryChat, u);
+                    createChatUser(queryChatUser);
+                }
+            }
             getHelper().getChatDao().update(chat);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     *
-     * @param chat    Chat
-     * @return true if chat with chatId exists, otherwise false
-     */
-    public Chat createIfNotExists(Chat chat) {
-        try {
-            return getHelper().getChatDao().createIfNotExists(chat);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public void createOrUpdateChat(Chat chat) {
-        try {
-            getHelper().getChatDao().createOrUpdate(chat);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if(getChat(chat.getId()) != null) {
+            updateChat(chat);
+            Log.d(this.getClass().getSimpleName(), "updated chat");
+        } else {
+            createChat(chat);
+            Log.d(this.getClass().getSimpleName(), "created chat");
         }
     }
 
-    /**
-     * @return the number of Chats stored in the database or -1 on error
-     */
-    public long getNumberOfChats() {
-        try {
-            return getHelper().getChatDao().countOf();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
 
     /**
      * ChatUser methods
      */
     public void createChatUser(ChatUser cu) {
         try {
-            getHelper().getChatUserDao().create(cu);
+            Chat queryChat = new Chat();
+            queryChat.setId(cu.chat.getId());
+            ChatUser queryChatUser = new ChatUser(queryChat, cu.user);
+            getHelper().getChatUserDao().create(queryChatUser);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void deleteChatUser(ChatUser cu) {
+        List<ChatUser> matching = new ArrayList<ChatUser>();
         try {
-            getHelper().getChatUserDao().delete(cu);
+            Chat queryChat = new Chat();
+            queryChat.setId(cu.chat.getId());
+            ChatUser queryChatUser = new ChatUser(queryChat, cu.user);
+            matching = getHelper().getChatUserDao().queryForMatchingArgs(queryChatUser);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(matching.isEmpty()) {
+            Log.e(this.getClass().getSimpleName(),
+                    "Error: Kein ChatUser zum Loeschen in DB vorhanden");
+            return;
+        }
+        try {
+            getHelper().getChatUserDao().deleteById(matching.get(0).id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 
 
     /**
@@ -254,19 +242,6 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-    /**
-     * This function will delete a user with userId
-     * from table
-     *
-     * @param userId        ID (primary key) of user
-     */
-    public void deleteUser(long userId) {
-        try {
-            getHelper().getUserDao().deleteById(userId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * This function will get all participants of one chat
@@ -274,12 +249,13 @@ public class DatabaseManager {
      * @return participants of chat with chatId or null on error
      */
     public ArrayList<User> getParticipantsFromDB(long chatId) {
-        ArrayList<User> participants = null;
-        List<ChatUser> matching = null;
+        ArrayList<User> participants = new ArrayList<User>();
+        List<ChatUser> matching;
         try {
-            Chat chat = getHelper().getChatDao().queryForId(chatId);
+            Chat queryChat = new Chat();
+            queryChat.setId(chatId);
             matching = getHelper().getChatUserDao().
-                    queryForEq(DatabaseConstants.CHAT_FIELD_NAME, chat);
+                    queryForEq(DatabaseConstants.CHAT_FIELD_NAME, queryChat);
         } catch (SQLException e) {
             return null;
         }
@@ -290,7 +266,7 @@ public class DatabaseManager {
     }
 
     /**
-     * This function will get all participants with contactFlag = true
+     * This function will get all participants with contactFlag = 1
      * @return contacts or null on error
      */
     public List<User> getContactsFromDB() {

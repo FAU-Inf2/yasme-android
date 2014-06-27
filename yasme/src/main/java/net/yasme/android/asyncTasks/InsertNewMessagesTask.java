@@ -14,10 +14,10 @@ import java.util.ArrayList;
 /**
  * Created by robert on 19.06.14.
  */
-public class UpdateDBMessagesTask extends AsyncTask<String, Void, Integer> {
+public class InsertNewMessagesTask extends AsyncTask<String, Void, Integer> {
     ArrayList<Message> messages;
 
-    public UpdateDBMessagesTask(ArrayList<Message> messages) {
+    public InsertNewMessagesTask(ArrayList<Message> messages) {
         this.messages = messages;
     }
 

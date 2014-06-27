@@ -66,7 +66,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
      */
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            new UpdateDBMessagesTask(messages).execute(Long.toString(lastMessageId),
+            new InsertNewMessagesTask(messages).execute(Long.toString(lastMessageId),
                     Long.toString(userId), accessToken);
             Log.d(this.getClass().getSimpleName(), "After update the Database");
             lastMessageId = messages.size() + lastMessageId;
