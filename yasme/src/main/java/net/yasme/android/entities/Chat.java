@@ -222,6 +222,16 @@ public class Chat implements Serializable {
         messages.add(msg);
     }
 
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "id=" + id +
+                ", participants=" + participants +
+                ", status='" + status + '\'' +
+                ", name='" + name + '\'' +
+                ", owner=" + owner +
+                '}';
+    }
     /*@JsonIgnore
     public void removeParticipant(User participant, long ownUserId) {
         try {

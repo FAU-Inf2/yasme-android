@@ -32,18 +32,18 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
 
         if(!success) {
-            //TODO: Debug
-            Log.e(this.getClass().getName(), "Fehler bei Datenbankzugriff");
-            System.out.println("Fehler bei Datenbankzugriff");
+            Log.d(this.getClass().getName(), "Fehler bei Datenbankzugriff");
         }
 
-
-        //DEBUG
         if (chatRooms.size() <= 0) {
             Log.d(this.getClass().getSimpleName(), "Benutze Dummy-Liste");
             createDummyChatRoomList();
         }
 
+
+        for(Chat chat : chatRooms) {
+            System.out.println("[Debug] " + chat.toString());
+        }
 
         ChatListAdapter adapter = (ChatListAdapter)fragment.getListAdapter();
         //fragment.setListAdapter(adapter);

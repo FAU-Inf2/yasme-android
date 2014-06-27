@@ -17,7 +17,7 @@ import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.ui.ChatListFragment;
 
-
+@Deprecated
 public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
     Context context;
     ChatListFragment activity;

@@ -195,6 +195,10 @@ public class DatabaseManager {
     /**
      * ChatUser methods
      */
+    /**
+     *
+     * @param cu
+     */
     public void createChatUser(ChatUser cu) {
         try {
             Chat queryChat = new Chat();
