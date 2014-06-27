@@ -11,7 +11,7 @@ public class RestServiceException extends Exception {
 
 	}
 
-	private RestServiceException(String error, int statusCode) {
+	public RestServiceException(String error, int statusCode) {
 		super(error);
 		this.statusCode = statusCode;
 

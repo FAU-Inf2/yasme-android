@@ -18,7 +18,9 @@ import org.codehaus.jackson.map.ObjectWriter;
 
 import net.yasme.android.exception.Error;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -59,7 +61,7 @@ public class ConnectionTask {
     protected static ObjectWriter objectWriter;
 
     /*
-     * Ressource URI individual for the single Tasks
+     * Ressource URI - individual for the single Tasks
      */
     protected URI uri;
 
@@ -124,7 +126,7 @@ public class ConnectionTask {
         }
 
         requestBase.setURI(requestURI);
-        createRequestHeader(requestBase);
+        addRequestHeader(requestBase);
 
         if (contentValue != null)
             requestBase.setEntity(new StringEntity(objectToJsonMapper(contentValue)));
@@ -158,7 +160,7 @@ public class ConnectionTask {
         }
 
         requestBase.setURI(requestURI);
-        createRequestHeader(requestBase);
+        addRequestHeader(requestBase);
         return executeRequest(requestBase);
     }
 
@@ -177,7 +179,7 @@ public class ConnectionTask {
         return ressourceURI;
     }
 
-    private void createRequestHeader(HttpRequestBase requestBase) {
+    private void addRequestHeader(HttpRequestBase requestBase) {
 
         requestBase.setHeader("Content-type", "application/json");
         requestBase.setHeader("Accept", "application/json");
@@ -185,11 +187,12 @@ public class ConnectionTask {
         System.out.println("[DEBUG] Session initialized? " + initializedSession);
 
         if (initializedSession) {
-            requestBase.setHeader("userId", ConnectionTask.userId);
+            requestBase.setHeader("userId", userId);
             requestBase.setHeader("Authorization", accessToken);
-
             //TODO: Change with real DeviceId
             requestBase.setHeader("deviceId", ConnectionTask.userId);
+
+            System.out.println("[DEBUG] userId:  " + userId + " accessToken: " + accessToken);
         }
     }
 
@@ -202,8 +205,7 @@ public class ConnectionTask {
         if (statusCode == 200 || statusCode == 201)
             return httpResponse;
         else
-            throw new RestServiceException(Error.ERROR);
-
-        //TODO: Exception Handling einheitlich hier im else Zweig implementieren
+            throw new RestServiceException((new BufferedReader(new InputStreamReader(
+                    httpResponse.getEntity().getContent(), "UTF-8"))).readLine(), statusCode);
     }
 }

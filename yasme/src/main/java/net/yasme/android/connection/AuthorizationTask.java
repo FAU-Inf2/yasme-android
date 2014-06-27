@@ -46,9 +46,8 @@ public class AuthorizationTask extends ConnectionTask {
 
             Header userID = httpResponse.getFirstHeader("userId");
             Header token = httpResponse.getFirstHeader("Authorization");
-            // DEBUG:
-            System.out.println("[DEBUG] Login successful - UserId: "
-                    + userID.getValue());
+
+            System.out.println("[DEBUG] Login successful!");
 
             return new String[]{userID.getValue(), token.getValue()};
         } catch (IOException e) {
