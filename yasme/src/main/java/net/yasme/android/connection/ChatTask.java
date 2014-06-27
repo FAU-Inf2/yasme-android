@@ -51,45 +51,20 @@ public class ChatTask extends ConnectionTask {
         }
     }
 
-    public List<Chat> getAllChatsForUser(long userId, String accessToken) throws RestServiceException {
+    public List<Chat> getAllChatsForUser() throws RestServiceException {
 
         List<Chat> chats = new ArrayList<Chat>();
 
         try {
-            /*
-            URI requestURI = uri;
+            HttpResponse httpResponse = executeRequest(Request.GET, "");
 
-            CloseableHttpClient httpClient = HttpClient.createSSLClient();
-            HttpGet httpGet = new HttpGet(requestURI);
+            JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
+                    httpResponse.getEntity().getContent())).readLine());
 
-            httpGet.setHeader("Content-type", "application/json");
-            httpGet.setHeader("Accept", "application/json");
+            for (int i = 0; i < jsonArray.length(); i++)
+                chats.add(new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
+                        toString(), Chat.class));
 
-            httpGet.setHeader("userId", Long.toString(userId));
-            httpGet.setHeader("Authorization", accessToken);
-
-            HttpResponse httpResponse = httpClient.execute(httpGet);
-            */
-
-            HttpResponse httpResponse = executeBaseRequest(Request.GET, "");
-
-            switch (httpResponse.getStatusLine().getStatusCode()) {
-                case 200:
-                    JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
-                            httpResponse.getEntity().getContent())).readLine());
-
-                    for (int i = 0; i < jsonArray.length(); i++)
-                        chats.add(new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
-                                toString(), Chat.class));
-                    break;
-                case 401:
-                    System.out.println("[DEBUG] Unauthorized");
-                    throw new RestServiceException(Error.UNAUTHORIZED);
-                case 404:
-                    throw new RestServiceException(Error.USER_NOT_FOUND);
-                default:
-                    throw new RestServiceException(Error.ERROR);
-            }
 
         } catch (ClientProtocolException e) {
             e.printStackTrace();

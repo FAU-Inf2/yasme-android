@@ -32,7 +32,6 @@ public class AuthorizationTask extends ConnectionTask {
     }
 
     private AuthorizationTask() {
-
         try {
             this.uri = new URIBuilder(baseURI).setPath("/sign").build();
         } catch (URISyntaxException e) {
@@ -43,32 +42,18 @@ public class AuthorizationTask extends ConnectionTask {
     public String[] loginUser(User user) throws RestServiceException {
 
         try {
-            HttpResponse httpResponse = executeEntityRequest(Request.POST, "in", user);
+            HttpResponse httpResponse = executeRequest(Request.POST, "in", user);
 
-            switch (httpResponse.getStatusLine().getStatusCode()) {
-                case 200:
-                    Header userID = httpResponse.getFirstHeader("userId");
-                    Header token = httpResponse.getFirstHeader("Authorization");
-                    // DEBUG:
-                    System.out.println("[DEBUG] Login successful - UserId: "
-                            + userID.getValue());
-                    return new String[]{userID.getValue(), token.getValue()};
-                case 401:
-                    System.out.println("[DEBUG] Unauthorized");
-                    throw new RestServiceException(Error.LOGIN_FAILED);
-                default:
-                    System.out.println("[DEBUG] Login Error");
-                    throw new RestServiceException(Error.LOGIN_FAILED);
-            }
+            Header userID = httpResponse.getFirstHeader("userId");
+            Header token = httpResponse.getFirstHeader("Authorization");
+            // DEBUG:
+            System.out.println("[DEBUG] Login successful - UserId: "
+                    + userID.getValue());
 
-        } catch (ClientProtocolException e) {
-            System.out.println("[DEBUG] Login ClientProtocolException");
-            e.printStackTrace();
+            return new String[]{userID.getValue(), token.getValue()};
         } catch (IOException e) {
-            System.out.println("[DEBUG] Login RestServiceException");
-            throw new RestServiceException(Error.CONNECTION_ERROR);
+            e.printStackTrace();
         }
-
         return null;
     }
 

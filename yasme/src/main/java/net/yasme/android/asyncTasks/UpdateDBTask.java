@@ -52,7 +52,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
         String accessToken = params[1];
 
         try {
-            serverChats = chatTask.getAllChatsForUser(userId, accessToken);
+            serverChats = chatTask.getAllChatsForUser();
         } catch (RestServiceException e) {
             Log.w(this.getClass().getSimpleName(), e.getMessage());
             return -2;

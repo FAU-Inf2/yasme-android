@@ -16,6 +16,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
+import net.yasme.android.exception.Error;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,6 +42,16 @@ public class ConnectionTask {
     protected static int serverPort;
     protected static URI baseURI;
 
+    protected static boolean initialized = false;
+
+    /*
+     * Session Params
+     */
+    protected static String userId;
+    protected static String accessToken;
+
+    protected static boolean initializedSession = false;
+
     /*
      * Connection Objects
      */
@@ -47,14 +59,9 @@ public class ConnectionTask {
     protected static ObjectWriter objectWriter;
 
     /*
-     * Session Params
+     * Ressource URI individual for the single Tasks
      */
     protected URI uri;
-    protected static String userId;
-    protected static String accessToken;
-
-    protected static boolean initialized = false;
-    protected static boolean initializedSession = false;
 
 
     public static void initParams(String serverScheme, String serverHost, String serverPort) {
@@ -62,8 +69,10 @@ public class ConnectionTask {
         ConnectionTask.serverScheme = serverScheme;
         ConnectionTask.serverHost = serverHost;
         ConnectionTask.serverPort = Integer.parseInt(serverPort);
+
         ConnectionTask.initialized = true;
         ConnectionTask.initializedSession = false;
+
         buildBaseURI();
 
         ConnectionTask.httpClient = HttpClient.createSSLClient();
@@ -72,6 +81,11 @@ public class ConnectionTask {
     }
 
     public static void initSession(long userId, String accessToken) {
+
+        if (!initialized) {
+            System.err.println("Server Params not initialized");
+            return;
+        }
         ConnectionTask.userId = Long.toString(userId);
         ConnectionTask.accessToken = accessToken;
         ConnectionTask.initializedSession = true;
@@ -91,11 +105,11 @@ public class ConnectionTask {
         }
     }
 
-    public HttpResponse executeEntityRequest(Request request, String path, Object contentValue) throws IOException, RestServiceException {
+    public HttpResponse executeRequest(Request request, String path, Object contentValue) throws IOException, RestServiceException {
 
-        URI requestURI = buildRessourceURI(path);
+        URI requestURI = buildRequestURI(path);
 
-        HttpEntityEnclosingRequestBase requestBase = null;
+        HttpEntityEnclosingRequestBase requestBase;
 
         switch (request) {
             case POST:
@@ -110,27 +124,20 @@ public class ConnectionTask {
         }
 
         requestBase.setURI(requestURI);
+        createRequestHeader(requestBase);
 
         if (contentValue != null)
             requestBase.setEntity(new StringEntity(objectToJsonMapper(contentValue)));
 
-        requestBase.setHeader("Content-type", "application/json");
-        requestBase.setHeader("Accept", "application/json");
-
-        if (initializedSession) {
-            requestBase.setHeader("userId", ConnectionTask.userId);
-            requestBase.setHeader("Authorization", accessToken);
-        }
-
         return executeRequest(requestBase);
     }
 
-    public HttpResponse executeBaseRequest(Request request, String path)
-            throws IOException {
+    public HttpResponse executeRequest(Request request, String path)
+            throws IOException, RestServiceException {
 
-        URI requestURI = buildRessourceURI(path);
+        URI requestURI = buildRequestURI(path);
 
-        HttpRequestBase requestBase = null;
+        HttpRequestBase requestBase;
 
         switch (request) {
             case POST:
@@ -151,24 +158,15 @@ public class ConnectionTask {
         }
 
         requestBase.setURI(requestURI);
-
-        requestBase.setHeader("Content-type", "application/json");
-        requestBase.setHeader("Accept", "application/json");
-
-        if (initializedSession) {
-            requestBase.setHeader("userId", ConnectionTask.userId);
-            requestBase.setHeader("Authorization", accessToken);
-            System.out.println("[DEBUG] SESSION_INIT :  " + initializedSession + " ID: " + userId + " Token:" + accessToken);
-        }
-
-        return httpClient.execute(requestBase);
+        createRequestHeader(requestBase);
+        return executeRequest(requestBase);
     }
 
     private <T> String objectToJsonMapper(T object) throws IOException {
         return objectWriter.writeValueAsString(object);
     }
 
-    private URI buildRessourceURI(String path) {
+    private URI buildRequestURI(String path) {
 
         URI ressourceURI = null;
         try {
@@ -179,16 +177,32 @@ public class ConnectionTask {
         return ressourceURI;
     }
 
+    private void createRequestHeader(HttpRequestBase requestBase) {
+
+        requestBase.setHeader("Content-type", "application/json");
+        requestBase.setHeader("Accept", "application/json");
+
+        System.out.println("[DEBUG] Session initialized? " + initializedSession);
+
+        if (initializedSession) {
+            requestBase.setHeader("userId", ConnectionTask.userId);
+            requestBase.setHeader("Authorization", accessToken);
+
+            //TODO: Change with real DeviceId
+            requestBase.setHeader("deviceId", ConnectionTask.userId);
+        }
+    }
+
     private HttpResponse executeRequest(HttpRequestBase requestBase) throws IOException, RestServiceException {
 
         HttpResponse httpResponse = httpClient.execute(requestBase);
 
         int statusCode = httpResponse.getStatusLine().getStatusCode();
 
-        if(statusCode == 200 || statusCode == 201)
+        if (statusCode == 200 || statusCode == 201)
             return httpResponse;
         else
-            return httpResponse;
+            throw new RestServiceException(Error.ERROR);
 
         //TODO: Exception Handling einheitlich hier im else Zweig implementieren
     }

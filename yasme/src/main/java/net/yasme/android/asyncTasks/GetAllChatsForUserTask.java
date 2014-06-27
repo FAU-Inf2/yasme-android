@@ -36,7 +36,7 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
      */
     protected Boolean doInBackground(String... params) {
         try {
-            chats = new ArrayList<Chat>(ChatTask.getInstance().getAllChatsForUser(Long.parseLong(params[0]), params[1]));
+            chats = new ArrayList<Chat>(ChatTask.getInstance().getAllChatsForUser());
         } catch (RestServiceException e) {
             System.out.println(e.getMessage());
             return false;
