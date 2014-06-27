@@ -54,12 +54,15 @@ public class Chat implements Serializable {
      */
     @JsonIgnore
     public Chat(long id, User user, AbstractYasmeActivity activity) {
+        this.id = id;
+        this.participants = new ArrayList<User>();
+        this.messages = new ArrayList<Message>();
         // setup Encryption for this chat
         // TODO: DEVICE-ID statt USERID uebergeben
         long creatorDevice = user.getId();
         aes = new MessageEncryption(activity, this, creatorDevice, activity.getAccessToken());
 
-        new Chat(id, new ArrayList<User>(), "", "", null, new ArrayList<Message>(), aes);
+        //new Chat(id, participants, "", "", null, new ArrayList<Message>(), aes);
     }
 
     public Chat(User owner, String status, String name) {
