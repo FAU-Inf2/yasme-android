@@ -39,55 +39,52 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.CHAT_NAME)
     private String name;
 
+    @DatabaseField(columnName = DatabaseConstants.OWNER, foreign = true)
     private User owner;
 
     @JsonIgnore
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
     private Collection<Message> messages;
 
-    @DatabaseField(columnName = DatabaseConstants.CONTACT)
-    private int conatactFlag = 0;
-
     @JsonIgnore
     private MessageEncryption aes;
-    @JsonIgnore
-    private String accessToken;
 
     /**
      * Constructors *
      */
     @JsonIgnore
     public Chat(long id, User user, AbstractYasmeActivity activity) {
-        this.id = id;
-        accessToken = activity.getAccessToken();
-
-        participants = new ArrayList<User>();
-        messages = new ArrayList<Message>();
-
         // setup Encryption for this chat
         // TODO: DEVICE-ID statt USERID uebergeben
         long creatorDevice = user.getId();
-        aes = new MessageEncryption(activity, this, creatorDevice, accessToken);
+        aes = new MessageEncryption(activity, this, creatorDevice, activity.getAccessToken());
+
+        new Chat(id, new ArrayList<User>(), "", "", null, new ArrayList<Message>(), aes);
     }
 
     public Chat(User owner, String status, String name) {
-        this.owner = owner;
-        this.status = status;
-        this.name = name;
-        this.participants = new ArrayList<User>();
+        //TODO: id generieren
+        new Chat(0, new ArrayList<User>(), status, name, owner, new ArrayList<Message>(), null);
     }
 
     public Chat(long id, List<User> participants, String status, String name,
                 User owner) {
+        new Chat(id, participants, status, name, owner, new ArrayList<Message>(), null);
+    }
+
+    public Chat() {
+        // ORMLite needs a no-arg constructor
+    }
+
+    public Chat(long id, Collection<User> participants, String status, String name, User owner,
+                Collection<Message> messages, MessageEncryption aes) {
         this.id = id;
         this.participants = participants;
         this.status = status;
         this.name = name;
         this.owner = owner;
-    }
-
-    public Chat() {
-        // ORMLite needs a no-arg constructor
+        this.messages = messages;
+        this.aes = aes;
     }
 
     /**
@@ -98,11 +95,10 @@ public class Chat implements Serializable {
     }
 
     public ArrayList<User> getParticipants() {
-        if (participants == null) {
-            participants = new ArrayList<User>();
+        if (participants.isEmpty()) {
             User dummy = new User("Dummy", 12);
             participants.add(dummy);
-            //Log.d(this.getClass().getSimpleName(), "Dummy-User hinzugefuegt");
+            Log.d(this.getClass().getSimpleName(), "Dummy-User hinzugefuegt");
         }
         return new ArrayList<User>(participants);
     }
@@ -131,6 +127,9 @@ public class Chat implements Serializable {
     }
 
     public User getOwner() {
+        if(owner == null) {
+            owner = new User("Dummy", 12);
+        }
         return owner;
     }
 
@@ -190,7 +189,6 @@ public class Chat implements Serializable {
     /**
      * Other Methods
      */
-
     @JsonIgnore
     public boolean isOwner(long userId) {
         if (owner.getId() == userId) {
@@ -203,7 +201,7 @@ public class Chat implements Serializable {
     // Exception. Falls diese Methode benötigt wird,
     // muss ein AsyncTask draus gemacht werden (ebenso die removeParticipant Methode)
     // - robert
-    @JsonIgnore
+    /*@JsonIgnore
     public void addParticipant(User participant, long ownUserId) {
         try {
             if (ChatTask.getInstance().addParticipantToChat(participant.getId(), id, ownUserId, accessToken))
@@ -211,14 +209,17 @@ public class Chat implements Serializable {
         } catch (RestServiceException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @JsonIgnore
     public void addMessage(Message msg) {
+        if(messages == null) {
+            messages = new ArrayList<Message>();
+        }
         messages.add(msg);
     }
 
-    @JsonIgnore
+    /*@JsonIgnore
     public void removeParticipant(User participant, long ownUserId) {
         try {
             if (ChatTask.getInstance().removePartipantFromChat(participant.getId(), id, ownUserId, accessToken))
@@ -226,13 +227,5 @@ public class Chat implements Serializable {
         } catch (RestServiceException e) {
             e.printStackTrace();
         }
-    }
-
-    public void addToContacts() {
-        conatactFlag = 1;
-    }
-
-    public void removeFromContacts() {
-        conatactFlag = 0;
-    }
+    }*/
 }

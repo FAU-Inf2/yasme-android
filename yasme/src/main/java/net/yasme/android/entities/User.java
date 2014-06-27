@@ -37,11 +37,9 @@ public class User implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.CHAT_ID, foreign = true)
     private Chat chat;
 
-
-    //@JsonIgnore
-    //@ForeignCollectionField(columnName = DatabaseConstants.CHATS)
-    // Collection<Chat> chats =  new  ArrayList<Chat>();
-    //list of all chats the user participates
+    @JsonIgnore
+    @DatabaseField(columnName = DatabaseConstants.CONTACT)
+    private int conatactFlag = 0;
 
 
     public User(String pw, String name, String email) {
@@ -134,5 +132,15 @@ public class User implements Serializable {
     //public void removeChat(Chat chat) {
     //    chats.remove(chat);
     //}
+
+    @JsonIgnore
+    public void addToContacts() {
+        conatactFlag = 1;
+    }
+
+    @JsonIgnore
+    public void removeFromContacts() {
+        conatactFlag = 0;
+    }
 }
 

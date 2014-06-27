@@ -17,7 +17,7 @@ import java.util.ArrayList;
 /**
  * Created by robert on 19.06.14.
  */
-
+@Deprecated
 public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
     Context context;
     ChatFragment fragment;
@@ -77,7 +77,7 @@ public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         if (success) {
             fragment.updateViews(messages);
-            new UpdateDBMessagesTask(messages).execute(Long.toString(lastMessageId),
+            new InsertNewMessagesTask(messages).execute(Long.toString(lastMessageId),
                     Long.toString(userId), accessToken);
 
             Log.d(this.getClass().getSimpleName(), "After update the Database");
