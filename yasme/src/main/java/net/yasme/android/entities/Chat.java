@@ -65,8 +65,13 @@ public class Chat implements Serializable {
         //new Chat(id, participants, "", "", null, new ArrayList<Message>(), aes);
     }
 
+    /**
+     * It is needed to set an id after calling this constructor!
+     * @param owner
+     * @param status
+     * @param name
+     */
     public Chat(User owner, String status, String name) {
-        //TODO: id generieren
         new Chat(0, new ArrayList<User>(), status, name, owner, new ArrayList<Message>(), null);
     }
 
@@ -87,7 +92,12 @@ public class Chat implements Serializable {
         this.name = name;
         this.owner = owner;
         this.messages = messages;
-        this.aes = aes;
+
+        if(aes != null) {
+            this.aes = aes;
+        } else {
+            //TODO aes = new MessageEncryption();
+        }
     }
 
     /**
@@ -159,7 +169,6 @@ public class Chat implements Serializable {
     /**
      * Setters *
      */
-
     public void setId(long id) {
         this.id = id;
     }
@@ -200,20 +209,6 @@ public class Chat implements Serializable {
         return false;
     }
 
-    // das wird so nicht funktionieren, da kommt dann ein NetworkOnMainThread
-    // Exception. Falls diese Methode benötigt wird,
-    // muss ein AsyncTask draus gemacht werden (ebenso die removeParticipant Methode)
-    // - robert
-    /*@JsonIgnore
-    public void addParticipant(User participant, long ownUserId) {
-        try {
-            if (ChatTask.getInstance().addParticipantToChat(participant.getId(), id, ownUserId, accessToken))
-                this.participants.add(participant);
-        } catch (RestServiceException e) {
-            e.printStackTrace();
-        }
-    }*/
-
     @JsonIgnore
     public void addMessage(Message msg) {
         if(messages == null) {
@@ -222,13 +217,14 @@ public class Chat implements Serializable {
         messages.add(msg);
     }
 
-    /*@JsonIgnore
-    public void removeParticipant(User participant, long ownUserId) {
-        try {
-            if (ChatTask.getInstance().removePartipantFromChat(participant.getId(), id, ownUserId, accessToken))
-                this.participants.remove(participant);
-        } catch (RestServiceException e) {
-            e.printStackTrace();
-        }
-    }*/
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "id=" + id +
+                ", participants=" + participants +
+                ", status='" + status + '\'' +
+                ", name='" + name + '\'' +
+                ", owner=" + owner +
+                '}';
+    }
 }

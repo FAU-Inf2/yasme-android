@@ -67,7 +67,7 @@ public class ChatTask extends ConnectionTask {
         System.out.println("Chat deleted");
     }
 
-    public Long createChatwithPar(Chat chat) throws RestServiceException {
+    public Long createChatWithPar(Chat chat) throws RestServiceException {
 
         try {
             HttpResponse httpResponse = executeRequest(Request.POST, "", chat);

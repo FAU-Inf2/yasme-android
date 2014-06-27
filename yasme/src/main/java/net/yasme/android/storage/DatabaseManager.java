@@ -73,6 +73,7 @@ public class DatabaseManager {
         try {
             getHelper().getChatDao().create(c);
             for(User user : c.getParticipants()) {
+                getHelper().getUserDao().createIfNotExists(user);
                 getHelper().getChatUserDao().create(new ChatUser(c, user));
             }
         } catch (SQLException e) {
@@ -194,6 +195,10 @@ public class DatabaseManager {
 
     /**
      * ChatUser methods
+     */
+    /**
+     *
+     * @param cu
      */
     public void createChatUser(ChatUser cu) {
         try {

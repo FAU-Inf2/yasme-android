@@ -39,6 +39,7 @@ public class ChatFragment extends Fragment {
 
     private SharedPreferences storage;
 
+    //UI references
     private EditText editMessage;
     private TextView status;
     private LinearLayout layout;
@@ -70,12 +71,11 @@ public class ChatFragment extends Fragment {
            }
            if(chat == null) {
                chat = new Chat(chatId, activity.getSelfUser(), activity);
-           }/* else {
-               chat.setParticipants(DatabaseManager.getInstance().getParticipantsFromDB(chatId));
-           }*/
+           }
 
            //DEBUG, TODO: encryption speichern und auslesen
-           aes = new MessageEncryption(activity.getApplicationContext(), chat, activity.getSelfUser().getId(), activity.getAccessToken());
+           aes = new MessageEncryption(activity.getApplicationContext(),
+                   chat, activity.getSelfUser().getId(), activity.getAccessToken());
            chat.setEncryption(aes);
        }
 
@@ -152,6 +152,8 @@ public class ChatFragment extends Fragment {
     public void asyncUpdate() {
         status.setText("GET messages");
         new GetMessageTaskInChat(activity.getApplicationContext(), this, chat.getEncryption(), storage)
+                .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());
+        new GetMessageTask(activity.getApplicationContext(), storage)
                 .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());
         status.setText("GET messages done");
     }
