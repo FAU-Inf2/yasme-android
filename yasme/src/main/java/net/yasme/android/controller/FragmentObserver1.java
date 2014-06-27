@@ -2,14 +2,12 @@ package net.yasme.android.controller;
 
 import android.app.Fragment;
 
-import net.yasme.android.ui.ChatListFragment;
-
 import java.util.ArrayList;
 
 /**
  * Created by martin on 26.06.2014.
  */
-public class FragmentObserver1<T extends Fragment> {
+public class FragmentObserver1<T extends Fragment & NotifiableFragment<P>,  P extends NotifyFragmentParameter> {
 
     private ArrayList<T> fragments;
 
@@ -21,6 +19,14 @@ public class FragmentObserver1<T extends Fragment> {
         fragments.remove(fragment);
     }
 
+    //add
+    public void notifyFragments(P parameter) {
+        for (T fragment : fragments) {
+            fragment.notifyFragment(parameter);
+        }
+    }
+
+    //do not give the list to others, be paranoid! They may modify it. :)
     public ArrayList<T> getFragments() {
       return fragments;
     }
