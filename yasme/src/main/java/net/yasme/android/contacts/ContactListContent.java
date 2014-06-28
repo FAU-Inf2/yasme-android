@@ -48,9 +48,9 @@ public class ContactListContent {
 
     static {
         // Add 3 sample items.
-       // addItem(new ContactListItem("1", "Stefan", "stefan@yasme.net"));
-       // addItem(new ContactListItem("2", "Cuong", "cuong@yasme.net"));
-       // addItem(new ContactListItem("3", "Flo", "florian@yasme.net"));
+        //addItem(new ContactListItem("1", "Stefan", "stefan@yasme.net"));
+        //addItem(new ContactListItem("2", "Cuong", "cuong@yasme.net"));
+        //addItem(new ContactListItem("3", "Flo", "florian@yasme.net"));
     }
 
 

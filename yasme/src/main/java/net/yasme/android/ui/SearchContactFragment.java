@@ -23,7 +23,7 @@ import net.yasme.android.exception.RestServiceException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchContactFragment extends Fragment implements ContactListItemFragment.OnFragmentInteractionListener, View.OnClickListener {
+public class SearchContactFragment extends Fragment implements View.OnClickListener {
 
 
     private long userId;
@@ -65,12 +65,6 @@ public class SearchContactFragment extends Fragment implements ContactListItemFr
 
         return layout;
     }
-
-    @Override
-    public void onFragmentInteraction(String id) {
-
-    }
-
 
 
     private void loadSearchSpinner(){

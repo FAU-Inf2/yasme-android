@@ -18,6 +18,7 @@ import net.yasme.android.connection.SearchTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.DatabaseManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,13 +91,15 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
         contactListContent = new ContactListContent();
 
-                DownloadAllUsers task = new DownloadAllUsers();
-        task.execute();
+         //       DownloadAllUsers task = new DownloadAllUsers();
+        //task.execute();
+
+        contactListContent.addItem(new ContactListContent.ContactListItem("1","Stefan","stefan@yasme.net"));
 
         mAdapter = new SimpleAdapter((ContactActivity)getActivity() ,
                 contactListContent.getMap(), android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
 
-
+        this.getContacts();
 
     }
 
@@ -139,7 +142,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(contactListContent.items.get(position).id);
+            mListener.onFragmentInteraction(contactListContent.items.get(position).id, view);
         }
     }
 
@@ -168,9 +171,21 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+        public void onFragmentInteraction(String id, View view);
     }
 
+
+    private void getContacts(){
+        List<User> userList = DatabaseManager.getInstance().getContactsFromDB();
+
+        if (userList != null){
+            for(User u:userList){
+                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail()));
+            }
+            mAdapter.notifyDataSetChanged();
+        }
+
+    }
 
 
     private class DownloadAllUsers extends AsyncTask<String,Void,List<User>>{

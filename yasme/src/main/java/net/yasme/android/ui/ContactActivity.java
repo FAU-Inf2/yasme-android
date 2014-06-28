@@ -3,23 +3,32 @@ package net.yasme.android.ui;
 import java.util.Locale;
 
 import android.app.ActionBar;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
 import net.yasme.android.R;
+import net.yasme.android.contacts.ContactListContent;
 
-public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener {
+public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -63,6 +72,8 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
                 actionBar.setSelectedNavigationItem(position);
             }
         });
+
+
 
         // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
@@ -115,10 +126,45 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
     }
 
     @Override
-    public void onFragmentInteraction(String id) {
+    public void onFragmentInteraction(String id, View view) {
 
         System.out.println("---------- in der Activity mit id: "+id+" ---------------");
 
+     /*
+        View detailslayout = getLayoutInflater().inflate(R.layout.fragment_user_details, null);
+
+        PopupWindow popupWindow = new PopupWindow(detailslayout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        popupWindow.setFocusable(true);
+
+        ColorDrawable d = new ColorDrawable();
+
+        popupWindow.setBackgroundDrawable(d);
+        int location[] = new int[2];
+
+        View root = this.mViewPager.getRootView();
+
+        view.getLocationOnScreen(location);
+
+        popupWindow.showAtLocation(view, Gravity.NO_GRAVITY,0,view.getHeight());
+*/
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+
+        if(prev != null){
+            ft.remove(prev);
+        }
+
+        ft.addToBackStack(null);
+
+        DialogFragment newFragment = UserDetailsFragment.newInstance("","");
+        newFragment.show(ft,"dialog");
+
+    }
+
+    @Override
+    public void onDetailsFragmentInteraction(Uri uri) {
 
     }
 

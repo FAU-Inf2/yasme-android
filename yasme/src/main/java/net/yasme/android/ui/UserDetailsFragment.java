@@ -1,25 +1,29 @@
 package net.yasme.android.ui;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import net.yasme.android.R;
+import net.yasme.android.entities.User;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link UserDetailsFragment.OnFragmentInteractionListener} interface
+ * {@link UserDetailsFragment.OnDetailsFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link UserDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  *
  */
-public class UserDetailsFragment extends Fragment {
+public class UserDetailsFragment extends DialogFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,7 +33,15 @@ public class UserDetailsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private User contact;
+
+    private TextView contactName;
+    private TextView email;
+    private TextView number;
+    private Button startChat;
+    private Button addContact;
+
+    private OnDetailsFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -50,6 +62,7 @@ public class UserDetailsFragment extends Fragment {
     }
     public UserDetailsFragment() {
         // Required empty public constructor
+
     }
 
     @Override
@@ -58,20 +71,33 @@ public class UserDetailsFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_details, container, false);
+
+        View layout = inflater.inflate(R.layout.fragment_user_details, container, false);
+        contact = new User("Stefan", "stefan@yasme.net",1);
+        contactName = (TextView) layout.findViewById(R.id.contact_header);
+        email = (TextView) layout.findViewById(R.id.mailViewText);
+        number = (TextView) layout.findViewById(R.id.numberViewText);
+        startChat = (Button) layout.findViewById(R.id.contact_detail_newchat);
+        addContact = (Button) layout.findViewById(R.id.contact_detail_addcontact);
+
+        contactName.setText(contact.getName());
+        email.setText(contact.getEmail());
+        number.setText("");
+
+        return layout;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onDetailsFragmentInteraction(uri);
         }
     }
 
@@ -79,7 +105,7 @@ public class UserDetailsFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnDetailsFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -92,6 +118,7 @@ public class UserDetailsFragment extends Fragment {
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -102,9 +129,9 @@ public class UserDetailsFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnDetailsFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onDetailsFragmentInteraction(Uri uri);
     }
 
 }
