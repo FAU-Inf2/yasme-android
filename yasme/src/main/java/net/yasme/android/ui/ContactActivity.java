@@ -27,6 +27,7 @@ import android.widget.PopupWindow;
 
 import net.yasme.android.R;
 import net.yasme.android.contacts.ContactListContent;
+import net.yasme.android.entities.User;
 
 public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener {
 
@@ -128,27 +129,6 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
     @Override
     public void onFragmentInteraction(String id, View view) {
 
-        System.out.println("---------- in der Activity mit id: "+id+" ---------------");
-
-     /*
-        View detailslayout = getLayoutInflater().inflate(R.layout.fragment_user_details, null);
-
-        PopupWindow popupWindow = new PopupWindow(detailslayout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        popupWindow.setFocusable(true);
-
-        ColorDrawable d = new ColorDrawable();
-
-        popupWindow.setBackgroundDrawable(d);
-        int location[] = new int[2];
-
-        View root = this.mViewPager.getRootView();
-
-        view.getLocationOnScreen(location);
-
-        popupWindow.showAtLocation(view, Gravity.NO_GRAVITY,0,view.getHeight());
-*/
-
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag("dialog");
 
@@ -158,13 +138,18 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
 
         ft.addToBackStack(null);
 
-        DialogFragment newFragment = UserDetailsFragment.newInstance("","");
-        newFragment.show(ft,"dialog");
+        DialogFragment userDetailsFragment = UserDetailsFragment.newInstance(new User("Stefan","stefan@yasme.net",1), false);
+        int style = userDetailsFragment.STYLE_NO_TITLE;
+        int theme = android.R.style.Theme_Holo;
+        userDetailsFragment.setStyle(style,0);
+        userDetailsFragment.show(ft,"dialog");
 
     }
 
     @Override
-    public void onDetailsFragmentInteraction(Uri uri) {
+    public void onDetailsFragmentInteraction(String s) {
+
+        System.out.println("------------------- in der Activity vom Details Fragment mit uri: "+s+"---------------------------");
 
     }
 

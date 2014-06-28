@@ -23,15 +23,14 @@ import net.yasme.android.entities.User;
  * create an instance of this fragment.
  *
  */
-public class UserDetailsFragment extends DialogFragment {
+public class UserDetailsFragment extends DialogFragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_USERNAME = "param1";
+    private static final String ARG_USERMAIL = "param2";
+    private static final String ARG_CONTACTBUTTON = "param3";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private User contact;
 
@@ -47,17 +46,18 @@ public class UserDetailsFragment extends DialogFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment UserDetailsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static UserDetailsFragment newInstance(String param1, String param2) {
+    public static UserDetailsFragment newInstance(User contact, Boolean addContactButton) {
         UserDetailsFragment fragment = new UserDetailsFragment();
+
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_USERNAME, contact.getName());
+        args.putString(ARG_USERMAIL, contact.getEmail());
+        args.putBoolean(ARG_CONTACTBUTTON, addContactButton);
         fragment.setArguments(args);
+
         return fragment;
     }
     public UserDetailsFragment() {
@@ -68,10 +68,11 @@ public class UserDetailsFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        contact = new User();
 
+        if (getArguments() != null) {
+            contact.setName(getArguments().getString(ARG_USERNAME));
+            contact.setEmail(getArguments().getString(ARG_USERMAIL));
         }
     }
 
@@ -80,7 +81,6 @@ public class UserDetailsFragment extends DialogFragment {
                              Bundle savedInstanceState) {
 
         View layout = inflater.inflate(R.layout.fragment_user_details, container, false);
-        contact = new User("Stefan", "stefan@yasme.net",1);
         contactName = (TextView) layout.findViewById(R.id.contact_header);
         email = (TextView) layout.findViewById(R.id.mailViewText);
         number = (TextView) layout.findViewById(R.id.numberViewText);
@@ -91,13 +91,20 @@ public class UserDetailsFragment extends DialogFragment {
         email.setText(contact.getEmail());
         number.setText("");
 
+        startChat.setOnClickListener(this);
+        addContact.setOnClickListener(this);
+
+        if (!getArguments().getBoolean(ARG_CONTACTBUTTON)){
+            addContact.setVisibility(View.GONE);
+        }
+
         return layout;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(String s) {
         if (mListener != null) {
-            mListener.onDetailsFragmentInteraction(uri);
+            mListener.onDetailsFragmentInteraction(s);
         }
     }
 
@@ -118,6 +125,13 @@ public class UserDetailsFragment extends DialogFragment {
         mListener = null;
     }
 
+    @Override
+    public void onClick(View v) {
+        if (mListener != null) {
+            mListener.onDetailsFragmentInteraction("");
+        }
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -130,8 +144,8 @@ public class UserDetailsFragment extends DialogFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnDetailsFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onDetailsFragmentInteraction(Uri uri);
+
+        public void onDetailsFragmentInteraction(String s);
     }
 
 }
