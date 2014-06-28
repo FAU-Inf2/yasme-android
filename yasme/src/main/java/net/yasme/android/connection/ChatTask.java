@@ -84,7 +84,7 @@ public class ChatTask extends ConnectionTask {
     public Chat getInfoOfChat(long chatId) throws RestServiceException {
 
         // note: only a participant of the chat shall get the chat object
-        String path = "/" + chatId + "/info";
+        String path = chatId + "/info";
         HttpResponse httpResponse = executeRequest(Request.GET, path);
 
         Chat chat = null;
@@ -100,14 +100,14 @@ public class ChatTask extends ConnectionTask {
     public void addParticipantToChat(long participantId, long chatId)
             throws RestServiceException {
 
-        String path = "/par/" + participantId + "/" + chatId;
+        String path = "par/" + participantId + "/" + chatId;
         executeRequest(Request.PUT, path);
         System.out.println("User added to Chat!");
     }
 
     public void changeOwnerOfChat(long chatId, long newOwnerId) throws RestServiceException {
 
-        String path = "/" + chatId + "/owner/" + newOwnerId;
+        String path = chatId + "owner/" + newOwnerId;
         executeRequest(Request.PUT, path);
         System.out.println("Owner changed");
     }
@@ -115,21 +115,21 @@ public class ChatTask extends ConnectionTask {
     public void removePartipantFromChat(long participantId, long chatId)
             throws RestServiceException {
 
-        String path = "/par/" + participantId + "/" + chatId;
+        String path = "par/" + participantId + "/" + chatId;
         executeRequest(Request.DELETE, path);
         System.out.println("User removed from Chat!");
     }
 
     public void removeOneSelfFromChat(long chatId)
             throws RestServiceException {
-        String path = "/" + chatId + "/par/self";
+        String path = chatId + "/par/self";
         HttpResponse httpResponse = executeRequest(Request.DELETE, path);
         System.out.println("I´m out of Chat No. " + chatId);
     }
 
     public void updateStatus(Chat chat) throws RestServiceException {
 
-        String path = "/" + chat.getId() + "/properties";
+        String path = chat.getId() + "/properties";
         HttpResponse httpResponse = executeRequest(Request.PUT, path, chat);
         System.out.println("Status of chat updated");
     }

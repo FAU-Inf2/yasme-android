@@ -198,7 +198,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
             List<User> userList = null;
 
             try {
-                userList = search.getAllUsers(userId, accessToken);
+                userList = search.getAllUsers();
             }catch (RestServiceException rse){
                 rse.getMessage();
                 rse.printStackTrace();

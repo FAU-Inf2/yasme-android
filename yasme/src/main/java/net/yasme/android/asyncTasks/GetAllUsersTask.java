@@ -40,7 +40,7 @@ public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
         userId = Long.parseLong(params[0]);
         accessToken = params[1];
         try {
-            allUsers = searchTask.getAllUsers(userId, accessToken);
+            allUsers = searchTask.getAllUsers();
         } catch (RestServiceException e) {
             // TODO
             e.printStackTrace();

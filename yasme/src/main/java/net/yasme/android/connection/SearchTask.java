@@ -40,7 +40,7 @@ public class SearchTask extends ConnectionTask {
 
     public User userByNumber(String phoneNumber) throws RestServiceException {
 
-        String path = "/userByNumber/" + phoneNumber;
+        String path = "userByNumber/" + phoneNumber;
         HttpResponse httpResponse = executeRequest(Request.GET, path);
 
         User user = null;
@@ -55,7 +55,7 @@ public class SearchTask extends ConnectionTask {
 
     public User userByMail(String email) throws RestServiceException {
 
-        String path = "/userByMail/" + email;
+        String path = "userByMail/" + email;
         HttpResponse httpResponse = executeRequest(Request.GET, path);
 
         User user = null;
@@ -71,7 +71,7 @@ public class SearchTask extends ConnectionTask {
 
     public User userByLike(String term) throws RestServiceException {
 
-        String path = "/userByLike/" + term;
+        String path = "userByLike/" + term;
         HttpResponse httpResponse = executeRequest(Request.GET, path);
 
         User user = null;
@@ -85,13 +85,13 @@ public class SearchTask extends ConnectionTask {
     }
 
 
-    public ArrayList<User> getAllUsers(long userId, String accessToken) throws
+    public ArrayList<User> getAllUsers() throws
             RestServiceException {
 
         ArrayList<User> users = new ArrayList<User>();
 
         try {
-            HttpResponse httpResponse = executeRequest(Request.GET, "/allUsers");
+            HttpResponse httpResponse = executeRequest(Request.GET, "allUsers");
 
             JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine());
@@ -115,7 +115,7 @@ public class SearchTask extends ConnectionTask {
         ArrayList<Device> devices = new ArrayList<Device>();
 
         try {
-            String path = "/allDevices/" + userId;
+            String path = "allDevices/" + userId;
             HttpResponse httpResponse = executeRequest(Request.GET, path);
 
             JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(

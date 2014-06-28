@@ -203,14 +203,10 @@ public class ConnectionTask {
 
     private HttpResponse executeRequest(HttpRequestBase requestBase) throws RestServiceException {
 
-        HttpResponse httpResponse;
-
         try {
-            httpResponse = HttpClient.createSSLClient().execute(requestBase);
+            HttpResponse httpResponse = HttpClient.createSSLClient().execute(requestBase);
             int statusCode = httpResponse.getStatusLine().getStatusCode();
-
             System.out.println("[DEBUG] StatusCode: " + statusCode);
-
             if (statusCode == 200 || statusCode == 201)
                 return httpResponse;
             else

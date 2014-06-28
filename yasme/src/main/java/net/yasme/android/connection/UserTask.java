@@ -42,7 +42,7 @@ public class UserTask extends ConnectionTask {
     }
 
     public void changeUserData(User user) throws RestServiceException {
-        HttpResponse httpResponse = executeRequest(Request.PUT, "", user);
+        executeRequest(Request.PUT, "", user);
         System.out.println("[DEBUG] User data changed");
     }
 
