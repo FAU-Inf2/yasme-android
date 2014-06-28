@@ -34,7 +34,8 @@
 
     <!-- Contacts -->
     <string name="button_search">Search</string>
-    <string name="contact_header">Contact</string>
+    <string name="contact_header"
+        translatable="false">Contact</string>
     <string-array name="search_spinner_content">
         <item>Search By Name</item>
         <item>Search By E-Mail</item>
