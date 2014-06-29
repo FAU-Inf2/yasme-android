@@ -29,7 +29,7 @@ import net.yasme.android.R;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.entities.User;
 
-public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener {
+public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener, SearchContactFragment.OnSearchFragmentInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -129,20 +129,14 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
     @Override
     public void onFragmentInteraction(String id, View view) {
 
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        this.displayDetailsFragment(false);
 
-        if(prev != null){
-            ft.remove(prev);
-        }
+    }
 
-        ft.addToBackStack(null);
+    @Override
+    public void onSearchFragmentInteraction(String s) {
 
-        DialogFragment userDetailsFragment = UserDetailsFragment.newInstance(new User("Stefan","stefan@yasme.net",1), false);
-        int style = userDetailsFragment.STYLE_NO_TITLE;
-        int theme = android.R.style.Theme_Holo;
-        userDetailsFragment.setStyle(style,0);
-        userDetailsFragment.show(ft,"dialog");
+        this.displayDetailsFragment(true);
 
     }
 
@@ -152,6 +146,29 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         System.out.println("------------------- in der Activity vom Details Fragment mit uri: "+s+"---------------------------");
 
     }
+
+    private void displayDetailsFragment(Boolean showAddContact){
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+
+        if(prev != null){
+            ft.remove(prev);
+        }
+
+        ft.addToBackStack(null);
+
+        DialogFragment userDetailsFragment = UserDetailsFragment.newInstance(new User("Stefan","stefan@yasme.net",1), showAddContact);
+        int style = userDetailsFragment.STYLE_NO_TITLE;
+        int theme = android.R.style.Theme_Holo;
+        userDetailsFragment.setStyle(style,0);
+        userDetailsFragment.show(ft,"dialog");
+
+    }
+
+
+
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

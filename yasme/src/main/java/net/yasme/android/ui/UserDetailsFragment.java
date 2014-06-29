@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import net.yasme.android.R;
@@ -39,6 +40,8 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
     private TextView number;
     private Button startChat;
     private Button addContact;
+    private ImageButton mailButton;
+    private ImageButton numberButton;
 
     private OnDetailsFragmentInteractionListener mListener;
 
@@ -86,6 +89,8 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
         number = (TextView) layout.findViewById(R.id.numberViewText);
         startChat = (Button) layout.findViewById(R.id.contact_detail_newchat);
         addContact = (Button) layout.findViewById(R.id.contact_detail_addcontact);
+        mailButton = (ImageButton) layout.findViewById(R.id.mail_image_button);
+        numberButton = (ImageButton) layout.findViewById(R.id.number_image_button);
 
         contactName.setText(contact.getName());
         email.setText(contact.getEmail());
@@ -133,16 +138,6 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
     }
 
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnDetailsFragmentInteractionListener {
 
         public void onDetailsFragmentInteraction(String s);

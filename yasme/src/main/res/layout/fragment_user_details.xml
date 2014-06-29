@@ -19,8 +19,10 @@
                 android:layout_height="match_parent"
                 android:text="@string/contact_header"
                 android:textStyle="bold"
-                android:textSize="12pt"
-                android:id="@+id/contact_header" />
+                android:textSize="16pt"
+                android:id="@+id/contact_header"
+                android:layout_margin="5pt"
+                android:layout_span="5" />
         </TableRow>
 
         <TableRow
@@ -70,17 +72,32 @@
                 android:text="E-Mail:"
                 android:id="@+id/mailView"
                 android:layout_column="0"
-                android:layout_margin="1mm"
-                android:textSize="8pt" />
+                android:textSize="8pt"
+                android:textColor="#ff6e37d2"
+                android:layout_marginLeft="2mm"
+                android:layout_marginTop="4mm"
+                android:layout_marginRight="2mm" />
+        </TableRow>
 
+        <TableRow>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Contact Mail"
                 android:id="@+id/mailViewText"
-                android:layout_column="4"
-                android:layout_margin="1mm"
-                android:textSize="8pt" />
+                android:layout_column="0"
+                android:textSize="10pt"
+                android:layout_marginLeft="4mm"
+                android:layout_marginTop="0.5mm"
+                android:layout_marginRight="30pt" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/mail_image_button"
+                android:layout_column="5"
+                android:src="@android:drawable/ic_dialog_email"
+                android:adjustViewBounds="false" />
         </TableRow>
 
         <TableRow
@@ -91,18 +108,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Phone Number:"
+                android:textAlignment="center"
                 android:id="@+id/numberView"
                 android:layout_column="0"
-                android:layout_margin="1mm"
-                android:textSize="8pt" />
+                android:textSize="8pt"
+                android:textColor="#ff6e37d2"
+                android:layout_marginLeft="2mm"
+                android:layout_marginTop="4mm"
+                android:layout_marginRight="2mm" />
+
+        </TableRow>
+
+        <TableRow>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Contact Number"
                 android:id="@+id/numberViewText"
-                android:layout_column="4"
-                android:layout_margin="1mm"
-                android:textSize="8pt" />
+                android:layout_column="0"
+                android:textSize="10pt"
+                android:layout_marginLeft="4mm"
+                android:layout_marginTop="0.5mm"
+                android:layout_marginRight="30pt"
+                android:layout_marginBottom="5mm"
+                android:textAlignment="center" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/number_image_button"
+                android:layout_column="5"
+                android:focusableInTouchMode="false"
+                android:src="@android:drawable/ic_menu_call" />
         </TableRow>
 
         <TableRow
@@ -115,8 +152,8 @@
                 android:text="New Chat"
                 android:id="@+id/contact_detail_newchat"
                 android:layout_column="0"
-                android:layout_span="5"
-                android:layout_margin="2mm" />
+                android:layout_span="6"
+                android:layout_marginLeft="2mm" />
         </TableRow>
 
         <TableRow
@@ -129,8 +166,8 @@
                 android:text="Add Contact"
                 android:id="@+id/contact_detail_addcontact"
                 android:layout_column="0"
-                android:layout_span="5"
-                android:layout_margin="2mm" />
+                android:layout_span="6"
+                android:layout_marginLeft="2mm" />
         </TableRow>
 
     </TableLayout>

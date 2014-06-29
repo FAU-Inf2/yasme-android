@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -23,7 +24,7 @@ import net.yasme.android.exception.RestServiceException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchContactFragment extends Fragment implements View.OnClickListener {
+public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
 
     private long userId;
@@ -37,6 +38,8 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
     ContactListContent contactListContent;
 
+    private OnSearchFragmentInteractionListener mListener;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,8 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View layout = inflater.inflate(R.layout.fragment_search_contact, null);
+
+        mListener = (OnSearchFragmentInteractionListener) getActivity();
 
         searchSpinner = (Spinner) layout.findViewById(R.id.search_spinner);
         searchButton = (Button) layout.findViewById(R.id.search_button);
@@ -60,6 +65,8 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
                 contactListContent.getMap(), android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
 
         searchResultView.setAdapter(mAdapter);
+
+        searchResultView.setOnItemClickListener(this);
 
         searchButton.setOnClickListener(this);
 
@@ -85,6 +92,17 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
             new SearchUserTask().execute();
         }
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (mListener != null) {
+            mListener.onSearchFragmentInteraction("");
+        }
+    }
+
+    public interface OnSearchFragmentInteractionListener {
+        public void onSearchFragmentInteraction(String s);
     }
 
 
