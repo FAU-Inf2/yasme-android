@@ -5,9 +5,6 @@ package net.yasme.android.storage;
  */
 public class DatabaseConstants {
 
-    // name of the database file
-    public static final String DATABASE = "net.yasme.android.DATABASE";
-
     //Chat
     public static final String CHAT_TABLE = "chat";
     public static final String CHAT_ID = "chatId";

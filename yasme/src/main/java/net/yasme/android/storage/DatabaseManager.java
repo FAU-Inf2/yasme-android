@@ -24,7 +24,7 @@ public class DatabaseManager {
 
     static public void init(Context context, long userId, String accessToken) {
         if (null == instance) {
-            instance = new DatabaseManager(context);
+            instance = new DatabaseManager(context, userId);
         }
         initialized = true;
     }
@@ -39,8 +39,8 @@ public class DatabaseManager {
 
     private DatabaseHelper helper;
 
-    private DatabaseManager(Context context) {
-        helper = new DatabaseHelper(context);
+    private DatabaseManager(Context context, long userId) {
+        helper = new DatabaseHelper(context, userId);
     }
 
     private DatabaseHelper getHelper() {

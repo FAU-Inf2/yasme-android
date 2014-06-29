@@ -13,6 +13,7 @@ import com.j256.ormlite.dao.Dao;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 import java.sql.SQLException;
 
@@ -24,6 +25,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // when anything changes in your database objects, we have to increase the database version
     private static final int DATABASE_VERSION = 23;
 
+    // name of the database file
+    private static final String DATABASE = "net.yasme.android.DATABASE";
+
     // the DAO object for chat
     private Dao<Chat, Long> chatDao = null;
 
@@ -33,8 +37,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<ChatUser, Long> chatUserDao = null;
 
 
-    public DatabaseHelper(Context context) {
-        super(context, DatabaseConstants.DATABASE, null, DATABASE_VERSION);
+    public DatabaseHelper(Context context, long userId) {
+        super(context, DATABASE + "_" + Long.toString(userId), null, DATABASE_VERSION);
     }
 
     @Override
