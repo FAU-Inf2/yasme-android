@@ -53,16 +53,27 @@ public class ContactListContent {
         //addItem(new ContactListItem("3", "Flo", "florian@yasme.net"));
     }
 
+    public void clearItems(){
+        listMap.clear();
+        items.clear();
+    }
 
     public static class ContactListItem {
         public String id;
         public String content;
         public String subContent;
+        public User user;
 
         public ContactListItem(String id, String content, String subContent) {
             this.id = id;
             this.content = content;
             this.subContent = subContent;
+        }
+        public ContactListItem(String id, String content, String subContent, User user) {
+            this.id = id;
+            this.content = content;
+            this.subContent = subContent;
+            this.user = user;
         }
 
         @Override

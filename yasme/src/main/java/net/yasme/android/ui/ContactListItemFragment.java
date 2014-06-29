@@ -91,15 +91,19 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
         contactListContent = new ContactListContent();
 
-         //       DownloadAllUsers task = new DownloadAllUsers();
-        //task.execute();
+        DownloadAllUsers task = new DownloadAllUsers();
+        task.execute();
 
-        contactListContent.addItem(new ContactListContent.ContactListItem("1","Stefan","stefan@yasme.net"));
+        //User temp = new User("Stefan","stefan@yasme.net",4);
+        //ContactListContent.ContactListItem item = new ContactListContent.ContactListItem(String.valueOf(temp.getId()),temp.getName(),temp.getEmail(),temp);
+
+        //contactListContent.addItem(item);
+
 
         mAdapter = new SimpleAdapter((ContactActivity)getActivity() ,
                 contactListContent.getMap(), android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
 
-        this.getContacts();
+       // this.getContacts();
 
     }
 
@@ -143,7 +147,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
 
-            mListener.onFragmentInteraction(contactListContent.items.get(position).id, view);
+            mListener.onFragmentInteraction(contactListContent.items.get(position).user, view);
         }
     }
 
@@ -171,8 +175,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     * >Communicating with Other Fragments</a> for more information.
     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String id, View view);
+        public void onFragmentInteraction(User user, View view);
     }
 
 
@@ -181,7 +184,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
         if (userList != null){
             for(User u:userList){
-                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail()));
+                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail(),u));
             }
             mAdapter.notifyDataSetChanged();
         }
@@ -210,7 +213,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
         protected void onPostExecute(List<User> userList){
             for(User u: userList){
-               contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail()));
+               contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail(),u));
             }
 
             mAdapter.notifyDataSetChanged();

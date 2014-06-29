@@ -29,7 +29,8 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_USERNAME = "param1";
     private static final String ARG_USERMAIL = "param2";
-    private static final String ARG_CONTACTBUTTON = "param3";
+    private static final String ARG_USERID = "param3";
+    private static final String ARG_CONTACTBUTTON = "param4";
 
     // TODO: Rename and change types of parameters
 
@@ -58,6 +59,7 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
         Bundle args = new Bundle();
         args.putString(ARG_USERNAME, contact.getName());
         args.putString(ARG_USERMAIL, contact.getEmail());
+        args.putString(ARG_USERID, String.valueOf(contact.getId()));
         args.putBoolean(ARG_CONTACTBUTTON, addContactButton);
         fragment.setArguments(args);
 
@@ -76,6 +78,7 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
         if (getArguments() != null) {
             contact.setName(getArguments().getString(ARG_USERNAME));
             contact.setEmail(getArguments().getString(ARG_USERMAIL));
+            contact.setId(Long.valueOf(getArguments().getString(ARG_USERID)));
         }
     }
 
@@ -98,6 +101,8 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
 
         startChat.setOnClickListener(this);
         addContact.setOnClickListener(this);
+        mailButton.setOnClickListener(this);
+        numberButton.setOnClickListener(this);
 
         if (!getArguments().getBoolean(ARG_CONTACTBUTTON)){
             addContact.setVisibility(View.GONE);
@@ -106,10 +111,9 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
         return layout;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(String s) {
         if (mListener != null) {
-            mListener.onDetailsFragmentInteraction(s);
+            mListener.onDetailsFragmentInteraction(contact,0);
         }
     }
 
@@ -132,15 +136,18 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if (mListener != null) {
-            mListener.onDetailsFragmentInteraction("");
+            if (mListener != null) {
+                mListener.onDetailsFragmentInteraction(contact,v.getId());
+                this.onDestroyView();
         }
+
+
     }
 
 
     public interface OnDetailsFragmentInteractionListener {
 
-        public void onDetailsFragmentInteraction(String s);
+        public void onDetailsFragmentInteraction(User user, Integer buttonId);
     }
 
 }

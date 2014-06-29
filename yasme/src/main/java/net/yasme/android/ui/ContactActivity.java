@@ -28,6 +28,7 @@ import android.widget.PopupWindow;
 import net.yasme.android.R;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.DatabaseManager;
 
 public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener, SearchContactFragment.OnSearchFragmentInteractionListener {
 
@@ -127,27 +128,64 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
     }
 
     @Override
-    public void onFragmentInteraction(String id, View view) {
+    public void onFragmentInteraction(User user, View view) {
 
-        this.displayDetailsFragment(false);
-
-    }
-
-    @Override
-    public void onSearchFragmentInteraction(String s) {
-
-        this.displayDetailsFragment(true);
+        this.displayDetailsFragment(user, false);
 
     }
 
     @Override
-    public void onDetailsFragmentInteraction(String s) {
+    public void onSearchFragmentInteraction(User user) {
 
-        System.out.println("------------------- in der Activity vom Details Fragment mit uri: "+s+"---------------------------");
+        this.displayDetailsFragment(user,true);
 
     }
 
-    private void displayDetailsFragment(Boolean showAddContact){
+    @Override
+    public void onDetailsFragmentInteraction(User user, Integer buttonId) {
+
+        switch (buttonId){
+            case R.id.contact_detail_newchat:
+                System.out.println("------------------- Create New Chat ---------------------------");
+                break;
+            case R.id.contact_detail_addcontact:
+                user.addToContacts();
+                DatabaseManager.getInstance().createUserIfNotExists(user);
+                System.out.println("------------------- Contact Added ---------------------------");
+                break;
+            case R.id.mail_image_button:
+                this.sendMail(user.getEmail());
+                break;
+            case R.id.number_image_button:
+                break;
+        }
+
+    }
+
+    private void callContact(String number){
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:"+number));
+        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(callIntent);
+    }
+
+    private void sendMail(String email){
+
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{email});
+        i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
+        i.putExtra(Intent.EXTRA_TEXT   , "Message powered by YASME");
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+           ex.printStackTrace();
+        }
+
+    }
+
+
+    private void displayDetailsFragment(User user, Boolean showAddContact){
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag("dialog");
@@ -158,7 +196,7 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
 
         ft.addToBackStack(null);
 
-        DialogFragment userDetailsFragment = UserDetailsFragment.newInstance(new User("Stefan","stefan@yasme.net",1), showAddContact);
+        DialogFragment userDetailsFragment = UserDetailsFragment.newInstance(user, showAddContact);
         int style = userDetailsFragment.STYLE_NO_TITLE;
         int theme = android.R.style.Theme_Holo;
         userDetailsFragment.setStyle(style,0);

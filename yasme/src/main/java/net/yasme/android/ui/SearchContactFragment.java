@@ -86,9 +86,10 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        if(searchText.equals("")){
+        if(searchText.getText().equals("")){
 
         }else{
+            contactListContent.clearItems();
             new SearchUserTask().execute();
         }
 
@@ -96,13 +97,13 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mListener != null) {
-            mListener.onSearchFragmentInteraction("");
+        if (mListener != null && !contactListContent.items.get(position).id.equals("null")) {
+            mListener.onSearchFragmentInteraction(contactListContent.items.get(position).user);
         }
     }
 
     public interface OnSearchFragmentInteractionListener {
-        public void onSearchFragmentInteraction(String s);
+        public void onSearchFragmentInteraction(User user);
     }
 
 
@@ -117,7 +118,6 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
             try {
                 switch (searchSpinner.getSelectedItemPosition()) {
                     case 0:
-                        uList.add(new User());
                         return uList;
                     case 1:
                         uList.add(searchTask.userByMail(String.valueOf(searchText.getText())));
@@ -128,7 +128,6 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
                 }
             }catch(RestServiceException rse){
                 rse.getMessage();
-                rse.printStackTrace();
             }
 
            return null;
@@ -137,11 +136,13 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
         protected void onPostExecute(List<User> userList) {
 
-            if (userList != null) {
+            if (userList != null && userList.size()!=0) {
                 for (User u : userList) {
-                    contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail()));
+                    contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
                 }
                 mAdapter.notifyDataSetChanged();
+            }else{
+                    contactListContent.addItem(new ContactListContent.ContactListItem("null","Sorry, No Contact Found",""));
             }
         }
     }
