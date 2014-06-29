@@ -8,6 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import net.yasme.android.storage.DatabaseConstants;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -31,6 +32,10 @@ public class User implements Serializable {
     private String name;
 
     private String pw;
+
+    private Timestamp lastModified;
+    private Timestamp created;
+    private String profilePicture;
 
     @JsonIgnore
     @DatabaseField(columnName = DatabaseConstants.CHAT_ID, foreign = true)
@@ -92,6 +97,17 @@ public class User implements Serializable {
         return id;
     }
 
+    public Timestamp getLastModified() {
+        return lastModified;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
 
     /*
      * Setters
@@ -125,6 +141,18 @@ public class User implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void setLastModified(Timestamp lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     //@JsonIgnore

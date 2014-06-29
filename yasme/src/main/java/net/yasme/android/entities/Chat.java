@@ -7,15 +7,14 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import net.yasme.android.ui.AbstractYasmeActivity;
-import net.yasme.android.connection.ChatTask;
 import net.yasme.android.encryption.MessageEncryption;
-import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,12 +41,17 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.OWNER, foreign = true)
     private User owner;
 
+    private Timestamp lastModified;
+    private Timestamp created;
+    private String profilePicture;
+
     @JsonIgnore
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
     private Collection<Message> messages;
 
     @JsonIgnore
     private MessageEncryption aes;
+
 
     /**
      * Constructors *
@@ -67,6 +71,7 @@ public class Chat implements Serializable {
 
     /**
      * It is needed to set an id after calling this constructor!
+     *
      * @param owner
      * @param status
      * @param name
@@ -93,7 +98,7 @@ public class Chat implements Serializable {
         this.owner = owner;
         this.messages = messages;
 
-        if(aes != null) {
+        if (aes != null) {
             this.aes = aes;
         } else {
             //TODO aes = new MessageEncryption();
@@ -139,8 +144,20 @@ public class Chat implements Serializable {
         return name;
     }
 
+    public Timestamp getLastModified() {
+        return lastModified;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
     public User getOwner() {
-        if(owner == null) {
+        if (owner == null) {
             owner = new User("Dummy", 12);
         }
         return owner;
@@ -193,6 +210,18 @@ public class Chat implements Serializable {
         this.aes = aes;
     }
 
+    public void setLastModified(Timestamp lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
     @JsonIgnore
     public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;
@@ -211,7 +240,7 @@ public class Chat implements Serializable {
 
     @JsonIgnore
     public void addMessage(Message msg) {
-        if(messages == null) {
+        if (messages == null) {
             messages = new ArrayList<Message>();
         }
         messages.add(msg);
