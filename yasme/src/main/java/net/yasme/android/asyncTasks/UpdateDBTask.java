@@ -81,7 +81,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
             //chat.setName(chatWithInfo.getStatus()); //TODO: ChatName in Info??
 
             //Participants in DB speichern, Beziehungstabelle aktualisieren
-            for(User user : chat.getParticipants()) {
+            for(User user : chatWithInfo.getParticipants()) {
                 dbManager.createUserIfNotExists(user);
                 dbManager.createChatUser(new ChatUser(chat, user));
                 Log.d(this.getClass().getSimpleName(), "User and ChatUser added to DB");
