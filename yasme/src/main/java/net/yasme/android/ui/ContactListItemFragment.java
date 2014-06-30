@@ -91,9 +91,6 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
         contactListContent = new ContactListContent();
 
-        DownloadAllUsers task = new DownloadAllUsers();
-        task.execute();
-
         //User temp = new User("Stefan","stefan@yasme.net",4);
         //ContactListContent.ContactListItem item = new ContactListContent.ContactListItem(String.valueOf(temp.getId()),temp.getName(),temp.getEmail(),temp);
 
@@ -103,7 +100,10 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
         mAdapter = new SimpleAdapter((ContactActivity)getActivity() ,
                 contactListContent.getMap(), android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
 
-       // this.getContacts();
+        DownloadAllUsers task = new DownloadAllUsers();
+        task.execute();
+
+        //this.getContacts();
 
     }
 
@@ -180,7 +180,10 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
 
     private void getContacts(){
-        List<User> userList = DatabaseManager.getInstance().getContactsFromDB();
+
+        DatabaseManager db = DatabaseManager.getInstance();
+
+        List<User> userList = db.getContactsFromDB();
 
         if (userList != null){
             for(User u:userList){

@@ -32,7 +32,7 @@ import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 
-public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener, SearchContactFragment.OnSearchFragmentInteractionListener {
+public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener, SearchContactFragment.OnSearchFragmentInteractionListener, OwnProfileFragment.OnOwnProfileFragmentInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -146,6 +146,8 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
     @Override
     public void onDetailsFragmentInteraction(User user, Integer buttonId) {
 
+        DatabaseManager db = DatabaseManager.getInstance();
+
         switch (buttonId){
             case R.id.contact_detail_newchat:
                 System.out.println("------------------- Create New Chat ---------------------------");
@@ -154,7 +156,7 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
                 break;
             case R.id.contact_detail_addcontact:
                 user.addToContacts();
-                DatabaseManager.getInstance().createUserIfNotExists(user);
+                db.createUserIfNotExists(user);
                 System.out.println("------------------- Contact Added ---------------------------");
                 break;
             case R.id.mail_image_button:
@@ -164,6 +166,11 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
                 break;
         }
 
+    }
+
+    @Override
+    public void onOwnProfileFragmentInteraction(String s) {
+        System.out.println("-------------------- In der Activity ---------------------");
     }
 
     private void callContact(String number){
@@ -208,6 +215,8 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
 
     }
 
+
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -235,6 +244,10 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
                     SearchContactFragment scf = new SearchContactFragment();
                     scf.setArguments(b);
                     return scf;
+                case 2:
+                    OwnProfileFragment opf = new OwnProfileFragment();
+                    opf.setArguments(b);
+                    return opf;
                 default:
                     ContactListItemFragment cliff = new ContactListItemFragment();
                     cliff.setArguments(b);
@@ -246,7 +259,7 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
+            return 3;
         }
 
         @Override
@@ -257,6 +270,8 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
                     return getString(R.string.title_section1).toUpperCase(l);
                 case 1:
                     return getString(R.string.title_section2).toUpperCase(l);
+                case 2:
+                    return getString(R.string.title_section3).toUpperCase(l);
 
             }
             return null;
