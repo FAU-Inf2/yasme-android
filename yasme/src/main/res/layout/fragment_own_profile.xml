@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.OwnProfileFragment">
+    tools:context=".ui.OwnProfileFragment"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
 
     <!-- TODO: Update blank fragment layout -->
     <TableLayout
@@ -41,15 +42,18 @@
             android:layout_height="fill_parent"
             android:background="@color/user_details_window">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageButton
+                android:layout_width="200dp"
+                android:layout_height="100dp"
                 android:background="@color/user_details_window"
-                android:id="@+id/own_imageView"
+                android:id="@+id/own_imageButton"
                 android:layout_column="0"
                 android:layout_gravity="left|top"
                 android:minHeight="20mm"
                 android:minWidth="20mm"
+                android:maxHeight="30mm"
+                android:maxWidth="30mm"
+                android:scaleType="fitXY"
                 android:src="@android:drawable/ic_menu_camera"
                 android:layout_margin="2mm" />
         </TableRow>
