@@ -45,7 +45,6 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
 
     @Override
     protected Integer doInBackground(String... params) {
-        Log.d(this.getClass().getSimpleName(), "beginn");
         List<Chat> serverChats = null;
         List<Message> serverMessages = null;
 
@@ -77,12 +76,21 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
                 Log.w(this.getClass().getSimpleName(), e.getMessage());
                 return -2;
             }
+            chat.setParticipants(chatWithInfo.getParticipants());
             chat.setStatus(chatWithInfo.getStatus());
             //chat.setName(chatWithInfo.getStatus()); //TODO: ChatName in Info??
 
             //Participants in DB speichern, Beziehungstabelle aktualisieren
-            for(User user : chatWithInfo.getParticipants()) {
-                dbManager.createUserIfNotExists(user);
+            List<User> users = chat.getParticipants();
+            for(User user : users) {
+                if(user.getName() != null) {
+                    Log.d(this.getClass().getSimpleName(), "[Debug]" + user.getName());
+                } else {
+                    user.setName("dummy");
+                    Log.d(this.getClass().getSimpleName(), "[Debug] userName ist null, verwende Dummy-Name");
+                }
+                //dbManager.createUserIfNotExists(user); //TODO
+                dbManager.createOrUpdateUser(user);
                 dbManager.createChatUser(new ChatUser(chat, user));
                 Log.d(this.getClass().getSimpleName(), "User and ChatUser added to DB");
             }
@@ -94,7 +102,6 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
             }
             dbManager.createOrUpdateChat(chat);
         }
-        Log.d(this.getClass().getSimpleName(), "ende");
         return 0;
     }
 

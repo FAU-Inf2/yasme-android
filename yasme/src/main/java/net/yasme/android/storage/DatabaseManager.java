@@ -248,6 +248,14 @@ public class DatabaseManager {
         }
     }
 
+    public void createOrUpdateUser(User u) {
+        try {
+            getHelper().getUserDao().createOrUpdate(u);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * This function will get all participants of one chat
      * @param chatId    long

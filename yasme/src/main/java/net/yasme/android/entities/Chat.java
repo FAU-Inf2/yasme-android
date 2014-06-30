@@ -29,8 +29,7 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.CHAT_ID, id = true)
     private long id;
 
-    //    @ForeignCollectionField(columnName = DatabaseConstants.PARTICIPANTS)
-    private Collection<User> participants;
+    private List<User> participants;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_STATUS)
     private String status;
@@ -89,7 +88,7 @@ public class Chat implements Serializable {
         // ORMLite needs a no-arg constructor
     }
 
-    public Chat(long id, Collection<User> participants, String status, String name, User owner,
+    public Chat(long id, List<User> participants, String status, String name, User owner,
                 Collection<Message> messages, MessageEncryption aes) {
         this.id = id;
         this.participants = participants;
