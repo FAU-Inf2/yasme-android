@@ -1,8 +1,8 @@
 package net.yasme.android.connection;
 
 import net.yasme.android.entities.Chat;
-import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.Error;
+import net.yasme.android.exception.RestServiceException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
@@ -90,8 +90,7 @@ public class ChatTask extends ConnectionTask {
         try {
             String path = chatId + "/info";
             HttpResponse httpResponse = executeRequest(Request.GET, path);
-
-            return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
+            return  new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
                     .getContent())).readLine(), Chat.class);
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);

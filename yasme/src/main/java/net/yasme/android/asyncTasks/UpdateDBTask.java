@@ -67,7 +67,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
 
         //Neue Chats einfuegen, neue Nachrichten einfuegen, dann updaten
         for(Chat chat : serverChats) {
-            Chat chatWithInfo = null;
+            Chat chatWithInfo;
 
             //Infos fuer jeden chat abrufen
             try {

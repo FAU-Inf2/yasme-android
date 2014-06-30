@@ -1,18 +1,14 @@
 package net.yasme.android.entities;
 
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import net.yasme.android.storage.DatabaseConstants;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  * Created by Stefan on 10.05.14.
@@ -33,8 +29,11 @@ public class User implements Serializable {
 
     private String pw;
 
+    @JsonIgnore
     private Timestamp lastModified;
+    @JsonIgnore
     private Timestamp created;
+    @JsonIgnore
     private String profilePicture;
 
     @JsonIgnore

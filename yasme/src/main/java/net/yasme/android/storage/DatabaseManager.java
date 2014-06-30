@@ -256,6 +256,15 @@ public class DatabaseManager {
         }
     }
 
+    public boolean existsUser(long userId) {
+        try {
+            return getHelper().getUserDao().idExists(userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * This function will get all participants of one chat
      * @param chatId    long
