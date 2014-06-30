@@ -1,10 +1,13 @@
 package net.yasme.android.connection;
 
 import net.yasme.android.entities.DiffieHellmanPart;
-import net.yasme.android.exception.*;
+import net.yasme.android.exception.Error;
+import net.yasme.android.exception.RestServiceException;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,24 +35,23 @@ public class DiffieHellmanPartTask extends ConnectionTask {
         }
     }
 
-    public boolean storeDHPart(DiffieHellmanPart dh) throws RestServiceException {
-
+    public void storeDHPart(DiffieHellmanPart dh) throws RestServiceException {
         executeRequest(Request.POST, "", dh);
         System.out.println("[DEBUG] DH received");
-        return true;
     }
 
     public DiffieHellmanPart getNextKey(long devId) throws RestServiceException {
 
         DiffieHellmanPart dh = null;
-
         HttpResponse httpResponse = executeRequest(Request.GET, Long.toString(devId));
+
         try {
             dh = new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine(), DiffieHellmanPart.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
+
         return dh;
     }
 }

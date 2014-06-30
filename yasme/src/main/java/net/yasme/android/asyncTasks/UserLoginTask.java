@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
 import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.gcm.CloudMessaging;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.LoginActivity;
 import net.yasme.android.connection.AuthorizationTask;
@@ -56,7 +59,8 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             accessToken = loginReturn[1];
 
             //initConnection Session
-            ConnectionTask.initSession(userId,accessToken);
+            //TODO: second Param should be deviceId
+            ConnectionTask.initSession(userId,userId,accessToken);
 
             System.out.println(loginReturn[0]);
 

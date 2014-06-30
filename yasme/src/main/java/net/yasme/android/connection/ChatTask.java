@@ -2,6 +2,7 @@ package net.yasme.android.connection;
 
 import net.yasme.android.entities.Chat;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.exception.Error;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
@@ -43,20 +44,22 @@ public class ChatTask extends ConnectionTask {
     public List<Chat> getAllChatsForUser() throws RestServiceException {
 
         List<Chat> chats = new ArrayList<Chat>();
-
         try {
             HttpResponse httpResponse = executeRequest(Request.GET, "");
             JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine());
 
-            for (int i = 0; i < jsonArray.length(); i++)
-                chats.add(new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
-                        toString(), Chat.class));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                Chat chat = new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
+                        toString(), Chat.class);
+                chats.add(chat);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
+
         return chats;
     }
 
@@ -76,45 +79,40 @@ public class ChatTask extends ConnectionTask {
                             .getContent(), "UTF-8")
             )).readLine());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
-        return null;
     }
 
     public Chat getInfoOfChat(long chatId) throws RestServiceException {
 
         // note: only a participant of the chat shall get the chat object
-        String path = chatId + "/info";
-        HttpResponse httpResponse = executeRequest(Request.GET, path);
 
-        Chat chat = null;
         try {
-            chat = new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
+            String path = chatId + "/info";
+            HttpResponse httpResponse = executeRequest(Request.GET, path);
+
+            return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
                     .getContent())).readLine(), Chat.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
-        return chat;
     }
 
     public void addParticipantToChat(long participantId, long chatId)
             throws RestServiceException {
-
         String path = "par/" + participantId + "/" + chatId;
         executeRequest(Request.PUT, path);
         System.out.println("User added to Chat!");
     }
 
     public void changeOwnerOfChat(long chatId, long newOwnerId) throws RestServiceException {
-
-        String path = chatId + "owner/" + newOwnerId;
+        String path = chatId + "/owner/" + newOwnerId;
         executeRequest(Request.PUT, path);
         System.out.println("Owner changed");
     }
 
     public void removePartipantFromChat(long participantId, long chatId)
             throws RestServiceException {
-
         String path = "par/" + participantId + "/" + chatId;
         executeRequest(Request.DELETE, path);
         System.out.println("User removed from Chat!");
@@ -123,14 +121,15 @@ public class ChatTask extends ConnectionTask {
     public void removeOneSelfFromChat(long chatId)
             throws RestServiceException {
         String path = chatId + "/par/self";
-        HttpResponse httpResponse = executeRequest(Request.DELETE, path);
+        executeRequest(Request.DELETE, path);
         System.out.println("I´m out of Chat No. " + chatId);
     }
 
     public void updateStatus(Chat chat) throws RestServiceException {
-
         String path = chat.getId() + "/properties";
-        HttpResponse httpResponse = executeRequest(Request.PUT, path, chat);
+        executeRequest(Request.PUT, path, chat);
         System.out.println("Status of chat updated");
     }
+
+    //TODO: implement lastSeen Rest Call
 }

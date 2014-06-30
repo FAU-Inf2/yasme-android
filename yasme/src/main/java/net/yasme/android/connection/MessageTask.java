@@ -46,7 +46,7 @@ public class MessageTask extends ConnectionTask {
         System.out.println("[DEBUG] Message stored!");
     }
 
-    public ArrayList<Message> getMessage(long lastMessageId, long userId, String accessToken)
+    public ArrayList<Message> getMessage(long lastMessageId)
             throws RestServiceException {
 
         ArrayList<Message> messages = new ArrayList<Message>();
@@ -101,7 +101,7 @@ public class MessageTask extends ConnectionTask {
                     System.out.println("[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
                             /*DEBUG END*/
                     //TODO: hier muss spaeter die DeviceId statt userUd uebergeben werden
-                    keyStorage.deleteKeyFromServer(keyId, userId);
+                    keyStorage.deleteKeyFromServer(keyId, Long.parseLong(userId));
                 } else {
                     System.out.println("[???] Es wurde kein Key in der Message gefunden");
                 }
@@ -110,8 +110,6 @@ public class MessageTask extends ConnectionTask {
                         sender.getLong("id")), obj.getString("message"), chatId, keyId));
             }
 
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (JSONException e) {

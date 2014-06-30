@@ -46,7 +46,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         MessageTask messageTask = MessageTask.getInstance(context);
 
         try {
-            messages = messageTask.getMessage(lastMessageId, userId, accessToken);
+            messages = messageTask.getMessage(lastMessageId);
         } catch (RestServiceException e) {
             e.printStackTrace();
         }

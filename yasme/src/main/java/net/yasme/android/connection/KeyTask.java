@@ -1,26 +1,18 @@
 package net.yasme.android.connection;
 
 import android.content.Context;
-
-import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.Error;
-
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
@@ -48,7 +40,8 @@ public class KeyTask extends ConnectionTask {
     }
 
 
-    public MessageKey saveKey(long creatorDevice, ArrayList<Long> recipients, Chat chat, String key, byte encType, String sign) throws RestServiceException {
+    public MessageKey saveKey(long creatorDevice, ArrayList<Long> recipients, Chat chat,
+                              String key, byte encType, String sign) throws RestServiceException {
 
         try {
             System.out.println("[???] Key wird an Server gesendet für insgesamt " + recipients.size() + " Users");
@@ -93,18 +86,15 @@ public class KeyTask extends ConnectionTask {
 
             return result;
 
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public boolean deleteKey(long chatId, long keyId, long DeviceId) throws RestServiceException {
-
+    public boolean deleteKey(long chatId, long keyId) throws RestServiceException {
         executeRequest(Request.DELETE, keyId + "/" + chatId);
         return true;
     }

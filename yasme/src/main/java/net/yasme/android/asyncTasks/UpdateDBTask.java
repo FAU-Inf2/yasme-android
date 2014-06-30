@@ -59,7 +59,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
             return -2;
         }
         try {
-            serverMessages = messageTask.getMessage(lastMessageId, userId, accessToken);
+            serverMessages = messageTask.getMessage(lastMessageId);
         } catch (RestServiceException e) {
             Log.w(this.getClass().getSimpleName(), e.getMessage());
             return -2;

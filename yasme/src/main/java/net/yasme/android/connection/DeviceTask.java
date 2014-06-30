@@ -2,7 +2,7 @@ package net.yasme.android.connection;
 
 import net.yasme.android.entities.Device;
 import net.yasme.android.exception.RestServiceException;
-
+import net.yasme.android.exception.Error;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -48,25 +48,23 @@ public class DeviceTask extends ConnectionTask {
             )).readLine())).getLong("id");
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public Device getDevice(long deviceId) throws RestServiceException {
+    public Device getDevice() throws RestServiceException {
 
         try {
-
-            HttpResponse httpResponse = executeRequest(Request.GET, Long.toString(deviceId));
+            HttpResponse httpResponse = executeRequest(Request.GET, deviceId);
             return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
                     .getContent())).readLine(), Device.class);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
-        return null;
     }
 
     public ArrayList<Device> getAllDevices() throws RestServiceException {
@@ -84,7 +82,7 @@ public class DeviceTask extends ConnectionTask {
                         toString(), Device.class));
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -93,10 +91,8 @@ public class DeviceTask extends ConnectionTask {
         return devices;
     }
 
-    public boolean deleteDevice(long deviceId) throws RestServiceException {
-
+    public void deleteDevice(long deviceId) throws RestServiceException {
         executeRequest(Request.DELETE, Long.toString(deviceId));
         System.out.println("[DEBUG] Device removed!");
-        return true;
     }
 }

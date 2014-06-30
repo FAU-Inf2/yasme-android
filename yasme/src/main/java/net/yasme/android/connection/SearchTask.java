@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.User;
-import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.exception.*;
+import net.yasme.android.exception.Error;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -43,14 +46,12 @@ public class SearchTask extends ConnectionTask {
         String path = "userByNumber/" + phoneNumber;
         HttpResponse httpResponse = executeRequest(Request.GET, path);
 
-        User user = null;
         try {
-            user = new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
+            return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine(), User.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
-        return user;
     }
 
     public User userByMail(String email) throws RestServiceException {
@@ -58,15 +59,12 @@ public class SearchTask extends ConnectionTask {
         String path = "userByMail/" + email;
         HttpResponse httpResponse = executeRequest(Request.GET, path);
 
-        User user = null;
         try {
-            user = new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
+            return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine(), User.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
-
-        return user;
     }
 
     public User userByLike(String term) throws RestServiceException {
@@ -74,14 +72,12 @@ public class SearchTask extends ConnectionTask {
         String path = "userByLike/" + term;
         HttpResponse httpResponse = executeRequest(Request.GET, path);
 
-        User user = null;
         try {
-            user = new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
+            return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine(), User.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
-        return user;
     }
 
 
@@ -103,9 +99,8 @@ public class SearchTask extends ConnectionTask {
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
-
         return users;
     }
 
@@ -128,7 +123,7 @@ public class SearchTask extends ConnectionTask {
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
         return devices;
     }

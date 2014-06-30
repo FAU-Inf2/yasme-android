@@ -47,6 +47,7 @@ public class ConnectionTask {
      * Session Params
      */
     protected static String userId;
+    protected static String deviceId;
     protected static String accessToken;
 
     protected static boolean initializedSession = false;
@@ -77,13 +78,17 @@ public class ConnectionTask {
                 .withDefaultPrettyPrinter();
     }
 
-    public static void initSession(long userId, String accessToken) {
+    public static void initSession(long userId, long deviceId, String accessToken) {
 
         if (!initialized) {
             System.err.println("Server Params not initialized");
             return;
         }
         ConnectionTask.userId = Long.toString(userId);
+
+        //TODO: Change to real deviceId
+        ConnectionTask.deviceId = Long.toString(deviceId);
+
         ConnectionTask.accessToken = accessToken;
         ConnectionTask.initializedSession = true;
     }
@@ -193,9 +198,7 @@ public class ConnectionTask {
         if (initializedSession) {
             requestBase.setHeader("userId", userId);
             requestBase.setHeader("Authorization", accessToken);
-
-            //TODO: Change with real DeviceId
-            requestBase.setHeader("deviceId", ConnectionTask.userId);
+            requestBase.setHeader("deviceId", deviceId);
 
             System.out.println("[DEBUG] userId:  " + userId + " accessToken: " + accessToken);
         }

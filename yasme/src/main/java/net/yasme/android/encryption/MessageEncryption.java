@@ -337,7 +337,7 @@ public class MessageEncryption {
 
                //delete Key
                 keytask = KeyTask.getInstance(context);
-                keytask.deleteKey(chatId, params[0], params[1]);
+                keytask.deleteKey(chatId, params[0]);
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());

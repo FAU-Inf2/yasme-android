@@ -49,7 +49,7 @@ public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
         accessToken = params[1];
 
         try {
-            messages = messageTask.getMessage(lastMessageId, userId, accessToken);
+            messages = messageTask.getMessage(lastMessageId);
         } catch (RestServiceException e) {
             e.printStackTrace();
         }

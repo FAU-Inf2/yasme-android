@@ -2,9 +2,12 @@ package net.yasme.android.connection;
 
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.exception.Error;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,9 +39,8 @@ public class UserTask extends ConnectionTask {
             return Long.parseLong(new BufferedReader(new InputStreamReader(httpResponse
                     .getEntity().getContent(), "UTF-8")).readLine());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
-        return null;
     }
 
     public void changeUserData(User user) throws RestServiceException {
@@ -53,8 +55,9 @@ public class UserTask extends ConnectionTask {
             return new ObjectMapper().readValue(((new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent(), "UTF-8"))).readLine()), User.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestServiceException(Error.CONNECTION_ERROR);
         }
-        return null;
     }
+
+    //TODO: implement new Methods for getting profile picture
 }
