@@ -57,8 +57,22 @@ public class DatabaseManager {
             c.setId(chatId);
             List<ChatUser> temp = getHelper().getChatUserDao().queryForMatchingArgs(new ChatUser(c, null));
             insert = new ArrayList<User>();
+            if(temp == null) {
+                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
+            }
+            if(temp.isEmpty()) {
+                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
+            }
             for(ChatUser cu : temp) {
-                insert.add(cu.user);
+                User tmp = getHelper().getUserDao().queryForId(cu.user.getId());
+                if(tmp == null) {
+                    continue;
+                }
+                insert.add(getHelper().getUserDao().queryForId(cu.user.getId()));
+                Log.d(this.getClass().getSimpleName(), "[Debug] name from DB: " + tmp.getName());
+            }
+            if(insert.isEmpty()) {
+                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,8 +106,6 @@ public class DatabaseManager {
             chats = getHelper().getChatDao().queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (NullPointerException e) {
-            chats = null;
         }
 
         if(chats == null) {
@@ -251,7 +263,7 @@ public class DatabaseManager {
     public void createOrUpdateUser(User u) {
         try {
             User tmp = getHelper().getUserDao().queryForId(u.getId());
-            if(tmp != null) {
+            if(tmp == null) {
                 getHelper().getUserDao().create(u);
             } else {
                 if(tmp.isContact() == 1) {
@@ -293,6 +305,15 @@ public class DatabaseManager {
             participants.add(current.user);
         }
         return participants;
+    }
+
+    public User getUser(long userId) {
+        try {
+            return getHelper().getUserDao().queryForId(userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

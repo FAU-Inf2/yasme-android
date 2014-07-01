@@ -180,8 +180,15 @@ public class ChatFragment extends Fragment {
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT));
 
-            textView.setText(msg.getSender().getName() + ": "
-                    + msg.getMessage());
+            //textView.setText(msg.getSender().getName() + ": "+ msg.getMessage());
+
+            String name = DatabaseManager.getInstance().getUser(msg.getSender().getId()).getName();
+            if(name == null) {
+                Log.i(this.getClass().getSimpleName(), "User existiert nicht in DB");
+                name = "anonym";
+            }
+            textView.setText(name + ": " + msg.getMessage());
+
             textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
             textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
 
