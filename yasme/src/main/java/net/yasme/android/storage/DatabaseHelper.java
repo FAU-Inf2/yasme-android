@@ -23,7 +23,7 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // when anything changes in your database objects, we have to increase the database version
-    private static final int DATABASE_VERSION = 25;
+    private static final int DATABASE_VERSION = 26;
 
     // name of the database file
     private static final String DATABASE = "net.yasme.android.DATABASE";
@@ -50,8 +50,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, ChatUser.class);
             TableUtils.createTable(connectionSource, MessageKey.class);
         } catch (SQLException e) {
-            System.out.println("Can't create database");
-            System.out.println(e.getMessage());
+            Log.w(this.getClass().getSimpleName(), "Can't create database" + e.getMessage());
         }
     }
 

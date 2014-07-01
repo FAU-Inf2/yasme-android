@@ -64,7 +64,7 @@ public class DatabaseManager {
 
     /**
      * This function will return all chats from database
-     * @return List of chats or null on error
+     * @return list of chats or an empty list on error
      */
     public ArrayList<Chat> getAllChats() {
         List<Chat> chats = null;
@@ -306,7 +306,9 @@ public class DatabaseManager {
      * This function will get all participants of one chat
      * @param chatId    long
      * @return participants of chat with chatId or null on error
+     * @deprecated use {@link public List<User> getParticipantsForChat(long chatId)} instead
      */
+    @Deprecated
     public ArrayList<User> getParticipantsFromDB(long chatId) {
         ArrayList<User> participants = new ArrayList<User>();
         List<ChatUser> matching;
