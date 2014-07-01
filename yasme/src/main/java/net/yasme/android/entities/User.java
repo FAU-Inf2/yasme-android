@@ -14,7 +14,7 @@ import java.sql.Timestamp;
  * Created by Stefan on 10.05.14.
  */
 
-@DatabaseTable(tableName = "users")
+@DatabaseTable(tableName = DatabaseConstants.USER_TABLE)
 public class User implements Serializable {
 
     @DatabaseField(columnName = DatabaseConstants.USER_ID,
@@ -69,7 +69,7 @@ public class User implements Serializable {
     }
 
     public User() {
-
+        // ORMLite needs a no-arg constructor
     }
 
     /*

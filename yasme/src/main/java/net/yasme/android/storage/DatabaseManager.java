@@ -1,11 +1,7 @@
 package net.yasme.android.storage;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
-import com.j256.ormlite.stmt.DeleteBuilder;
 
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
@@ -50,38 +46,9 @@ public class DatabaseManager {
 
     /******* CRUD functions ******/
 
-    public List<User> getParticipantsForChat(long chatId) {
-        List<User> insert = null;
-        try {
-            Chat c = new Chat();
-            c.setId(chatId);
-            List<ChatUser> temp = getHelper().getChatUserDao().queryForMatchingArgs(new ChatUser(c, null));
-            insert = new ArrayList<User>();
-            if(temp == null) {
-                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
-            }
-            if(temp.isEmpty()) {
-                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
-            }
-            for(ChatUser cu : temp) {
-                User tmp = getHelper().getUserDao().queryForId(cu.user.getId());
-                if(tmp == null) {
-                    continue;
-                }
-                insert.add(getHelper().getUserDao().queryForId(cu.user.getId()));
-                Log.d(this.getClass().getSimpleName(), "[Debug] name from DB: " + tmp.getName());
-            }
-            if(insert.isEmpty()) {
-                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return insert;
-    }
-
     /**
      * Adds one chat to database
+     * @param c     Chat
      */
     public void createChat(Chat c) {
         try {
@@ -97,7 +64,6 @@ public class DatabaseManager {
 
     /**
      * This function will return all chats from database
-     *
      * @return List of chats or null on error
      */
     public ArrayList<Chat> getAllChats() {
@@ -138,7 +104,6 @@ public class DatabaseManager {
 
         return chat;
     }
-
 
     /**
      * Retrieves the chat which all given users (and no one else) participate in
@@ -194,6 +159,10 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Updates the given chat or creates a new chat, if no such chat exists
+     * @param chat      Chat
+     */
     public void createOrUpdateChat(Chat chat) {
         if(getChat(chat.getId()) != null) {
             updateChat(chat);
@@ -209,7 +178,7 @@ public class DatabaseManager {
      * ChatUser methods
      */
     /**
-     *
+     * creates a new ChatUser object
      * @param cu
      */
     public void createChatUser(ChatUser cu) {
@@ -223,6 +192,10 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Removes a ChatUser object from the Database
+     * @param cu    ChatUser
+     */
     public void deleteChatUser(ChatUser cu) {
         List<ChatUser> matching = new ArrayList<ChatUser>();
         try {
@@ -260,6 +233,10 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Updates the given user or creates a new user, if no such user exists
+     * @param u     User
+     */
     public void createOrUpdateUser(User u) {
         try {
             User tmp = getHelper().getUserDao().queryForId(u.getId());
@@ -276,6 +253,11 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * This function if a user is already stored in the Database
+     * @param userId    long
+     * @return true if user with userId exists, otherwise false
+     */
     public boolean existsUser(long userId) {
         try {
             return getHelper().getUserDao().idExists(userId);
@@ -283,6 +265,41 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * This function returns all participants from the chat with the given chatId
+     * @param chatId    long
+     * @return a list of users
+     */
+    public List<User> getParticipantsForChat(long chatId) {
+        List<User> insert = null;
+        try {
+            Chat c = new Chat();
+            c.setId(chatId);
+            List<ChatUser> temp = getHelper().getChatUserDao().queryForMatchingArgs(new ChatUser(c, null));
+            insert = new ArrayList<User>();
+            if(temp == null) {
+                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
+            }
+            if(temp.isEmpty()) {
+                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
+            }
+            for(ChatUser cu : temp) {
+                User tmp = getHelper().getUserDao().queryForId(cu.user.getId());
+                if(tmp == null) {
+                    continue;
+                }
+                insert.add(getHelper().getUserDao().queryForId(cu.user.getId()));
+                Log.d(this.getClass().getSimpleName(), "[Debug] name from DB: " + tmp.getName());
+            }
+            if(insert.isEmpty()) {
+                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return insert;
     }
 
     /**
@@ -307,6 +324,11 @@ public class DatabaseManager {
         return participants;
     }
 
+    /**
+     * This function returns the user with userId
+     * @param userId    long
+     * @return User with userId or null if no such User exists
+     */
     public User getUser(long userId) {
         try {
             return getHelper().getUserDao().queryForId(userId);
@@ -330,6 +352,10 @@ public class DatabaseManager {
         return contacts;
     }
 
+    /**
+     * This function will reset the contactFlag so that the user is removed from the contact list
+     * @param u     User
+     */
     public void removeContactFromDB(User u) {
         try {
             getHelper().getUserDao().queryForId(u.getId());

@@ -9,7 +9,7 @@ import net.yasme.android.entities.User;
 /**
  * Created by robert on 23.06.14.
  */
-@DatabaseTable(tableName = "chatUser")
+@DatabaseTable(tableName = DatabaseConstants.CHAT_USER_TABLE)
 public class ChatUser {
 
     @DatabaseField(generatedId = true)

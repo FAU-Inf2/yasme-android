@@ -12,7 +12,7 @@ import java.util.Date;
  * Created by bene on 06.05.14.
  */
 
-@DatabaseTable(tableName = "messages")
+@DatabaseTable(tableName = DatabaseConstants.MESSAGE_TABLE)
 public class Message implements Serializable {
 
     @DatabaseField(columnName = DatabaseConstants.MESSAGE_ID,
