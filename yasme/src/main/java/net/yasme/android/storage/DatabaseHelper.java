@@ -5,15 +5,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.j256.ormlite.dao.Dao;
 
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
-import net.yasme.android.ui.AbstractYasmeActivity;
 
 import java.sql.SQLException;
 
@@ -48,6 +48,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Message.class);
             TableUtils.createTable(connectionSource, User.class);
             TableUtils.createTable(connectionSource, ChatUser.class);
+            TableUtils.createTable(connectionSource, MessageKey.class);
         } catch (SQLException e) {
             System.out.println("Can't create database");
             System.out.println(e.getMessage());
@@ -61,6 +62,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, Message.class, true);
             TableUtils.dropTable(connectionSource, User.class, true);
             TableUtils.dropTable(connectionSource, ChatUser.class, true);
+            TableUtils.dropTable(connectionSource, MessageKey.class, true);
             onCreate(db, connectionSource);
         } catch (java.sql.SQLException e) {
             System.out.println("Can't drop databases");

@@ -2,25 +2,42 @@ package net.yasme.android.entities;
 
 //creator --> de
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+import net.yasme.android.storage.DatabaseConstants;
+
 import java.io.Serializable;
 
+@DatabaseTable(tableName = DatabaseConstants.MESSAGE_KEY_TABLE)
 public class MessageKey implements Serializable {
 
-    public static MessageKey last;
+    @DatabaseField(columnName = DatabaseConstants.KEY_ID)
     private long uniqueId;  // for database storing
 
+    @DatabaseField(columnName = DatabaseConstants.KEY_CHAT, canBeNull = false, foreign = true,
+            foreignAutoCreate=true, foreignAutoRefresh=true)
+    private Chat chat = null;
 
-	private long id = -1;
+    @DatabaseField(columnName = DatabaseConstants.VECTOR)
+    private String initVector = "";
+
+    @DatabaseField(columnName = DatabaseConstants.KEY)
+    private String messageKey = "";
+
+    @DatabaseField(columnName = DatabaseConstants.TIMESTAMP)
+    private long timestamp = -1;
+
+
+    public static MessageKey last;
+
+    private long id = -1;
 	private Device creatorDevice = null;   // fuer Auswahl des oeffentlichen									// Schluessels
 	private Device recipientDevice = null; // fuer Auswahl des DH-Anteils
-	private Chat chat = null;
-	private String messageKey = "";
-	private String initVector = "";
 	private byte encType = -1;
 	private long encInfoId = -1;
 	private String encInfo = "";
 	private String sign = "";
-	private long timestamp = -1;
 
 	/** Constructors **/
 	public MessageKey(long id, Device creatorDevice, Device recipientDevice,
@@ -52,8 +69,8 @@ public class MessageKey implements Serializable {
 	}
 
 	public MessageKey() {
-
-	}
+        // ORMLite needs a no-arg constructor
+    }
 
 	/** Getters **/
 	public long getId() {
