@@ -250,7 +250,15 @@ public class DatabaseManager {
 
     public void createOrUpdateUser(User u) {
         try {
-            getHelper().getUserDao().createOrUpdate(u);
+            User tmp = getHelper().getUserDao().queryForId(u.getId());
+            if(tmp != null) {
+                getHelper().getUserDao().create(u);
+            } else {
+                if(tmp.isContact() == 1) {
+                    u.addToContacts();
+                    getHelper().getUserDao().update(u);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -299,5 +307,15 @@ public class DatabaseManager {
             contacts = null;
         }
         return contacts;
+    }
+
+    public void removeContactFromDB(User u) {
+        try {
+            getHelper().getUserDao().queryForId(u.getId());
+            u.removeFromContacts();
+            getHelper().getUserDao().update(u);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

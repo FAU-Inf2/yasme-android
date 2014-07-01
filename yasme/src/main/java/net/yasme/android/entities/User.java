@@ -42,7 +42,7 @@ public class User implements Serializable {
 
     @JsonIgnore
     @DatabaseField(columnName = DatabaseConstants.CONTACT)
-    private int conatactFlag = 0;
+    private int contactFlag = 0;
 
 
     public User(String pw, String name, String email) {
@@ -161,12 +161,17 @@ public class User implements Serializable {
 
     @JsonIgnore
     public void addToContacts() {
-        conatactFlag = 1;
+        contactFlag = 1;
     }
 
     @JsonIgnore
     public void removeFromContacts() {
-        conatactFlag = 0;
+        contactFlag = 0;
+    }
+
+    @JsonIgnore
+    public int isContact() {
+        return contactFlag;
     }
 }
 
