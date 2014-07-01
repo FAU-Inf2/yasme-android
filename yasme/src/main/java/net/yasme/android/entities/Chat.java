@@ -130,11 +130,12 @@ public class Chat implements Serializable {
         }
         if (name.length() <= 0) {
             try {
-                for (int i = 0; i < getParticipants().size(); i++) {
-                    if (name.length() <= 0) {
+                int size = getParticipants().size();
+                for (int i = 0; i < size; i++) {
+                    name += getParticipants().get(i).getName();
+                    if(i < size - 1) {
                         name += ", ";
                     }
-                    name += getParticipants().get(i).getName();
                 }
             } catch (Exception e) {
 
