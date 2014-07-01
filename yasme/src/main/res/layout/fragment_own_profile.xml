@@ -1,0 +1,147 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.OwnProfileFragment"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/user_details_window">
+
+        <TableRow
+            android:layout_height="20mm"
+            android:layout_width="match_parent"
+            android:background="@color/user_details_window">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:text="@string/own_contact_header"
+                android:textStyle="bold"
+                android:textSize="16pt"
+                android:id="@+id/own_contact_header"
+                android:layout_margin="5pt"
+                android:layout_span="5" />
+        </TableRow>
+
+        <TableRow
+            android:layout_height="20mm"
+            android:layout_width="match_parent">
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/user_details_window"></TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/user_details_window">
+
+            <ImageButton
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                android:background="@color/user_details_window"
+                android:id="@+id/own_imageButton"
+                android:layout_column="0"
+                android:layout_gravity="left|top"
+                android:minHeight="20mm"
+                android:minWidth="20mm"
+                android:maxHeight="30mm"
+                android:maxWidth="30mm"
+                android:scaleType="fitXY"
+                android:src="@android:drawable/ic_menu_camera"
+                android:layout_margin="2mm" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"></TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"></TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="E-Mail:"
+                android:id="@+id/own_mailView"
+                android:layout_column="0"
+                android:textSize="8pt"
+                android:textColor="#ff6e37d2"
+                android:layout_marginLeft="2mm"
+                android:layout_marginTop="4mm"
+                android:layout_marginRight="2mm" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact Mail"
+                android:id="@+id/own_mailViewText"
+                android:layout_column="0"
+                android:textSize="10pt"
+                android:layout_marginLeft="4mm"
+                android:layout_marginTop="0.5mm"
+                android:layout_marginRight="30pt" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone Number:"
+                android:textAlignment="center"
+                android:id="@+id/own_numberView"
+                android:layout_column="0"
+                android:textSize="8pt"
+                android:textColor="#ff6e37d2"
+                android:layout_marginLeft="2mm"
+                android:layout_marginTop="4mm"
+                android:layout_marginRight="2mm" />
+
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact Number"
+                android:id="@+id/own_numberViewText"
+                android:layout_column="0"
+                android:textSize="10pt"
+                android:layout_marginLeft="4mm"
+                android:layout_marginTop="0.5mm"
+                android:layout_marginRight="30pt"
+                android:layout_marginBottom="5mm"
+                android:textAlignment="center" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+        </TableRow>
+
+    </TableLayout>
+
+</FrameLayout>

@@ -1,5 +1,7 @@
 package net.yasme.android.connection;
 
+import android.graphics.drawable.Drawable;
+
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.Error;
@@ -9,7 +11,9 @@ import org.apache.http.client.utils.URIBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
@@ -59,5 +63,32 @@ public class UserTask extends ConnectionTask {
         }
     }
 
-    //TODO: implement new Methods for getting profile picture
+    //TODO: implement method
+    public void uploadProfilePicture(Drawable drawable) throws RestServiceException {
+
+        executeRequest(Request.POST, "profile");
+
+    }
+
+    public Drawable getOwnProfilePicture() throws RestServiceException {
+
+        try {
+            InputStream stream = (executeRequest(Request.GET, "profile")).getEntity().getContent();
+            return Drawable.createFromStream(stream, null);
+
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        }
+    }
+
+    public Drawable getProfilePicture(long userId) throws RestServiceException {
+        try {
+            String path = "profile/" + userId;
+            InputStream stream = (executeRequest(Request.GET, path)).getEntity().getContent();
+            return Drawable.createFromStream(stream, null);
+
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        }
+    }
 }
