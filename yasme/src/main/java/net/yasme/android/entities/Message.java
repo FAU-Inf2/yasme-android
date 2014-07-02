@@ -23,7 +23,8 @@ public class Message implements Serializable {
             foreignAutoCreate=true, foreignAutoRefresh=true)
     private Chat chat;
 
-    @DatabaseField(columnName = DatabaseConstants.SENDER, foreign = true)
+    @DatabaseField(columnName = DatabaseConstants.SENDER, foreign = true,
+            foreignAutoCreate=true, foreignAutoRefresh=true)
     private User sender;
 
     @DatabaseField(columnName = DatabaseConstants.DATE)

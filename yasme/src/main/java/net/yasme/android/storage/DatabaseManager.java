@@ -132,12 +132,12 @@ public class DatabaseManager {
      */
     public void updateChat(Chat chat) {
         try {
-            List<User> dBParticipants = getParticipantsFromDB(chat.getId());
-            if(dBParticipants == null) {
+            List<User> dbParticipants = getParticipantsForChat(chat.getId());
+            if(dbParticipants == null) {
                 Log.e(this.getClass().getSimpleName(), "Error: Kein Teilnehmer in DB vorhanden");
                 return;
             }
-            for(User u : dBParticipants) {
+            for(User u : dbParticipants) {
                 if(!chat.getParticipants().contains(u)) {
                     Chat queryChat = new Chat();
                     queryChat.setId(chat.getId());
@@ -146,7 +146,7 @@ public class DatabaseManager {
                 }
             }
             for(User u: chat.getParticipants()) {
-                if(!dBParticipants.contains(u)) {
+                if(!dbParticipants.contains(u)) {
                     Chat queryChat = new Chat();
                     queryChat.setId(chat.getId());
                     ChatUser queryChatUser = new ChatUser(queryChat, u);

@@ -52,13 +52,13 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         long uId = Long.parseLong(params[3]);
 
         // encrypt Message
-        //String msg_encrypted = aes.encrypt(msg); //TODO: evtl. loeschen
-        String msg_encrypted = msg;
+        String msgEncrypted = aes.encrypt(msg); //TODO: evtl. loeschen
+        //String msgEncrypted = msg;
 
         // create Message
         User user = new User(uName, uMail,  uId);
         long aesId = aes.getKeyId();
-        Message createdMessage = new Message(user, msg_encrypted, Long.parseLong(params[4]), aesId);
+        Message createdMessage = new Message(user, msgEncrypted, Long.parseLong(params[4]), aesId);
         System.out.println("AES getKeyID: " + aes.getKeyId());
         try {
             messageTask.sendMessage(createdMessage);

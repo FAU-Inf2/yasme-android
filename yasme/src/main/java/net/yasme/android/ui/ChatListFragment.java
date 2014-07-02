@@ -72,11 +72,6 @@ public class ChatListFragment extends ListFragment {
            showChat(chat.getId());
        }
 
-       public void showStandardChat() {
-           showChat(1);
-       }
-
-
         public void showChat(long chatId) {
             System.out.println("ShowChat: " + chatId);
             Intent intent = new Intent(activity, ChatActivity.class);

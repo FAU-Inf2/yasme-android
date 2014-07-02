@@ -135,12 +135,12 @@ public class ChatFragment extends Fragment {
     }
 
     public void send(View view) {
-        String msg = aes.encrypt(editMessage.getText().toString());
-
+        String msg = editMessage.getText().toString();
         if (msg.isEmpty()) {
             status.setText("Nichts eingegeben");
             return;
         }
+        //String msgEncrypted = aes.encrypt(editMessage.getText().toString());
 
         new SendMessageTask(activity.getApplicationContext(), (ChatActivity)activity, this, chat.getEncryption())
                 .execute(msg, activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), Long.toString(activity.getSelfUser().getId()),
@@ -151,6 +151,7 @@ public class ChatFragment extends Fragment {
 
     public void asyncUpdate() {
         status.setText("GET messages");
+        //TODO: folgende Methode loeschen
         new GetMessageTaskInChat(activity.getApplicationContext(), this, chat.getEncryption(), storage)
                 .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());
         new GetMessageTask(activity.getApplicationContext(), storage)

@@ -26,12 +26,10 @@ public class User implements Serializable {
             allowGeneratedIdInsert = true, generatedId = true)
     private long id;
 
-    @DatabaseField(columnName = DatabaseConstants.USER_MAIL)
-    private String email;
-
     @DatabaseField(columnName = DatabaseConstants.USER_NAME)
     private String name;
 
+    private String email;
     private String pw;
 
     @JsonIgnore
