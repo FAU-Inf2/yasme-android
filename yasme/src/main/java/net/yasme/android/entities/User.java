@@ -1,14 +1,19 @@
 package net.yasme.android.entities;
 
+import android.graphics.Bitmap;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import net.yasme.android.storage.DatabaseConstants;
+import net.yasme.android.storage.PictureManager;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created by Stefan on 10.05.14.
@@ -30,9 +35,9 @@ public class User implements Serializable {
     private String pw;
 
     @JsonIgnore
-    private Timestamp lastModified;
+    private Date lastModified;
     @JsonIgnore
-    private Timestamp created;
+    private Date created;
     @JsonIgnore
     private String profilePicture;
 
@@ -96,11 +101,11 @@ public class User implements Serializable {
         return id;
     }
 
-    public Timestamp getLastModified() {
+    public Date getLastModified() {
         return lastModified;
     }
 
-    public Timestamp getCreated() {
+    public Date getCreated() {
         return created;
     }
 
@@ -142,11 +147,11 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public void setLastModified(Timestamp lastModified) {
+    public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(Date created) {
         this.created = created;
     }
 
@@ -173,5 +178,21 @@ public class User implements Serializable {
     public int isContact() {
         return contactFlag;
     }
+
+
+    //public Bitmap loadProfilePicture() {
+
+    //}
+
+    //public void storeAndSetProfilePicture(Bitmap picture) {
+    //    // Set the modified date to now since the stored picture's name will contain that date
+    //    setLastModified(new Date());
+    //    String storedPath;
+    //    try {
+    //        PictureManager.INSTANCE.storePicture(this, picture);
+    //    } catch (IOException e) {
+    //
+    //    }
+    //}
 }
 

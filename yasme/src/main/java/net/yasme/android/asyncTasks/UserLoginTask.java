@@ -26,6 +26,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
     SharedPreferences storage;
     LoginActivity activity;
 
+
     public UserLoginTask(Context context, SharedPreferences storage, LoginActivity activity) {
         this.context = context;
         this.storage = storage;
