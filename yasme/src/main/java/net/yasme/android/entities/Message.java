@@ -43,8 +43,8 @@ public class Message implements Serializable {
         // ORMLite needs a no-arg constructor
     }
 
-    public Message(User sender, String message, long chat, long messageKeyId) {
-        this(sender, message, new Date(), chat, messageKeyId);
+    public Message(User sender, String message, long chatId, long messageKeyId) {
+        this(sender, message, new Date(), chatId, messageKeyId);
     }
 
     public Message(User sender, String message, Date dateSent, long chatId, long messageKeyId) {
@@ -76,7 +76,7 @@ public class Message implements Serializable {
         return messageKey;
     }
 
-    public long getChat() {
+    public long getChatId() {
         return chat.getId();
     }
 

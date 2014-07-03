@@ -173,6 +173,9 @@ public class Chat implements Serializable {
 
     @JsonIgnore
     public ArrayList<Message> getMessages() {
+        if(messages == null) {
+            return new ArrayList<Message>();
+        }
         return new ArrayList<Message>(messages);
     }
 
