@@ -76,7 +76,7 @@ public class Message implements Serializable {
         return messageKey;
     }
 
-    public long getChat() {
+    public long getChatId() {
         return chat.getId();
     }
 

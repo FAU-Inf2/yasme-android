@@ -44,7 +44,7 @@ public class InsertNewMessagesTask extends AsyncTask<String, Void, Integer> {
 
         for (Chat chat : chats) {
             for (Message msg : messages) {
-                if(msg.getChat() == chat.getId()) {
+                if(msg.getChatId() == chat.getId()) {
                     chat.addMessage(msg);
                     Log.d(this.getClass().getSimpleName(), "Message added to DB");
                 }

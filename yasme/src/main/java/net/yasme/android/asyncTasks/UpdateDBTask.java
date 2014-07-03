@@ -15,6 +15,7 @@ import net.yasme.android.storage.ChatUser;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,8 +83,8 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
 
             //Participants in DB speichern, Beziehungstabelle aktualisieren
             List<User> users = chat.getParticipants();
-            for(User user : users) {
-                if(user.getName() != null) {
+            for (User user : users) {
+                if (user.getName() != null) {
                     Log.d(this.getClass().getSimpleName(), "[Debug]" + user.getName());
                 } else {
                     user.setName("dummy");
@@ -95,13 +96,24 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
                 Log.d(this.getClass().getSimpleName(), "User and ChatUser added to DB");
             }
 
+            Log.e(this.getClass().getSimpleName(),
+                    "Number of loaded messages " + serverMessages.size());
+
+
+            //Nachrichten in passende Chats einfuegen
             for (Message message : serverMessages) {
-                if(message.getChat() == chat.getId()) {
+                if (message.getChatId() == chat.getId()) {
                     chat.addMessage(message);
+                    Log.e(this.getClass().getSimpleName(), "bla");
                 }
+            }
+            if(chat.getMessages() == null || chat.getMessages().size() == 0) {
+                chat.setMessages(new ArrayList<Message>());
             }
             dbManager.createOrUpdateChat(chat);
         }
+        Log.d(this.getClass().getSimpleName(),
+                "Alle Nachrichten verteilt?: " + Boolean.toString((0 == serverMessages.size())));
         return 0;
     }
 

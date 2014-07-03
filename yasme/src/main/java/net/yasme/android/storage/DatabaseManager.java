@@ -49,16 +49,16 @@ public class DatabaseManager {
 
     /**
      * Adds one chat to database
-     * @param c     Chat
+     * @param chat     Chat
      */
-    public void createChat(Chat c) {
+    public void createChat(Chat chat) {
         try {
-            for(User user : c.getParticipants()) {
+            for(User user : chat.getParticipants()) {
                 getHelper().getUserDao().createIfNotExists(user);
-                getHelper().getChatUserDao().create(new ChatUser(c, user));
+                getHelper().getChatUserDao().create(new ChatUser(chat, user));
             }
-            storeMessages(c.getMessages());
-            getHelper().getChatDao().create(c);
+            storeMessages(chat.getMessages());
+            getHelper().getChatDao().create(chat);
         } catch (SQLException e) {
             e.printStackTrace();
         }
