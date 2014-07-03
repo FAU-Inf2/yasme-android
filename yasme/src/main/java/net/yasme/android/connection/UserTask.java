@@ -8,6 +8,7 @@ import net.yasme.android.exception.Error;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.BufferedReader;
@@ -16,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserTask extends ConnectionTask {
 
@@ -70,10 +73,23 @@ public class UserTask extends ConnectionTask {
 
     }
 
-    public Drawable getOwnProfilePicture() throws RestServiceException {
+    //public Drawable getOwnProfilePicture() throws RestServiceException {
+//
+  //      try {
+    //        InputStream stream = (executeRequest(Request.GET, "profile")).getEntity().getContent();
+      //      return Drawable.createFromStream(stream, null);
+//
+  //      } catch (IOException e) {
+    //        throw new RestServiceException(Error.CONNECTION_ERROR);
+      //  }
+    //}
 
+    public Drawable getProfilePicture(long userId) throws RestServiceException {
         try {
-            InputStream stream = (executeRequest(Request.GET, "profile")).getEntity().getContent();
+            String path = "profile/" + userId;
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Accept", "image/jpeg; q=0.5, image/png");
+            InputStream stream = (executeRequest(Request.GET, path, headers)).getEntity().getContent();
             return Drawable.createFromStream(stream, null);
 
         } catch (IOException e) {
@@ -81,14 +97,7 @@ public class UserTask extends ConnectionTask {
         }
     }
 
-    public Drawable getProfilePicture(long userId) throws RestServiceException {
-        try {
-            String path = "profile/" + userId;
-            InputStream stream = (executeRequest(Request.GET, path)).getEntity().getContent();
-            return Drawable.createFromStream(stream, null);
-
-        } catch (IOException e) {
-            throw new RestServiceException(Error.CONNECTION_ERROR);
-        }
+    public void getProfilePictureEasy(long userId) {
+        // DefaultHttpClient
     }
 }

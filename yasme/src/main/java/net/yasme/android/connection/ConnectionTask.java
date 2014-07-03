@@ -3,6 +3,7 @@ package net.yasme.android.connection;
 import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.exception.RestServiceException;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -12,6 +13,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicHeader;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
@@ -23,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 public class ConnectionTask {
 
@@ -107,7 +110,7 @@ public class ConnectionTask {
         }
     }
 
-    public HttpResponse executeRequest(Request request, String path, Object contentValue) throws RestServiceException {
+    public HttpResponse executeRequest(Request request, String path, Object contentValue, Map<String, String> additionalHeaders) throws RestServiceException {
 
         HttpEntityEnclosingRequestBase requestBase;
 
@@ -124,7 +127,7 @@ public class ConnectionTask {
         }
 
         requestBase.setURI(buildRequestURI(path));
-        addRequestHeader(requestBase);
+        addRequestHeader(requestBase, additionalHeaders);
 
         if (contentValue != null) {
             try {
@@ -136,9 +139,12 @@ public class ConnectionTask {
         return executeRequest(requestBase);
     }
 
-    public HttpResponse executeRequest(Request request, String path)
-            throws RestServiceException {
+    public HttpResponse executeRequest(Request request, String path, Object contentValue) throws RestServiceException {
+        return executeRequest(request, path, contentValue, null);
+    }
 
+
+    public HttpResponse executeRequest(Request request, String path, Map<String, String> additionalHeaders) throws RestServiceException {
         HttpRequestBase requestBase;
 
         switch (request) {
@@ -160,8 +166,12 @@ public class ConnectionTask {
         }
 
         requestBase.setURI(buildRequestURI(path));
-        addRequestHeader(requestBase);
+        addRequestHeader(requestBase, additionalHeaders);
         return executeRequest(requestBase);
+    }
+
+    public HttpResponse executeRequest(Request request, String path) throws RestServiceException {
+        return executeRequest(request, path, null);
     }
 
     private <T> String objectToJsonMapper(T object) {
@@ -188,10 +198,17 @@ public class ConnectionTask {
         return ressourceURI;
     }
 
-    private void addRequestHeader(HttpRequestBase requestBase) {
+    private void addRequestHeader(HttpRequestBase requestBase, Map<String, String> additionalHeaders) {
 
         requestBase.setHeader("Content-type", "application/json");
         requestBase.setHeader("Accept", "application/json");
+
+        // Copy additional header properties. Content-Type and Accept may be overriden
+        if (null != additionalHeaders && additionalHeaders.size() != 0) {
+            for (Map.Entry<String, String> header : additionalHeaders.entrySet()) {
+                requestBase.setHeader(header.getKey(), header.getValue());
+            }
+        }
 
         System.out.println("[DEBUG] Session initialized? " + initializedSession);
 
@@ -210,7 +227,7 @@ public class ConnectionTask {
             HttpResponse httpResponse = HttpClient.createSSLClient().execute(requestBase);
             int statusCode = httpResponse.getStatusLine().getStatusCode();
             System.out.println("[DEBUG] StatusCode: " + statusCode);
-            if (statusCode == 200 || statusCode == 201)
+            if (statusCode == 200 || statusCode == 201 || statusCode == 204)
                 return httpResponse;
             else
                 throw new RestServiceException((new BufferedReader(new InputStreamReader(

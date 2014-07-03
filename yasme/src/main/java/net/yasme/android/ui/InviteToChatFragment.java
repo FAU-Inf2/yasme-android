@@ -3,6 +3,7 @@ package net.yasme.android.ui;
 import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.CreateChatTask;
 import net.yasme.android.asyncTasks.GetAllUsersTask;
+import net.yasme.android.connection.UserTask;
 import net.yasme.android.entities.User;
 
 import java.util.ArrayList;
@@ -44,6 +46,14 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // TODO Remove that temporary stuff
+        Drawable d;
+        try {
+            d = UserTask.getInstance().getProfilePicture(8);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         activity = (AbstractYasmeActivity) getActivity();
         findViewsById();
