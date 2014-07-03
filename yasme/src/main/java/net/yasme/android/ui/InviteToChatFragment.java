@@ -47,14 +47,6 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO Remove that temporary stuff
-        Drawable d;
-        try {
-            d = UserTask.getInstance().getProfilePicture(8);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         activity = (AbstractYasmeActivity) getActivity();
         findViewsById();
         new GetAllUsersTask(activity.getApplicationContext(), this).execute(Long.toString(activity.getUserId()), activity.getAccessToken());
