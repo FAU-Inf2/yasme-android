@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 
 import java.sql.SQLException;
@@ -52,11 +53,12 @@ public class DatabaseManager {
      */
     public void createChat(Chat c) {
         try {
-            getHelper().getChatDao().create(c);
             for(User user : c.getParticipants()) {
                 getHelper().getUserDao().createIfNotExists(user);
                 getHelper().getChatUserDao().create(new ChatUser(c, user));
             }
+            storeMessages(c.getMessages());
+            getHelper().getChatDao().create(c);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -79,6 +81,7 @@ public class DatabaseManager {
         }
         for(Chat chat : chats) {
             chat.setParticipants(getParticipantsForChat(chat.getId()));
+            chat.setMessages(new ArrayList<Message>(getMessagesForChat(chat.getId())));
         }
         ArrayList<Chat> chatsArray = new ArrayList(chats);
         return chatsArray;
@@ -98,6 +101,7 @@ public class DatabaseManager {
                 return null;
             }
             chat.setParticipants(getParticipantsForChat(chat.getId()));
+            chat.setMessages(new ArrayList<Message>(getMessagesForChat(chat.getId())));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -120,6 +124,7 @@ public class DatabaseManager {
         }
         for(Chat chat : matchingChats) {
             chat.setParticipants(getParticipantsForChat(chat.getId()));
+            chat.setMessages(new ArrayList<Message>(getMessagesForChat(chat.getId())));
         }
         return matchingChats;
     }
@@ -133,8 +138,13 @@ public class DatabaseManager {
     public void updateChat(Chat chat) {
         try {
             List<User> dbParticipants = getParticipantsForChat(chat.getId());
+            List<Message> dbMessages = getMessagesForChat(chat.getId());
             if(dbParticipants == null) {
                 Log.e(this.getClass().getSimpleName(), "Error: Kein Teilnehmer in DB vorhanden");
+                return;
+            }
+            if(dbMessages == null) {
+                Log.e(this.getClass().getSimpleName(), "Error: Keine Nachrichten in DB vorhanden");
                 return;
             }
             for(User u : dbParticipants) {
@@ -152,6 +162,10 @@ public class DatabaseManager {
                     ChatUser queryChatUser = new ChatUser(queryChat, u);
                     createChatUser(queryChatUser);
                 }
+            }
+            int chatSize = chat.getMessages().size();
+            if(chatSize != dbMessages.size()) {
+                storeMessages(chat.getMessages().subList(dbMessages.size(), chatSize));
             }
             getHelper().getChatDao().update(chat);
         } catch (SQLException e) {
@@ -366,5 +380,30 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Message methods
+     */
+    public void storeMessages(List<Message> messages) {
+        for(Message msg : messages) {
+            try {
+                getHelper().getMessageDao().create(msg);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public List<Message> getMessagesForChat(long chatId) {
+        Message matchingObj = new Message(null, null, null, chatId, 0);
+        List<Message> matching = null;
+        try {
+            matching = getHelper().getMessageDao().queryForMatchingArgs(matchingObj);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return matching;
     }
 }
