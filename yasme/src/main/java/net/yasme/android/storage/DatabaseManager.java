@@ -164,7 +164,7 @@ public class DatabaseManager {
                 }
             }
             int chatSize = chat.getMessages().size();
-            if(chatSize != dbMessages.size()) {
+            if(chatSize > dbMessages.size()) {
                 storeMessages(chat.getMessages().subList(dbMessages.size(), chatSize));
             }
             getHelper().getChatDao().update(chat);

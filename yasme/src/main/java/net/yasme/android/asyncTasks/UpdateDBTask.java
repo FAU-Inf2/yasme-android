@@ -96,15 +96,14 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
                 Log.d(this.getClass().getSimpleName(), "User and ChatUser added to DB");
             }
 
-            Log.e(this.getClass().getSimpleName(),
-                    "Number of loaded messages " + serverMessages.size());
+            Log.d(this.getClass().getSimpleName(),
+                    "Number of messages from server: " + serverMessages.size());
 
 
             //Nachrichten in passende Chats einfuegen
             for (Message message : serverMessages) {
                 if (message.getChatId() == chat.getId()) {
                     chat.addMessage(message);
-                    Log.e(this.getClass().getSimpleName(), "bla");
                 }
             }
             if(chat.getMessages() == null || chat.getMessages().size() == 0) {
