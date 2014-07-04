@@ -3,7 +3,7 @@ package net.yasme.android.asyncTasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.yasme.android.controller.FragmentObserver2;
+import net.yasme.android.controller.ObserverRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.ChatListAdapter;
@@ -14,11 +14,11 @@ import java.util.ArrayList;
 /**
  * Created by robert on 19.06.14.
  */
-public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
+public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
     ChatListFragment fragment;
     int layoutId;
 
-    public GetChatDataTask(ChatListFragment fragment) {
+    public GetChatListTask(ChatListFragment fragment) {
         this.fragment = fragment;
     }
 
@@ -45,11 +45,13 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
             System.out.println("[Debug] " + chat.toString());
         }
 
-        ChatListAdapter adapter = (ChatListAdapter)fragment.getListAdapter();
-        //fragment.setListAdapter(adapter);
-        Log.d(this.getClass().getSimpleName(), "UpdateMessages: " + chatRooms.size());
-        adapter.updateChats(chatRooms);
-        adapter.notifyDataSetChanged();
+        ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).notifyFragments(new ChatListFragment.ChatListParam(chatRooms));
+
+
+        //ChatListAdapter adapter = (ChatListAdapter)fragment.getListAdapter();
+        //Log.d(this.getClass().getSimpleName(), "UpdateMessages: " + chatRooms.size());
+        //adapter.updateChats(chatRooms);
+        //adapter.notifyDataSetChanged();
     }
 
     protected void createDummyChatRoomList() {
