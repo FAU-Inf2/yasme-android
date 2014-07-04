@@ -7,9 +7,13 @@ import java.util.ArrayList;
 /**
  * Created by martin on 26.06.2014.
  */
-public class FragmentObserver1<T extends Fragment & NotifiableFragment<P>,  P extends NotifyFragmentParameter> {
+public class FragmentObserver<T extends Fragment & NotifiableFragment<P>,  P extends NotifyFragmentParameter> {
 
     private ArrayList<T> fragments;
+
+    public FragmentObserver() {
+        fragments = new ArrayList<T>();
+    }
 
     public void register(T fragment) {
         fragments.add(fragment);
@@ -27,7 +31,7 @@ public class FragmentObserver1<T extends Fragment & NotifiableFragment<P>,  P ex
     }
 
     //do not give the list to others, be paranoid! They may modify it. :)
-    public ArrayList<T> getFragments() {
-      return fragments;
-    }
+    //public ArrayList<T> getFragments() {
+    //  return fragments;
+    // }
 }

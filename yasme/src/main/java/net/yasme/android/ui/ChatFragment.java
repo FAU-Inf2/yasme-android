@@ -1,7 +1,6 @@
 package net.yasme.android.ui;
 
 import android.app.Fragment;
-import android.app.ListFragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,15 +12,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.GetChatDataTask;
 import net.yasme.android.asyncTasks.GetMessageTask;
 import net.yasme.android.asyncTasks.GetMessageTaskInChat;
-import net.yasme.android.asyncTasks.GetProfileDataTask;
 import net.yasme.android.asyncTasks.SendMessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
