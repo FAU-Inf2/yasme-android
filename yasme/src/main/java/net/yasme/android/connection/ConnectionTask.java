@@ -111,6 +111,15 @@ public class ConnectionTask {
         }
     }
 
+    /**
+     * Builds a request to upload an image given as HttpEntity. Uses specific implementation of adding headers
+     * @param request to be executed
+     * @param path last component of the URI
+     * @param image to be uploaded
+     * @param additionalHeaders as key-value-pairs
+     * @return response from server
+     * @throws RestServiceException
+     */
     public HttpResponse executeUpload(Request request, String path, HttpEntity image, Map<String, String> additionalHeaders) throws RestServiceException {
         HttpEntityEnclosingRequestBase requestBase;
 
@@ -132,7 +141,6 @@ public class ConnectionTask {
             requestBase.setEntity(image);
         }
 
-        // TODO Remove duplicated code
         // Copy additional header properties. Content-Type and Accept may be overriden
         if (null != additionalHeaders && additionalHeaders.size() != 0) {
             for (Map.Entry<String, String> header : additionalHeaders.entrySet()) {
