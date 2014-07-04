@@ -4,6 +4,7 @@ import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.exception.RestServiceException;
 
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -108,6 +109,44 @@ public class ConnectionTask {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    public HttpResponse executeUpload(Request request, String path, HttpEntity image, Map<String, String> additionalHeaders) throws RestServiceException {
+        HttpEntityEnclosingRequestBase requestBase;
+
+        switch (request) {
+            case POST:
+                requestBase = new HttpPost();
+                break;
+            case PUT:
+                requestBase = new HttpPut();
+                break;
+            default:
+                System.out.println("Request not supported!");
+                return null;
+        }
+
+        requestBase.setURI(buildRequestURI(path));
+
+        if (image != null) {
+            requestBase.setEntity(image);
+        }
+
+        // TODO Remove duplicated code
+        // Copy additional header properties. Content-Type and Accept may be overriden
+        if (null != additionalHeaders && additionalHeaders.size() != 0) {
+            for (Map.Entry<String, String> header : additionalHeaders.entrySet()) {
+                requestBase.setHeader(header.getKey(), header.getValue());
+            }
+        }
+
+        if (initializedSession) {
+            requestBase.setHeader("userId", userId);
+            requestBase.setHeader("Authorization", accessToken);
+            requestBase.setHeader("deviceId", deviceId);
+        }
+
+        return executeRequest(requestBase);
     }
 
     public HttpResponse executeRequest(Request request, String path, Object contentValue, Map<String, String> additionalHeaders) throws RestServiceException {

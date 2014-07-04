@@ -3,11 +3,15 @@ package net.yasme.android.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +19,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import net.yasme.android.R;
+import net.yasme.android.connection.UserTask;
 import net.yasme.android.entities.User;
+import net.yasme.android.exception.RestServiceException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,6 +102,18 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
         imageButton.setOnClickListener(this);
 
+        // TODO Load profile image into imageButton area as AsyncTask
+        Drawable profilePicture = null;
+        try {
+            profilePicture = UserTask.getInstance().getProfilePicture(u.getId());
+            // profilePicture will be null if no one has been uploaded yet
+            if (null != profilePicture) {
+                imageButton.setImageDrawable(profilePicture);
+            }
+        } catch (RestServiceException e) {
+            Log.e("Error", e.getMessage());
+        }
+
         return layout;
     }
 
@@ -154,7 +172,16 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             ImageButton imgB = (ImageButton) activity.findViewById(R.id.own_imageButton);
 
             BitmapFactory factory = new BitmapFactory();
-            imgB.setImageBitmap(factory.decodeFile(picturePath));
+            Bitmap newProfilePicture = factory.decodeFile(picturePath);
+            imgB.setImageBitmap(newProfilePicture);
+
+            // TODO Upload picture as AsyncTask
+            Drawable d = Drawable.createFromPath(picturePath);
+            try {
+                UserTask.getInstance().uploadProfilePicture(d);
+            } catch (RestServiceException e) {
+                e.printStackTrace();
+            }
         }
     }
 

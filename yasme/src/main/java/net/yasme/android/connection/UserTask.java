@@ -77,7 +77,7 @@ public class UserTask extends ConnectionTask {
                 .addBinaryBody("file", drawableToByteArray(drawable), ContentType.create("image/jpeg"), "")
                 .build();
 
-        executeRequest(Request.POST, "profile", multipartEntity);
+        executeUpload(Request.POST, "profile", multipartEntity, null);
     }
 
 
@@ -104,7 +104,11 @@ public class UserTask extends ConnectionTask {
             String path = "profile/" + userId;
             Map<String, String> headers = new HashMap<>();
             headers.put("Accept", "image/jpeg; q=0.5, image/png");
-            InputStream stream = (executeRequest(Request.GET, path, headers)).getEntity().getContent();
+            HttpEntity response = (executeRequest(Request.GET, path, headers)).getEntity();
+            if (null == response) {
+                return null;
+            }
+            InputStream stream = response.getContent();
             return Drawable.createFromStream(stream, null);
 
         } catch (IOException e) {
