@@ -57,7 +57,6 @@ public class DatabaseManager {
                 getHelper().getUserDao().createIfNotExists(user);
                 getHelper().getChatUserDao().create(new ChatUser(chat, user));
             }
-            storeMessages(chat.getMessages());
             getHelper().getChatDao().create(chat);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,7 +80,6 @@ public class DatabaseManager {
         }
         for(Chat chat : chats) {
             chat.setParticipants(getParticipantsForChat(chat.getId()));
-            chat.setMessages(new ArrayList<Message>(getMessagesForChat(chat.getId())));
         }
         ArrayList<Chat> chatsArray = new ArrayList(chats);
         return chatsArray;
@@ -116,7 +114,7 @@ public class DatabaseManager {
      */
     public List<Chat> getChats(List<User> users) {
         List<Chat> matchingChats = null;
-        Chat search = new Chat(0, users, null, null, null);
+        Chat search = new Chat(0, users, null, null, null); //TODO: not working
         try {
             matchingChats = getHelper().getChatDao().queryForMatchingArgs(search);
         } catch (SQLException e) {
@@ -124,7 +122,6 @@ public class DatabaseManager {
         }
         for(Chat chat : matchingChats) {
             chat.setParticipants(getParticipantsForChat(chat.getId()));
-            chat.setMessages(new ArrayList<Message>(getMessagesForChat(chat.getId())));
         }
         return matchingChats;
     }
@@ -138,13 +135,8 @@ public class DatabaseManager {
     public void updateChat(Chat chat) {
         try {
             List<User> dbParticipants = getParticipantsForChat(chat.getId());
-            List<Message> dbMessages = getMessagesForChat(chat.getId());
             if(dbParticipants == null) {
                 Log.e(this.getClass().getSimpleName(), "Error: Kein Teilnehmer in DB vorhanden");
-                return;
-            }
-            if(dbMessages == null) {
-                Log.e(this.getClass().getSimpleName(), "Error: Keine Nachrichten in DB vorhanden");
                 return;
             }
             for(User u : dbParticipants) {
@@ -163,10 +155,6 @@ public class DatabaseManager {
                     createChatUser(queryChatUser);
                 }
             }
-            int chatSize = chat.getMessages().size();
-            if(chatSize > dbMessages.size()) {
-                storeMessages(chat.getMessages().subList(dbMessages.size(), chatSize));
-            }
             getHelper().getChatDao().update(chat);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -178,12 +166,17 @@ public class DatabaseManager {
      * @param chat      Chat
      */
     public void createOrUpdateChat(Chat chat) {
-        if(getChat(chat.getId()) != null) {
-            updateChat(chat);
-            Log.d(this.getClass().getSimpleName(), "updated chat");
-        } else {
-            createChat(chat);
-            Log.d(this.getClass().getSimpleName(), "created chat");
+        try {
+            if(getHelper().getChatDao().idExists(chat.getId())) {
+            //if(getChat(chat.getId()) != null) {
+                updateChat(chat);
+                Log.d(this.getClass().getSimpleName(), "updated chat");
+            } else {
+                createChat(chat);
+                Log.d(this.getClass().getSimpleName(), "created chat");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -397,7 +390,9 @@ public class DatabaseManager {
     }
 
     public List<Message> getMessagesForChat(long chatId) {
-        Message matchingObj = new Message(null, null, null, chatId, 0);
+        Chat chat = new Chat();
+        chat.setId(chatId);
+        Message matchingObj = new Message(null, null, null, chat, 0);
         List<Message> matching = null;
         try {
             matching = getHelper().getMessageDao().queryForMatchingArgs(matchingObj);

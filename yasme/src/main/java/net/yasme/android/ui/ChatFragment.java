@@ -68,7 +68,7 @@ public class ChatFragment extends Fragment {
                Log.e(this.getClass().getSimpleName(), "number messages: " + chat.getMessages().size());
            } catch (NullPointerException e) {
                chat = null;
-               Log.w(this.getClass().getSimpleName(), "Chat aus DB holen failed");
+               Log.w(this.getClass().getSimpleName(), "get chat from DB failed");
            }
            if(chat == null) {
                chat = new Chat(chatId, activity.getSelfUser(), activity);

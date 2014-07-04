@@ -33,13 +33,12 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
 
         if(!success) {
             Log.d(this.getClass().getName(), "Fehler bei Datenbankzugriff");
-        }
-
-        if (chatRooms.size() <= 0) {
-            Log.d(this.getClass().getSimpleName(), "Benutze Dummy-Liste");
             createDummyChatRoomList();
         }
 
+        if (chatRooms.size() <= 0) {
+            createDummyChatRoomList();
+        }
 
         for(Chat chat : chatRooms) {
             System.out.println("[Debug] " + chat.toString());
@@ -47,12 +46,13 @@ public class GetChatDataTask extends AsyncTask<String, Void, Boolean> {
 
         ChatListAdapter adapter = (ChatListAdapter)fragment.getListAdapter();
         //fragment.setListAdapter(adapter);
-        Log.d(this.getClass().getSimpleName(), "UpdateMessages: " + chatRooms.size());
+        Log.d(this.getClass().getSimpleName(), "UpdateChats: " + chatRooms.size());
         adapter.updateChats(chatRooms);
         adapter.notifyDataSetChanged();
     }
 
     protected void createDummyChatRoomList() {
+        Log.d(this.getClass().getSimpleName(), "Benutze Dummy-Liste");
         chatRooms = new ArrayList<Chat>();
         int number = 10;
         for (int i = 1; i < number; i++)

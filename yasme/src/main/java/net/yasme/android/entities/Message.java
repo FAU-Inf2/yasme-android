@@ -44,15 +44,16 @@ public class Message implements Serializable {
     }
 
     public Message(User sender, String message, long chatId, long messageKeyId) {
-        this(sender, message, new Date(), chatId, messageKeyId);
+        Chat chat = new Chat();
+        chat.setId(chatId);
+        new Message(sender, message, new Date(), chat, messageKeyId);
     }
 
-    public Message(User sender, String message, Date dateSent, long chatId, long messageKeyId) {
+    public Message(User sender, String message, Date dateSent, Chat chat, long messageKeyId) {
         this.sender = sender;
         this.message = message;
         this.dateSent = dateSent;
-        this.chat = new Chat();
-        chat.setId(chatId);
+        this.chat = chat;
         this.id = id++;
         this.messageKeyId = messageKeyId;
     }

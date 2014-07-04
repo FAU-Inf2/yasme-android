@@ -29,7 +29,7 @@ public class InsertNewMessagesTask extends AsyncTask<String, Void, Integer> {
      * params[2] is accessToken
      */
     protected Integer doInBackground(String... params) {
-        ArrayList<Chat> chats = dbManager.getAllChats();
+        //ArrayList<Chat> chats = dbManager.getAllChats();
 
         if (messages == null) {
             Log.d(this.getClass().getSimpleName(), "messages sind null");
@@ -38,11 +38,13 @@ public class InsertNewMessagesTask extends AsyncTask<String, Void, Integer> {
         if (messages.isEmpty()) {
             return 0;
         }
-        if(chats == null) {
-            return -1;
-        }
+        //if(chats == null) {
+        //    return -1;
+        //}
 
-        for (Chat chat : chats) {
+        //wird von DB erledigt
+
+        /*for (Chat chat : chats) {
             for (Message msg : messages) {
                 if(msg.getChatId() == chat.getId()) {
                     chat.addMessage(msg);
@@ -50,22 +52,25 @@ public class InsertNewMessagesTask extends AsyncTask<String, Void, Integer> {
                 }
             }
             dbManager.updateChat(chat);
-        }
+        }*/
+        dbManager.storeMessages(messages);
         return 1;
     }
 
     @Override
     protected void onPostExecute(final Integer success) {
-        if (success == 1) {
-            Log.i(this.getClass().getSimpleName(), "UpdateDB successfull");
-        } else {
-            Log.w(this.getClass().getSimpleName(), "UpdateDB not successfull");
-            if(success == -1) {
+        switch(success) {
+            case -1:
+                Log.w(this.getClass().getSimpleName(), "UpdateDB not successfull");
                 Log.d(this.getClass().getSimpleName(), "chats sind null");
-            }
-            if (success == 0) {
+                break;
+            case 0:
+                Log.w(this.getClass().getSimpleName(), "UpdateDB not successfull");
                 Log.d(this.getClass().getSimpleName(), "messages sind empty");
-            }
+                break;
+            case 1:
+                Log.i(this.getClass().getSimpleName(), "UpdateDB successfull");
+                break;
         }
     }
 }

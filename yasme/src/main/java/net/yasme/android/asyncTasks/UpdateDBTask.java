@@ -100,15 +100,17 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
                     "Number of messages from server: " + serverMessages.size());
 
 
-            //Nachrichten in passende Chats einfuegen
-            for (Message message : serverMessages) {
-                if (message.getChatId() == chat.getId()) {
-                    chat.addMessage(message);
-                }
-            }
-            if(chat.getMessages() == null || chat.getMessages().size() == 0) {
-                chat.setMessages(new ArrayList<Message>());
-            }
+            //Nachrichten in passende Chats einfuegen - wird von DB erledigt
+
+            //for (Message message : serverMessages) {
+            //    if (message.getChatId() == chat.getId()) {
+            //        chat.addMessage(message);
+            //    }
+            //}
+            //if(chat.getMessages() == null || chat.getMessages().size() == 0) {
+            //    chat.setMessages(new ArrayList<Message>());
+            //}
+            dbManager.storeMessages(serverMessages);
             dbManager.createOrUpdateChat(chat);
         }
         return 0;

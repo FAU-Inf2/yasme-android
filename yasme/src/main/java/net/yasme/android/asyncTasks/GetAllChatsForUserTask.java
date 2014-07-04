@@ -69,13 +69,7 @@ public class GetAllChatsForUserTask extends AsyncTask<String, Void, Boolean>{
                 Log.d(this.getClass().getSimpleName(),
                         "Fehler bei getInfoOfChat " + Long.toString(chatInfo.getId()));
             }
-            if(/*dbManager.createIfNotExists(chat) != null*/dbManager.getChat(chat.getId()) != null) {
-                dbManager.updateChat(chat);
-                Log.i(this.getClass().getSimpleName(), "Chat upgedatet");
-            } else {
-                dbManager.createChat(chat);
-                Log.i(this.getClass().getSimpleName(), "Neuer Chat eingefuegt");
-            }
+            dbManager.createOrUpdateChat(chat);
         }
         return true;
     }
