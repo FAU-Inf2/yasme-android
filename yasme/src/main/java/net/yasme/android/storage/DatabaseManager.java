@@ -284,7 +284,9 @@ public class DatabaseManager {
         try {
             Chat c = new Chat();
             c.setId(chatId);
-            List<ChatUser> temp = getHelper().getChatUserDao().queryForMatchingArgs(new ChatUser(c, null));
+            List<ChatUser> temp = null;
+            temp = getHelper().getChatUserDao().queryForMatchingArgs(new ChatUser(c, null));
+
             insert = new ArrayList<User>();
             if(temp == null) {
                 Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
@@ -307,30 +309,6 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return insert;
-    }
-
-    /**
-     * This function will get all participants of one chat
-     * @param chatId    long
-     * @return participants of chat with chatId or null on error
-     * @deprecated use {@link public List<User> getParticipantsForChat(long chatId)} instead
-     */
-    @Deprecated
-    public ArrayList<User> getParticipantsFromDB(long chatId) {
-        ArrayList<User> participants = new ArrayList<User>();
-        List<ChatUser> matching;
-        try {
-            Chat queryChat = new Chat();
-            queryChat.setId(chatId);
-            matching = getHelper().getChatUserDao().
-                    queryForEq(DatabaseConstants.CHAT_FIELD_NAME, queryChat);
-        } catch (SQLException e) {
-            return null;
-        }
-        for(ChatUser current : matching) {
-            participants.add(current.user);
-        }
-        return participants;
     }
 
     /**
@@ -395,7 +373,8 @@ public class DatabaseManager {
         Message matchingObj = new Message(null, null, null, chat, 0);
         List<Message> matching = null;
         try {
-            matching = getHelper().getMessageDao().queryForMatchingArgs(matchingObj);
+            matching = getHelper().getMessageDao().queryForEq(DatabaseConstants.CHAT, chat);
+            //matching = getHelper().getMessageDao().queryForMatchingArgs(matchingObj);
         } catch (SQLException e) {
             e.printStackTrace();
         }

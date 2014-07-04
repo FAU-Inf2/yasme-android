@@ -81,6 +81,10 @@ public class Message implements Serializable {
         return chat.getId();
     }
 
+    public Chat getChat() {
+        return chat;
+    }
+
     public long getId() {
         return id;
     }
@@ -92,9 +96,13 @@ public class Message implements Serializable {
     /**
      * Setters
      */
-    public void setChat(long chatId) {
+    public void setChatAndId(long chatId) {
         this.chat = new Chat();
         this.chat.setId(chatId);
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
     }
 
     public void setMessage(String message) {
