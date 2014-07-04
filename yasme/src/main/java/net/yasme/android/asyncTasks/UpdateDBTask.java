@@ -111,8 +111,6 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
             }
             dbManager.createOrUpdateChat(chat);
         }
-        Log.d(this.getClass().getSimpleName(),
-                "Alle Nachrichten verteilt?: " + Boolean.toString((0 == serverMessages.size())));
         return 0;
     }
 

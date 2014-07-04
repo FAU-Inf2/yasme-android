@@ -65,6 +65,7 @@ public class ChatFragment extends Fragment {
            //trying to get chat with chatId from local DB
            try {
                chat = DatabaseManager.getInstance().getChat(chatId);
+               Log.e(this.getClass().getSimpleName(), "number messages: " + chat.getMessages().size());
            } catch (NullPointerException e) {
                chat = null;
                Log.w(this.getClass().getSimpleName(), "Chat aus DB holen failed");
@@ -106,7 +107,6 @@ public class ChatFragment extends Fragment {
                 update(v);
             }
         });
-
 
         return rootView;
     }

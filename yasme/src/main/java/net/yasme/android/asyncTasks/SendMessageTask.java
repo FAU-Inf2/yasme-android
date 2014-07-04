@@ -52,8 +52,9 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         long uId = Long.parseLong(params[3]);
 
         // encrypt Message
-        String msgEncrypted = aes.encrypt(msg); //TODO: evtl. loeschen
-        //String msgEncrypted = msg;
+        //String msgEncrypted = aes.encrypt(msg); //TODO
+        String msgEncrypted = msg;
+        Log.d(this.getClass().getSimpleName(), "Gesendete Nachricht: " + msgEncrypted);
 
         // create Message
         User user = new User(uName, uMail,  uId);
@@ -64,6 +65,7 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
             messageTask.sendMessage(createdMessage);
             return true;
         } catch (RestServiceException e) {
+            e.printStackTrace();
             Log.w(this.getClass().getSimpleName(), e.getMessage());
         }
         return false;
@@ -73,8 +75,10 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         if (success) {
             //activity.asyncUpdate();
             fragment.getStatus().setText("Gesendet: " + msg);
+            Log.i(this.getClass().getSimpleName(), "Gesendet: " + msg);
         } else {
             fragment.getStatus().setText("Senden fehlgeschlagen");
+            Log.w(this.getClass().getSimpleName(), "Senden fehlgeschlagen");
         }
     }
 }
