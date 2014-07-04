@@ -58,12 +58,13 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
     compile 'org.apache.httpcomponents:httpclient:4.3.4'
+    compile 'org.apache.httpcomponents:httpmime:4.3.4'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.0'
     compile 'com.google.android.gms:play-services:3.1.+'
-    compile 'com.android.support:support-v4:+'
-    compile 'com.android.support:support-v13:19.+'
-    //compile 'com.android.support:support-v4:20.+'
-    //compile 'com.android.support:support-v13:20.+'
+    //compile 'com.android.support:support-v4:+'
+    //compile 'com.android.support:support-v13:19.+'
+    compile 'com.android.support:support-v4:20.+'
+    compile 'com.android.support:support-v13:20.+'
 }
 
 

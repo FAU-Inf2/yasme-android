@@ -1,18 +1,22 @@
 package net.yasme.android.connection;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.Error;
 
+import org.apache.http.entity.ContentType;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -69,8 +73,19 @@ public class UserTask extends ConnectionTask {
     //TODO: implement method
     public void uploadProfilePicture(Drawable drawable) throws RestServiceException {
 
-        executeRequest(Request.POST, "profile");
+        HttpEntity multipartEntity = MultipartEntityBuilder.create()
+                .addBinaryBody("file", drawableToByteArray(drawable), ContentType.create("image/jpeg"), "")
+                .build();
 
+        executeRequest(Request.POST, "profile", multipartEntity);
+    }
+
+
+    private byte[] drawableToByteArray(Drawable drawable) {
+        Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        return stream.toByteArray();
     }
 
     //public Drawable getOwnProfilePicture() throws RestServiceException {
@@ -95,9 +110,5 @@ public class UserTask extends ConnectionTask {
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         }
-    }
-
-    public void getProfilePictureEasy(long userId) {
-        // DefaultHttpClient
     }
 }
