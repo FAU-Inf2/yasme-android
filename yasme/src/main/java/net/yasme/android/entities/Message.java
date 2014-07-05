@@ -5,6 +5,8 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import net.yasme.android.storage.DatabaseConstants;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -77,6 +79,7 @@ public class Message implements Serializable {
         return messageKey;
     }
 
+    @JsonIgnore
     public long getChatId() {
         return chat.getId();
     }
@@ -96,6 +99,8 @@ public class Message implements Serializable {
     /**
      * Setters
      */
+
+    @JsonIgnore
     public void setChatAndId(long chatId) {
         this.chat = new Chat();
         this.chat.setId(chatId);
