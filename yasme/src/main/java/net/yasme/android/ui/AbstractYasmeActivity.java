@@ -56,8 +56,8 @@ public abstract class AbstractYasmeActivity  extends Activity {
 
         storage = getSharedPreferences(STORAGE_PREFS, 0);
         Long userId = storage.getLong(USER_ID, 0);
-        String userName = storage.getString(USER_NAME, "anonym");
-        String userMail = storage.getString(USER_MAIL, "anonym@yasme.net");
+        String userName = storage.getString(USER_NAME, "dummy"); //TODO: evtl. anderen dummy namen
+        String userMail = storage.getString(USER_MAIL, "@yasme.net");
         String userPw = storage.getString(USER_PW, "password");
 
         accessToken = storage.getString(ACCESSTOKEN, null);
