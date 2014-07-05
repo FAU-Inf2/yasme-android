@@ -118,7 +118,7 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
             }
         }
 
-        new CreateChatTask(activity.getApplicationContext(), this, selectedUsers).execute(Long.toString(activity.getUserId()), activity.getAccessToken());
+        new CreateChatTask(this, activity.getSelfUser(), selectedUsers).execute(Long.toString(activity.getUserId()), activity.getAccessToken());
         return;
     }
 

@@ -20,16 +20,16 @@ import java.util.List;
 public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
 
     private DatabaseManager databaseManager = DatabaseManager.getInstance();
-    protected Context context;
     protected InviteToChatFragment fragment;
+    private User selfUser;
     private List<User> selectedUsers;
     private long userId;
     private String accessToken;
     private long newChatId = -1;
     private Chat newChat;
 
-    public CreateChatTask(Context context, InviteToChatFragment fragment, List<User> selectedUsers) {
-        this.context = context;
+    public CreateChatTask(InviteToChatFragment fragment, User selfUser, List<User> selectedUsers) {
+        this.selfUser = selfUser;
         this.fragment = fragment;
         this.selectedUsers = selectedUsers;
     }
@@ -53,7 +53,6 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
         } else {
             // No chat found in database. Create a new one
 
-            User owner = fragment.getAbstractYasmeActivity().getSelfUser();
             // Concatenate chat name according to the participant's names
             String name = "";
             for (int i=0; i<selectedUsers.size(); i++) {
@@ -63,7 +62,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
                 }
             }
 
-            newChat = new Chat(owner, "Created: " + new Date().toString(), name);
+            newChat = new Chat(selfUser, "Created: " + new Date().toString(), name);
             newChat.setParticipants(selectedUsers);
             try {
                 newChatId = ChatTask.getInstance().createChatWithPar(newChat);
