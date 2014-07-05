@@ -22,14 +22,16 @@ public class CreateSingleChatTask extends AsyncTask<String, Void, Boolean> {
     private DatabaseManager databaseManager = DatabaseManager.getInstance();
     private ContactActivity activity;
     private User user;
+    private User selfUser;
     private long userId;
     private String accessToken;
     private long newChatId = -1;
     private Chat newChat;
 
 
-    public CreateSingleChatTask(ContactActivity activity, User user){
+    public CreateSingleChatTask(ContactActivity activity, User selfUser, User user){
         this.activity = activity;
+        this.selfUser = selfUser;
         this.user = user;
     }
 
@@ -49,12 +51,11 @@ public class CreateSingleChatTask extends AsyncTask<String, Void, Boolean> {
         } else {
             // No chat found in database. Create a new one
 
-            User owner = activity.getSelfUser();
             // Concatenate chat name according to the participant's names
             String name = user.getName();
 
 
-            newChat = new Chat(owner, "Created: " + new Date().toString(), name);
+            newChat = new Chat(selfUser, "Created: " + new Date().toString(), name);
             newChat.setParticipants(userList);
             try {
                 newChatId = ChatTask.getInstance().createChatWithPar(newChat);
