@@ -49,7 +49,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
            new UpdateDBTask(activity.getApplicationContext(), activity.storage)
                    .execute(Long.toString(activity.getUserId()), activity.getAccessToken());
            //Laedt die Liste aller Chats von der Datenbank in das Fragment
-           new GetChatListTask(this).execute();
+           new GetChatListTask().execute();
        }
 
         @Override

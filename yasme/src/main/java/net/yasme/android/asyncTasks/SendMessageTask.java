@@ -1,6 +1,5 @@
 package net.yasme.android.asyncTasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -16,13 +15,13 @@ import net.yasme.android.ui.ChatFragment;
  * Created by robert on 19.06.14.
  */
 public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
-    Context context;
+
     ChatActivity activity;
     MessageEncryption aes;
     ChatFragment fragment;
 
-    public SendMessageTask(Context context, ChatActivity activity, ChatFragment fragment, MessageEncryption aes) {
-        this.context = context;
+    public SendMessageTask(ChatActivity activity, ChatFragment fragment, MessageEncryption aes) {
+
         this.activity = activity;
         this.aes = aes;
         this.fragment = fragment;
