@@ -151,7 +151,7 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         switch (buttonId){
             case R.id.contact_detail_newchat:
                 System.out.println("------------------- Create New Chat ---------------------------");
-                CreateSingleChatTask chatTask = new CreateSingleChatTask(this.getApplicationContext(),this,user);
+                CreateSingleChatTask chatTask = new CreateSingleChatTask(this,user);
                 chatTask.execute(String.valueOf(this.getUserId()),this.getAccessToken());
                 break;
             case R.id.contact_detail_addcontact:

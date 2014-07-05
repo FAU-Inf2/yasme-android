@@ -1,6 +1,5 @@
 package net.yasme.android.asyncTasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -21,7 +20,6 @@ import java.util.List;
 public class CreateSingleChatTask extends AsyncTask<String, Void, Boolean> {
 
     private DatabaseManager databaseManager = DatabaseManager.getInstance();
-    private Context context;
     private ContactActivity activity;
     private User user;
     private long userId;
@@ -30,8 +28,7 @@ public class CreateSingleChatTask extends AsyncTask<String, Void, Boolean> {
     private Chat newChat;
 
 
-    public CreateSingleChatTask(Context context, ContactActivity activity, User user){
-        this.context = context;
+    public CreateSingleChatTask(ContactActivity activity, User user){
         this.activity = activity;
         this.user = user;
     }
