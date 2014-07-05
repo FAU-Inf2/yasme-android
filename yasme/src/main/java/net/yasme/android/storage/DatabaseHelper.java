@@ -14,6 +14,7 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 import java.sql.SQLException;
 
@@ -23,7 +24,7 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // when anything changes in your database objects, we have to increase the database version
-    private static final int DATABASE_VERSION = 28;
+    private static final int DATABASE_VERSION = 32;
 
     // name of the database file
     private static final String DATABASE = "net.yasme.android.DATABASE";

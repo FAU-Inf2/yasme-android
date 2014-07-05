@@ -90,7 +90,6 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
                     user.setName("dummy");
                     Log.d(this.getClass().getSimpleName(), "[Debug] userName ist null, verwende Dummy-Name");
                 }
-                //dbManager.createUserIfNotExists(user); //TODO
                 dbManager.createOrUpdateUser(user);
                 dbManager.createChatUser(new ChatUser(chat, user));
                 Log.d(this.getClass().getSimpleName(), "User and ChatUser added to DB");
@@ -110,7 +109,18 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
             //if(chat.getMessages() == null || chat.getMessages().size() == 0) {
             //    chat.setMessages(new ArrayList<Message>());
             //}
-            dbManager.storeMessages(serverMessages);
+            /*for(Message msg : serverMessages) {
+                Chat newChat = new Chat();
+                long id;
+                try{
+                    id = msg.getChatId();
+                } catch (NullPointerException e) {
+                    id = 1;
+                }
+                newChat.setId(id);
+                msg.setChat(newChat);
+            }*/
+            //dbManager.storeMessages(serverMessages);
             dbManager.createOrUpdateChat(chat);
         }
         return 0;

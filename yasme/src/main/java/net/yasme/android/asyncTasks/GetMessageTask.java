@@ -6,10 +6,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.entities.Message;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 import java.util.ArrayList;
 
@@ -66,9 +66,8 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
      */
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            new InsertNewMessagesTask(messages).execute(Long.toString(lastMessageId),
-                    Long.toString(userId), accessToken);
-            Log.d(this.getClass().getSimpleName(), "After update the Database");
+            new InsertNewMessagesTask(messages).execute();
+            Log.d(this.getClass().getSimpleName(), "Messages stored");
 
             lastMessageId = messages.size() + lastMessageId;
             Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
@@ -76,6 +75,9 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
             SharedPreferences.Editor editor = storage.edit();
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
             editor.commit();
+
+            //TODO: abrufen der neuen nachrichten durch den Chat triggern
+            //Observer benachrichtigen
 
         } else {
             Log.i(this.getClass().getSimpleName(), "Keine neuen Nachrichten");

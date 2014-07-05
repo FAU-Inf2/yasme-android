@@ -58,7 +58,7 @@ public class MessageTask extends ConnectionTask {
 
             JSONArray jsonArray = new JSONArray(json);
 
-            System.out.println("[DEBUG] getMessageRequest successful: " + json);
+            System.out.println("[DEBUG] getMessageRequest successful: ");// + json);
 
             for (int i = 0; i < jsonArray.length(); i++) {
 

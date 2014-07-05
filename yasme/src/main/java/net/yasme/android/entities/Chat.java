@@ -40,8 +40,13 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.OWNER, foreign = true)
     private User owner;
 
+    @JsonIgnore
     private Timestamp lastModified;
+
+    @JsonIgnore
     private Timestamp created;
+
+    @JsonIgnore
     private String profilePicture;
 
     @JsonIgnore
@@ -112,7 +117,7 @@ public class Chat implements Serializable {
     }
 
     public ArrayList<User> getParticipants() {
-        if (participants.isEmpty()) {
+        if (participants == null || participants.isEmpty()) {
             User dummy = new User("Dummy", 12);
             participants.add(dummy);
             Log.d(this.getClass().getSimpleName(), "Dummy-User hinzugefuegt");

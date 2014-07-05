@@ -1,11 +1,8 @@
 package net.yasme.android.asyncTasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
-import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseManager;
 
@@ -23,11 +20,6 @@ public class InsertNewMessagesTask extends AsyncTask<String, Void, Integer> {
 
     DatabaseManager dbManager = DatabaseManager.getInstance();
 
-    /**
-     * params[0] is lastMessageId
-     * params[1] is userId
-     * params[2] is accessToken
-     */
     protected Integer doInBackground(String... params) {
         //ArrayList<Chat> chats = dbManager.getAllChats();
 

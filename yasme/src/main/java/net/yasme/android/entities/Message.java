@@ -18,7 +18,7 @@ import java.util.Date;
 public class Message implements Serializable {
 
     @DatabaseField(columnName = DatabaseConstants.MESSAGE_ID,
-            allowGeneratedIdInsert = true, generatedId = true)
+            id = true)
     private long id;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT, canBeNull = false, foreign = true,
@@ -36,6 +36,8 @@ public class Message implements Serializable {
     private String message;
 
     private long messageKeyId;
+
+    @JsonIgnore
     private MessageKey messageKey;
 
     /**
@@ -48,7 +50,14 @@ public class Message implements Serializable {
     public Message(User sender, String message, long chatId, long messageKeyId) {
         Chat chat = new Chat();
         chat.setId(chatId);
-        new Message(sender, message, new Date(), chat, messageKeyId);
+
+        this.chat = chat;
+        this.dateSent = new Date();
+        this.sender = sender;
+        this.message = message;
+        this.messageKeyId = messageKeyId;
+
+        //new Message(sender, message, new Date(), chat, messageKeyId);
     }
 
     public Message(User sender, String message, Date dateSent, Chat chat, long messageKeyId) {
@@ -56,7 +65,7 @@ public class Message implements Serializable {
         this.message = message;
         this.dateSent = dateSent;
         this.chat = chat;
-        this.id = id++;
+        //this.id = id++;
         this.messageKeyId = messageKeyId;
     }
 

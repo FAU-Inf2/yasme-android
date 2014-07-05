@@ -23,7 +23,7 @@ import java.util.Date;
 public class User implements Serializable {
 
     @DatabaseField(columnName = DatabaseConstants.USER_ID,
-            allowGeneratedIdInsert = true, generatedId = true)
+            id = true)
     private long id;
 
     @DatabaseField(columnName = DatabaseConstants.USER_NAME)
