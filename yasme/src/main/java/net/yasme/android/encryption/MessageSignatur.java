@@ -13,11 +13,16 @@ import android.util.Base64;
 
 /*
 # KeyVerteilung:
-# Bei Anmeldung schickt User RSA-Key an Server, sein Device benachrichtigt alle bekannten Kontake
+# Bei Regisirierung holt User sich von allen Kontakten die öffentliche Keys
+# Bei Registrierung schickt User RSA-Key an Server, sein Device benachrichtigt alle bekannten Kontake
 # bei Hinzufuegen eines neuen Kontakts wird dieser ebenfalls benachrichtigt
-# --> Kontakt holt Key vom Server
+# --> Kontakt holt Key vom Server bzw. App muss selber RSA-Key des Kontakts holen
 #
 # ansonsten beim Nachrichten senden/empfangen, AsyncTask, falls Key nicht vorhanden sein sollte
+
+# Methode1: Abholen RSA-Key von einem bestimmten Usern (Array) holen
+# Methode2: Senden des RSA-Keys an Server (mit Liste der notwendigen Empfänger --> Kontakte)
+# Methode3: Informiere Kontakt, dass er meinen RSA-Key abholen soll
  */
 
 public class MessageSignatur {

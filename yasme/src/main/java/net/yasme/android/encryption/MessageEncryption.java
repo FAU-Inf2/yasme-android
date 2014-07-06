@@ -11,6 +11,7 @@ import net.yasme.android.connection.KeyTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.DatabaseManager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -51,6 +52,8 @@ public class MessageEncryption {
     private AESEncryption aes;
     private KeyTask keytask;
 
+    private DatabaseManager db = DatabaseManager.getInstance();
+
 
     //Constructor for saving Key from server (Generating a key is not necessary)
     public MessageEncryption(Context context, long chatid){
@@ -72,8 +75,7 @@ public class MessageEncryption {
                 CURRENTKEY, Context.MODE_PRIVATE);
 
         // if no old key for this chat, then generate a new one, beginning with
-        if(1==1){
-        //if (!currentKeyPref.contains("keyId")) {
+        if (!currentKeyPref.contains("keyId")) {
             System.out.println("[???] Generate Key");
             aes = new AESEncryption();
 
@@ -85,7 +87,7 @@ public class MessageEncryption {
                     long userId = user.getId();
                     //nicht an sich selbst schicken
                     //TODO TEST
-                    if (1==1){//if (userId != creator) {
+                    if (userId != creator) {
                         recipients.add(user.getId());
                     }
 
@@ -141,13 +143,16 @@ public class MessageEncryption {
             checkCurrentKeyId();
 
             // get Key from storage
-            byte[][] keydata = getKeyfromLocalStorage(chatId, keyId);
+            MessageKey key = getKeyfromLocalStorage(chatId, keyId);
             // if Key is available
-            if (keydata != null) {
-                byte[] key = keydata[0];
-                byte[] iv = keydata[1];
+            if (key != null) {
+                String keyBase64 = key.getMessageKey();
+                String ivBase64 = key.getInitVector();
 
-                aes = new AESEncryption(key, iv);
+                byte[] keyBytes = Base64.decode(keyBase64.getBytes(), Base64.DEFAULT);
+                byte[] ivBytes = Base64.decode(ivBase64.getBytes(), Base64.DEFAULT);
+
+                aes = new AESEncryption(keyBytes, ivBytes);
             }
         }
         catch (Exception e){
@@ -157,10 +162,13 @@ public class MessageEncryption {
 
     // check, which Key is need to encrypt
     public void checkCurrentKeyId(){
-        SharedPreferences currentKeyPref = context.getSharedPreferences(CURRENTKEY, Context.MODE_PRIVATE);
+
+        keyId = db.getCurrentKey(chatId);
+        /*SharedPreferences currentKeyPref = context.getSharedPreferences(CURRENTKEY, Context.MODE_PRIVATE);
 
         long keyidfromstorage = currentKeyPref.getLong("keyId", 0);
         keyId = keyidfromstorage;
+        */
     }
 
     // encrypt
@@ -217,7 +225,7 @@ public class MessageEncryption {
        }
         return null;
     }
-
+    //TODO: device id überflüssig
     //delete a symmetric Key from server when the client got that key
     public void deleteKeyFromServer(long keyId, long DeviceId){
        new DeleteKeyTask().execute(keyId, DeviceId);
@@ -259,7 +267,11 @@ public class MessageEncryption {
 
     }
 
-    public byte[][] getKeyfromLocalStorage(long chatid, long keyid) {
+    public MessageKey getKeyfromLocalStorage(long chatid, long keyid) {
+
+        return db.getMessageKey();
+
+        /*
         SharedPreferences sharedPref;
         try {
             sharedPref = context.getSharedPreferences(
@@ -289,6 +301,7 @@ public class MessageEncryption {
         }
         // Key is not available
         return null;
+        */
 
     }
 
@@ -301,14 +314,15 @@ public class MessageEncryption {
 
             try {
 
-                String keyBase64 = aes.getKeyinBase64() + "," + aes.getIVinBase64();
+                String keyBase64 = aes.getKeyinBase64();
+                String iv = aes.getIVinBase64();
                 String sign = "test";
                 //TODO: encTyoe je nach Verschluesselung anpassen
                 byte encType = 0;
 
                 // send Key to all Recipients
                 keytask = KeyTask.getInstance(context);
-                MessageKey messageKey = keytask.saveKey(creatorDevice, recipients, chat, keyBase64, encType, sign);
+                MessageKey messageKey = keytask.saveKey(creatorDevice, recipients, chat, key, iv, encType, sign);
 
                 return messageKey;
             } catch (Exception e) {

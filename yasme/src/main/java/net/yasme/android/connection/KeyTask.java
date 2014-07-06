@@ -32,7 +32,7 @@ public class KeyTask extends ConnectionTask {
     private KeyTask(Context context) {
 
         try {
-            this.uri = new URIBuilder(baseURI).setPath("/msgkey").build();
+            this.uri = new URIBuilder(baseURI).setPath("/v1/msgkey").build();
             this.context = context;
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -41,7 +41,7 @@ public class KeyTask extends ConnectionTask {
 
 
     public MessageKey saveKey(long creatorDevice, ArrayList<Long> recipients, Chat chat,
-                              String key, byte encType, String sign) throws RestServiceException {
+                              String key, String iv, byte encType, String sign) throws RestServiceException {
 
         try {
             System.out.println("[???] Key wird an Server gesendet für insgesamt " + recipients.size() + " Users");
@@ -61,7 +61,7 @@ public class KeyTask extends ConnectionTask {
                 */
                 //TODO: Dummy_IV
                 messageKeys[i++] = new MessageKey(0, new Device(creatorDevice),
-                        new Device(recipient), chat, key, "DummyIV", encType, sign);
+                        new Device(recipient), chat, key, iv, encType, sign);
 
                 System.out.println("[???] Key gesendet für User " + recipient);
             }
