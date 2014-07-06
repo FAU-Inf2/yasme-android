@@ -19,7 +19,12 @@ public class LoginActivity extends AbstractYasmeActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_with_single_fragment);
+
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.singleFragmentContainer, new LoginFragment()).commit();
+        }
 
         //TODO: temporäre Lösung:
         HttpClient.context = this.getApplicationContext();

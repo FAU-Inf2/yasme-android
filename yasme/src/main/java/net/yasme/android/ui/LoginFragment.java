@@ -87,6 +87,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Log.d(this.getClass().getSimpleName(), "[DEBUG] SignIn-Button pushed");
                         attemptLogin();
                     }
                 }
@@ -96,6 +97,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Log.d(this.getClass().getSimpleName(), "[DEBUG] Register-Button pushed");
                         registerDialog();
                     }
                 }
@@ -114,6 +116,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
      */
     public void attemptLogin() {
         if (authTask != null) {
+            Log.d(this.getClass().getSimpleName(), "[DEBUG] AuthTask is null!");
             return;
         }
 
