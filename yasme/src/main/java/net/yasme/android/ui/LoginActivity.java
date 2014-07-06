@@ -40,15 +40,12 @@ public class LoginActivity extends AbstractYasmeActivity {
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask authTask = null;
-    private UserRegistrationTask regTask = null;
     private YasmeDeviceRegistrationTask yasmeDevRegTask = null;
     private CloudMessaging cloudMessaging = null;
 
     protected String accessToken;
 
-    // Values for name, email and password at the time of the login attempt.
-    private String emailTmp;
-    private String passwordTmp;
+
     private long userIdTmp;
 
     // values for devices google + yasme server
@@ -57,13 +54,6 @@ public class LoginActivity extends AbstractYasmeActivity {
 
     // focusView for validate()
     private View focusView = null;
-
-    // UI references.
-    private EditText emailView;
-    private EditText passwordView;
-    private View loginFormView;
-    private View loginStatusView;
-    private TextView loginStatusMessageView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,55 +77,6 @@ public class LoginActivity extends AbstractYasmeActivity {
         }
         //GCM End
 
-        // open storagePreferences
-        // Restore preferencesNAME
-        storage = getSharedPreferences(STORAGE_PREFS,
-                MODE_PRIVATE);
-        emailTmp = getSelfUser().getEmail();
-        accessToken = getAccessToken();
-
-        // Set up the login form.
-        // email = getIntent().getStringExtra(USER_EMAIL);
-        emailView = (EditText) findViewById(R.id.email);
-        emailView.setText(emailTmp);
-
-        passwordView = (EditText) findViewById(R.id.password);
-        passwordView
-                .setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView textView, int id,
-                                                  KeyEvent keyEvent) {
-                        if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                            attemptLogin();
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-
-        loginFormView = findViewById(R.id.login_form);
-        loginStatusView = findViewById(R.id.login_status);
-        loginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
-
-        findViewById(R.id.sign_in_button).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        attemptLogin();
-                    }
-                }
-        );
-
-        findViewById(R.id.register_button).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        registerDialog();
-                    }
-                }
-        );
-
-        regTask = new UserRegistrationTask(storage);
     }
 
     private void registerDialog() {
