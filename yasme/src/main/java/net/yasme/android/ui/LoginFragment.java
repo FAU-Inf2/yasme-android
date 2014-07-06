@@ -307,7 +307,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
 
         try {
             DeviceRegistrationParam deviceRegistrationParam = ((DeviceRegistrationParam)param);
-
+            onPostYasmeDeviceRegExecute(deviceRegistrationParam.getSuccess(),
+                    deviceRegistrationParam.getDeviceId());
         } catch (Exception e) {
 
         }
