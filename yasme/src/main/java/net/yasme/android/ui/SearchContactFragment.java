@@ -118,6 +118,7 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
             try {
                 switch (searchSpinner.getSelectedItemPosition()) {
                     case 0:
+                        uList = searchTask.userByLike(String.valueOf(searchText.getText()));
                         return uList;
                     case 1:
                         uList.add(searchTask.userByMail(String.valueOf(searchText.getText())));

@@ -2,6 +2,7 @@ package net.yasme.android.ui;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -13,7 +14,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import net.yasme.android.R;
+import net.yasme.android.asyncTasks.CreateSingleChatTask;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.DatabaseManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +30,7 @@ import net.yasme.android.entities.User;
 public class UserDetailsFragment extends DialogFragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_USER = "userparam";
     private static final String ARG_USERNAME = "param1";
     private static final String ARG_USERMAIL = "param2";
     private static final String ARG_USERID = "param3";
@@ -35,6 +39,8 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
     // TODO: Rename and change types of parameters
 
     private User contact;
+    private User selfuser;
+    private AbstractYasmeActivity activity;
 
     private TextView contactName;
     private TextView email;
@@ -43,6 +49,7 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
     private Button addContact;
     private ImageButton mailButton;
     private ImageButton numberButton;
+    private DatabaseManager db;
 
     private OnDetailsFragmentInteractionListener mListener;
 
@@ -53,13 +60,14 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
      * @return A new instance of fragment UserDetailsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static UserDetailsFragment newInstance(User contact, Boolean addContactButton) {
+    public static UserDetailsFragment newInstance(User theContact, Boolean addContactButton) {
         UserDetailsFragment fragment = new UserDetailsFragment();
 
         Bundle args = new Bundle();
-        args.putString(ARG_USERNAME, contact.getName());
-        args.putString(ARG_USERMAIL, contact.getEmail());
-        args.putString(ARG_USERID, String.valueOf(contact.getId()));
+        args.putSerializable(ARG_USER, theContact);
+        args.putString(ARG_USERNAME, theContact.getName());
+        args.putString(ARG_USERMAIL, theContact.getEmail());
+        args.putString(ARG_USERID, String.valueOf(theContact.getId()));
         args.putBoolean(ARG_CONTACTBUTTON, addContactButton);
         fragment.setArguments(args);
 
@@ -73,12 +81,12 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        contact = new User();
 
         if (getArguments() != null) {
-            contact.setName(getArguments().getString(ARG_USERNAME));
-            contact.setEmail(getArguments().getString(ARG_USERMAIL));
-            contact.setId(Long.valueOf(getArguments().getString(ARG_USERID)));
+            contact = (User) getArguments().getSerializable(ARG_USER);
+            //contact.setName(getArguments().getString(ARG_USERNAME));
+            //contact.setEmail(getArguments().getString(ARG_USERMAIL));
+            //contact.setId(Long.valueOf(getArguments().getString(ARG_USERID)));
         }
     }
 
@@ -103,6 +111,11 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
         addContact.setOnClickListener(this);
         mailButton.setOnClickListener(this);
         numberButton.setOnClickListener(this);
+
+        activity = (AbstractYasmeActivity) getActivity();
+        selfuser = activity.getSelfUser();
+
+        db = DatabaseManager.getInstance();
 
         if (!getArguments().getBoolean(ARG_CONTACTBUTTON)){
             addContact.setVisibility(View.GONE);
@@ -136,12 +149,54 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-            if (mListener != null) {
-                mListener.onDetailsFragmentInteraction(contact,v.getId());
-                this.onDestroyView();
+
+    switch (v.getId()) {
+        case R.id.contact_detail_newchat:
+            System.out.println("------------------- Create New Chat ---------------------------");
+            CreateSingleChatTask chatTask = new CreateSingleChatTask((ContactActivity) getActivity(),this, selfuser, contact);
+            chatTask.execute(String.valueOf(activity.getUserId()), activity.getAccessToken());
+        break;
+
+    case R.id.contact_detail_addcontact:
+        contact.addToContacts();
+        //db.createUserIfNotExists(user);
+        db.createOrUpdateUser(contact);
+        System.out.println("------------------- Contact Added ---------------------------" + db.getContactsFromDB());
+        break;
+
+    case R.id.mail_image_button:
+        this.sendMail(contact.getEmail());
+        break;
+    case R.id.number_image_button:
+        break;
+}
+
+    }
+
+    private void sendMail(String email){
+
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{email});
+        i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
+        i.putExtra(Intent.EXTRA_TEXT   , "Message powered by YASME");
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            ex.printStackTrace();
         }
 
+    }
 
+
+    public void startChat(long chatId) {
+        //Log.d(this.getClass().getSimpleName(), "[DEBUG] Start chat: " + chatId);
+        Intent intent = new Intent(activity, ChatActivity.class);
+        intent.putExtra(activity.USER_MAIL, activity.getUserMail());
+        intent.putExtra(activity.USER_ID, activity.getUserId());
+        intent.putExtra(activity.CHAT_ID, chatId);
+        intent.putExtra(activity.USER_NAME, activity.getSelfUser().getName());
+        startActivity(intent);
     }
 
 

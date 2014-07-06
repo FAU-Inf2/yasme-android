@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.User;
@@ -67,17 +68,36 @@ public class SearchTask extends ConnectionTask {
         }
     }
 
-    public User userByLike(String term) throws RestServiceException {
+    public List<User> userByLike(String term) throws RestServiceException {
+
+        ArrayList<User> users = new ArrayList<User>();
 
         String path = "userByLike/" + term;
         HttpResponse httpResponse = executeRequest(Request.GET, path);
 
         try {
-            return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
-                    httpResponse.getEntity().getContent())).readLine(), User.class);
+            HttpResponse httpResponse1 = executeRequest(Request.GET,"userByLike/"+term);
+
+            JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
+                    httpResponse.getEntity().getContent())).readLine());
+
+            for(int i = 0; i<jsonArray.length(); i++){
+                users.add(new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
+                        toString(), User.class));
+            }
+
+
+
+            //return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
+            //        httpResponse.getEntity().getContent())).readLine(), User.class);
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
+        } catch(JSONException je){
+
         }
+
+        return users;
+
     }
 
 
