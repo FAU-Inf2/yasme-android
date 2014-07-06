@@ -80,6 +80,7 @@ public class Chat implements Serializable {
         new Chat(0, new ArrayList<User>(), status, name, owner, new ArrayList<Message>(), null);
     }
 
+    @Deprecated
     public Chat(long id, List<User> participants, String status, String name,
                 User owner) {
         new Chat(id, participants, status, name, owner, new ArrayList<Message>(), null);

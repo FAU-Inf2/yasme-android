@@ -82,21 +82,20 @@ public class MessageTask extends ConnectionTask {
                 if (key != null) {
 
                     String messageKey = key.getString("messageKey");
+                    String iv = key.getString("initVector");
                     //decrypt the key with RSA
                     //TODO: statt userId deviceId uebergeben
                             /*
                             MessageSignatur rsa = new MessageSignatur(context, userId);
                             String messageKey = rsa.decrypt(messageKeyEncrypted);
                             */
-                    String[] base64arr = messageKey.split(",");
-                    String keyBase64 = base64arr[0];
-                    String ivBase64 = base64arr[1];
+
 
                     long timestamp = key.getLong("timestamp");
 
                     MessageEncryption keyStorage = new MessageEncryption(context, chatId);
 
-                    keyStorage.saveKey(obj.getLong("messageKeyId"), keyBase64, ivBase64, timestamp);
+                    keyStorage.saveKey(obj.getLong("messageKeyId"), messageKey, iv, timestamp);
                             /*DEBUG*/
                     System.out.println("[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
                             /*DEBUG END*/
