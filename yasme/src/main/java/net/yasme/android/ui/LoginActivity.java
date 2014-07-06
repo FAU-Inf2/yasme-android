@@ -315,7 +315,7 @@ public class LoginActivity extends AbstractYasmeActivity {
 
         // load regId
         //TODO: SharedPrefs umbenennen und als String in der AbstractYasmeActivity speichern
-        SharedPreferences pushPrefs = getSharedPreferences(LoginActivity.class.getSimpleName(),MODE_PRIVATE);
+        SharedPreferences pushPrefs = getSharedPreferences(LoginActivity.class.getSimpleName(), MODE_PRIVATE);
 
         String regId = pushPrefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID,null);
         this.googleRegId = regId;

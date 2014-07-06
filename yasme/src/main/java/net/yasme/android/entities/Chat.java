@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,13 +41,8 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.OWNER, foreign = true)
     private User owner;
 
-    @JsonIgnore
-    private Timestamp lastModified;
-
-    @JsonIgnore
-    private Timestamp created;
-
-    @JsonIgnore
+    private Date lastModified;
+    private Date created;
     private String profilePicture;
 
     @JsonIgnore
@@ -116,8 +112,10 @@ public class Chat implements Serializable {
         return id;
     }
 
+    @JsonIgnore
     public ArrayList<User> getParticipants() {
         if (participants == null || participants.isEmpty()) {
+            participants = new ArrayList<>();
             User dummy = new User("Dummy", 12);
             participants.add(dummy);
             Log.d(this.getClass().getSimpleName(), "Dummy-User hinzugefuegt");
@@ -149,11 +147,11 @@ public class Chat implements Serializable {
         return name;
     }
 
-    public Timestamp getLastModified() {
+    public Date getLastModified() {
         return lastModified;
     }
 
-    public Timestamp getCreated() {
+    public Date getCreated() {
         return created;
     }
 
@@ -168,6 +166,7 @@ public class Chat implements Serializable {
         return owner;
     }
 
+    @JsonIgnore
     public int getNumberOfParticipants() {
 
         if (participants != null)
@@ -198,6 +197,7 @@ public class Chat implements Serializable {
         this.id = id;
     }
 
+    @JsonIgnore
     public void setParticipants(List<User> participants) {
         this.participants = participants;
     }

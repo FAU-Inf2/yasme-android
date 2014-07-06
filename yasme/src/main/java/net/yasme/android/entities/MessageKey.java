@@ -13,10 +13,9 @@ import java.io.Serializable;
 public class MessageKey implements Serializable {
 
     @DatabaseField(columnName = DatabaseConstants.KEY_ID)
-    private long uniqueId;  // for database storing
+    private long id = -1;
 
-    @DatabaseField(columnName = DatabaseConstants.KEY_CHAT, canBeNull = false, foreign = true,
-            foreignAutoCreate=true, foreignAutoRefresh=true)
+    @DatabaseField(columnName = DatabaseConstants.KEY_CHAT, canBeNull = false, foreign = true)
     private Chat chat = null;
 
     @DatabaseField(columnName = DatabaseConstants.VECTOR)
@@ -28,11 +27,9 @@ public class MessageKey implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.TIMESTAMP)
     private long timestamp = -1;
 
-
     public static MessageKey last;
 
-    private long id = -1;
-	private Device creatorDevice = null;   // fuer Auswahl des oeffentlichen									// Schluessels
+	private Device creatorDevice = null;   // fuer Auswahl des oeffentlichen Schluessels
 	private Device recipientDevice = null; // fuer Auswahl des DH-Anteils
 	private byte encType = -1;
 	private long encInfoId = -1;

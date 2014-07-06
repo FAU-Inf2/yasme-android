@@ -5,6 +5,7 @@ import android.util.Log;
 
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 
 import java.sql.SQLException;
@@ -47,6 +48,9 @@ public class DatabaseManager {
 
     /******* CRUD functions ******/
 
+    /**
+     * Chat methods
+     */
     /**
      * Adds one chat to database
      * @param chat     Chat
@@ -357,6 +361,7 @@ public class DatabaseManager {
     /**
      * Message methods
      */
+
     public void storeMessages(List<Message> messages) {
         for(Message msg : messages) {
             try {
@@ -380,4 +385,36 @@ public class DatabaseManager {
         }
         return matching;
     }
+
+
+    /**
+     * CurrentKey methods
+     */
+
+    public long getCurrentKey(long chatId) {
+        List<CurrentKey> currentKeys = null;
+        Chat chat = new Chat();
+        chat.setId(chatId);
+        try {
+            currentKeys = getHelper().getCurrentKeyDao().queryForEq(DatabaseConstants.CURRENT_KEY_CHAT, chat);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(currentKeys.size() != 1) {
+            Log.e(this.getClass().getSimpleName(), "Mehrere currentKeys pro Chat");
+            return 0;
+        }
+        return currentKeys.get(0).getMessageKey().getId();
+    }
+
+    public MessageKey getMessageKey(long keyId) {
+        MessageKey messageKey = null;
+        try {
+            messageKey = getHelper().getMessageKeyDao().queryForId(keyId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return messageKey;
+    }
+
 }

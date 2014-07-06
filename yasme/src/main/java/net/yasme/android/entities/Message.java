@@ -37,7 +37,6 @@ public class Message implements Serializable {
 
     private long messageKeyId;
 
-    @JsonIgnore
     private MessageKey messageKey;
 
     /**

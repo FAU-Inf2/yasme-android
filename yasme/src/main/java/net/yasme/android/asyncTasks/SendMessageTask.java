@@ -65,21 +65,22 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
                 ", " + createdMessage.getId() + ", " + createdMessage.getChatId());
         */
         if(createdMessage == null) {
-            Log.e(this.getClass().getSimpleName(), "1 createdMessage is null!");
+            Log.d(this.getClass().getSimpleName(), "1 createdMessage is null!");
         }
         if(user == null) {
-            Log.e(this.getClass().getSimpleName(), "2 createdMessage is null!");
+            Log.d(this.getClass().getSimpleName(), "2 createdMessage is null!");
         }
         if(msgEncrypted == null) {
-            Log.e(this.getClass().getSimpleName(), "3 createdMessage is null!");
+            Log.d(this.getClass().getSimpleName(), "3 createdMessage is null!");
         }
         if(Long.parseLong(params[4]) == 0) {
-            Log.e(this.getClass().getSimpleName(), "4 createdMessage is null!");
+            Log.d(this.getClass().getSimpleName(), "4 createdMessage is null!");
         }
         if(aesId == 0) {
-            Log.e(this.getClass().getSimpleName(), "5 createdMessage is null!");
+            Log.d(this.getClass().getSimpleName(), "5 createdMessage is null!");
         }
-
+        Log.e(this.getClass().getSimpleName(), msgEncrypted + " " + user.getId() + " " +
+                Long.parseLong(params[4]) + " " + aesId);
         try {
             if(createdMessage == null) {
                 Log.e(this.getClass().getSimpleName(), "createdMessage is null!");
