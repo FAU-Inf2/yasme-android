@@ -388,7 +388,7 @@ public class DatabaseManager {
 
 
     /**
-     * CurrentKey methods
+     * MessageKey and CurrentKey methods
      */
 
     public long getCurrentKey(long chatId) {
@@ -402,9 +402,22 @@ public class DatabaseManager {
         }
         if(currentKeys.size() != 1) {
             Log.e(this.getClass().getSimpleName(), "Mehrere currentKeys pro Chat");
-            return 0;
+            return -1;
         }
         return currentKeys.get(0).getMessageKey().getId();
+    }
+
+    public void updateCurrentKey(long keyId, long chatId) {
+        Chat chat = new Chat();
+        chat.setId(chatId);
+        MessageKey messageKey = new MessageKey();
+        messageKey.setId(keyId);
+        CurrentKey newCurrentKey = new CurrentKey(chat, messageKey);
+        try {
+            getHelper().getCurrentKeyDao().update(newCurrentKey);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public MessageKey getMessageKey(long keyId) {

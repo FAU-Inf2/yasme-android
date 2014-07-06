@@ -18,6 +18,11 @@ public class CurrentKey {
     @DatabaseField(columnName = DatabaseConstants.CURRENT_KEY)
     private MessageKey messageKey;
 
+    public CurrentKey(Chat chat, MessageKey messageKey) {
+        this.chat = chat;
+        this.messageKey = messageKey;
+    }
+
     public Chat getChat() {
         return chat;
     }
