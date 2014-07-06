@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.connection.SearchTask;
 import net.yasme.android.contacts.ContactListContent;
+import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.NotifyFragmentParameter;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
@@ -26,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<NotifyFragmentParameter> {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -192,6 +195,36 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
             mAdapter.notifyDataSetChanged();
         }
 
+    }
+
+    public void notifyFragment(NotifyFragmentParameter param) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        ContactListItemParam contactListItemParam = ((ContactListItemParam)param);
+    }
+
+
+    public static class ContactListItemParam implements NotifyFragmentParameter {
+        private Boolean success;
+        private Long userId;
+        private String accessToken;
+
+        public ContactListItemParam(Boolean success, Long userId, String accessToken) {
+            this.success = success;
+            this.userId = userId;
+            this.accessToken = accessToken;
+        }
+
+        public Long getUserId() {
+            return userId;
+        }
+
+        public String getAccessToken() {
+            return accessToken;
+        }
+
+        public Boolean getSuccess() {
+            return success;
+        }
     }
 
 

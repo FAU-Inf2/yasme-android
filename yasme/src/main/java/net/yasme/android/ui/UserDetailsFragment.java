@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.CreateSingleChatTask;
+import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.NotifyFragmentParameter;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 
@@ -27,7 +30,7 @@ import net.yasme.android.storage.DatabaseManager;
  * create an instance of this fragment.
  *
  */
-public class UserDetailsFragment extends DialogFragment implements View.OnClickListener {
+public class UserDetailsFragment extends DialogFragment implements View.OnClickListener, NotifiableFragment<NotifyFragmentParameter> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_USER = "userparam";
@@ -205,4 +208,34 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
         public void onDetailsFragmentInteraction(User user, Integer buttonId);
     }
 
+
+    public void notifyFragment(NotifyFragmentParameter param) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        UserDetailsParam userDetailsParam = ((UserDetailsParam)param);
+    }
+
+
+    public static class UserDetailsParam implements NotifyFragmentParameter {
+        private Boolean success;
+        private Long userId;
+        private String accessToken;
+
+        public UserDetailsParam(Boolean success, Long userId, String accessToken) {
+            this.success = success;
+            this.userId = userId;
+            this.accessToken = accessToken;
+        }
+
+        public Long getUserId() {
+            return userId;
+        }
+
+        public String getAccessToken() {
+            return accessToken;
+        }
+
+        public Boolean getSuccess() {
+            return success;
+        }
+    }
 }
