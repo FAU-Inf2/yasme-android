@@ -1,46 +1,12 @@
 package net.yasme.android.ui;
 
-import android.app.Fragment;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.GetMessageTask;
-import net.yasme.android.asyncTasks.GetMessageTaskInChat;
-import net.yasme.android.asyncTasks.SendMessageTask;
-import net.yasme.android.connection.ConnectionTask;
-import net.yasme.android.encryption.MessageEncryption;
-import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.Message;
-import net.yasme.android.entities.User;
-import net.yasme.android.storage.DatabaseManager;
-
-import java.util.ArrayList;
 
 public class ChatActivity extends AbstractYasmeActivity {
-
-    SharedPreferences storage;
-
-    private EditText editMessage;
-	private TextView status;
-
-    private Chat chat;
-
-    MessageEncryption aes;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -1,9 +1,5 @@
 package net.yasme.android.asyncTasks;
 
-/**
- * Created by robert on 19.06.14.
- */
-
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
@@ -12,6 +8,9 @@ import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
+/**
+ * Created by robert on 19.06.14.
+ */
 public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
     SharedPreferences storage;
 

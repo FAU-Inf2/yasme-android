@@ -22,15 +22,11 @@ import net.yasme.android.storage.DatabaseManager;
  * Represents an asynchronous login task used to authenticate the user.
  */
 public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
-    Context context;
     SharedPreferences storage;
-    LoginActivity activity;
 
 
-    public UserLoginTask(Context context, SharedPreferences storage, LoginActivity activity) {
-        this.context = context;
+    public UserLoginTask(SharedPreferences storage) {
         this.storage = storage;
-        this.activity = activity;
     }
 
     long lastMessageId;
@@ -73,14 +69,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
             lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
-            //editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
-
             editor.commit();
-
-            //Initialize database (once in application)
-            if (!DatabaseManager.isInitialized()) {
-                DatabaseManager.init(context, userId, accessToken);
-            }
 
         } catch (RestServiceException e) {
             return false;
@@ -91,17 +80,13 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
-        if(success) {
-            //new UpdateDBTask(context, null)
-            //        .execute(Long.toString(lastMessageId), Long.toString(userId), accessToken);
-            //new GetAllChatsForUserTask(context).execute(Long.toString(userId), accessToken);
-            //new GetMessageTask(context, storage).execute(Long.toString(userId), accessToken);
-        }
-        activity.onPostLoginExecute(success, userId, accessToken);
+        //TODO: Observer, folgende Paramter
+        //activity.onPostLoginExecute(success, userId, accessToken);
     }
 
     @Override
     protected void onCancelled() {
-        activity.showProgress(false);
+        //TODO: hier ebenfalls
+        //activity.showProgress(false);
     }
 }

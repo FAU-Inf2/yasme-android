@@ -9,8 +9,6 @@ import net.yasme.android.R;
 
 public class ChatListActivity extends AbstractYasmeActivity {
 
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,11 +41,6 @@ public class ChatListActivity extends AbstractYasmeActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-
-
-
-
 
 }
 
