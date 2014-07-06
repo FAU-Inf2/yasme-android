@@ -14,6 +14,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.LoginActivity;
 
+
 /**
  * Created by florianwinklmeier on 19.06.14.
  */

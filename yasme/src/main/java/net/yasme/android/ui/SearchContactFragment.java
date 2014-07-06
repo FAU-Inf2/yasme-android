@@ -1,7 +1,5 @@
 package net.yasme.android.ui;
 
-import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -17,21 +15,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import net.yasme.android.R;
-import net.yasme.android.connection.SearchTask;
+import net.yasme.android.asyncTasks.SearchUserTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.NotifyFragmentParameter;
 import net.yasme.android.entities.User;
-import net.yasme.android.exception.RestServiceException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<NotifyFragmentParameter> {
-
-
-    private long userId;
-    private String accessToken;
 
     private Spinner searchSpinner;
     private Button searchButton;
@@ -93,7 +86,7 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
         }else{
             contactListContent.clearItems();
-            new SearchUserTask().execute();
+            new SearchUserTask(searchSpinner,searchText,contactListContent,mAdapter).execute();
         }
 
     }
@@ -139,6 +132,7 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
         }
     }
 
+    /*
     private class SearchUserTask extends AsyncTask<String,Void,List<User>> {
 
         @Override
@@ -179,5 +173,5 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
             }
         }
     }
-
+    */
 }
