@@ -42,10 +42,8 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
            //ChatListParam test = new ChatListParam(null);
            ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
 
-           new GetProfileDataTask(activity.getApplicationContext(), this, activity.storage)
-                   .execute(Long.toString(activity.getUserId()), activity.getAccessToken(),
-                           activity.getUserMail());
-
+           //holt vor allem den Namen des Users ab
+           new GetProfileDataTask(activity.storage).execute();
            //Aktualisiert die Datenbank auf den aktuellen Stand des Servers
            new UpdateDBTask(activity.getApplicationContext(), activity.storage)
                    .execute(Long.toString(activity.getUserId()), activity.getAccessToken());
