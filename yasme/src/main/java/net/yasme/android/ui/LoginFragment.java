@@ -55,10 +55,11 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = (AbstractYasmeActivity)getActivity();
 
         // open storagePreferences
         // Restore preferencesNAME
-        emailTmp = activity.getSelfUser().getEmail();
+        emailTmp = activity.getStorage().getString(AbstractYasmeActivity.USER_MAIL, "@yasme.net");
         accessToken = activity.getAccessToken();
 
         // Set up the login form.
