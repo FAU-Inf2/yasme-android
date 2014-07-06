@@ -32,7 +32,7 @@ public class KeyTask extends ConnectionTask {
     private KeyTask(Context context) {
 
         try {
-            this.uri = new URIBuilder(baseURI).setPath("/v1/msgkey").build();
+            this.uri = new URIBuilder(baseURI).setPath("/msgkey").build();
             this.context = context;
         } catch (URISyntaxException e) {
             e.printStackTrace();
