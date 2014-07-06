@@ -3,6 +3,8 @@ package net.yasme.android.asyncTasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.yasme.android.entities.Chat;
+import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
@@ -49,6 +51,7 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         String uName = params[1];
         String uMail = params[2];
         long uId = Long.parseLong(params[3]);
+        long chatId = Long.parseLong(params[4]);
 
         // encrypt Message
         //String msgEncrypted = aes.encrypt(msg); //TODO
@@ -58,11 +61,16 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         // create Message
         User user = new User(uName, uMail,  uId);
         long aesId = aes.getKeyId();
-        Message createdMessage = new Message(user, msgEncrypted, Long.parseLong(params[4]), aesId);
+        Chat chat = new Chat();
+        chat.setId(chatId);
+        chat.setParticipants(DatabaseManager.getInstance().getParticipantsForChat(chatId));
+
+        Message createdMessage = new Message(user, msgEncrypted, chat, aesId);
         Log.d(this.getClass().getSimpleName(), "AES getKeyID: " + aes.getKeyId());
         /*Log.d(this.getClass().getSimpleName(), "[Debug] " + createdMessage.getMessage() +
                 ", " + createdMessage.getId() + ", " + createdMessage.getChatId());
         */
+        /*DEBUG*/
         if(createdMessage == null) {
             Log.d(this.getClass().getSimpleName(), "1 createdMessage is null!");
         }
@@ -72,14 +80,15 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         if(msgEncrypted == null) {
             Log.d(this.getClass().getSimpleName(), "3 createdMessage is null!");
         }
-        if(Long.parseLong(params[4]) == 0) {
+        if(chatId == 0) {
             Log.d(this.getClass().getSimpleName(), "4 createdMessage is null!");
         }
         if(aesId == 0) {
             Log.d(this.getClass().getSimpleName(), "5 createdMessage is null!");
         }
         Log.e(this.getClass().getSimpleName(), msgEncrypted + " " + user.getId() + " " +
-                Long.parseLong(params[4]) + " " + aesId);
+                chatId + " " + aesId);
+        /*DEBUG END*/
         try {
             if(createdMessage == null) {
                 Log.e(this.getClass().getSimpleName(), "createdMessage is null!");

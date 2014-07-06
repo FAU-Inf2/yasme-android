@@ -59,6 +59,16 @@ public class Message implements Serializable {
         //new Message(sender, message, new Date(), chat, messageKeyId);
     }
 
+    public Message(User sender, String message, Chat chat, long messageKeyId) {
+        this.chat = chat;
+        this.dateSent = new Date();
+        this.sender = sender;
+        this.message = message;
+        this.messageKeyId = messageKeyId;
+
+        //new Message(sender, message, new Date(), chat, messageKeyId);
+    }
+
     public Message(User sender, String message, Date dateSent, Chat chat, long messageKeyId) {
         this.sender = sender;
         this.message = message;
