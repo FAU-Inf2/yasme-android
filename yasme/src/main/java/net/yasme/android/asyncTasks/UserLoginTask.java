@@ -83,16 +83,6 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
-        //TODO: Observer, folgende Paramter
-        //activity.onPostLoginExecute(success, userId, accessToken);
         ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).notifyFragments(new LoginFragment.LoginParam(success, userId, accessToken));
     }
-
-    /*
-    @Override
-    protected void onCancelled() {
-        //TODO: hier ebenfalls
-        //activity.showProgress(false);
-    }
-    */
 }

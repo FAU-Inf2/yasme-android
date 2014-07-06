@@ -293,6 +293,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
     public void notifyFragment(NotifyFragmentParameter param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         LoginParam loginParam = ((LoginParam)param);
+        onPostLoginExecute(loginParam.getSuccess(), loginParam.getUserId(),
+                loginParam.getAccessToken());
     }
 
 
