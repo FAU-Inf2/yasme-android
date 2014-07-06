@@ -420,6 +420,22 @@ public class DatabaseManager {
         }
     }
 
+    public boolean existsCurrentKeyForChat(long chatId) {
+        //TODO: effektiver machen, evtl. SELECT
+        List<CurrentKey> currentKeys = null;
+        Chat chat = new Chat();
+        chat.setId(chatId);
+        try {
+            currentKeys = getHelper().getCurrentKeyDao().queryForEq(DatabaseConstants.CURRENT_KEY_CHAT, chat);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(currentKeys.size() != 1) {
+            Log.e(this.getClass().getSimpleName(), "Mehrere currentKeys pro Chat");
+        }
+        return (currentKeys.size() != 0);
+    }
+
     public MessageKey getMessageKey(long keyId) {
         MessageKey messageKey = null;
         try {
@@ -429,5 +445,6 @@ public class DatabaseManager {
         }
         return messageKey;
     }
+
 
 }
