@@ -100,7 +100,7 @@ public class MessageTask extends ConnectionTask {
                     System.out.println("[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
                             /*DEBUG END*/
                     //TODO: hier muss spaeter die DeviceId statt userUd uebergeben werden
-                    keyStorage.deleteKeyFromServer(keyId, Long.parseLong(userId));
+                    keyStorage.deleteKeyFromServer(keyId);
                 } else {
                     System.out.println("[???] Es wurde kein Key in der Message gefunden");
                 }
