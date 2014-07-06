@@ -40,6 +40,7 @@
         <item>Nach E-Mail suchen</item>
         <item>Nach Telefonnummer suchen</item>
     </string-array>
+    <string name="phone_number">Phone Number</string>
 
     <!-- Settings -->
     <string name="action_settings">Einstellungen</string>

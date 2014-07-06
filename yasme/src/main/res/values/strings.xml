@@ -43,6 +43,7 @@
         <item>Search By E-Mail</item>
         <item>Search By Phone Number</item>
     </string-array>
+    <string name="phone_number">Phone Number</string>
 
     <!-- Settings -->
     <string name="action_settings">Settings</string>

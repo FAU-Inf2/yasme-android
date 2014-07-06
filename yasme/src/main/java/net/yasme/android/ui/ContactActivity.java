@@ -146,26 +146,6 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
     @Override
     public void onDetailsFragmentInteraction(User user, Integer buttonId) {
 
-        DatabaseManager db = DatabaseManager.getInstance();
-
-        switch (buttonId){
-            case R.id.contact_detail_newchat:
-                System.out.println("------------------- Create New Chat ---------------------------");
-                CreateSingleChatTask chatTask = new CreateSingleChatTask(this,selfUser,user);
-                chatTask.execute(String.valueOf(this.getUserId()),this.getAccessToken());
-                break;
-            case R.id.contact_detail_addcontact:
-                user.addToContacts();
-                db.createUserIfNotExists(user);
-                System.out.println("------------------- Contact Added ---------------------------");
-                break;
-            case R.id.mail_image_button:
-                this.sendMail(user.getEmail());
-                break;
-            case R.id.number_image_button:
-                break;
-        }
-
     }
 
     @Override
@@ -256,6 +236,7 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
 
         }
 
+
         @Override
         public int getCount() {
             // Show 3 total pages.
@@ -276,15 +257,5 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
             }
             return null;
         }
-    }
-
-    public void startChat(long chatId) {
-        //Log.d(this.getClass().getSimpleName(), "[DEBUG] Start chat: " + chatId);
-        Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra(this.USER_MAIL, this.getUserMail());
-        intent.putExtra(this.USER_ID, this.getUserId());
-        intent.putExtra(this.CHAT_ID, chatId);
-        intent.putExtra(this.USER_NAME, this.getSelfUser().getName());
-        startActivity(intent);
     }
 }

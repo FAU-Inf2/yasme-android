@@ -104,6 +104,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
         // TODO Load profile image into imageButton area as AsyncTask
         Drawable profilePicture = null;
+       /*
         try {
             profilePicture = UserTask.getInstance().getProfilePicture(u.getId());
             // profilePicture will be null if no one has been uploaded yet
@@ -113,7 +114,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         } catch (RestServiceException e) {
             Log.e("Error", e.getMessage());
         }
-
+*/
         return layout;
     }
 
@@ -185,16 +186,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnOwnProfileFragmentInteractionListener {
         public void onOwnProfileFragmentInteraction(String s);
     }

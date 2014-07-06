@@ -9,6 +9,7 @@ import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.ContactActivity;
+import net.yasme.android.ui.UserDetailsFragment;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,11 +26,12 @@ public class CreateSingleChatTask extends AsyncTask<String, Void, Boolean> {
     private User selfUser;
     private long userId;
     private String accessToken;
+    private UserDetailsFragment userDetailsFragment;
     private long newChatId = -1;
     private Chat newChat;
 
 
-    public CreateSingleChatTask(ContactActivity activity, User selfUser, User user){
+    public CreateSingleChatTask(ContactActivity activity,UserDetailsFragment userDetailsFragment, User selfUser, User user){
         this.activity = activity;
         this.selfUser = selfUser;
         this.user = user;
@@ -82,7 +84,7 @@ public class CreateSingleChatTask extends AsyncTask<String, Void, Boolean> {
             if (null != newChat) {
                 databaseManager.createChat(newChat);
             }
-            activity.startChat(newChatId);
+            userDetailsFragment.startChat(newChatId);
         }
     }
 }

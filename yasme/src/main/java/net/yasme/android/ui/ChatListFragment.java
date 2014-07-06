@@ -92,11 +92,11 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         //}
 
     @Override
-    public void notifyFragment(NotifyFragmentParameter value) {
+    public void notifyFragment(NotifyFragmentParameter param) {
         Log.d(super.getClass().getSimpleName(),"I have been notified. Yeeha!");
         ChatListAdapter adapter = (ChatListAdapter)this.getListAdapter();
         //createDummyChatRoomList();
-        chatRooms = ((ChatListParam)value).getChatRooms();
+        chatRooms = ((ChatListParam)param).getChatRooms();
         adapter.updateChats(chatRooms);
         adapter.notifyDataSetChanged();
     }
