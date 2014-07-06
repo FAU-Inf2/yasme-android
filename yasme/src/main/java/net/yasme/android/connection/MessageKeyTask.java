@@ -1,11 +1,12 @@
 package net.yasme.android.connection;
 
-import android.content.Context;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.MessageKey;
+import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.Error;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONException;
@@ -19,28 +20,26 @@ import java.util.ArrayList;
 public class MessageKeyTask extends ConnectionTask {
 
     private static MessageKeyTask instance;
-    private Context context; //necessary for getting Key from Local Storage
 
 
-    public static MessageKeyTask getInstance(Context context) {
+    public static MessageKeyTask getInstance() {
         if (instance == null) {
-            instance = new MessageKeyTask(context);
+            instance = new MessageKeyTask();
         }
         return instance;
     }
 
-    private MessageKeyTask(Context context) {
+    private MessageKeyTask() {
 
         try {
             this.uri = new URIBuilder(baseURI).setPath("/msgkey").build();
-            this.context = context;
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
 
 
-    public MessageKey saveKey(long creatorDevice, ArrayList<Long> recipients, Chat chat,
+    public MessageKey saveKey(ArrayList<User> recipients, Chat chat,
                               String key, String iv, byte encType, String sign) throws RestServiceException {
 
         try {
@@ -51,7 +50,7 @@ public class MessageKeyTask extends ConnectionTask {
             //messageKey Array
             MessageKey[] messageKeys = new MessageKey[recipients.size()];
 
-            for (long recipient : recipients) {
+            for (User recipient : recipients) {
 
                 //encrypt the key with RSA
                 /*
@@ -60,8 +59,8 @@ public class MessageKeyTask extends ConnectionTask {
                 String keyEncrypted = rsa.encrypt(key, pubKey);
                 */
                 //TODO: Dummy_IV
-                messageKeys[i++] = new MessageKey(0, new Device(creatorDevice),
-                        new Device(recipient), chat, key, iv, encType, sign);
+                messageKeys[i++] = new MessageKey(0, new Device(Long.parseLong(deviceId)),
+                        new Device(recipient.getId()), chat, key, iv, encType, sign);
 
                 System.out.println("[???] Key gesendet für User " + recipient);
             }
@@ -81,7 +80,7 @@ public class MessageKeyTask extends ConnectionTask {
 
             //return keyId and timestamp from serverresponse
             //TODO: Dummy_IV
-            MessageKey result = new MessageKey(keyId, new Device(creatorDevice), new Device(0), chat, key, "DummyIV", encType, sign);
+            MessageKey result = new MessageKey(keyId, new Device(Long.parseLong(deviceId)), new Device(0), chat, key, "DummyIV", encType, sign);
             result.setTimestamp(timestamp);
 
             return result;
@@ -94,8 +93,8 @@ public class MessageKeyTask extends ConnectionTask {
         return null;
     }
 
-    public boolean deleteKey(long chatId, long keyId) throws RestServiceException {
-        executeRequest(Request.DELETE, keyId + "/" + chatId);
+    public boolean deleteKey(long keyId) throws RestServiceException {
+        executeRequest(Request.DELETE, String.valueOf(keyId));
         return true;
     }
 }

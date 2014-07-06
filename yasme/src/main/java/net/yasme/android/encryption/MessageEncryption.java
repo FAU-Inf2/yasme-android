@@ -4,7 +4,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import net.yasme.android.asyncTasks.DeleteMessageKeyTask;
 import net.yasme.android.R;
+import net.yasme.android.asyncTasks.SendMessageKeyTask;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.entities.Chat;
@@ -14,7 +16,6 @@ import net.yasme.android.storage.DatabaseManager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.util.Base64;
 
 import java.sql.Timestamp;
@@ -40,7 +41,7 @@ public class MessageEncryption {
     long chatId;
     Chat chat;
     long creatorDevice; //TODO: make DEVICE
-    ArrayList<Long> recipients = new ArrayList<Long>(); //Send generated Key to this recipients
+    ArrayList<User> recipients = new ArrayList<User>(); //Send generated Key to this recipients
     Context context;
     String accessToken;
 
@@ -79,14 +80,13 @@ public class MessageEncryption {
 
             // TODO pro User alle Devices suchen und in recipients speichern
             //suche alle Empfaenger des Schluessels
-            ArrayList<User> participants = chat.getParticipants();
-            if (participants != null) {
-                for (User user : participants) {
+            if (chat.getParticipants() != null) {
+                for (User user : chat.getParticipants()) {
                     long userId = user.getId();
                     //nicht an sich selbst schicken
                     //TODO TEST
                     if (userId != creator) {
-                        recipients.add(user.getId());
+                        recipients.add(user);
                     }
 
                 }
@@ -217,7 +217,7 @@ public class MessageEncryption {
     // send Key to server
     public MessageKey sendKey() {
        try{
-           SendKeyTask task = new SendKeyTask();
+           SendMessageKeyTask task = new SendMessageKeyTask(aes, recipients, chat);
            task.execute();
            MessageKey result = task.get();
            return result;
@@ -229,7 +229,7 @@ public class MessageEncryption {
     //TODO: device id überflüssig
     //delete a symmetric Key from server when the client got that key
     public void deleteKeyFromServer(long keyId, long DeviceId){
-       new DeleteKeyTask().execute(keyId, DeviceId);
+       new DeleteMessageKeyTask().execute(keyId);
     }
 
     // save needed key for chatid, and save key for keyid
@@ -306,64 +306,5 @@ public class MessageEncryption {
 
     }
 
-
-
-    // Async-Task for sending Key to Server
-    class SendKeyTask extends AsyncTask<String, Void, MessageKey> {
-
-        protected MessageKey doInBackground(String... params) {
-
-            try {
-
-                String keyBase64 = aes.getKeyinBase64();
-                String iv = aes.getIVinBase64();
-                String sign = "test";
-                //TODO: encTyoe je nach Verschluesselung anpassen
-                byte encType = 0;
-
-                // send Key to all Recipients
-                keytask = MessageKeyTask.getInstance(context);
-                MessageKey messageKey = keytask.saveKey(creatorDevice, recipients, chat,
-                        keyBase64, iv, encType, sign);
-
-                return messageKey;
-            } catch (Exception e) {
-                System.out.println("Fail to send key: "+e.getMessage());
-            }
-            return null;
-        }
-
-        protected void onPostExecute(Boolean result) {
-
-        }
-    }
-
-    // Async-Task for sending Key to Server
-    class DeleteKeyTask extends AsyncTask<Long, Void, Boolean> {
-
-        protected Boolean doInBackground(Long... params) {
-
-            /**
-             * @param params [0] is keyId
-             *        params [1] is DeviceId from User
-             * @return Returns true if it was successful, otherwise false
-             */
-
-            try {
-
-               //delete Key
-                keytask = MessageKeyTask.getInstance(context);
-                keytask.deleteKey(chatId, params[0]);
-
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            return true;
-        }
-
-        protected void onPostExecute(Boolean result) {
-
-        }
-    }
 }
 
