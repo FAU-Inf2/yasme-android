@@ -31,6 +31,12 @@ public class ObserverRegistry {
             case CHATLISTFRAGMENT:
                 result = Observers.CHATLISTFRAGMENT.observer;
                 break;
+            case REGISTERFRAGMENT:
+                result = Observers.REGISTERFRAGMENT.observer;
+                break;
+            case LOGINFRAGMENT:
+                result = Observers.LOGINFRAGMENT.observer;
+                break;
             case EXAMPLEFRAGMENT:
                   result = Observers.EXAMPLEFRAGMENT.observer;
                 break;
@@ -45,6 +51,8 @@ public class ObserverRegistry {
 //        CHATFRAGMENT(new FragmentObserver1<ChatFragment>()),
 //        USERDETAILS(new FragmentObserver1<UserDetailsFragment>()),
         CHATLISTFRAGMENT(new FragmentObserver<ChatListFragment, NotifyFragmentParameter>()),
+        REGISTERFRAGMENT(new FragmentObserver<ChatListFragment, NotifyFragmentParameter>()),
+        LOGINFRAGMENT(new FragmentObserver<ChatListFragment, NotifyFragmentParameter>()),
         EXAMPLEFRAGMENT(new FragmentObserver<ExampleFragment, ExampleFragment.MyParameters>());
 
 

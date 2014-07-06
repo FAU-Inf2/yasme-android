@@ -84,9 +84,11 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
         //activity.onPostLoginExecute(success, userId, accessToken);
     }
 
+    /*
     @Override
     protected void onCancelled() {
         //TODO: hier ebenfalls
         //activity.showProgress(false);
     }
+    */
 }

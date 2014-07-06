@@ -6,16 +6,22 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.UserRegistrationTask;
+import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.NotifyFragmentParameter;
+import net.yasme.android.entities.Chat;
+
+import java.util.ArrayList;
 
 /**
  * Created by robert on 06.07.14.
  */
-public class RegisterFragment extends Fragment {
+public class RegisterFragment extends Fragment implements NotifiableFragment<NotifyFragmentParameter> {
 
 
     AbstractYasmeActivity activity;
@@ -82,5 +88,36 @@ public class RegisterFragment extends Fragment {
                 }
         );
         alert.show();
+    }
+
+    @Override
+    public void notifyFragment(NotifyFragmentParameter param) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        RegistrationParam regParam = ((RegistrationParam)param);
+    }
+
+
+    public static class RegistrationParam implements NotifyFragmentParameter {
+        private Boolean success;
+        private String email;
+        private String password;
+
+        public RegistrationParam(Boolean success, String email, String password) {
+            this.success = success;
+            this.email = email;
+            this.password = password;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public Boolean getSuccess() {
+            return success;
+        }
     }
 }
