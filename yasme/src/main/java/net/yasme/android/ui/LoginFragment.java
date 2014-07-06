@@ -27,7 +27,6 @@ import net.yasme.android.storage.DatabaseManager;
 
 public class LoginFragment extends Fragment implements NotifiableFragment<NotifyFragmentParameter> {
 
-
     //Keep track of the login task to ensure we can cancel it if requested.
     private UserLoginTask authTask = null;
 
@@ -55,11 +54,11 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = (AbstractYasmeActivity)getActivity();
 
         // open storagePreferences
-        // Restore preferencesNAME
-        emailTmp = activity.getSelfUser().getEmail();
-        accessToken = activity.getAccessToken();
+        emailTmp = activity.getStorage().getString(AbstractYasmeActivity.USER_MAIL, "@yasme.net");
+        accessToken = activity.getStorage().getString(AbstractYasmeActivity.ACCESSTOKEN, "0");
 
         // Set up the login form.
         emailView = (EditText) getView().findViewById(R.id.email);
@@ -226,7 +225,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device at yasme server");
                 DeviceRegistrationTask yasmeDevRegTask =
                         new DeviceRegistrationTask(activity.getStorage());
-                yasmeDevRegTask.execute(this.accessToken, Long.toString(userId),
+                yasmeDevRegTask.execute(accessToken, Long.toString(userId),
                         this.deviceProduct, this.googleRegId);
 
             }
@@ -306,7 +305,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
 
         try {
             DeviceRegistrationParam deviceRegistrationParam = ((DeviceRegistrationParam)param);
-
+            onPostYasmeDeviceRegExecute(deviceRegistrationParam.getSuccess(),
+                    deviceRegistrationParam.getDeviceId());
         } catch (Exception e) {
 
         }
