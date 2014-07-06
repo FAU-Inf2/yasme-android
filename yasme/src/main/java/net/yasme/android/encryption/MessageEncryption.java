@@ -189,11 +189,14 @@ public class MessageEncryption {
         // another key is needed
         else {
             // get Key from storage
-            byte[][] keydata = getKeyfromLocalStorage(chatId, keyid);
+            MessageKey messageKey = getKeyfromLocalStorage(chatId, keyId);
             // if Key is available
-            if (keydata != null) {
-                byte[] keyBytes = keydata[0];
-                byte[] ivBytes = keydata[1];
+            if (messageKey != null) {
+                String keyBase64 = messageKey.getMessageKey();
+                String ivBase64 = messageKey.getInitVector();
+
+                byte[] keyBytes = Base64.decode(keyBase64.getBytes(), Base64.DEFAULT);
+                byte[] ivBytes = Base64.decode(ivBase64.getBytes(), Base64.DEFAULT);
 
                 // convert key needed for decryption
                 SecretKey key = new SecretKeySpec(keyBytes, "AES");
@@ -267,9 +270,9 @@ public class MessageEncryption {
 
     }
 
-    public MessageKey getKeyfromLocalStorage(long chatid, long keyid) {
+    public MessageKey getKeyfromLocalStorage(long chatId, long keyId) {
 
-        return db.getMessageKey();
+        return db.getMessageKey(keyId);
 
         /*
         SharedPreferences sharedPref;
@@ -322,7 +325,8 @@ public class MessageEncryption {
 
                 // send Key to all Recipients
                 keytask = KeyTask.getInstance(context);
-                MessageKey messageKey = keytask.saveKey(creatorDevice, recipients, chat, key, iv, encType, sign);
+                MessageKey messageKey = keytask.saveKey(creatorDevice, recipients, chat,
+                        keyBase64, iv, encType, sign);
 
                 return messageKey;
             } catch (Exception e) {
