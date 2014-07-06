@@ -9,14 +9,12 @@ import android.text.InputType;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.UserRegistrationTask;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.NotifyFragmentParameter;
-import net.yasme.android.entities.Chat;
-
-import java.util.ArrayList;
 
 /**
  * Created by robert on 06.07.14.
@@ -91,10 +89,31 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Not
         alert.show();
     }
 
+    public void onPostRegisterExecute(Boolean success, String email, String password) {
+
+        if (success) {
+            activity.getSelfUser().setEmail(email);
+            Toast.makeText(
+                    activity.getApplicationContext(),
+                    getResources().getString(
+                            R.string.registration_successful),
+                    Toast.LENGTH_SHORT
+            ).show();
+        } else {
+            Toast.makeText(
+                    activity.getApplicationContext(),
+                    getResources().getString(
+                            R.string.registration_not_successful),
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
+    }
+
     @Override
     public void notifyFragment(NotifyFragmentParameter param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         RegistrationParam regParam = ((RegistrationParam)param);
+        onPostRegisterExecute(regParam.getSuccess(), regParam.getEmail(), regParam.getPassword());
     }
 
 

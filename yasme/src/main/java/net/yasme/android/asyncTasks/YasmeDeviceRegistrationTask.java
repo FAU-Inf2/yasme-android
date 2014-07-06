@@ -16,12 +16,10 @@ import net.yasme.android.exception.RestServiceException;
  * Created by cuong on 21/06/14.
  */
 public class YasmeDeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
-    LoginActivity activity;
     SharedPreferences prefs;
     long deviceId;
 
-    public YasmeDeviceRegistrationTask(SharedPreferences prefs, LoginActivity activity){
-        this.activity = activity;
+    public YasmeDeviceRegistrationTask(SharedPreferences prefs){
         this.prefs = prefs;
     }
 
@@ -88,7 +86,8 @@ public class YasmeDeviceRegistrationTask extends AsyncTask<String, Void, Boolean
             editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
             editor.commit();
             Log.d(this.getClass().getSimpleName(),"[DEBUG] Device stored to SharedPreferences");
-            activity.onPostYasmeDeviceRegExecute(success,deviceId);
+            //TODO: Observer, LoginFragment
+            //activity.onPostYasmeDeviceRegExecute(success,deviceId);
         }
 
     }
