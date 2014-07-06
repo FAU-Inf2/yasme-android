@@ -35,7 +35,7 @@ public class SearchTask extends ConnectionTask {
     private SearchTask() {
 
         try {
-            this.uri = new URIBuilder(baseURI).setPath("/v1/search").build();
+            this.uri = new URIBuilder(baseURI).setPath("/search").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
