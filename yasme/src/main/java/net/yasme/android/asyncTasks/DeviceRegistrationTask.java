@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.yasme.android.controller.ObserverRegistry;
 import net.yasme.android.ui.LoginActivity;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
@@ -11,15 +12,16 @@ import net.yasme.android.connection.DeviceTask;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.ui.LoginFragment;
 
 /**
  * Created by cuong on 21/06/14.
  */
-public class YasmeDeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
+public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
     SharedPreferences prefs;
     long deviceId;
 
-    public YasmeDeviceRegistrationTask(SharedPreferences prefs){
+    public DeviceRegistrationTask(SharedPreferences prefs){
         this.prefs = prefs;
     }
 
@@ -88,6 +90,7 @@ public class YasmeDeviceRegistrationTask extends AsyncTask<String, Void, Boolean
             Log.d(this.getClass().getSimpleName(),"[DEBUG] Device stored to SharedPreferences");
             //TODO: Observer, LoginFragment
             //activity.onPostYasmeDeviceRegExecute(success,deviceId);
+            ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).notifyFragments(new LoginFragment.DeviceRegistrationParam(success, deviceId));
         }
 
     }

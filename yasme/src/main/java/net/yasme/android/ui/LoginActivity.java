@@ -1,34 +1,13 @@
 package net.yasme.android.ui;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.InputType;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.YasmeDeviceRegistrationTask;
-import net.yasme.android.asyncTasks.UserLoginTask;
-import net.yasme.android.asyncTasks.UserRegistrationTask;
 import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.gcm.CloudMessaging;
-import net.yasme.android.storage.DatabaseManager;
 
 /**
  * Activity which displays a login screen to the user, offering registration as

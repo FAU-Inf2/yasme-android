@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.UserLoginTask;
-import net.yasme.android.asyncTasks.YasmeDeviceRegistrationTask;
+import net.yasme.android.asyncTasks.DeviceRegistrationTask;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.NotifyFragmentParameter;
 import net.yasme.android.storage.DatabaseManager;
@@ -221,8 +221,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
                 // TODO register device
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device does not exist in Database");
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device at yasme server");
-                YasmeDeviceRegistrationTask yasmeDevRegTask =
-                        new YasmeDeviceRegistrationTask(activity.getStorage());
+                DeviceRegistrationTask yasmeDevRegTask =
+                        new DeviceRegistrationTask(activity.getStorage());
                 yasmeDevRegTask.execute(this.accessToken, Long.toString(userId),
                         this.deviceProduct, this.googleRegId);
 
@@ -292,9 +292,21 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
     @Override
     public void notifyFragment(NotifyFragmentParameter param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        LoginParam loginParam = ((LoginParam)param);
-        onPostLoginExecute(loginParam.getSuccess(), loginParam.getUserId(),
-                loginParam.getAccessToken());
+        // Nice code!
+        try {
+            LoginParam loginParam = ((LoginParam)param);
+            onPostLoginExecute(loginParam.getSuccess(), loginParam.getUserId(),
+                    loginParam.getAccessToken());
+        } catch (Exception e) {
+
+        }
+
+        try {
+            DeviceRegistrationParam deviceRegistrationParam = ((DeviceRegistrationParam)param);
+
+        } catch (Exception e) {
+
+        }
     }
 
 
@@ -315,6 +327,24 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
 
         public String getAccessToken() {
             return accessToken;
+        }
+
+        public Boolean getSuccess() {
+            return success;
+        }
+    }
+
+    public static class DeviceRegistrationParam implements NotifyFragmentParameter {
+        private Boolean success;
+        private Long deviceId;
+
+        public DeviceRegistrationParam(Boolean success, Long deviceId) {
+            this.success = success;
+            this.deviceId = deviceId;
+        }
+
+        public Long getDeviceId() {
+            return deviceId;
         }
 
         public Boolean getSuccess() {
