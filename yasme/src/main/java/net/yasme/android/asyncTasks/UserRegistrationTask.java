@@ -17,14 +17,10 @@ import net.yasme.android.exception.RestServiceException;
  * Represents an asynchronous task used to register the user.
  */
 public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
-    Context context;
     SharedPreferences storage;
-    LoginActivity activity;
 
-    public UserRegistrationTask(Context context, SharedPreferences storage, LoginActivity activity) {
-        this.context = context;
+    public UserRegistrationTask(SharedPreferences storage) {
         this.storage = storage;
-        this.activity = activity;
     }
 
     String name;
@@ -66,14 +62,16 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
             editor.commit();
 
             //Login after registration was successfull
-            UserLoginTask authTask = new UserLoginTask(context, storage, activity);
+            UserLoginTask authTask = new UserLoginTask(storage);
             authTask.execute(email, password);
         }
-        activity.onPostRegisterExecute(success, email, password);
+        //TODO: activity mit folgenden Sachen benachrichtigen
+        //activity.onPostRegisterExecute(success, email, password);
     }
 
     @Override
     protected void onCancelled() {
-        activity.showProgress(false);
+        //TODO: hier ebenfalls observer
+        //activity.showProgress(false);
     }
 }

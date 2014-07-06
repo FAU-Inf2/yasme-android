@@ -17,7 +17,7 @@ import net.yasme.android.asyncTasks.UserRegistrationTask;
  */
 public class RegisterFragment extends Fragment {
 
-    /*
+
     AbstractYasmeActivity activity;
     private UserRegistrationTask regTask = null;
 
@@ -26,6 +26,7 @@ public class RegisterFragment extends Fragment {
         SharedPreferences storage = activity.getStorage();
         regTask = new UserRegistrationTask(storage);
 
+        registerDialog();
     }
 
     private void registerDialog() {
@@ -81,6 +82,5 @@ public class RegisterFragment extends Fragment {
                 }
         );
         alert.show();
-    */
-
+    }
 }

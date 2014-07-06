@@ -28,6 +28,7 @@ import net.yasme.android.asyncTasks.UserLoginTask;
 import net.yasme.android.asyncTasks.UserRegistrationTask;
 import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.gcm.CloudMessaging;
+import net.yasme.android.storage.DatabaseManager;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -134,63 +135,12 @@ public class LoginActivity extends AbstractYasmeActivity {
                 }
         );
 
-        regTask = new UserRegistrationTask(getApplicationContext(), storage, this);
+        regTask = new UserRegistrationTask(storage);
     }
 
     private void registerDialog() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle(getString(R.string.registration_title));
-
-        LinearLayout list = new LinearLayout(this);
-        list.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        final EditText name = new EditText(this);
-        name.setHint(R.string.registration_name);
-        list.addView(name, layoutParams);
-        final EditText mail = new EditText(this);
-        mail.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
-        mail.setHint(R.string.registration_email);
-        list.addView(mail, layoutParams);
-        final EditText password = new EditText(this);
-        password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
-        password.setHint(R.string.registration_password);
-        list.addView(password, layoutParams);
-        final EditText password_check = new EditText(this);
-        password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
-        password_check.setHint(R.string.registration_repeat_password);
-        list.addView(password_check, layoutParams);
-        alert.setView(list);
-        //TODO: Input type seems to change nothing??
-
-        // "OK" button to save the values
-        alert.setPositiveButton(R.string.registration_button_ok,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                        // Grab the EditText's input
-                        String inputName = name.getText().toString();
-                        String inputMail = mail.getText().toString();
-                        String inputPassword = password.getText().toString();
-                        String inputPasswordCheck = password_check.getText()
-                                .toString();
-
-                        //TODO: RSA-Keys erstellen und oeffentlichen Schluessel senden
-                        regTask.execute(inputName, inputMail, inputPassword, inputPasswordCheck);
-                    }
-                }
-        );
-
-        // "Cancel" button
-        alert.setNegativeButton(R.string.registration_button_cancel,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
-                }
-        );
-
-        alert.show();
+        getFragmentManager().beginTransaction()
+                .add(R.id.singleFragmentContainer, new RegisterFragment()).commit();
     }
 
     @Override
@@ -249,7 +199,7 @@ public class LoginActivity extends AbstractYasmeActivity {
             // perform the user login attempt.
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
-            authTask = new UserLoginTask(getApplicationContext(), storage, this);
+            authTask = new UserLoginTask(storage);
             authTask.execute(emailTmp, passwordTmp);
         }
     }
@@ -348,6 +298,10 @@ public class LoginActivity extends AbstractYasmeActivity {
         showProgress(false);
 
         if (success) {
+            //Initialize database (once in application)
+            if (!DatabaseManager.isInitialized()) {
+                DatabaseManager.init(getApplicationContext(), userId, accessToken);
+            }
             // check if there is a device in the Database
             if (yasmeDeviceCheck() == true) {
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device exists in Database");
