@@ -1,6 +1,5 @@
 package net.yasme.android.asyncTasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import net.yasme.android.ui.InviteToChatActivity;
@@ -16,7 +15,6 @@ import java.util.List;
  */
 public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
 
-    protected Context context;
     protected InviteToChatFragment fragment;
 
     protected SearchTask searchTask = SearchTask.getInstance();
@@ -24,8 +22,7 @@ public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
     private String accessToken;
     private List<User> allUsers;
 
-    public GetAllUsersTask(Context context, InviteToChatFragment fragment) {
-        this.context = context;
+    public GetAllUsersTask(InviteToChatFragment fragment) {
         this.fragment = fragment;
     }
 

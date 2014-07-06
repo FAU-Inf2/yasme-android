@@ -138,7 +138,7 @@ public class ChatFragment extends Fragment {
         }
         //String msgEncrypted = aes.encrypt(editMessage.getText().toString());
 
-        new SendMessageTask(activity.getApplicationContext(), (ChatActivity)activity, this, chat.getEncryption())
+        new SendMessageTask((ChatActivity)activity, this, chat.getEncryption())
                 .execute(msg, activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), Long.toString(activity.getSelfUser().getId()),
                         Long.toString(chat.getId()), activity.getAccessToken());
         editMessage.setText("");
