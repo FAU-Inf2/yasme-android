@@ -24,19 +24,17 @@ import java.util.ArrayList;
 public class MessageTask extends ConnectionTask {
 
     private static MessageTask instance;
-    private Context context; //necessary for saving Key from Message
 
-    public static MessageTask getInstance(Context context) {
+    public static MessageTask getInstance() {
         if (instance == null) {
-            instance = new MessageTask(context);
+            instance = new MessageTask();
         }
         return instance;
     }
 
-    private MessageTask(Context context) {
+    private MessageTask() {
         try {
             this.uri = new URIBuilder(baseURI).setPath("/v1/msg").build();
-            this.context = context;
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
