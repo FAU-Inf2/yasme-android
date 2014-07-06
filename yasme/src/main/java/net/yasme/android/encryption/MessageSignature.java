@@ -25,32 +25,37 @@ import android.util.Base64;
 # Methode3: Informiere Kontakt, dass er meinen RSA-Key abholen soll
  */
 
-public class MessageSignatur {
+public class MessageSignature {
 
-    private String RSAKEYSTORAGE = "rsaKeyStorage"; //Storage for Private and Public Keys from user
-    private final String PUBLICKEYS = "publicKeys"; //Storage for all Public Keys of user's friends
+    //private String RSAKEYSTORAGE = "rsaKeyStorage"; //Storage for Private and Public Keys from user
+    //private final String PUBLICKEYS = "publicKeys"; //Storage for all Public Keys of user's friends
 
-    Context context;
-    private RSAEncryption rsa = new RSAEncryption();
-    long creatorDevice;
+    //Context context;
+    private RSAEncryption rsa; // = new RSAEncryption();
+    long selfDeviceId;
     //TODO: entscheiden, ob fuie eigene KEYS fuer userID oder deviceID gespeichert werden
 
-    public MessageSignatur(Context context, long creatorDevice) {
-        this.context = context;
-        this.creatorDevice = creatorDevice;
+    public MessageSignature(PrivateKey privKey, PublicKey pubKey, long selfDeviceId) {
+        //this.context = context;
+        this.selfDeviceId = selfDeviceId;
+        this.rsa = new RSAEncryption(privKey,pubKey);
         //add UserId to the storagename, because there are more than one user on device who need a private key
-        RSAKEYSTORAGE += "_" + Long.toString(creatorDevice);
+        //RSAKEYSTORAGE += "_" + Long.toString(creatorDevice);
     }
 
+    // TODO: Generating keys in YasmeDeviceRegistration
+    /*
     public void generateRSAKeys(){
         rsa.generateKeyPair();
         saveRSAKeys();
-        //TODO: send Public Key to Server
     }
+    */
 
     //save own RSAKeys
+    /*
     public boolean saveRSAKeys(){
-        //TODO: Loesche alle alten Eintraege???
+        // rsa.getPrivKeyinBase64()
+        // rsa.getPubKeyinBase64()
         try {
             SharedPreferences rsakeys = context.getSharedPreferences(RSAKEYSTORAGE, Context.MODE_PRIVATE);
             SharedPreferences.Editor keyeditor = rsakeys.edit();
@@ -67,16 +72,18 @@ public class MessageSignatur {
             return false;
         }
     }
+    */
 
     //save a public Key from a friend
     public boolean savePublicKey(long deviceId, String publicKeyinBase64){
-        //TODO
-        //speichere Key in SharedPreferendes PublicKeys
+        //TODO: Save friends key to database
         return true;
     }
 
     //get own PrivateKey from LocalStorage
-    public PrivateKey getPrivateRSAKey(){
+    //public PrivateKey getPrivateRSAKey(){
+        //return rsa.getPrivKey();
+        /*
         SharedPreferences rsakeys = context.getSharedPreferences(RSAKEYSTORAGE, Context.MODE_PRIVATE);
         String privKey_base64 = rsakeys.getString("privateKey", "");
         System.out.println("[???] Private Key Base64:"+privKey_base64);
@@ -102,11 +109,16 @@ public class MessageSignatur {
         }
 
         return null;
+        */
 
-    }
+
+    //}
+
 
     //get own PublicKey from LocalStorage
-    public PublicKey getPublicRSAKey(){
+    //public PublicKey getPublicRSAKey(){
+        //return rsa.getPubKey();
+        /*
         SharedPreferences rsakeys = context.getSharedPreferences(RSAKEYSTORAGE, Context.MODE_PRIVATE);
         String pubKey_base64 = rsakeys.getString("publicKey", "");
 
@@ -131,9 +143,10 @@ public class MessageSignatur {
         }
 
         return null;
+        */
+    //}
 
-    }
-
+    /*
     //get own PublicKey in Base64
     public String getPublicRSAKeyInBase64(){
         SharedPreferences rsakeys = context.getSharedPreferences(RSAKEYSTORAGE, Context.MODE_PRIVATE);
@@ -146,11 +159,12 @@ public class MessageSignatur {
 
         return null;
     }
+    */
 
     //sign
     public String sign(String text){
-        PrivateKey privKey = getPrivateRSAKey();
-        return rsa.sign(text, privKey);
+        //PrivateKey privKey = getPrivateRSAKey();
+        return rsa.sign(text, rsa.getPrivKey());
     }
 
     //verify
@@ -165,8 +179,8 @@ public class MessageSignatur {
 
     //decrypt
     public String decrypt(String text){
-        PrivateKey privKey = getPrivateRSAKey();
-        return rsa.decrypt(text, privKey);
+        //PrivateKey privKey = getPrivateRSAKey();
+        return rsa.decrypt(text, rsa.getPrivKey());
     }
 
 
@@ -179,9 +193,9 @@ public class MessageSignatur {
 
     //get a Public Key for specific user from LocalStorage
     public PublicKey getPubKeyFromUser(long deviceId){
-        //TODO:
+        //TODO: Get publicKey from Database
         //get public key for the specific deviceId
-        return getPublicRSAKey(); //TODO: ersetzen
+        return rsa.getPubKey(); //TODO: ersetzen
     }
 
 
