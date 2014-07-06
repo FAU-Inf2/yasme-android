@@ -45,7 +45,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
            //holt vor allem den Namen des Users ab
            new GetProfileDataTask(activity.storage).execute();
            //Aktualisiert die Datenbank auf den aktuellen Stand des Servers
-           new UpdateDBTask(activity.getApplicationContext(), activity.storage)
+           new UpdateDBTask(activity.storage)
                    .execute(Long.toString(activity.getUserId()), activity.getAccessToken());
            //Laedt die Liste aller Chats von der Datenbank in das Fragment
            new GetChatListTask().execute();

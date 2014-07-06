@@ -27,7 +27,7 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         this.fragment = fragment;
     }
 
-    MessageTask messageTask = MessageTask.getInstance(activity);
+    MessageTask messageTask = MessageTask.getInstance();
 
     String msg;
 

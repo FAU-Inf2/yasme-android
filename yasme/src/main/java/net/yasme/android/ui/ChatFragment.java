@@ -71,8 +71,7 @@ public class ChatFragment extends Fragment {
            }
 
            //DEBUG, TODO: encryption speichern und auslesen
-           aes = new MessageEncryption(activity.getApplicationContext(),
-                   chat, activity.getSelfUser().getId(), activity.getAccessToken());
+           aes = new MessageEncryption(chat, activity.getSelfUser().getId());
            chat.setEncryption(aes);
        }
 
@@ -148,7 +147,7 @@ public class ChatFragment extends Fragment {
     public void asyncUpdate() {
         status.setText("GET messages");
         //TODO: folgende Methode loeschen
-        new GetMessageTaskInChat(activity.getApplicationContext(), this, chat.getEncryption(), storage)
+        new GetMessageTaskInChat( this, chat.getEncryption(), storage)
                 .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());
         new GetMessageTask(activity.getApplicationContext(), storage)
                 .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());

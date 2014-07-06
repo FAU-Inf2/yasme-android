@@ -19,11 +19,9 @@ import java.util.ArrayList;
 // TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach
 // geloescht werden
 public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
-    Context context;
     SharedPreferences storage;
 
     public GetMessageTask(Context context, SharedPreferences storage) {
-        this.context = context;
         this.storage = storage;
     }
 
@@ -43,7 +41,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
         userId = Long.parseLong(params[0]);
         accessToken = params[1];
-        MessageTask messageTask = MessageTask.getInstance(context);
+        MessageTask messageTask = MessageTask.getInstance();
 
         try {
             messages = messageTask.getMessage(lastMessageId);
@@ -81,7 +79,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
 
         } else {
             Log.i(this.getClass().getSimpleName(), "Keine neuen Nachrichten");
-            Toast.makeText(context, "Keine neuen Nachrichten", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Keine neuen Nachrichten", Toast.LENGTH_SHORT).show();
         }
     }
 }

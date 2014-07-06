@@ -1,6 +1,5 @@
 package net.yasme.android.asyncTasks;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -19,20 +18,18 @@ import java.util.ArrayList;
  */
 @Deprecated
 public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
-    Context context;
     ChatFragment fragment;
     SharedPreferences storage;
     MessageEncryption aes;
 
-    public GetMessageTaskInChat(Context context, ChatFragment fragment, MessageEncryption aes, SharedPreferences storage) {
-        this.context = context;
+    public GetMessageTaskInChat(ChatFragment fragment, MessageEncryption aes, SharedPreferences storage) {
         this.fragment = fragment;
         this.storage = storage;
         this.aes = aes;
     }
 
     ArrayList<Message> messages;
-    MessageTask messageTask = MessageTask.getInstance(context);
+    MessageTask messageTask = MessageTask.getInstance();
     long lastMessageId;
     long userId;
     String accessToken;
