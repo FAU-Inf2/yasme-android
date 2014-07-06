@@ -4,21 +4,14 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import net.yasme.android.asyncTasks.DeleteMessageKeyTask;
-import net.yasme.android.R;
 import net.yasme.android.asyncTasks.SendMessageKeyTask;
-import net.yasme.android.connection.ConnectionTask;
-import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Base64;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 
 //um den Schluessel zum Verschluesseln abzurufen muss bekannt sein, mit welcher KeyId der Chat verschluesselt wird
@@ -42,39 +35,40 @@ public class MessageEncryption {
     Chat chat;
     long creatorDevice; //TODO: make DEVICE
     ArrayList<User> recipients = new ArrayList<User>(); //Send generated Key to this recipients
-    Context context;
-    String accessToken;
+    //Context context;
+    //String accessToken;
 
-    private String CURRENTKEY = "CurrentKey"; // tablename for "currentKey-Storage" per Chat
-    private String KEYSTORAGE = "KeyStorage"; //tablename for "KeyStorage" per Chat
+    //private String CURRENTKEY = "CurrentKey"; // tablename for "currentKey-Storage" per Chat
+    //private String KEYSTORAGE = "KeyStorage"; //tablename for "KeyStorage" per Chat
 
     private AESEncryption aes;
-    private MessageKeyTask keytask;
 
     private DatabaseManager db = DatabaseManager.getInstance();
 
 
+    /*
     //Constructor for saving Key from server (Generating a key is not necessary)
-    public MessageEncryption(Context context, long chatid){
+    public MessageEncryption(long tets, Context context, long chatid){
         this.context = context;
         this.chatId = chatid;
         this.CURRENTKEY = this.CURRENTKEY + "_" + Long.toString(chatId);
         this.KEYSTORAGE = this.KEYSTORAGE + "_" + Long.toString(chatId);
     }
+    */
 
     // Constructor fuer Chat-Verschluesselung--> holt bzw. generiert Key, falls noetig
-    public MessageEncryption(Context context, Chat chat, long creator, String accessToken) {
+    public MessageEncryption(Chat chat, long creator) {
 
-        this(context, chat.getId());
+        //this(context, chat.getId());
         this.chat = chat;
-        this.accessToken = accessToken;
+        //this.accessToken = accessToken;
         this.creatorDevice = creator;
 
-        SharedPreferences currentKeyPref = context.getSharedPreferences(
-                CURRENTKEY, Context.MODE_PRIVATE);
+        //SharedPreferences currentKeyPref = context.getSharedPreferences(
+        //        CURRENTKEY, Context.MODE_PRIVATE);
 
         // if no old key for this chat, then generate a new one, beginning with
-        if (!currentKeyPref.contains("keyId")) {
+        if (db.getCurrentKey(chatId) < 0) {
             System.out.println("[???] Generate Key");
             aes = new AESEncryption();
 
@@ -102,7 +96,8 @@ public class MessageEncryption {
                     keyId = resultMessageKey.getId();
                     long timestamp = resultMessageKey.getTimestamp();
                     System.out.println("[???] Key wurde an Server gesendet, ID: "+keyId);
-                    saveKey(keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
+                    //saveKey(keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
+                    //TODO: saveKeyToDatabase
                     System.out.println("[???] Key wurde lokal gespeichert, ID: "+keyId);
                 }else {
                     System.out.println("[???] Fehler beim Senden des Keys an den Server");
@@ -113,9 +108,9 @@ public class MessageEncryption {
                 System.out.println("[???] No recipients in chat could be found. Key was not sent to server!");
             }
 
-            if (!ConnectionTask.isInitialized()) {
-                ConnectionTask.initParams(context.getResources().getString(R.string.server_scheme),context.getResources().getString(R.string.server_host),context.getResources().getString(R.string.server_port));
-            }
+            //if (!ConnectionTask.isInitialized()) {
+            //    ConnectionTask.initParams(context.getResources().getString(R.string.server_scheme),context.getResources().getString(R.string.server_host),context.getResources().getString(R.string.server_port));
+            //}
 
 
 
@@ -141,7 +136,7 @@ public class MessageEncryption {
             checkCurrentKeyId();
 
             // get Key from storage
-            MessageKey key = getKeyfromLocalStorage(chatId, keyId);
+            MessageKey key = getKeyFromLocalStorage(chatId, keyId);
             // if Key is available
             if (key != null) {
                 String keyBase64 = key.getMessageKey();
@@ -187,7 +182,7 @@ public class MessageEncryption {
         // another key is needed
         else {
             // get Key from storage
-            MessageKey messageKey = getKeyfromLocalStorage(chatId, keyId);
+            MessageKey messageKey = getKeyFromLocalStorage(chatId, keyId);
             // if Key is available
             if (messageKey != null) {
                 String keyBase64 = messageKey.getMessageKey();
@@ -226,14 +221,15 @@ public class MessageEncryption {
        }
         return null;
     }
-    //TODO: device id überflüssig
     //delete a symmetric Key from server when the client got that key
-    public void deleteKeyFromServer(long keyId){
-       new DeleteMessageKeyTask().execute(keyId);
-    }
+    //public void deleteKeyFromServer(long keyId){
+    //    new DeleteMessageKeyTask().execute(keyId);
+    //}
 
     // save needed key for chatid, and save key for keyid
+      /*
     public void saveKey(long keyid, String key, String iv, long timestamp) {
+
         SharedPreferences keysPref = context.getSharedPreferences(KEYSTORAGE, Context.MODE_PRIVATE);
         SharedPreferences currentKeyPref = context.getSharedPreferences(CURRENTKEY, Context.MODE_PRIVATE);
 
@@ -266,9 +262,10 @@ public class MessageEncryption {
         keysEditor.commit();
         currentKeyEditor.commit();
 
-    }
 
-    public MessageKey getKeyfromLocalStorage(long chatId, long keyId) {
+    }
+  */
+    public MessageKey getKeyFromLocalStorage(long chatId, long keyId) {
 
         return db.getMessageKey(keyId);
 

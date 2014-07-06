@@ -2,6 +2,7 @@ package net.yasme.android.connection;
 
 import android.content.Context;
 
+import net.yasme.android.asyncTasks.DeleteMessageKeyTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
@@ -93,14 +94,15 @@ public class MessageTask extends ConnectionTask {
 
                     long timestamp = key.getLong("timestamp");
 
-                    MessageEncryption keyStorage = new MessageEncryption(context, chatId);
+                    //MessageEncryption keyStorage = new MessageEncryption(context, chatId);
 
-                    keyStorage.saveKey(obj.getLong("messageKeyId"), messageKey, iv, timestamp);
+                    //keyStorage.saveKey(obj.getLong("messageKeyId"), messageKey, iv, timestamp);
+                    // TODO: storeKeyToDatabase
                             /*DEBUG*/
                     System.out.println("[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
                             /*DEBUG END*/
-                    //TODO: hier muss spaeter die DeviceId statt userUd uebergeben werden
-                    keyStorage.deleteKeyFromServer(keyId);
+                    new DeleteMessageKeyTask().execute(keyId);
+                    //keyStorage.deleteKeyFromServer(keyId);
                 } else {
                     System.out.println("[???] Es wurde kein Key in der Message gefunden");
                 }
