@@ -106,8 +106,6 @@ public class CloudMessaging {
 
             System.out.println("Device registered, registration ID=" + regid);
 
-            sendRegistrationIdToBackend();
-
             // Persist the regID - no need to register again.
             storeRegistrationId(context, regid);
         } catch (IOException ex) {
@@ -127,27 +125,5 @@ public class CloudMessaging {
         editor.putString(AbstractYasmeActivity.PROPERTY_REG_ID, regId);
         editor.putInt(AbstractYasmeActivity.PROPERTY_APP_VERSION, appVersion);
         editor.commit();
-    }
-
-    private void sendRegistrationIdToBackend() {
-
-    }
-
-    public boolean sendMessage(){
-
-        try {
-            Bundle data = new Bundle();
-
-            data.putString("my_message", "Hello World");
-            data.putString("my_action",
-                    "com.google.android.gcm.demo.app.ECHO_NOW");
-            //String id = Integer.toString(msgId.incrementAndGet());
-            gcm.send(regid + "@gcm.googleapis.com", "1", data);
-            System.out.println("Sent message");
-            return true;
-        } catch (IOException ex) {
-           System.out.println("Error :" + ex.getMessage());
-        }
-        return false;
     }
 }
