@@ -62,11 +62,20 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
         emailTmp = activity.getStorage().getString(AbstractYasmeActivity.USER_MAIL, "@yasme.net");
         accessToken = activity.getAccessToken();
 
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_login, container,
+                false);
+
         // Set up the login form.
-        emailView = (EditText) getView().findViewById(R.id.email);
+        emailView = (EditText) rootView.findViewById(R.id.email);
         emailView.setText(emailTmp);
 
-        passwordView = (EditText) getView().findViewById(R.id.password);
+        passwordView = (EditText) rootView.findViewById(R.id.password);
         passwordView
                 .setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
@@ -80,11 +89,11 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
                     }
                 });
 
-        loginFormView = getView().findViewById(R.id.login_form);
-        loginStatusView = getView().findViewById(R.id.login_status);
-        loginStatusMessageView = (TextView) getView().findViewById(R.id.login_status_message);
+        loginFormView = rootView.findViewById(R.id.login_form);
+        loginStatusView = rootView.findViewById(R.id.login_status);
+        loginStatusMessageView = (TextView) rootView.findViewById(R.id.login_status_message);
 
-        getView().findViewById(R.id.sign_in_button).setOnClickListener(
+        rootView.findViewById(R.id.sign_in_button).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -94,7 +103,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
                 }
         );
 
-        getView().findViewById(R.id.register_button).setOnClickListener(
+        rootView.findViewById(R.id.register_button).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -103,6 +112,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
                     }
                 }
         );
+
+        return rootView;
     }
 
     private void registerDialog() {
@@ -219,7 +230,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
             // check if there is a device in the Database
             if (yasmeDeviceCheck() == true) {
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device exists in Database");
-                Intent intent = new Intent(activity.getApplicationContext(), ChatListFragment.class);
+                //Intent intent = new Intent(activity.getApplicationContext(), ChatListFragment.class);
+                Intent intent = new Intent(activity, ChatListActivity.class);
                 startActivity(intent);
             } else {
                 // TODO register device
@@ -240,7 +252,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
     public void onPostYasmeDeviceRegExecute(Boolean success, long deviceId) {
         if (success) {
             Log.d(this.getClass().getSimpleName(), "[DEBUG] Login after device registration at yasme server");
-            Intent intent = new Intent(activity.getApplicationContext(), ChatListFragment.class);
+            Intent intent = new Intent(activity, ChatListActivity.class);
             startActivity(intent);
         }
     }
@@ -285,13 +297,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_login, container,
-                false);
-        return rootView;
-    }
 
     @Override
     public void notifyFragment(NotifyFragmentParameter param) {
