@@ -45,6 +45,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
            new GetProfileDataTask(activity.getApplicationContext(), this, activity.storage)
                    .execute(Long.toString(activity.getUserId()), activity.getAccessToken(),
                            activity.getUserMail());
+
            //Aktualisiert die Datenbank auf den aktuellen Stand des Servers
            new UpdateDBTask(activity.getApplicationContext(), activity.storage)
                    .execute(Long.toString(activity.getUserId()), activity.getAccessToken());

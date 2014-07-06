@@ -115,7 +115,8 @@ public class Chat implements Serializable {
         if (participants.isEmpty()) {
             User dummy = new User("Dummy", 12);
             participants.add(dummy);
-            Log.d(this.getClass().getSimpleName(), "Dummy-User hinzugefuegt");
+            // Without cast IntelliJ is not happy
+            Log.d(((Object)this).getClass().getSimpleName(), "Dummy-User hinzugefuegt");
         }
         return new ArrayList<User>(participants);
     }
