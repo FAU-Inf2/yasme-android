@@ -22,6 +22,7 @@ import net.yasme.android.asyncTasks.UserLoginTask;
 import net.yasme.android.asyncTasks.DeviceRegistrationTask;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.NotifyFragmentParameter;
+import net.yasme.android.controller.ObserverRegistry;
 import net.yasme.android.storage.DatabaseManager;
 
 
@@ -62,6 +63,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
         emailTmp = activity.getStorage().getString(AbstractYasmeActivity.USER_MAIL, "@yasme.net");
         accessToken = activity.getAccessToken();
 
+        ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).register(this);
     }
 
 
