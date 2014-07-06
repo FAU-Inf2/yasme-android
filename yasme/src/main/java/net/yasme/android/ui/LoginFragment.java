@@ -3,16 +3,21 @@ package net.yasme.android.ui;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import net.yasme.android.R;
+import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.NotifyFragmentParameter;
 
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements NotifiableFragment<NotifyFragmentParameter> {
 
     // UI references.
     private EditText emailView;
@@ -79,5 +84,43 @@ public class LoginFragment extends Fragment {
         );
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_chatlist, container,
+                false);
+        return rootView;
+    }
+
+    @Override
+    public void notifyFragment(NotifyFragmentParameter param) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        LoginParam loginParam = ((LoginParam)param);
+    }
+
+
+    public static class LoginParam implements NotifyFragmentParameter {
+        private Boolean success;
+        private Long userId;
+        private String accessToken;
+
+        public LoginParam(Boolean success, Long userId, String accessToken) {
+            this.success = success;
+            this.userId = userId;
+            this.accessToken = accessToken;
+        }
+
+        public Long getUserId() {
+            return userId;
+        }
+
+        public String getAccessToken() {
+            return accessToken;
+        }
+
+        public Boolean getSuccess() {
+            return success;
+        }
+    }
 }
 

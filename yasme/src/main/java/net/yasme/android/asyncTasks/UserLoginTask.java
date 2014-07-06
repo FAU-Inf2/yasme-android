@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.controller.ObserverRegistry;
 import net.yasme.android.gcm.CloudMessaging;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.LoginActivity;
@@ -14,6 +15,7 @@ import net.yasme.android.connection.AuthorizationTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.RegisterFragment;
 
 /**
  * Created by robert on 19.06.14.
@@ -82,6 +84,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         //TODO: Observer, folgende Paramter
         //activity.onPostLoginExecute(success, userId, accessToken);
+        ObserverRegistry.getRegistry(ObserverRegistry.Observers.REGISTERFRAGMENT).notifyFragments(new RegisterFragment.RegistrationParam(success, userId, accessToken));
     }
 
     /*
