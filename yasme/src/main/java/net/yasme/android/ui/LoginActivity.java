@@ -357,7 +357,7 @@ public class LoginActivity extends AbstractYasmeActivity {
                 // TODO register device
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device does not exist in Database");
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device at yasme server");
-                yasmeDevRegTask = new YasmeDeviceRegistrationTask(getApplicationContext(), storage, this);
+                yasmeDevRegTask = new YasmeDeviceRegistrationTask(storage, this);
                 yasmeDevRegTask.execute(this.accessToken, Long.toString(userId),this.deviceProduct,this.googleRegId);
 
             }

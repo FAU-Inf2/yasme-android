@@ -15,11 +15,9 @@ import java.util.ArrayList;
  * Created by robert on 19.06.14.
  */
 public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
-    ChatListFragment fragment;
     int layoutId;
 
-    public GetChatListTask(ChatListFragment fragment) {
-        this.fragment = fragment;
+    public GetChatListTask() {
     }
 
     ArrayList<Chat> chatRooms = null;

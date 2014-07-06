@@ -1,6 +1,5 @@
 package net.yasme.android.asyncTasks;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -17,13 +16,11 @@ import net.yasme.android.exception.RestServiceException;
  * Created by cuong on 21/06/14.
  */
 public class YasmeDeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
-    Context context;
     LoginActivity activity;
     SharedPreferences prefs;
     long deviceId;
 
-    public YasmeDeviceRegistrationTask(Context context,SharedPreferences prefs, LoginActivity activity){
-        this.context = context;
+    public YasmeDeviceRegistrationTask(SharedPreferences prefs, LoginActivity activity){
         this.activity = activity;
         this.prefs = prefs;
     }

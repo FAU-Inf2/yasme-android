@@ -42,13 +42,15 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
            //ChatListParam test = new ChatListParam(null);
            ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
 
-           //Holt vor allem den eigenen Namen ab
-           new GetProfileDataTask(activity.storage).execute();
+           new GetProfileDataTask(activity.getApplicationContext(), this, activity.storage)
+                   .execute(Long.toString(activity.getUserId()), activity.getAccessToken(),
+                           activity.getUserMail());
+
            //Aktualisiert die Datenbank auf den aktuellen Stand des Servers
            new UpdateDBTask(activity.getApplicationContext(), activity.storage)
                    .execute(Long.toString(activity.getUserId()), activity.getAccessToken());
            //Laedt die Liste aller Chats von der Datenbank in das Fragment
-           new GetChatListTask(this).execute();
+           new GetChatListTask().execute();
        }
 
         @Override
@@ -106,7 +108,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         }
 
         private ArrayList<Chat> chatRooms = null;
-        public ChatListParam(ArrayList<Chat> chatRooms) {
+                public ChatListParam(ArrayList<Chat> chatRooms) {
                     this.chatRooms = chatRooms;
                 }
         }

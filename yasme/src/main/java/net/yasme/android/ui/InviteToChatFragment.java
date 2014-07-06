@@ -49,7 +49,7 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
 
         activity = (AbstractYasmeActivity) getActivity();
         findViewsById();
-        new GetAllUsersTask(activity.getApplicationContext(), this).execute(Long.toString(activity.getUserId()), activity.getAccessToken());
+        new GetAllUsersTask(this).execute(Long.toString(activity.getUserId()), activity.getAccessToken());
     }
 
     @Override
