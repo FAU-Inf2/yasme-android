@@ -15,6 +15,7 @@ import net.yasme.android.connection.AuthorizationTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.LoginFragment;
 import net.yasme.android.ui.RegisterFragment;
 
 /**
@@ -84,7 +85,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         //TODO: Observer, folgende Paramter
         //activity.onPostLoginExecute(success, userId, accessToken);
-        ObserverRegistry.getRegistry(ObserverRegistry.Observers.REGISTERFRAGMENT).notifyFragments(new RegisterFragment.RegistrationParam(success, userId, accessToken));
+        ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).notifyFragments(new LoginFragment.LoginParam(success, userId, accessToken));
     }
 
     /*
