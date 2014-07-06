@@ -3,11 +3,10 @@ package net.yasme.android.encryption;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.transform.Result;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.ConnectionTask;
-import net.yasme.android.connection.KeyTask;
+import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
@@ -18,7 +17,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Base64;
 
-import java.lang.reflect.Array;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -50,7 +48,7 @@ public class MessageEncryption {
     private String KEYSTORAGE = "KeyStorage"; //tablename for "KeyStorage" per Chat
 
     private AESEncryption aes;
-    private KeyTask keytask;
+    private MessageKeyTask keytask;
 
     private DatabaseManager db = DatabaseManager.getInstance();
 
@@ -324,7 +322,7 @@ public class MessageEncryption {
                 byte encType = 0;
 
                 // send Key to all Recipients
-                keytask = KeyTask.getInstance(context);
+                keytask = MessageKeyTask.getInstance(context);
                 MessageKey messageKey = keytask.saveKey(creatorDevice, recipients, chat,
                         keyBase64, iv, encType, sign);
 
@@ -354,7 +352,7 @@ public class MessageEncryption {
             try {
 
                //delete Key
-                keytask = KeyTask.getInstance(context);
+                keytask = MessageKeyTask.getInstance(context);
                 keytask.deleteKey(chatId, params[0]);
 
             } catch (Exception e) {

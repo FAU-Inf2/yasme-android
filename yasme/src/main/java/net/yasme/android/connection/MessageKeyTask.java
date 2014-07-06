@@ -16,20 +16,20 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-public class KeyTask extends ConnectionTask {
+public class MessageKeyTask extends ConnectionTask {
 
-    private static KeyTask instance;
+    private static MessageKeyTask instance;
     private Context context; //necessary for getting Key from Local Storage
 
 
-    public static KeyTask getInstance(Context context) {
+    public static MessageKeyTask getInstance(Context context) {
         if (instance == null) {
-            instance = new KeyTask(context);
+            instance = new MessageKeyTask(context);
         }
         return instance;
     }
 
-    private KeyTask(Context context) {
+    private MessageKeyTask(Context context) {
 
         try {
             this.uri = new URIBuilder(baseURI).setPath("/msgkey").build();
