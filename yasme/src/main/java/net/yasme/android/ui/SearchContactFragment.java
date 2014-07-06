@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +19,15 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.connection.SearchTask;
 import net.yasme.android.contacts.ContactListContent;
+import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.NotifyFragmentParameter;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<NotifyFragmentParameter> {
 
 
     private long userId;
@@ -106,6 +109,35 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
         public void onSearchFragmentInteraction(User user);
     }
 
+    public void notifyFragment(NotifyFragmentParameter param) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        SearchContactParam searchContactParam = ((SearchContactParam)param);
+    }
+
+
+    public static class SearchContactParam implements NotifyFragmentParameter {
+        private Boolean success;
+        private Long userId;
+        private String accessToken;
+
+        public SearchContactParam(Boolean success, Long userId, String accessToken) {
+            this.success = success;
+            this.userId = userId;
+            this.accessToken = accessToken;
+        }
+
+        public Long getUserId() {
+            return userId;
+        }
+
+        public String getAccessToken() {
+            return accessToken;
+        }
+
+        public Boolean getSuccess() {
+            return success;
+        }
+    }
 
     private class SearchUserTask extends AsyncTask<String,Void,List<User>> {
 
