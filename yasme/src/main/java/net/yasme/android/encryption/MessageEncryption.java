@@ -228,7 +228,7 @@ public class MessageEncryption {
     }
     //TODO: device id überflüssig
     //delete a symmetric Key from server when the client got that key
-    public void deleteKeyFromServer(long keyId, long DeviceId){
+    public void deleteKeyFromServer(long keyId){
        new DeleteMessageKeyTask().execute(keyId);
     }
 
