@@ -149,7 +149,7 @@ public class ChatFragment extends Fragment {
         //TODO: folgende Methode loeschen
         new GetMessageTaskInChat( this, chat.getEncryption(), storage)
                 .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());
-        new GetMessageTask(activity.getApplicationContext(), storage)
+        new GetMessageTask(storage)
                 .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());
         status.setText("GET messages done");
     }
