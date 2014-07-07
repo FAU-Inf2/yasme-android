@@ -310,22 +310,21 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         return true;
     }
 
+    @Override
+    public void notifyFragment(LoginParam param) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        if(param instanceof LoginProcessParam)
+            notifyFragment((LoginProcessParam)param);
+        else if(param instanceof DeviceRegistrationParam)
+            notifyFragment((DeviceRegistrationParam)param);
+    }
+
     public void notifyFragment(LoginProcessParam loginParam) {
         Log.d(super.getClass().getSimpleName(), "I have been notified with loginParam");
 
             onPostLoginExecute(loginParam.getSuccess(), loginParam.getUserId(),
                     loginParam.getAccessToken());
             Log.d(super.getClass().getSimpleName(), "Login-Status: " + loginParam.getSuccess());
-
-        /*
-        try {
-            DeviceRegistrationParam deviceRegistrationParam = ((DeviceRegistrationParam)param);
-            onPostYasmeDeviceRegExecute(deviceRegistrationParam.getSuccess(),
-                    deviceRegistrationParam.getDeviceId());
-        } catch (Exception e) {
-
-        }
-        */
     }
 
     public void notifyFragment(DeviceRegistrationParam deviceRegistrationParam) {
@@ -336,14 +335,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
     }
 
-    @Override
-    public void notifyFragment(LoginParam param) {
-        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        if(param instanceof LoginProcessParam)
-           notifyFragment((LoginProcessParam)param);
-        else if(param instanceof DeviceRegistrationParam)
-            notifyFragment((DeviceRegistrationParam)param);
-    }
+
 
 
 
