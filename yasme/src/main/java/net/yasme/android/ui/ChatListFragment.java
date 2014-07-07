@@ -21,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by martin on 21.06.2014.
  */
-public class ChatListFragment extends ListFragment implements NotifiableFragment<ChatListFragment.ChatListParam> {
+public class ChatListFragment extends ListFragment implements NotifiableFragment<ArrayList<Chat>> {
 
        private AbstractYasmeActivity activity;
        private ArrayList<Chat> chatRooms = new ArrayList<Chat>();
@@ -42,7 +42,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
            //ChatListParam test = new ChatListParam(null);
            //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
            Log.d(this.getClass().getSimpleName(),"Try to get ChatListObservableInstance");
-           FragmentObservable<ChatListFragment,ChatListParam> obs = ObservableRegistry.getObservable(ChatListFragment.class, ChatListParam.class);
+           FragmentObservable<ChatListFragment,ArrayList<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
            Log.d(this.getClass().getSimpleName(),"... successful");
            obs.register(this);
 
@@ -62,7 +62,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
             super.onStop();
             //De-Register at observer
             //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).remove(this);
-            FragmentObservable<ChatListFragment,ChatListParam> obs = ObservableRegistry.getObservable(ChatListFragment.class, ChatListParam.class);
+            FragmentObservable<ChatListFragment,ArrayList<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
             Log.d(this.getClass().getSimpleName(),"Remove from observer");
             obs.remove(this);
         }
@@ -99,16 +99,17 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         //}
 
     @Override
-    public void notifyFragment(ChatListParam param) {
+    public void notifyFragment(ArrayList<Chat> chatRooms) {
         Log.d(super.getClass().getSimpleName(),"I have been notified. Yeeha!");
         ChatListAdapter adapter = (ChatListAdapter)this.getListAdapter();
         //createDummyChatRoomList();
-        chatRooms = ((ChatListParam)param).getChatRooms();
+        //        chatRooms = ((ChatListParam)param).getChatRooms();
+        this.chatRooms = chatRooms;
         adapter.updateChats(chatRooms);
         adapter.notifyDataSetChanged();
     }
 
-
+/*
     public static class ChatListParam {
         public ArrayList<Chat> getChatRooms() {
             return chatRooms;
@@ -137,4 +138,5 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
             chatRooms.add(chat);
         }
     }
+    */
 }

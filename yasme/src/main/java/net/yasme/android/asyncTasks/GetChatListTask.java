@@ -42,8 +42,8 @@ public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
             System.out.println("[Debug] " + chat.toString());
         }
 
-        FragmentObservable<ChatListFragment,ChatListFragment.ChatListParam> obs = ObservableRegistry.getObservable(ChatListFragment.class, ChatListFragment.ChatListParam.class);
-        obs.notifyFragments(new ChatListFragment.ChatListParam(chatRooms));
+        FragmentObservable<ChatListFragment,ArrayList<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
+        obs.notifyFragments(chatRooms);
 
         //ChatListAdapter adapter = (ChatListAdapter)fragment.getListAdapter();
         //Log.d(this.getClass().getSimpleName(), "UpdateMessages: " + chatRooms.size());

@@ -9,10 +9,9 @@ public class ObservableRegistryEntry {
     private Class fragment;
     private Class param;
 
-    public ObservableRegistryEntry(FragmentObservable<?, ?> obs, Class fragment, Class param) {
+    public ObservableRegistryEntry(FragmentObservable<?, ?> obs, Class fragment) {
         this.obs = obs;
         this.fragment = fragment;
-        this.param = param;
     }
 
     public FragmentObservable<?, ?> getObs() {
@@ -27,8 +26,8 @@ public class ObservableRegistryEntry {
         return param;
     }
 
-    public Boolean check(Class fragmentRef, Class paramRef) {
-        return fragment.equals(fragmentRef) && paramRef.equals(param);
+    public Boolean check(Class fragmentRef) {
+        return fragment.equals(fragmentRef);
     }
 }
     /*

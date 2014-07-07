@@ -65,7 +65,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
         //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).register(this);
         Log.d(this.getClass().getSimpleName(),"Try to get LoginObservableInstance");
-        FragmentObservable<LoginFragment,LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class, LoginParam.class);
+        FragmentObservable<LoginFragment,LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
         Log.d(this.getClass().getSimpleName(),"... successful");
 
         obs.register(this);
@@ -74,7 +74,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     @Override
     public void onStop() {
         super.onStop();
-        FragmentObservable<LoginFragment,LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class, LoginParam.class);
+        FragmentObservable<LoginFragment,LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
         Log.d(this.getClass().getSimpleName(),"Remove from observer");
         obs.remove(this);
     }
@@ -310,20 +310,13 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         return true;
     }
 
+    public void notifyFragment(LoginProcessParam loginParam) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified with loginParam");
 
-
-    @Override
-    public void notifyFragment(LoginParam param) {
-        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        // Nice code!
-        try {
-            LoginParam loginParam = ((LoginParam)param);
             onPostLoginExecute(loginParam.getSuccess(), loginParam.getUserId(),
                     loginParam.getAccessToken());
             Log.d(super.getClass().getSimpleName(), "Login-Status: " + loginParam.getSuccess());
-        } catch (Exception e) {
 
-        }
         /*
         try {
             DeviceRegistrationParam deviceRegistrationParam = ((DeviceRegistrationParam)param);
@@ -335,13 +328,38 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         */
     }
 
+    public void notifyFragment(DeviceRegistrationParam deviceRegistrationParam) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified with deviceRegistrationParam");
+
+            onPostYasmeDeviceRegExecute(deviceRegistrationParam.getSuccess(),
+                    deviceRegistrationParam.getDeviceId());
+
+    }
+
+    @Override
+    public void notifyFragment(LoginParam param) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        if(param instanceof LoginProcessParam)
+           notifyFragment((LoginProcessParam)param);
+        else if(param instanceof DeviceRegistrationParam)
+            notifyFragment((DeviceRegistrationParam)param);
+    }
+
+
 
     public static class LoginParam {
-        private Boolean success;
+        protected Boolean success;
+
+        public Boolean getSuccess() {
+            return success;
+        }
+    }
+
+    public static class LoginProcessParam extends LoginParam{
         private Long userId;
         private String accessToken;
 
-        public LoginParam(Boolean success, Long userId, String accessToken) {
+        public LoginProcessParam(Boolean success, Long userId, String accessToken) {
             this.success = success;
             this.userId = userId;
             this.accessToken = accessToken;
@@ -354,14 +372,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         public String getAccessToken() {
             return accessToken;
         }
-
-        public Boolean getSuccess() {
-            return success;
-        }
     }
 
-    public static class DeviceRegistrationParam {
-        private Boolean success;
+    public static class DeviceRegistrationParam extends LoginParam{
         private Long deviceId;
 
         public DeviceRegistrationParam(Boolean success, Long deviceId) {
@@ -371,10 +384,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
         public Long getDeviceId() {
             return deviceId;
-        }
-
-        public Boolean getSuccess() {
-            return success;
         }
     }
 }
