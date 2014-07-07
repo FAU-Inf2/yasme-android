@@ -90,7 +90,8 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
             Log.d(this.getClass().getSimpleName(),"[DEBUG] Device stored to SharedPreferences");
             //TODO: Observer, LoginFragment
             //activity.onPostYasmeDeviceRegExecute(success,deviceId);
-            ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).notifyFragments(new LoginFragment.DeviceRegistrationParam(success, deviceId));
+            //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).notifyFragments(new LoginFragment.DeviceRegistrationParam(success, deviceId));
+
         }
 
     }

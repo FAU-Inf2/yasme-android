@@ -42,7 +42,7 @@ public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
             System.out.println("[Debug] " + chat.toString());
         }
 
-        ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).notifyFragments(new ChatListFragment.ChatListParam(chatRooms));
+        //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).notifyFragments(new ChatListFragment.ChatListParam(chatRooms));
 
 
         //ChatListAdapter adapter = (ChatListAdapter)fragment.getListAdapter();

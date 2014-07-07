@@ -70,7 +70,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
         }
         //TODO: activity mit folgenden Sachen benachrichtigen
         //activity.onPostRegisterExecute(success, email, password);
-        ObserverRegistry.getRegistry(ObserverRegistry.Observers.REGISTERFRAGMENT).notifyFragments(new RegisterFragment.RegistrationParam(success, email, password));
+        //ObserverRegistry.getRegistry(ObserverRegistry.Observers.REGISTERFRAGMENT).notifyFragments(new RegisterFragment.RegistrationParam(success, email, password));
     }
 
     @Override

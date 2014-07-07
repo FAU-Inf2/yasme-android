@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by martin on 26.06.2014.
  */
-public class FragmentObserver<T extends Fragment & NotifiableFragment<P>,  P extends NotifyFragmentParameter> {
+public class FragmentObserver<T extends NotifiableFragment<P>,  P> {
 
     private ArrayList<T> fragments;
 

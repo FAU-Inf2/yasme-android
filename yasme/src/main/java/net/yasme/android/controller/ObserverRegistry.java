@@ -9,22 +9,42 @@ import net.yasme.android.ui.RegisterFragment;
 import net.yasme.android.ui.SearchContactFragment;
 import net.yasme.android.ui.UserDetailsFragment;
 
+import java.util.ArrayList;
+
 /**
  * Created by andreas on 27.06.14.
  */
 public class ObserverRegistry {
 
+    private static ArrayList<FragmentObserver<?, ?>> obs = new ArrayList<>();
+
+    public static <T extends NotifiableFragment<P>, P> FragmentObserver<T, P> getInstance() {
+        for (FragmentObserver<?, ?> o : obs) {
+            try {
+                FragmentObserver<T, P> res = (FragmentObserver<T, P>) o;
+                return res;
+            } catch (Exception e) {
+            }
+        }
+        FragmentObserver<T, P> res = new FragmentObserver<T, P>();
+        obs.add(res);
+        return res;
+    }
+}
+    /*
     public static void main(String[] args) {
         //ObserverRegistry.getRegistry(Observers.EXAMPLEFRAGMENT).register(new ExampleFragment());
 
         ExampleFragment.MyParameters parameters = new ExampleFragment.MyParameters(1, 2.0);
         ObserverRegistry.getRegistry(Observers.EXAMPLEFRAGMENT).notifyFragments(parameters);
         //Observers.EXAMPLEFRAGMENT.observer.notifyFragments(parameters);
+        FragmentObserver<ChatListFragment,ChatListFragment.ChatListParam> ob = new FragmentObserver<>();
+        ob.register(new ChatListFragment());
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Fragment & NotifiableFragment<P>, P extends NotifyFragmentParameter> FragmentObserver<T, P> getRegistry(Observers observerType) {
-        FragmentObserver<? extends Fragment, ? extends NotifyFragmentParameter> result = null;
+    public static <T extends NotifiableFragment<P>, P> FragmentObserver<T, P> getRegistry(Observers observerType) {
+        FragmentObserver<? extends Fragment, ?> result = null;
 
         switch (observerType) {
 //            case CHATFRAGMENT:
@@ -65,7 +85,7 @@ public class ObserverRegistry {
 //        CHATFRAGMENT(new FragmentObserver1<ChatFragment>()),
 //        USERDETAILS(new FragmentObserver1<UserDetailsFragment>()),
         EXAMPLEFRAGMENT(new FragmentObserver<ExampleFragment, ExampleFragment.MyParameters>()),
-        CHATLISTFRAGMENT(new FragmentObserver<ChatListFragment, NotifyFragmentParameter>()),
+        CHATLISTFRAGMENT(new FragmentObserver<ChatListFragment, ChatListFragment.ChatListParam>()),
         REGISTERFRAGMENT(new FragmentObserver<RegisterFragment, NotifyFragmentParameter>()),
         LOGINFRAGMENT(new FragmentObserver<LoginFragment, NotifyFragmentParameter>()),
         SEARCHCONTACTFRAGMENT(new FragmentObserver<SearchContactFragment, NotifyFragmentParameter>()),
@@ -74,14 +94,16 @@ public class ObserverRegistry {
 
 
 
-        public FragmentObserver<? extends Fragment, ? extends NotifyFragmentParameter> getObserver() {
+        public FragmentObserver<T extends NotifiableFragment<P>, P> getObserver() {
             return observer;
         }
 
-        private FragmentObserver<? extends Fragment, ? extends NotifyFragmentParameter> observer;
+        private FragmentObserver<T extends NotifiableFragment<P>, P> observer;
 
-        Observers(FragmentObserver<? extends Fragment, ? extends NotifyFragmentParameter> observer) {
+        Observers(FragmentObserver<T extends NotifiableFragment<P>, P> observer) {
             this.observer = observer;
         }
     }
 }
+
+*/

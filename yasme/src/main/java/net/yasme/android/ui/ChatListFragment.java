@@ -11,6 +11,7 @@ import net.yasme.android.R;
 import net.yasme.android.asyncTasks.GetChatListTask;
 import net.yasme.android.asyncTasks.GetProfileDataTask;
 import net.yasme.android.asyncTasks.UpdateDBTask;
+import net.yasme.android.controller.FragmentObserver;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.NotifyFragmentParameter;
 import net.yasme.android.controller.ObserverRegistry;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by martin on 21.06.2014.
  */
-public class ChatListFragment extends ListFragment implements NotifiableFragment<NotifyFragmentParameter> {
+public class ChatListFragment extends ListFragment implements NotifiableFragment<ChatListFragment.ChatListParam> {
 
        private AbstractYasmeActivity activity;
        private ArrayList<Chat> chatRooms = new ArrayList<Chat>();
@@ -40,7 +41,9 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
             //Register at observer
            //ChatListParam test = new ChatListParam(null);
-           ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
+           //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
+           FragmentObserver<ChatListFragment,ChatListParam> obs = ObserverRegistry.getInstance();
+           obs.register(this);
 
            //holt vor allem den Namen des Users ab
            new GetProfileDataTask(activity.storage).execute();
@@ -92,7 +95,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         //}
 
     @Override
-    public void notifyFragment(NotifyFragmentParameter param) {
+    public void notifyFragment(ChatListParam param) {
         Log.d(super.getClass().getSimpleName(),"I have been notified. Yeeha!");
         ChatListAdapter adapter = (ChatListAdapter)this.getListAdapter();
         //createDummyChatRoomList();
@@ -102,7 +105,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     }
 
 
-    public static class ChatListParam implements NotifyFragmentParameter {
+    public static class ChatListParam {
         public ArrayList<Chat> getChatRooms() {
             return chatRooms;
         }
