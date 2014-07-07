@@ -26,7 +26,11 @@ public class FragmentObserver<T extends NotifiableFragment<P>,  P> {
     //add
     public void notifyFragments(P parameter) {
         for (T fragment : fragments) {
-            fragment.notifyFragment(parameter);
+            try {
+                fragment.notifyFragment(parameter);
+            } catch (Exception e) {
+
+            }
         }
     }
 
