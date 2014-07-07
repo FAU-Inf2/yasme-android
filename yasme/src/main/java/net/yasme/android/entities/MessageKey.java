@@ -12,7 +12,7 @@ import java.io.Serializable;
 @DatabaseTable(tableName = DatabaseConstants.MESSAGE_KEY_TABLE)
 public class MessageKey implements Serializable {
 
-    @DatabaseField(columnName = DatabaseConstants.KEY_ID)
+    @DatabaseField(columnName = DatabaseConstants.KEY_ID, id = true)
     private long id = -1;
 
     @DatabaseField(columnName = DatabaseConstants.KEY_CHAT, canBeNull = false, foreign = true)

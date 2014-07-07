@@ -141,9 +141,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
      * and no actual login attempt is made.
      */
     public void attemptLogin() {
-        if (authTask != null) {
-            Log.d(this.getClass().getSimpleName(), "[DEBUG] AuthTask is null!");
-            return;
+        if (authTask == null) {
+            authTask = new UserLoginTask(activity.getStorage());
+            Log.d(this.getClass().getSimpleName(), "[DEBUG] AuthTask is null");
         }
 
         // Reset errors.
@@ -183,8 +183,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             // perform the user login attempt.
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
-            authTask = new UserLoginTask(activity.getStorage());
             authTask.execute(emailTmp, passwordTmp);
+            authTask = null;
         }
     }
 

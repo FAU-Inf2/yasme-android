@@ -44,5 +44,6 @@ public class DatabaseConstants {
     public static final String CURRENT_KEY_TABLE = "currentKeyTable";
     public static final String CURRENT_KEY_CHAT = "currentKeyChat";
     public static final String CURRENT_KEY = "currentKey";
+    public static final String CURRENT_KEY_ID = "currentKeyId";
 
 }

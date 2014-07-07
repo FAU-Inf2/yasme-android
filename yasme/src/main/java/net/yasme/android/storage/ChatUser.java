@@ -6,11 +6,13 @@ import com.j256.ormlite.table.DatabaseTable;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 
+import java.io.Serializable;
+
 /**
  * Created by robert on 23.06.14.
  */
 @DatabaseTable(tableName = DatabaseConstants.CHAT_USER_TABLE)
-public class ChatUser {
+public class ChatUser implements Serializable{
 
     @DatabaseField(generatedId = true)
     long id;

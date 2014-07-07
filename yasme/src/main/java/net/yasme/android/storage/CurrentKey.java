@@ -6,21 +6,30 @@ import com.j256.ormlite.table.DatabaseTable;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.MessageKey;
 
+import java.io.Serializable;
+
 /**
  * Created by robert on 06.07.14.
  */
 @DatabaseTable(tableName = DatabaseConstants.CURRENT_KEY_TABLE)
-public class CurrentKey {
+public class CurrentKey implements Serializable {
 
-    @DatabaseField(columnName = DatabaseConstants.CURRENT_KEY_CHAT)
+    @DatabaseField(columnName = DatabaseConstants.CURRENT_KEY_ID, generatedId = true)
+    long id;
+
+    @DatabaseField(columnName = DatabaseConstants.CURRENT_KEY_CHAT, foreign = true)
     private Chat chat;
 
-    @DatabaseField(columnName = DatabaseConstants.CURRENT_KEY)
+    @DatabaseField(columnName = DatabaseConstants.CURRENT_KEY, foreign = true)
     private MessageKey messageKey;
 
     public CurrentKey(Chat chat, MessageKey messageKey) {
         this.chat = chat;
         this.messageKey = messageKey;
+    }
+
+    public CurrentKey() {
+        //ORMLite
     }
 
     public Chat getChat() {

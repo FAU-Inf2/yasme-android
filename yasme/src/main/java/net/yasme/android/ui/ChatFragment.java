@@ -178,7 +178,8 @@ public class ChatFragment extends Fragment {
 
             //textView.setText(msg.getSender().getName() + ": "+ msg.getMessage());
 
-            String name = DatabaseManager.getInstance().getUser(msg.getSender().getId()).getName();
+            //String name = DatabaseManager.getInstance().getUser(msg.getSender().getId()).getName();
+            String name = null;
             if(name == null) {
                 Log.i(this.getClass().getSimpleName(), "User existiert nicht in DB");
                 name = "anonym";
