@@ -399,6 +399,9 @@ public class DatabaseManager {
             currentKeys = getHelper().getCurrentKeyDao().queryForEq(DatabaseConstants.CURRENT_KEY_CHAT, chat);
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return -1;
         }
         if(currentKeys.size() != 1) {
             Log.e(this.getClass().getSimpleName(), "Mehrere currentKeys pro Chat");
