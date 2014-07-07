@@ -9,6 +9,7 @@ import android.widget.Toast;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.entities.Message;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
 import java.util.ArrayList;
@@ -21,32 +22,29 @@ import java.util.ArrayList;
 public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
     SharedPreferences storage;
 
-    public GetMessageTask(Context context, SharedPreferences storage) {
+    public GetMessageTask(SharedPreferences storage) {
         this.storage = storage;
     }
 
     ArrayList<Message> messages;
-
     long lastMessageId;
     long userId;
     String accessToken;
 
     /**
-     * @param params
-     *              0 is userId
-     *              1 is accessToken
+     * @param params 0 is userId
+     *               1 is accessToken
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
         lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
         userId = Long.parseLong(params[0]);
         accessToken = params[1];
-        MessageTask messageTask = MessageTask.getInstance();
 
         try {
-            messages = messageTask.getMessage(lastMessageId);
+            messages = MessageTask.getInstance().getMessage(lastMessageId);
         } catch (RestServiceException e) {
-            e.printStackTrace();
+            Log.w(this.getClass().getSimpleName(), e.getMessage());
         }
 
         if (messages == null) {
@@ -55,31 +53,33 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         if (messages.isEmpty()) {
             return false;
         }
+        DatabaseManager.getInstance().storeMessages(messages);
         return true;
     }
+
 
     /**
      * updates Database,
      * stores lastMessageId
      */
+    @Override
     protected void onPostExecute(final Boolean success) {
-        if (success) {
-            new InsertNewMessagesTask(messages).execute();
-            Log.d(this.getClass().getSimpleName(), "Messages stored");
 
-            lastMessageId = messages.size() + lastMessageId;
-            Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
-
-            SharedPreferences.Editor editor = storage.edit();
-            editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
-            editor.commit();
-
-            //TODO: abrufen der neuen nachrichten durch den Chat triggern
-            //Observer benachrichtigen
-
-        } else {
-            Log.i(this.getClass().getSimpleName(), "Keine neuen Nachrichten");
-            //Toast.makeText(context, "Keine neuen Nachrichten", Toast.LENGTH_SHORT).show();
+        if (!success) {
+            Log.w(this.getClass().getSimpleName(), "UpdateDB not successfull");
+            return;
         }
+
+        Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
+
+        lastMessageId = messages.size() + lastMessageId;
+        Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
+
+        SharedPreferences.Editor editor = storage.edit();
+        editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
+        editor.commit();
+
+        //TODO: abrufen der neuen nachrichten durch den Chat triggern
+        //Observer benachrichtigen
     }
 }

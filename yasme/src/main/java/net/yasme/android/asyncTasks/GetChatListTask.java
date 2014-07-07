@@ -29,7 +29,7 @@ public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
 
     protected void onPostExecute(final Boolean success) {
 
-        if(!success) {
+        if (!success) {
             Log.d(this.getClass().getName(), "Fehler bei Datenbankzugriff");
             createDummyChatRoomList();
         }
@@ -38,11 +38,11 @@ public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
             createDummyChatRoomList();
         }
 
-        for(Chat chat : chatRooms) {
+        for (Chat chat : chatRooms) {
             System.out.println("[Debug] " + chat.toString());
         }
 
-        FragmentObservable<ChatListFragment,ArrayList<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
+        FragmentObservable<ChatListFragment, ArrayList<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
         obs.notifyFragments(chatRooms);
 
         //ChatListAdapter adapter = (ChatListAdapter)fragment.getListAdapter();
@@ -55,8 +55,7 @@ public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
         Log.d(this.getClass().getSimpleName(), "Benutze Dummy-Liste");
         chatRooms = new ArrayList<Chat>();
         int number = 10;
-        for (int i = 1; i < number; i++)
-        {
+        for (int i = 1; i < number; i++) {
             Chat chat = new Chat();
             chat.setId(i);
             chat.setName("Chat " + i);

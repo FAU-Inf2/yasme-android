@@ -41,7 +41,9 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.OWNER, foreign = true)
     private User owner;
 
+    @DatabaseField(columnName = DatabaseConstants.LAST_MODIFIED)
     private Date lastModified;
+
     private Date created;
     private String profilePicture;
 
@@ -197,6 +199,11 @@ public class Chat implements Serializable {
      */
     public void setId(long id) {
         this.id = id;
+    }
+
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
     }
 
     @JsonIgnore

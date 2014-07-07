@@ -12,6 +12,7 @@ public class DatabaseConstants {
     public static final String CHAT_STATUS = "chatStatus";
     public static final String MESSAGES = "messages";
     public static final String OWNER = "owner";
+    public static final String LAST_MODIFIED = "lastModified";
 
     //Message
     public static final String MESSAGE_TABLE = "messages";

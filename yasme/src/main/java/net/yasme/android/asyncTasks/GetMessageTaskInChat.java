@@ -74,8 +74,8 @@ public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         if (success) {
             fragment.updateViews(messages);
-            new InsertNewMessagesTask(messages).execute(Long.toString(lastMessageId),
-                    Long.toString(userId), accessToken);
+            //new InsertNewMessagesTask(messages).execute(Long.toString(lastMessageId),
+            //        Long.toString(userId), accessToken);
 
             Log.d(this.getClass().getSimpleName(), "After update the Database");
             lastMessageId = messages.size() + lastMessageId;
