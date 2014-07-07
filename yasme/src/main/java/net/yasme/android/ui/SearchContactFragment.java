@@ -18,13 +18,12 @@ import net.yasme.android.R;
 import net.yasme.android.asyncTasks.SearchUserTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.controller.NotifiableFragment;
-import net.yasme.android.controller.NotifyFragmentParameter;
 import net.yasme.android.entities.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<NotifyFragmentParameter> {
+public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<SearchContactFragment.SearchContactParam> {
 
     private Spinner searchSpinner;
     private Button searchButton;
@@ -102,13 +101,12 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
         public void onSearchFragmentInteraction(User user);
     }
 
-    public void notifyFragment(NotifyFragmentParameter param) {
+    public void notifyFragment(SearchContactParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        SearchContactParam searchContactParam = ((SearchContactParam)param);
     }
 
 
-    public static class SearchContactParam implements NotifyFragmentParameter {
+    public static class SearchContactParam {
         private Boolean success;
         private Long userId;
         private String accessToken;

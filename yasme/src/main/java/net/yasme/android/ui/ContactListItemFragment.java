@@ -18,7 +18,6 @@ import net.yasme.android.R;
 import net.yasme.android.connection.SearchTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.controller.NotifiableFragment;
-import net.yasme.android.controller.NotifyFragmentParameter;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
@@ -29,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<NotifyFragmentParameter> {
+public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<ContactListItemFragment.ContactListItemParam> {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -197,13 +196,12 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
     }
 
-    public void notifyFragment(NotifyFragmentParameter param) {
+    public void notifyFragment(ContactListItemParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        ContactListItemParam contactListItemParam = ((ContactListItemParam)param);
     }
 
 
-    public static class ContactListItemParam implements NotifyFragmentParameter {
+    public static class ContactListItemParam {
         private Boolean success;
         private Long userId;
         private String accessToken;

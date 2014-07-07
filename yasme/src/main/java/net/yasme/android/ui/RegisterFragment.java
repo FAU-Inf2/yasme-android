@@ -14,12 +14,11 @@ import android.widget.Toast;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.UserRegistrationTask;
 import net.yasme.android.controller.NotifiableFragment;
-import net.yasme.android.controller.NotifyFragmentParameter;
 
 /**
  * Created by robert on 06.07.14.
  */
-public class RegisterFragment extends Fragment implements NotifiableFragment<NotifyFragmentParameter> {
+public class RegisterFragment extends Fragment implements NotifiableFragment<RegisterFragment.RegistrationParam> {
 
 
     AbstractYasmeActivity activity;
@@ -110,14 +109,13 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Not
     }
 
     @Override
-    public void notifyFragment(NotifyFragmentParameter param) {
+    public void notifyFragment(RegistrationParam regParam) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        RegistrationParam regParam = ((RegistrationParam)param);
         onPostRegisterExecute(regParam.getSuccess(), regParam.getEmail(), regParam.getPassword());
     }
 
 
-    public static class RegistrationParam implements NotifyFragmentParameter {
+    public static class RegistrationParam {
         private Boolean success;
         private String email;
         private String password;

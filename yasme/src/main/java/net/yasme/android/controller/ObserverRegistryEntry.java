@@ -1,36 +1,38 @@
 package net.yasme.android.controller;
 
-import android.app.Fragment;
 import android.util.Log;
-
-import net.yasme.android.ui.ChatListFragment;
-import net.yasme.android.ui.ContactListItemFragment;
-import net.yasme.android.ui.LoginFragment;
-import net.yasme.android.ui.RegisterFragment;
-import net.yasme.android.ui.SearchContactFragment;
-import net.yasme.android.ui.UserDetailsFragment;
 
 import java.util.ArrayList;
 
 /**
  * Created by andreas on 27.06.14.
  */
-public class ObserverRegistry {
+public class ObserverRegistryEntry {
 
-    private static ArrayList<ObserverRegistryEntry> entries = new ArrayList<>();
+    private FragmentObserver<?, ?> obs;
+    private Class fragment;
+    private Class param;
 
-    public static <T extends NotifiableFragment<P>, P> FragmentObserver<T, P> getObservable(Class fragmentClass, Class paramClass) {
-        for (ObserverRegistryEntry entry : entries) {
-           if (entry.check(fragmentClass,paramClass)) {
-               Log.d("ObserverRegistry","Returned existing observable");
-               return (FragmentObserver<T,P>)entry.getObs();
-           }
-        }
-        FragmentObserver<T, P> res = new FragmentObserver<T, P>();
-        ObserverRegistryEntry entry = new ObserverRegistryEntry(res,fragmentClass,paramClass);
-        Log.d("ObserverRegistry","Created new observable");
-        entries.add(entry);
-        return res;
+    public ObserverRegistryEntry(FragmentObserver<?, ?> obs, Class fragment, Class param) {
+        this.obs = obs;
+        this.fragment = fragment;
+        this.param = param;
+    }
+
+    public FragmentObserver<?, ?> getObs() {
+        return obs;
+    }
+
+    public Class getFragment() {
+        return fragment;
+    }
+
+    public Class getParam() {
+        return param;
+    }
+
+    public Boolean check(Class fragmentRef, Class paramRef) {
+        return fragment.equals(fragmentRef) && paramRef.equals(param);
     }
 }
     /*

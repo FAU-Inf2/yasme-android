@@ -17,7 +17,6 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.CreateSingleChatTask;
 import net.yasme.android.controller.NotifiableFragment;
-import net.yasme.android.controller.NotifyFragmentParameter;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 
@@ -30,7 +29,7 @@ import net.yasme.android.storage.DatabaseManager;
  * create an instance of this fragment.
  *
  */
-public class UserDetailsFragment extends DialogFragment implements View.OnClickListener, NotifiableFragment<NotifyFragmentParameter> {
+public class UserDetailsFragment extends DialogFragment implements View.OnClickListener, NotifiableFragment<UserDetailsFragment.UserDetailsParam> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_USER = "userparam";
@@ -209,13 +208,12 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
     }
 
 
-    public void notifyFragment(NotifyFragmentParameter param) {
+    public void notifyFragment(UserDetailsParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        UserDetailsParam userDetailsParam = ((UserDetailsParam)param);
     }
 
 
-    public static class UserDetailsParam implements NotifyFragmentParameter {
+    public static class UserDetailsParam {
         private Boolean success;
         private Long userId;
         private String accessToken;

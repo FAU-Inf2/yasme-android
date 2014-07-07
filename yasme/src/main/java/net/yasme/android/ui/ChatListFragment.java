@@ -13,7 +13,6 @@ import net.yasme.android.asyncTasks.GetProfileDataTask;
 import net.yasme.android.asyncTasks.UpdateDBTask;
 import net.yasme.android.controller.FragmentObserver;
 import net.yasme.android.controller.NotifiableFragment;
-import net.yasme.android.controller.NotifyFragmentParameter;
 import net.yasme.android.controller.ObserverRegistry;
 import net.yasme.android.entities.Chat;
 
@@ -42,7 +41,9 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
             //Register at observer
            //ChatListParam test = new ChatListParam(null);
            //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
-           FragmentObserver<ChatListFragment,ChatListParam> obs = ObserverRegistry.getInstance();
+           Log.d(this.getClass().getSimpleName(),"Try to get ChatListObservableInstance");
+           FragmentObserver<ChatListFragment,ChatListParam> obs = ObserverRegistry.getObservable(ChatListFragment.class,ChatListParam.class);
+           Log.d(this.getClass().getSimpleName(),"... successful");
            obs.register(this);
 
            //holt vor allem den Namen des Users ab

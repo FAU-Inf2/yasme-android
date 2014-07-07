@@ -20,13 +20,13 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.UserLoginTask;
 import net.yasme.android.asyncTasks.DeviceRegistrationTask;
+import net.yasme.android.controller.FragmentObserver;
 import net.yasme.android.controller.NotifiableFragment;
-import net.yasme.android.controller.NotifyFragmentParameter;
 import net.yasme.android.controller.ObserverRegistry;
 import net.yasme.android.storage.DatabaseManager;
 
 
-public class LoginFragment extends Fragment implements NotifiableFragment<NotifyFragmentParameter> {
+public class LoginFragment extends Fragment implements NotifiableFragment<LoginFragment.LoginParam> {
 
 
     //Keep track of the login task to ensure we can cancel it if requested.
@@ -64,6 +64,11 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
         accessToken = activity.getAccessToken();
 
         //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).register(this);
+        Log.d(this.getClass().getSimpleName(),"Try to get LoginObservableInstance");
+        FragmentObserver<LoginFragment,LoginParam> obs = ObserverRegistry.getObservable(LoginFragment.class,LoginParam.class);
+        Log.d(this.getClass().getSimpleName(),"... successful");
+
+        obs.register(this);
     }
 
 
@@ -301,7 +306,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
 
 
     @Override
-    public void notifyFragment(NotifyFragmentParameter param) {
+    public void notifyFragment(LoginParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         // Nice code!
         try {
@@ -311,7 +316,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
         } catch (Exception e) {
 
         }
-
+        /*
         try {
             DeviceRegistrationParam deviceRegistrationParam = ((DeviceRegistrationParam)param);
             onPostYasmeDeviceRegExecute(deviceRegistrationParam.getSuccess(),
@@ -319,10 +324,11 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
         } catch (Exception e) {
 
         }
+        */
     }
 
 
-    public static class LoginParam implements NotifyFragmentParameter {
+    public static class LoginParam {
         private Boolean success;
         private Long userId;
         private String accessToken;
@@ -346,7 +352,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<Notify
         }
     }
 
-    public static class DeviceRegistrationParam implements NotifyFragmentParameter {
+    public static class DeviceRegistrationParam {
         private Boolean success;
         private Long deviceId;
 

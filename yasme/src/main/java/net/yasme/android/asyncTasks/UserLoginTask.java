@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.controller.FragmentObserver;
 import net.yasme.android.controller.ObserverRegistry;
 import net.yasme.android.gcm.CloudMessaging;
 import net.yasme.android.ui.AbstractYasmeActivity;
@@ -84,5 +85,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).notifyFragments(new LoginFragment.LoginParam(success, userId, accessToken));
+        FragmentObserver<LoginFragment,LoginFragment.LoginParam> obs = ObserverRegistry.getObservable(LoginFragment.class,LoginFragment.LoginParam.class);
+        obs.notifyFragments(new LoginFragment.LoginParam(success, userId, accessToken));
     }
 }
