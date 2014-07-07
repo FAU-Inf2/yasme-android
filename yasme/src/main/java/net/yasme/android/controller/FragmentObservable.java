@@ -1,17 +1,18 @@
 package net.yasme.android.controller;
 
 import android.app.Fragment;
+import android.util.Log;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 
 /**
  * Created by martin on 26.06.2014.
  */
-public class FragmentObserver<T extends NotifiableFragment<P>,  P> {
-
+public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
     private ArrayList<T> fragments;
 
-    public FragmentObserver() {
+    public FragmentObservable() {
         fragments = new ArrayList<T>();
     }
 
@@ -27,9 +28,10 @@ public class FragmentObserver<T extends NotifiableFragment<P>,  P> {
     public void notifyFragments(P parameter) {
         for (T fragment : fragments) {
             try {
+                Log.d("FragmentObserver", "Notify fragment: " + fragment.getClass().getSimpleName());
                 fragment.notifyFragment(parameter);
             } catch (Exception e) {
-
+                Log.d("FragmentObserver", "Notify fragment failed: " + fragment.getClass().getSimpleName());
             }
         }
     }

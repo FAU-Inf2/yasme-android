@@ -7,32 +7,21 @@ import java.util.ArrayList;
 /**
  * Created by andreas on 27.06.14.
  */
-public class ObserverRegistryEntry {
+public class ObservableRegistry {
 
-    private FragmentObserver<?, ?> obs;
-    private Class fragment;
-    private Class param;
+    private static ArrayList<ObservableRegistryEntry> entries = new ArrayList<>();
 
-    public ObserverRegistryEntry(FragmentObserver<?, ?> obs, Class fragment, Class param) {
-        this.obs = obs;
-        this.fragment = fragment;
-        this.param = param;
-    }
-
-    public FragmentObserver<?, ?> getObs() {
-        return obs;
-    }
-
-    public Class getFragment() {
-        return fragment;
-    }
-
-    public Class getParam() {
-        return param;
-    }
-
-    public Boolean check(Class fragmentRef, Class paramRef) {
-        return fragment.equals(fragmentRef) && paramRef.equals(param);
+    public static <T extends NotifiableFragment<P>, P> FragmentObservable<T, P> getObservable(Class fragmentClass, Class paramClass) {
+        for (ObservableRegistryEntry entry : entries) {
+           if (entry.check(fragmentClass,paramClass)) {
+               Log.d("ObserverRegistry","Returned existing observable");
+               return (FragmentObservable<T,P>)entry.getObs();
+           }
+        }
+        FragmentObservable<T, P> res = new FragmentObservable<T, P>();
+        Log.d("ObserverRegistry","Created new observable");
+        entries.add(new ObservableRegistryEntry(res,fragmentClass,paramClass));
+        return res;
     }
 }
     /*

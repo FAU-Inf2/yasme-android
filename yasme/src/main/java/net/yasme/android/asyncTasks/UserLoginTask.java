@@ -1,23 +1,16 @@
 package net.yasme.android.asyncTasks;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
 import net.yasme.android.connection.ConnectionTask;
-import net.yasme.android.controller.FragmentObserver;
-import net.yasme.android.controller.ObserverRegistry;
-import net.yasme.android.gcm.CloudMessaging;
+import net.yasme.android.controller.FragmentObservable;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.ui.AbstractYasmeActivity;
-import net.yasme.android.ui.LoginActivity;
 import net.yasme.android.connection.AuthorizationTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.LoginFragment;
-import net.yasme.android.ui.RegisterFragment;
 
 /**
  * Created by robert on 19.06.14.
@@ -84,8 +77,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
-        //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).notifyFragments(new LoginFragment.LoginParam(success, userId, accessToken));
-        FragmentObserver<LoginFragment,LoginFragment.LoginParam> obs = ObserverRegistry.getObservable(LoginFragment.class,LoginFragment.LoginParam.class);
+        FragmentObservable<LoginFragment,LoginFragment.LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class, LoginFragment.LoginParam.class);
         obs.notifyFragments(new LoginFragment.LoginParam(success, userId, accessToken));
     }
 }

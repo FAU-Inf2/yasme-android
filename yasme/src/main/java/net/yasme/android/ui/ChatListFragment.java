@@ -11,9 +11,9 @@ import net.yasme.android.R;
 import net.yasme.android.asyncTasks.GetChatListTask;
 import net.yasme.android.asyncTasks.GetProfileDataTask;
 import net.yasme.android.asyncTasks.UpdateDBTask;
-import net.yasme.android.controller.FragmentObserver;
+import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
-import net.yasme.android.controller.ObserverRegistry;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
            //ChatListParam test = new ChatListParam(null);
            //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
            Log.d(this.getClass().getSimpleName(),"Try to get ChatListObservableInstance");
-           FragmentObserver<ChatListFragment,ChatListParam> obs = ObserverRegistry.getObservable(ChatListFragment.class,ChatListParam.class);
+           FragmentObservable<ChatListFragment,ChatListParam> obs = ObservableRegistry.getObservable(ChatListFragment.class, ChatListParam.class);
            Log.d(this.getClass().getSimpleName(),"... successful");
            obs.register(this);
 
@@ -62,6 +62,9 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
             super.onStop();
             //De-Register at observer
             //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).remove(this);
+            FragmentObservable<ChatListFragment,ChatListParam> obs = ObservableRegistry.getObservable(ChatListFragment.class, ChatListParam.class);
+            Log.d(this.getClass().getSimpleName(),"Remove from observer");
+            obs.remove(this);
         }
         /*
        @Override

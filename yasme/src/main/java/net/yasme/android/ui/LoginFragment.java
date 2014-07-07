@@ -20,9 +20,9 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.UserLoginTask;
 import net.yasme.android.asyncTasks.DeviceRegistrationTask;
-import net.yasme.android.controller.FragmentObserver;
+import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
-import net.yasme.android.controller.ObserverRegistry;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.storage.DatabaseManager;
 
 
@@ -65,12 +65,19 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
         //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).register(this);
         Log.d(this.getClass().getSimpleName(),"Try to get LoginObservableInstance");
-        FragmentObserver<LoginFragment,LoginParam> obs = ObserverRegistry.getObservable(LoginFragment.class,LoginParam.class);
+        FragmentObservable<LoginFragment,LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class, LoginParam.class);
         Log.d(this.getClass().getSimpleName(),"... successful");
 
         obs.register(this);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        FragmentObservable<LoginFragment,LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class, LoginParam.class);
+        Log.d(this.getClass().getSimpleName(),"Remove from observer");
+        obs.remove(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -313,6 +320,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             LoginParam loginParam = ((LoginParam)param);
             onPostLoginExecute(loginParam.getSuccess(), loginParam.getUserId(),
                     loginParam.getAccessToken());
+            Log.d(super.getClass().getSimpleName(), "Login-Status: " + loginParam.getSuccess());
         } catch (Exception e) {
 
         }

@@ -3,10 +3,10 @@ package net.yasme.android.asyncTasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.yasme.android.controller.ObserverRegistry;
+import net.yasme.android.controller.FragmentObservable;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.ui.ChatListAdapter;
 import net.yasme.android.ui.ChatListFragment;
 
 import java.util.ArrayList;
@@ -42,8 +42,8 @@ public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
             System.out.println("[Debug] " + chat.toString());
         }
 
-        //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).notifyFragments(new ChatListFragment.ChatListParam(chatRooms));
-
+        FragmentObservable<ChatListFragment,ChatListFragment.ChatListParam> obs = ObservableRegistry.getObservable(ChatListFragment.class, ChatListFragment.ChatListParam.class);
+        obs.notifyFragments(new ChatListFragment.ChatListParam(chatRooms));
 
         //ChatListAdapter adapter = (ChatListAdapter)fragment.getListAdapter();
         //Log.d(this.getClass().getSimpleName(), "UpdateMessages: " + chatRooms.size());
