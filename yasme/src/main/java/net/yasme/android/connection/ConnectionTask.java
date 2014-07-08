@@ -40,6 +40,9 @@ public class ConnectionTask {
     /*
      * Connection Params
      */
+
+    protected final static String APIVERSION = "/v1";
+
     protected static String serverScheme;
     protected static String serverHost;
     protected static int serverPort;

@@ -37,7 +37,7 @@ public class UserTask extends ConnectionTask {
 
     private UserTask() {
         try {
-            this.uri = new URIBuilder(baseURI).setPath("/v1/usr").build();
+            this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/usr").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

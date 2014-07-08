@@ -34,7 +34,7 @@ public class MessageTask extends ConnectionTask {
 
     private MessageTask() {
         try {
-            this.uri = new URIBuilder(baseURI).setPath("/v1/msg").build();
+            this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/msg").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

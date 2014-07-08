@@ -29,7 +29,7 @@ public class DeviceTask extends ConnectionTask {
 
     private DeviceTask() {
         try {
-            this.uri = new URIBuilder(baseURI).setPath("/v1/device").build();
+            this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/device").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

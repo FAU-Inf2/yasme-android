@@ -2,9 +2,11 @@ package net.yasme.android.connection;
 
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
+
 import java.net.URISyntaxException;
 
 /**
@@ -24,7 +26,7 @@ public class AuthorizationTask extends ConnectionTask {
 
     private AuthorizationTask() {
         try {
-            this.uri = new URIBuilder(baseURI).setPath("/v1/sign").build();
+            this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/sign").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

@@ -32,7 +32,7 @@ public class MessageKeyTask extends ConnectionTask {
     private MessageKeyTask() {
 
         try {
-            this.uri = new URIBuilder(baseURI).setPath("/v1/msgkey").build();
+            this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/msgkey").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

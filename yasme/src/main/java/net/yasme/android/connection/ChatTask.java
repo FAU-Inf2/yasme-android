@@ -35,7 +35,7 @@ public class ChatTask extends ConnectionTask {
     private ChatTask() {
 
         try {
-            this.uri = new URIBuilder(baseURI).setPath("/v1/chat").build();
+            this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/chat").build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
