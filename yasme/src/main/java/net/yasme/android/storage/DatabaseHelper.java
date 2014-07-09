@@ -24,7 +24,7 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // when anything changes in your database objects, we have to increase the database version
-    private static final int DATABASE_VERSION = 44;
+    private static final int DATABASE_VERSION = 45;
 
     // name of the database file
     private static final String DATABASE = "net.yasme.android.DATABASE";
@@ -41,7 +41,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 
     public DatabaseHelper(Context context, long userId) {
-        super(context, DATABASE + "_" + Long.toString(userId), null, DATABASE_VERSION);
+        super(context, DATABASE/* + "_" + Long.toString(userId)*/, null, DATABASE_VERSION);
     }
 
     @Override

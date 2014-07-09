@@ -1,6 +1,7 @@
 package net.yasme.android.connection;
 
 import android.content.Context;
+import android.util.Log;
 
 import net.yasme.android.asyncTasks.DeleteMessageKeyTask;
 import net.yasme.android.encryption.MessageEncryption;
@@ -57,18 +58,20 @@ public class MessageTask extends ConnectionTask {
 
             JSONArray jsonArray = new JSONArray(json);
 
-            System.out.println("[DEBUG] getMessageRequest successful: ");// + json);
+            Log.d(this.getClass().getSimpleName(),
+                    "[DEBUG] getMessageRequest successful: " + jsonArray.length() + " new messages");// + json);
 
             for (int i = 0; i < jsonArray.length(); i++) {
-
                 JSONObject obj = jsonArray.getJSONObject(i);
                 JSONObject sender = obj.getJSONObject("sender");
                 JSONObject chat = obj.getJSONObject("chat");
 
+                Log.d(this.getClass().getSimpleName(), "Message: " + obj.toString());
+
                 long chatId = chat.getLong("id");
                 long keyId = obj.getLong("messageKeyId");
 
-                System.out.println("Sender: " + sender.toString());
+                //System.out.println("Sender: " + sender.toString());
 
                         /* extracting Keys and save it */
                 JSONObject key;
@@ -79,7 +82,6 @@ public class MessageTask extends ConnectionTask {
                 }
 
                 if (key != null) {
-
                     String messageKey = key.getString("messageKey");
                     String iv = key.getString("initVector");
                     //decrypt the key with RSA
@@ -105,8 +107,10 @@ public class MessageTask extends ConnectionTask {
                     System.out.println("[???] Es wurde kein Key in der Message gefunden");
                 }
 
-                messages.add(new Message(new User(sender.getString("name"),
-                        sender.getLong("id")), obj.getString("message"), chatId, keyId));
+                Message msg = new Message(new User(sender.getString("name"),
+                        sender.getLong("id")), obj.getString("message"), chatId, keyId);
+                messages.add(msg);
+                Log.d(this.getClass().getSimpleName(), "Message added: " + msg.getMessage());
             }
 
         } catch (IOException e) {

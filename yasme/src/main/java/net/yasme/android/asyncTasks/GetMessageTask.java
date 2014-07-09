@@ -32,14 +32,10 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
     String accessToken;
 
     /**
-     * @param params 0 is userId
-     *               1 is accessToken
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
         lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
-        userId = Long.parseLong(params[0]);
-        accessToken = params[1];
 
         try {
             messages = MessageTask.getInstance().getMessage(lastMessageId);

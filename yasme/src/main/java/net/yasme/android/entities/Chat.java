@@ -257,14 +257,4 @@ public class Chat implements Serializable {
         }
         messages.add(msg);
     }
-
-    public String toString() {
-        return "Chat{" +
-                "id=" + id +
-                ", participants=" + participants +
-                ", status='" + status + '\'' +
-                ", name='" + name + '\'' +
-                ", owner=" + owner +
-                '}';
-    }
 }

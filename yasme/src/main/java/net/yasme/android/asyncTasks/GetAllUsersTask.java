@@ -18,8 +18,6 @@ public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
     protected InviteToChatFragment fragment;
 
     protected SearchTask searchTask = SearchTask.getInstance();
-    private long userId;
-    private String accessToken;
     private List<User> allUsers;
 
     public GetAllUsersTask(InviteToChatFragment fragment) {
@@ -27,15 +25,10 @@ public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
     }
 
     /**
-     * @param params
-     *              0 is userId
-     *              1 is accessToken
      * @return Returns true if it was successful, otherwise false
      */
     @Override
     protected Boolean doInBackground(String... params) {
-        userId = Long.parseLong(params[0]);
-        accessToken = params[1];
         try {
             allUsers = searchTask.getAllUsers();
         } catch (RestServiceException e) {

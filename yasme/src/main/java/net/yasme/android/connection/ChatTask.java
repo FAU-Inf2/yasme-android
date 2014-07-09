@@ -59,7 +59,7 @@ public class ChatTask extends ConnectionTask {
                 Chat chat = new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
                         toString(), Chat.class);
                 chats.add(chat);
-                Log.e(this.getClass().getSimpleName(), "chat " + i + " " + chat.toString());
+                //Log.e(this.getClass().getSimpleName(), "chat " + i + " " + chat.toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();

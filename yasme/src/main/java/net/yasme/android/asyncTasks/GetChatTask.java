@@ -26,13 +26,9 @@ public class GetChatTask extends AsyncTask<String, Void, Boolean> {
     }
 
     /**
-     * @param params 0 is userId
-     *               1 is accessToken
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
-        userId = Long.parseLong(params[0]);
-        accessToken = params[1];
 
         List<Chat> serverChats = null;
         List<Chat> dbChats = dbManager.getAllChats();
@@ -60,8 +56,7 @@ public class GetChatTask extends AsyncTask<String, Void, Boolean> {
                     Log.w(this.getClass().getSimpleName(), e.getMessage());
                     return false;
                 }
-                Log.e(this.getClass().getSimpleName(), "Chat: " + chat.toString());
-                Log.e(this.getClass().getSimpleName(), "ChatInfo: " + chatWithInfo.toString());
+
 
                 //chat.setParticipants(chatWithInfo.getParticipants());
                 //chat.setStatus(chatWithInfo.getStatus());

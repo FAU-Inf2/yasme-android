@@ -365,7 +365,7 @@ public class DatabaseManager {
     public void storeMessages(List<Message> messages) {
         for(Message msg : messages) {
             try {
-                getHelper().getMessageDao().create(msg);
+                getHelper().getMessageDao().createIfNotExists(msg);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
