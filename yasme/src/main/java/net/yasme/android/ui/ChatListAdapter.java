@@ -68,7 +68,7 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         Chat chat = chats.get(position);
         titleView.setText(chat.getName());
         subtitleView.setText(chat.getNumberOfParticipants() + " Teilnehmer");
-        iconView.setImageResource(R.drawable.ic_action_cc_bcc);
+        iconView.setImageResource(R.drawable.chat_default_icon);
         row.setTag(chat.getId());
 
         return row;
