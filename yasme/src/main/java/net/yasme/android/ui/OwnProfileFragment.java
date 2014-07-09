@@ -20,8 +20,14 @@ import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.UserTask;
+import net.yasme.android.controller.FragmentObservable;
+import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +38,7 @@ import net.yasme.android.exception.RestServiceException;
  * create an instance of this fragment.
  *
  */
-public class OwnProfileFragment extends Fragment implements View.OnClickListener {
+public class OwnProfileFragment extends Fragment implements View.OnClickListener, NotifiableFragment<Drawable> {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -81,6 +87,12 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         }
 
         activity = (AbstractYasmeActivity) getActivity();
+
+        // Register at observer
+        Log.d(this.getClass().getSimpleName(), "Try to get OwnProfileObservable");
+        FragmentObservable<OwnProfileFragment, Drawable> obs = ObservableRegistry.getObservable(OwnProfileFragment.class);
+        Log.d(this.getClass().getSimpleName(),"... successful");
+        obs.register(this);
     }
 
     @Override
@@ -184,6 +196,11 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void notifyFragment(Drawable value) {
+
     }
 
 
