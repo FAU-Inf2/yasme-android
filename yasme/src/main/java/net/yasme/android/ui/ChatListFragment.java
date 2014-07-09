@@ -9,6 +9,8 @@ import android.widget.ListView;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.GetChatListTask;
+import net.yasme.android.asyncTasks.GetChatTask;
+import net.yasme.android.asyncTasks.GetMessageTask;
 import net.yasme.android.asyncTasks.GetProfileDataTask;
 import net.yasme.android.asyncTasks.UpdateDBTask;
 import net.yasme.android.controller.FragmentObservable;
@@ -50,8 +52,10 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
            new GetProfileDataTask(activity.storage).execute();
 
            //Aktualisiert die Datenbank auf den aktuellen Stand des Servers
-           new UpdateDBTask(activity.storage)
-                   .execute(Long.toString(activity.getUserId()), activity.getAccessToken());
+           new GetChatTask().execute(Long.toString(activity.getUserId()), activity.getAccessToken());
+           new GetMessageTask(activity.getStorage()).execute(Long.toString(activity.getUserId()), activity.getAccessToken());
+           //new UpdateDBTask(activity.storage)
+           //        .execute(Long.toString(activity.getUserId()), activity.getAccessToken());
 
            //Laedt die Liste aller Chats von der Datenbank in das Fragment
            new GetChatListTask().execute();

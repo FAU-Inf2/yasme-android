@@ -1,5 +1,7 @@
 package net.yasme.android.connection;
 
+import android.util.Log;
+
 import net.yasme.android.entities.Chat;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
@@ -49,10 +51,15 @@ public class ChatTask extends ConnectionTask {
             JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine());
 
+            //for (int i = 0; i < jsonArray.length(); i++) {
+            //    Log.d(this.getClass().getSimpleName(), jsonArray.optString(i));
+            //}
+            //Log.e(this.getClass().getSimpleName(), "arraylength " + jsonArray.length());
             for (int i = 0; i < jsonArray.length(); i++) {
                 Chat chat = new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
                         toString(), Chat.class);
                 chats.add(chat);
+                Log.e(this.getClass().getSimpleName(), "chat " + i + " " + chat.toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();

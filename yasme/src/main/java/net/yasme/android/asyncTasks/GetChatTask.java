@@ -43,9 +43,14 @@ public class GetChatTask extends AsyncTask<String, Void, Boolean> {
             Log.w(this.getClass().getSimpleName(), e.getMessage());
         }
 
+        if(serverChats == null) {
+            Log.e(this.getClass().getSimpleName(), "serverChats sind null");
+            return false;
+        }
+
 
         for (Chat chat : serverChats) {
-            if (chat.getLastModified().after(new Date())) {
+            //if (chat.getLastModified().after(new Date())) {
                 Chat chatWithInfo;
 
                 //Infos fuer jeden chat abrufen
@@ -55,8 +60,11 @@ public class GetChatTask extends AsyncTask<String, Void, Boolean> {
                     Log.w(this.getClass().getSimpleName(), e.getMessage());
                     return false;
                 }
-                chat.setParticipants(chatWithInfo.getParticipants());
-                chat.setStatus(chatWithInfo.getStatus());
+                Log.e(this.getClass().getSimpleName(), "Chat: " + chat.toString());
+                Log.e(this.getClass().getSimpleName(), "ChatInfo: " + chatWithInfo.toString());
+
+                //chat.setParticipants(chatWithInfo.getParticipants());
+                //chat.setStatus(chatWithInfo.getStatus());
 
                 //Participants in DB speichern, Beziehungstabelle aktualisieren
                 List<User> users = chat.getParticipants();
@@ -70,10 +78,10 @@ public class GetChatTask extends AsyncTask<String, Void, Boolean> {
                     dbManager.createChatUser(new ChatUser(chat, user));
                     Log.d(this.getClass().getSimpleName(), "User and ChatUser added to DB");
                 }
-                dbManager.updateChat(chat);
-            } else {
-                continue;
-            }
+                dbManager.createOrUpdateChat(chat);
+            //} else {
+            //    continue;
+            //}
         }
 
 
@@ -89,11 +97,11 @@ public class GetChatTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
 
         if (!success) {
-            Log.w(this.getClass().getSimpleName(), "");
+            Log.w(this.getClass().getSimpleName(), "failed");
             return;
         }
 
-        Log.i(this.getClass().getSimpleName(), "");
+        Log.i(this.getClass().getSimpleName(), "success");
 
 
         //TODO: abrufen der neuen nachrichten durch den Chat triggern

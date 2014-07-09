@@ -2,6 +2,7 @@ package net.yasme.android.entities;
 
 import android.util.Log;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -41,10 +42,14 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.OWNER, foreign = true)
     private User owner;
 
-    @DatabaseField(columnName = DatabaseConstants.LAST_MODIFIED)
+    @JsonIgnore
+    @DatabaseField(columnName = DatabaseConstants.LAST_MODIFIED, dataType = DataType.DATE)
     private Date lastModified;
 
+    @JsonIgnore
     private Date created;
+
+    @JsonIgnore
     private String profilePicture;
 
     @JsonIgnore
@@ -58,7 +63,6 @@ public class Chat implements Serializable {
     /**
      * Constructors *
      */
-    @JsonIgnore
     public Chat(long id, User user, AbstractYasmeActivity activity) {
         this.id = id;
         this.participants = new ArrayList<User>();
@@ -82,7 +86,6 @@ public class Chat implements Serializable {
         new Chat(0, new ArrayList<User>(), status, name, owner, new ArrayList<Message>(), null);
     }
 
-    @Deprecated
     public Chat(long id, List<User> participants, String status, String name,
                 User owner) {
         new Chat(id, participants, status, name, owner, new ArrayList<Message>(), null);
@@ -115,9 +118,8 @@ public class Chat implements Serializable {
         return id;
     }
 
-    @JsonIgnore
     public ArrayList<User> getParticipants() {
-        if (participants == null || participants.isEmpty()) {
+        if (participants == null) {
             participants = new ArrayList<>();
             User dummy = new User("Dummy", 12);
             participants.add(dummy);
@@ -170,7 +172,6 @@ public class Chat implements Serializable {
         return owner;
     }
 
-    @JsonIgnore
     public int getNumberOfParticipants() {
 
         if (participants != null)
@@ -179,7 +180,6 @@ public class Chat implements Serializable {
         return 0;
     }
 
-    @JsonIgnore
     public ArrayList<Message> getMessages() {
         if(messages == null) {
             return new ArrayList<Message>();
@@ -187,7 +187,6 @@ public class Chat implements Serializable {
         return new ArrayList<Message>(messages);
     }
 
-    @JsonIgnore
     public MessageEncryption getEncryption() {
         if (aes == null)
             System.out.println("[DEBUG] Chat wurde erstellt ohne gueltiges Encryption-Object --> Class: Chat.getEncryption())");
@@ -206,7 +205,6 @@ public class Chat implements Serializable {
         this.lastModified = lastModified;
     }
 
-    @JsonIgnore
     public void setParticipants(List<User> participants) {
         this.participants = participants;
     }
@@ -239,7 +237,6 @@ public class Chat implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    @JsonIgnore
     public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;
     }
@@ -247,7 +244,6 @@ public class Chat implements Serializable {
     /**
      * Other Methods
      */
-    @JsonIgnore
     public boolean isOwner(long userId) {
         if (owner.getId() == userId) {
             return true;
@@ -255,7 +251,6 @@ public class Chat implements Serializable {
         return false;
     }
 
-    @JsonIgnore
     public void addMessage(Message msg) {
         if (messages == null) {
             messages = new ArrayList<Message>();
@@ -263,7 +258,6 @@ public class Chat implements Serializable {
         messages.add(msg);
     }
 
-    @Override
     public String toString() {
         return "Chat{" +
                 "id=" + id +

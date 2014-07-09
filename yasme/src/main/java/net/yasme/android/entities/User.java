@@ -1,24 +1,21 @@
 package net.yasme.android.entities;
 
-import android.graphics.Bitmap;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import net.yasme.android.storage.DatabaseConstants;
-import net.yasme.android.storage.PictureManager;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Stefan on 10.05.14.
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 @DatabaseTable(tableName = DatabaseConstants.USER_TABLE)
 public class User implements Serializable {
 
@@ -31,6 +28,8 @@ public class User implements Serializable {
 
     private String email;
     private String pw;
+
+    private List<Device> devices;
 
     @JsonIgnore
     private Date lastModified;
@@ -83,6 +82,11 @@ public class User implements Serializable {
     //    return new ArrayList<Chat>(chats);
     //}
 
+    public List<Device> getDevices() {
+        return devices;
+    }
+
+
     public String getEmail() {
         return email;
     }
@@ -128,6 +132,11 @@ public class User implements Serializable {
     //public void setChat(ArrayList<Chat> chats) {
     //    this.chats = chats;
     //}
+
+
+    public void setDevices(List<Device> devices) {
+        this.devices = devices;
+    }
 
     public void setPw(String pw) {
         this.pw = pw;
