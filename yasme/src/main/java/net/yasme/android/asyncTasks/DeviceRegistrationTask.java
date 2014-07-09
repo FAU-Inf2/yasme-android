@@ -4,12 +4,15 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.yasme.android.controller.FragmentObservable;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
 import net.yasme.android.connection.DeviceTask;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.ui.LoginFragment;
 
 /**
  * Created by cuong on 21/06/14.
@@ -85,10 +88,9 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
             editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
             editor.commit();
             Log.d(this.getClass().getSimpleName(),"[DEBUG] Device stored to SharedPreferences");
-            //TODO: Observer, LoginFragment
-            //activity.onPostYasmeDeviceRegExecute(success,deviceId);
-            //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).notifyFragments(new LoginFragment.DeviceRegistrationParam(success, deviceId));
 
+            FragmentObservable<LoginFragment,LoginFragment.LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
+            obs.notifyFragments(new LoginFragment.DeviceRegistrationParam(success, deviceId));
         }
 
     }
