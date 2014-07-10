@@ -101,8 +101,10 @@ public class MessageTask extends ConnectionTask {
                             /*DEBUG*/
                     System.out.println("[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
                             /*DEBUG END*/
-                    new DeleteMessageKeyTask().execute(keyId);
-                    //keyStorage.deleteKeyFromServer(keyId);
+
+                    // Delete Key from Server
+                    // TODO: Remove comment
+                    //new DeleteMessageKeyTask().execute(keyId);
                 } else {
                     System.out.println("[???] Es wurde kein Key in der Message gefunden");
                 }
