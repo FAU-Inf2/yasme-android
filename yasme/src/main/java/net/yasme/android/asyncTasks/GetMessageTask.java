@@ -49,7 +49,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         if (messages.isEmpty()) {
             return false;
         }
-        DatabaseManager.getInstance().storeMessages(messages);
+        DatabaseManager.INSTANCE.storeMessages(messages);
         return true;
     }
 

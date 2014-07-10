@@ -60,7 +60,7 @@ public class ChatFragment extends Fragment {
 
            //trying to get chat with chatId from local DB
            try {
-               chat = DatabaseManager.getInstance().getChat(chatId);
+               chat = DatabaseManager.INSTANCE.getChat(chatId);
                Log.e(this.getClass().getSimpleName(), "number messages: " + chat.getMessages().size());
            } catch (NullPointerException e) {
                chat = null;
@@ -115,7 +115,7 @@ public class ChatFragment extends Fragment {
 
     @Override
     public void onStop() {
-        DatabaseManager.getInstance().updateChat(chat);
+        DatabaseManager.INSTANCE.updateChat(chat);
         super.onStop();
     }
 
@@ -178,7 +178,7 @@ public class ChatFragment extends Fragment {
 
             //textView.setText(msg.getSender().getName() + ": "+ msg.getMessage());
 
-            String name = DatabaseManager.getInstance().getUser(msg.getSender().getId()).getName();
+            String name = DatabaseManager.INSTANCE.getUser(msg.getSender().getId()).getName();
 
             if(name == null) {
                 Log.i(this.getClass().getSimpleName(), "User existiert nicht in DB");

@@ -30,7 +30,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
     long lastMessageId;
 
     public UpdateDBTask(SharedPreferences storage) { //TODO: context entfernen
-        dbManager = DatabaseManager.getInstance();
+        dbManager = DatabaseManager.INSTANCE;
         chatTask = ChatTask.getInstance();
         messageTask = MessageTask.getInstance();
         this.storage = storage;

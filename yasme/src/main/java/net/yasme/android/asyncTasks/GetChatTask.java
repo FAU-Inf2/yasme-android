@@ -22,7 +22,7 @@ public class GetChatTask extends AsyncTask<String, Void, Boolean> {
     String accessToken;
 
     public GetChatTask() {
-        dbManager = DatabaseManager.getInstance();
+        dbManager = DatabaseManager.INSTANCE;
     }
 
     /**

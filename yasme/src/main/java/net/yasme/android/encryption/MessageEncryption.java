@@ -43,7 +43,7 @@ public class MessageEncryption {
 
     private AESEncryption aes;
 
-    private DatabaseManager db = DatabaseManager.getInstance();
+    private DatabaseManager db = DatabaseManager.INSTANCE;
 
 
     /*

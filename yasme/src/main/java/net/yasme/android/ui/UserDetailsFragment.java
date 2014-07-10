@@ -117,7 +117,7 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
         activity = (AbstractYasmeActivity) getActivity();
         selfuser = activity.getSelfUser();
 
-        db = DatabaseManager.getInstance();
+        db = DatabaseManager.INSTANCE;
 
         if (!getArguments().getBoolean(ARG_CONTACTBUTTON)){
             addContact.setVisibility(View.GONE);

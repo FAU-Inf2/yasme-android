@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
 
-    private DatabaseManager databaseManager = DatabaseManager.getInstance();
+    private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
     protected InviteToChatFragment fragment;
     private User selfUser;
     private List<User> selectedUsers;

@@ -17,46 +17,41 @@ import java.util.List;
 /**
  * Created by robert on 13.06.14.
  */
-public class DatabaseManager {
+public enum DatabaseManager {
+    INSTANCE;
 
-    static private DatabaseManager instance;
-    private static Boolean initialized = false;
-
-    public static void init(Context context, long userId) {
-        if (null == instance) {
-            instance = new DatabaseManager(context, userId);
-            helper = new DatabaseHelper(context, userId);
-        }
-        initialized = true;
-    }
-
-    public static Boolean isInitialized() {
-        return initialized;
-    }
-
-    static public DatabaseManager getInstance() {
-        return instance;
-    }
-
-    private static DatabaseHelper helper;
-
-    private DatabaseManager(Context context, long userId) {
-        helper = new DatabaseHelper(context, userId);
-    }
-
-    private DatabaseHelper getHelper() {
-        return helper;
-    }
+    private boolean mInitialized = false;
+    private DatabaseHelper mHelper;
+    private Context mContext;
+    private long mUserId;
 
     private UserDao userDao;
 
-    public UserDao getUserDao() {
-        return userDao;
+    public void init(Context context, long userId) {
+        mContext = context;
+        mUserId = userId;
+        mHelper = new DatabaseHelper(context, userId);
+        initalizeDaos();
+        mInitialized = true;
     }
 
+    public boolean isInitialized() {
+        return mInitialized;
+    }
+
+
+    private DatabaseHelper getHelper() {
+        return mHelper;
+    }
+
+
     private void initalizeDaos() {
-        UserDaoImpl.INSTANCE.setDatabaseHelper(helper);
+        UserDaoImpl.INSTANCE.setDatabaseHelper(mHelper);
         userDao = UserDaoImpl.INSTANCE;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
     }
 
 

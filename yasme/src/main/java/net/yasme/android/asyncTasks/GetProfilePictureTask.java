@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class GetProfilePictureTask extends AsyncTask<String, Void, Boolean> {
 
-        private DatabaseManager databaseManager = DatabaseManager.getInstance();
+        private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
         private Drawable profilePicture;
 
 

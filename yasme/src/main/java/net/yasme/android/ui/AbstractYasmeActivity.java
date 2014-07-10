@@ -63,8 +63,8 @@ public abstract class AbstractYasmeActivity  extends Activity {
         accessToken = storage.getString(ACCESSTOKEN, null);
 
         //Initialize database (once in application)
-        if(!DatabaseManager.isInitialized()) {
-            DatabaseManager.init(this, userId);
+        if(!DatabaseManager.INSTANCE.isInitialized()) {
+            DatabaseManager.INSTANCE.init(this, userId);
         }
 
         selfUser = new User();

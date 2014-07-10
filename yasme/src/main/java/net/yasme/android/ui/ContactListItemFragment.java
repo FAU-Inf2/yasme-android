@@ -183,7 +183,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
     private void getContacts(){
 
-        DatabaseManager db = DatabaseManager.getInstance();
+        DatabaseManager db = DatabaseManager.INSTANCE;
 
         List<User> userList = db.getContactsFromDB();
 

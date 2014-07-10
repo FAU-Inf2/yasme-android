@@ -63,7 +63,7 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         long aesId = aes.getKeyId();
         Chat chat = new Chat();
         chat.setId(chatId);
-        chat.setParticipants(DatabaseManager.getInstance().getParticipantsForChat(chatId));
+        chat.setParticipants(DatabaseManager.INSTANCE.getParticipantsForChat(chatId));
 
         Message createdMessage = new Message(user, msgEncrypted, chat, aesId);
         Log.d(this.getClass().getSimpleName(), "AES getKeyID: " + aes.getKeyId());

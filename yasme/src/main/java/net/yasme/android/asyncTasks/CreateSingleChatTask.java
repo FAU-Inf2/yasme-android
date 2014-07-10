@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class CreateSingleChatTask extends AsyncTask<String, Void, Boolean> {
 
-    private DatabaseManager databaseManager = DatabaseManager.getInstance();
+    private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
     private ContactActivity activity;
     private User user;
     private User selfUser;

@@ -23,7 +23,7 @@ public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
     ArrayList<Chat> chatRooms = null;
 
     protected Boolean doInBackground(String... params) {
-        chatRooms = DatabaseManager.getInstance().getAllChats();
+        chatRooms = DatabaseManager.INSTANCE.getAllChats();
         return chatRooms != null;
     }
 
