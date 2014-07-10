@@ -7,6 +7,8 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.dao.UserDao;
+import net.yasme.android.storage.dao.UserDaoImpl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class DatabaseManager {
     static private DatabaseManager instance;
     private static Boolean initialized = false;
 
-    static public void init(Context context, long userId, String accessToken) {
+    static public void init(Context context, long userId) {
         if (null == instance) {
             instance = new DatabaseManager(context, userId);
         }
@@ -43,6 +45,17 @@ public class DatabaseManager {
 
     private DatabaseHelper getHelper() {
         return helper;
+    }
+
+    private UserDao userDao;
+
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    private void initalizeDaos() {
+        UserDaoImpl.INSTANCE.setDatabaseHelper(helper);
+        userDao = UserDaoImpl.INSTANCE;
     }
 
 

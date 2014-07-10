@@ -54,7 +54,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, MessageKey.class);
             TableUtils.createTable(connectionSource, CurrentKey.class);
         } catch (SQLException e) {
-            Log.w(this.getClass().getSimpleName(), "Can't create database" + e.getMessage());
+            Log.e(this.getClass().getSimpleName(), "Can't create database");
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
         }
     }
 
@@ -68,9 +69,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, MessageKey.class, true);
             TableUtils.dropTable(connectionSource, CurrentKey.class, true);
             onCreate(db, connectionSource);
-        } catch (java.sql.SQLException e) {
-            System.out.println("Can't drop databases");
-            System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            Log.e(this.getClass().getSimpleName(), "Can't drop databases");
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
         }
     }
 
@@ -85,8 +86,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         if (null == chatDao) {
             try {
                 chatDao = DaoManager.createDao(connectionSource, Chat.class);
-            }catch (java.sql.SQLException e) {
-                Log.w(this.getClass().getSimpleName(), e.getMessage());
+            } catch (java.sql.SQLException e) {
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
             }
         }
         return chatDao;
@@ -97,7 +98,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             try {
                 userDao = DaoManager.createDao(connectionSource, User.class);
             } catch (SQLException e) {
-                Log.w(this.getClass().getSimpleName(), e.getMessage());
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
             }
         }
         return userDao;
@@ -108,7 +109,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             try {
                 messageDao = DaoManager.createDao(connectionSource, Message.class);
             } catch (SQLException e) {
-                Log.w(this.getClass().getSimpleName(), e.getMessage());
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
             }
         }
         return messageDao;
@@ -119,7 +120,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             try {
                 chatUserDao = DaoManager.createDao(connectionSource, ChatUser.class);
             } catch (SQLException e) {
-                Log.w(this.getClass().getSimpleName(), e.getMessage());
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
             }
         }
         return chatUserDao;
@@ -130,7 +131,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             try {
                 currentKeyDao = DaoManager.createDao(connectionSource, CurrentKey.class);
             } catch (SQLException e) {
-                Log.w(this.getClass().getSimpleName(), e.getMessage());
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
             }
         }
         return currentKeyDao;
@@ -141,7 +142,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             try {
                 messageKeyDao = DaoManager.createDao(connectionSource, MessageKey.class);
             } catch (SQLException e) {
-                Log.w(this.getClass().getSimpleName(), e.getMessage());
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
             }
         }
         return messageKeyDao;
