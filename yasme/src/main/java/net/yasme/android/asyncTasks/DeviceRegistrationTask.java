@@ -89,8 +89,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
             editor.commit();
             Log.d(this.getClass().getSimpleName(),"[DEBUG] Device stored to SharedPreferences");
 
-            FragmentObservable<LoginFragment,LoginFragment.LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
-            obs.notifyFragments(new LoginFragment.DeviceRegistrationParam(success, deviceId));
+            ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(new LoginFragment.DeviceRegistrationParam(success, deviceId));
         }
 
     }

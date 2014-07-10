@@ -77,7 +77,6 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
-        FragmentObservable<LoginFragment,LoginFragment.LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
-        obs.notifyFragments(new LoginFragment.LoginProcessParam(success, userId, accessToken));
+        ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(new LoginFragment.LoginProcessParam(success, userId, accessToken));
     }
 }
