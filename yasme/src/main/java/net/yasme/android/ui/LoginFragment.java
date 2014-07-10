@@ -65,7 +65,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
         //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).register(this);
         Log.d(this.getClass().getSimpleName(),"Try to get LoginObservableInstance");
-        FragmentObservable<LoginFragment,LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
+        FragmentObservable<LoginFragment, LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
         Log.d(this.getClass().getSimpleName(),"... successful");
 
         obs.register(this);
@@ -347,7 +347,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         }
     }
 
-    public static class LoginProcessParam extends LoginParam{
+    public static class LoginProcessParam extends LoginParam {
         private Long userId;
         private String accessToken;
 
@@ -366,7 +366,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         }
     }
 
-    public static class DeviceRegistrationParam extends LoginParam{
+    public static class DeviceRegistrationParam extends LoginParam {
         private Long deviceId;
 
         public DeviceRegistrationParam(Boolean success, Long deviceId) {

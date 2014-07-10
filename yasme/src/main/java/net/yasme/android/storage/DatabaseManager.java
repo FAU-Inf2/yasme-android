@@ -31,7 +31,7 @@ public enum DatabaseManager {
         mContext = context;
         mUserId = userId;
         mHelper = new DatabaseHelper(context, userId);
-        initalizeDaos();
+        initializeDaos();
         mInitialized = true;
     }
 
@@ -45,7 +45,7 @@ public enum DatabaseManager {
     }
 
 
-    private void initalizeDaos() {
+    private void initializeDaos() {
         UserDaoImpl.INSTANCE.setDatabaseHelper(mHelper);
         userDao = UserDaoImpl.INSTANCE;
     }
