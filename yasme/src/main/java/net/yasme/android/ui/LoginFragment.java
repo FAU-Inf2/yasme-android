@@ -239,7 +239,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         if (success) {
             //Initialize database (once in application)
             if (!DatabaseManager.isInitialized()) {
-                DatabaseManager.init(activity.getApplicationContext(), userId, accessToken);
+                DatabaseManager.init(activity.getApplicationContext(), userId);
             }
             // check if there is a device in the Database
             if (yasmeDeviceCheck() == true) {

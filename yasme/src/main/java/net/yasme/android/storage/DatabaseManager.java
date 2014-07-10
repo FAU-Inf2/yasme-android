@@ -22,9 +22,10 @@ public class DatabaseManager {
     static private DatabaseManager instance;
     private static Boolean initialized = false;
 
-    static public void init(Context context, long userId) {
+    public static void init(Context context, long userId) {
         if (null == instance) {
             instance = new DatabaseManager(context, userId);
+            helper = new DatabaseHelper(context, userId);
         }
         initialized = true;
     }
@@ -37,7 +38,7 @@ public class DatabaseManager {
         return instance;
     }
 
-    private DatabaseHelper helper;
+    private static DatabaseHelper helper;
 
     private DatabaseManager(Context context, long userId) {
         helper = new DatabaseHelper(context, userId);
