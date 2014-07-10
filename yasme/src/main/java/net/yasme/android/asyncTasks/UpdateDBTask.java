@@ -1,6 +1,5 @@
 package net.yasme.android.asyncTasks;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -13,9 +12,9 @@ import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.ChatUser;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,6 +23,7 @@ import java.util.List;
 public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
 
     DatabaseManager dbManager;
+    private UserDAO userDAO;
     ChatTask chatTask;
     MessageTask messageTask;
     SharedPreferences storage;
@@ -31,6 +31,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
 
     public UpdateDBTask(SharedPreferences storage) { //TODO: context entfernen
         dbManager = DatabaseManager.INSTANCE;
+        userDAO = DatabaseManager.INSTANCE.getUserDAO();
         chatTask = ChatTask.getInstance();
         messageTask = MessageTask.getInstance();
         this.storage = storage;
@@ -90,7 +91,8 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
                     user.setName("dummy");
                     Log.d(this.getClass().getSimpleName(), "[Debug] userName ist null, verwende Dummy-Name");
                 }
-                dbManager.createOrUpdateUser(user);
+                userDAO.addOrUpdate(user);
+                // TODO Seperate logic from persistence layer
                 dbManager.createChatUser(new ChatUser(chat, user));
                 Log.d(this.getClass().getSimpleName(), "User and ChatUser added to DB");
             }

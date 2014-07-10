@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by bene on 10.07.14.
  */
-public enum UserDaoImpl implements UserDao {
+public enum UserDAOImpl implements UserDAO {
     INSTANCE;
 
     private DatabaseHelper databaseHelper;

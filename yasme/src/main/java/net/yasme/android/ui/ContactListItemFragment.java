@@ -21,6 +21,7 @@ import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.dao.UserDAO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -183,10 +184,9 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
     private void getContacts(){
 
-        DatabaseManager db = DatabaseManager.INSTANCE;
+        UserDAO userDAO = DatabaseManager.INSTANCE.getUserDAO();
 
-        List<User> userList = db.getContactsFromDB();
-
+        List<User> userList = userDAO.getContacts();
         if (userList != null){
             for(User u:userList){
                 contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail(),u));

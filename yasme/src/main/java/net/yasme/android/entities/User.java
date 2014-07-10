@@ -19,17 +19,18 @@ import java.util.List;
 @DatabaseTable(tableName = DatabaseConstants.USER_TABLE)
 public class User implements Serializable {
 
-    @DatabaseField(columnName = DatabaseConstants.USER_ID,
-            id = true)
+    @DatabaseField(columnName = DatabaseConstants.USER_ID, id = true)
     private long id;
 
     @DatabaseField(columnName = DatabaseConstants.USER_NAME)
     private String name;
 
+    //@DatabaseField(columnName = DatabaseConstants.USER_EMAIL)
     private String email;
+
     private String pw;
 
-    private List<Device> devices;
+    private List<Device> devices;   // Just for convenience
 
     @JsonIgnore
     private Date lastModified;

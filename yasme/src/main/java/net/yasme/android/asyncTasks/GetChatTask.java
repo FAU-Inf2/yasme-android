@@ -9,6 +9,7 @@ import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.ChatUser;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.dao.UserDAO;
 
 import java.util.Date;
 import java.util.List;
@@ -17,12 +18,15 @@ import java.util.List;
  * Created by robert on 07.07.14.
  */
 public class GetChatTask extends AsyncTask<String, Void, Boolean> {
-    DatabaseManager dbManager;
+
+    private DatabaseManager dbManager;
+    private UserDAO userDAO;
     long userId;
     String accessToken;
 
     public GetChatTask() {
         dbManager = DatabaseManager.INSTANCE;
+        userDAO = DatabaseManager.INSTANCE.getUserDAO();
     }
 
     /**
@@ -69,7 +73,7 @@ public class GetChatTask extends AsyncTask<String, Void, Boolean> {
                     } else {
                         continue;
                     }
-                    dbManager.createOrUpdateUser(user);
+                    userDAO.addOrUpdate(user);
                     dbManager.createChatUser(new ChatUser(chat, user));
                     Log.d(this.getClass().getSimpleName(), "User and ChatUser added to DB");
                 }

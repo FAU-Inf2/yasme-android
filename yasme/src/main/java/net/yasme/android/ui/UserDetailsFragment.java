@@ -14,11 +14,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.j256.ormlite.dao.DaoManager;
+
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.CreateSingleChatTask;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.dao.UserDAO;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,7 +54,7 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
     private Button addContact;
     private ImageButton mailButton;
     private ImageButton numberButton;
-    private DatabaseManager db;
+    private UserDAO userDAO;
 
     private OnDetailsFragmentInteractionListener mListener;
 
@@ -117,7 +120,7 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
         activity = (AbstractYasmeActivity) getActivity();
         selfuser = activity.getSelfUser();
 
-        db = DatabaseManager.INSTANCE;
+        userDAO = DatabaseManager.INSTANCE.getUserDAO();
 
         if (!getArguments().getBoolean(ARG_CONTACTBUTTON)){
             addContact.setVisibility(View.GONE);
@@ -162,8 +165,8 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
     case R.id.contact_detail_addcontact:
         contact.addToContacts();
         //db.createUserIfNotExists(user);
-        db.createOrUpdateUser(contact);
-        System.out.println("------------------- Contact Added ---------------------------" + db.getContactsFromDB());
+        userDAO.addOrUpdate(contact);
+        System.out.println("------------------- Contact Added ---------------------------" + userDAO.getContacts());
         break;
 
     case R.id.mail_image_button:

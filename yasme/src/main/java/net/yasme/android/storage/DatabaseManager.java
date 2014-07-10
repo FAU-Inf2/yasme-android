@@ -7,8 +7,8 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
-import net.yasme.android.storage.dao.UserDao;
-import net.yasme.android.storage.dao.UserDaoImpl;
+import net.yasme.android.storage.dao.UserDAO;
+import net.yasme.android.storage.dao.UserDAOImpl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,13 +25,13 @@ public enum DatabaseManager {
     private Context mContext;
     private long mUserId;
 
-    private UserDao userDao;
+    private UserDAO userDAO;
 
     public void init(Context context, long userId) {
         mContext = context;
         mUserId = userId;
         mHelper = new DatabaseHelper(context, userId);
-        initializeDaos();
+        initializeDAOs();
         mInitialized = true;
     }
 
@@ -45,13 +45,13 @@ public enum DatabaseManager {
     }
 
 
-    private void initializeDaos() {
-        UserDaoImpl.INSTANCE.setDatabaseHelper(mHelper);
-        userDao = UserDaoImpl.INSTANCE;
+    private void initializeDAOs() {
+        UserDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
+        userDAO = UserDAOImpl.INSTANCE;
     }
 
-    public UserDao getUserDao() {
-        return userDao;
+    public UserDAO getUserDAO() {
+        return userDAO;
     }
 
 
@@ -253,39 +253,39 @@ public enum DatabaseManager {
         }
     }
 
-    /**
-     * Updates the given user or creates a new user, if no such user exists
-     * @param u     User
-     */
-    public void createOrUpdateUser(User u) {
-        try {
-            User tmp = getHelper().getUserDao().queryForId(u.getId());
-            if(tmp == null) {
-                getHelper().getUserDao().create(u);
-            } else {
-                if(tmp.isContact() == 1) {
-                    u.addToContacts();
-                    getHelper().getUserDao().update(u);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * This function if a user is already stored in the Database
-     * @param userId    long
-     * @return true if user with userId exists, otherwise false
-     */
-    public boolean existsUser(long userId) {
-        try {
-            return getHelper().getUserDao().idExists(userId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+//    /**
+//     * Updates the given user or creates a new user, if no such user exists
+//     * @param u     User
+//     */
+//    public void createOrUpdateUser(User u) {
+//        try {
+//            User tmp = getHelper().getUserDao().queryForId(u.getId());
+//            if(tmp == null) {
+//                getHelper().getUserDao().create(u);
+//            } else {
+//                if(tmp.isContact() == 1) {
+//                    u.addToContacts();
+//                    getHelper().getUserDao().update(u);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    /**
+//     * This function if a user is already stored in the Database
+//     * @param userId    long
+//     * @return true if user with userId exists, otherwise false
+//     */
+//    public boolean existsUser(long userId) {
+//        try {
+//            return getHelper().getUserDao().idExists(userId);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 
     /**
      * This function returns all participants from the chat with the given chatId
@@ -323,48 +323,48 @@ public enum DatabaseManager {
         }
         return insert;
     }
-
-    /**
-     * This function returns the user with userId
-     * @param userId    long
-     * @return User with userId or null if no such User exists
-     */
-    public User getUser(long userId) {
-        try {
-            return getHelper().getUserDao().queryForId(userId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * This function will get all participants with contactFlag = 1
-     * @return contacts or null on error
-     */
-    public List<User> getContactsFromDB() {
-        List<User> contacts;
-        try {
-            contacts = getHelper().getUserDao().queryForEq(DatabaseConstants.CONTACT, 1);
-        } catch (SQLException e) {
-            contacts = null;
-        }
-        return contacts;
-    }
-
-    /**
-     * This function will reset the contactFlag so that the user is removed from the contact list
-     * @param u     User
-     */
-    public void removeContactFromDB(User u) {
-        try {
-            getHelper().getUserDao().queryForId(u.getId());
-            u.removeFromContacts();
-            getHelper().getUserDao().update(u);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+//
+//    /**
+//     * This function returns the user with userId
+//     * @param userId    long
+//     * @return User with userId or null if no such User exists
+//     */
+//    public User getUser(long userId) {
+//        try {
+//            return getHelper().getUserDao().queryForId(userId);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//
+//    /**
+//     * This function will get all participants with contactFlag = 1
+//     * @return contacts or null on error
+//     */
+//    public List<User> getContactsFromDB() {
+//        List<User> contacts;
+//        try {
+//            contacts = getHelper().getUserDao().queryForEq(DatabaseConstants.CONTACT, 1);
+//        } catch (SQLException e) {
+//            contacts = null;
+//        }
+//        return contacts;
+//    }
+//
+//    /**
+//     * This function will reset the contactFlag so that the user is removed from the contact list
+//     * @param u     User
+//     */
+//    public void removeContactFromDB(User u) {
+//        try {
+//            getHelper().getUserDao().queryForId(u.getId());
+//            u.removeFromContacts();
+//            getHelper().getUserDao().update(u);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     /**
