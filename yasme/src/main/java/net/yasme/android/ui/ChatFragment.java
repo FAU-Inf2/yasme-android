@@ -125,8 +125,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     @Override
     public void onStop() {
-        // TODO What's going on here?
-        DatabaseManager.INSTANCE.getChatDAO().update(chat);
         super.onStop();
         FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "Remove from observer");
@@ -202,7 +200,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             try {
                 name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
             } catch (NullPointerException e) {
-                Log.d(this.getClass().getSimpleName(), "User nicht in DB grfunden");
+                Log.d(this.getClass().getSimpleName(), "User nicht in DB gefunden");
                 name = "anonym";
             }
             textView.setText(name + ": " + msg.getMessage());
@@ -210,12 +208,12 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
             textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
 
-            if (msg.getSender().getId() == activity.getSelfUser().getId()) {
+            /*if (msg.getSender().getId() == activity.getSelfUser().getId()) {
                 textView.setGravity(Gravity.RIGHT);
                 row.setGravity(Gravity.RIGHT);
                 textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
                 textView.setTextColor(getResources().getColor(R.color.chat_text_color_self));
-            }
+            }*/
             row.addView(textView);
             layout.addView(row, layoutParams);
 

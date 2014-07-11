@@ -38,7 +38,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
         try {
-            messages = MessageTask.getInstance().getMessage(lastMessageId);
+            messages = MessageTask.getInstance().getMessage(0L);
         } catch (RestServiceException e) {
             Log.w(this.getClass().getSimpleName(), e.getMessage());
         }
@@ -52,13 +52,13 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
         for(Message msg : messages) {
             DatabaseManager.INSTANCE.getMessageDAO().add(msg);//storeMessages(messages);
+            DatabaseManager.INSTANCE.getMessageKeyDAO().add(msg.getMessageKey());
         }
         return true;
     }
 
 
     /**
-     * updates Database,
      * stores lastMessageId
      */
     @Override

@@ -28,10 +28,10 @@ public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
     public void notifyFragments(P parameter) {
         for (T fragment : fragments) {
             try {
-                Log.d("FragmentObserver", "Notify fragment: " + fragment.getClass().getSimpleName());
+                Log.d(this.getClass().getSimpleName(), "Notify fragment: " + fragment.getClass().getSimpleName());
                 fragment.notifyFragment(parameter);
             } catch (Exception e) {
-                Log.d("FragmentObserver", "Notify fragment failed: " + fragment.getClass().getSimpleName());
+                Log.d(this.getClass().getSimpleName(), "Notify fragment failed: " + fragment.getClass().getSimpleName());
             }
         }
     }
