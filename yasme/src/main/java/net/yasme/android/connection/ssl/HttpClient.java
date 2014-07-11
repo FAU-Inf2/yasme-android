@@ -2,8 +2,10 @@ package net.yasme.android.connection.ssl;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import net.yasme.android.R;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -32,6 +34,7 @@ public class HttpClient {
     public static Context context;
 
     public static CloseableHttpClient createSSLClient() {
+
 
         SSLConnectionSocketFactory sslsf = null;
 

@@ -28,7 +28,6 @@ import net.yasme.android.storage.DatabaseManager;
 
 public class LoginFragment extends Fragment implements NotifiableFragment<LoginFragment.LoginParam> {
 
-
     //Keep track of the login task to ensure we can cancel it if requested.
     private UserLoginTask authTask = null;
 
@@ -142,7 +141,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
      */
     public void attemptLogin() {
         if (authTask == null) {
-            authTask = new UserLoginTask(activity.getStorage());
+            authTask = new UserLoginTask(activity.getStorage(), activity.getApplicationContext());
             Log.d(this.getClass().getSimpleName(), "[DEBUG] AuthTask is null");
         }
 
@@ -232,9 +231,11 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         activity.getSelfUser().setId(userId);
         SharedPreferences.Editor editor = activity.getStorage().edit();
         editor.putString(AbstractYasmeActivity.ACCESSTOKEN, accessToken);
-        editor.commit();
+
 
         showProgress(false);
+        activity.mSignedIn = success;
+        editor.putBoolean(AbstractYasmeActivity.SIGN_IN, activity.mSignedIn);
 
         if (success) {
             //Initialize database (once in application)
@@ -251,15 +252,17 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 // TODO register device
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device does not exist in Database");
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device at yasme server");
-                DeviceRegistrationTask yasmeDevRegTask =
-                        new DeviceRegistrationTask(activity.getStorage());
-                yasmeDevRegTask.execute(this.accessToken, Long.toString(userId),
+                //DeviceRegistrationTask yasmeDevRegTask =
+                        new DeviceRegistrationTask(activity.getStorage())
+                        .execute(this.accessToken, Long.toString(userId),
                         this.deviceProduct, this.googleRegId);
 
             }
+            editor.commit();
         } else {
             passwordView.setError(getString(R.string.error_incorrect_user_or_password));
             passwordView.requestFocus();
+            editor.commit();
         }
     }
 

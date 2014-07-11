@@ -2,10 +2,13 @@ package net.yasme.android.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import net.yasme.android.R;
+import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.connection.ssl.HttpClient;
 
 public class ChatListActivity extends AbstractYasmeActivity {
 
@@ -14,11 +17,30 @@ public class ChatListActivity extends AbstractYasmeActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_with_single_fragment);
 
-		if (savedInstanceState == null) {
+        if(HttpClient.context == null) {
+            //TODO: temporäre Lösung:
+            HttpClient.context = this.getApplicationContext();
+        }
+
+
+        if(!mSignedIn) {
+            Log.i(this.getClass().getSimpleName(), "Not logged in, starting login activity");
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
+        Log.i(this.getClass().getSimpleName(), "User is authorized");
+
+        long userId = storage.getLong(AbstractYasmeActivity.USER_ID, 0);
+        String accessToken = storage.getString(AbstractYasmeActivity.ACCESSTOKEN, "");
+        //initConnection Session
+        //TODO: second Param should be deviceId
+        ConnectionTask.initSession(userId, userId, accessToken);
+
+        if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.singleFragmentContainer, new ChatListFragment()).commit();
 		}
-
     }
 
 	@Override

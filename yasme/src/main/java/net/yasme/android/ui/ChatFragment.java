@@ -19,17 +19,21 @@ import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.GetMessageTask;
 import net.yasme.android.asyncTasks.server.GetMessageTaskInChat;
 import net.yasme.android.asyncTasks.server.SendMessageTask;
+import net.yasme.android.controller.FragmentObservable;
+import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by martin on 21.06.2014.
  */
-public class ChatFragment extends Fragment {
+public class ChatFragment extends Fragment implements NotifiableFragment<List<Message>> {
 
     private AbstractYasmeActivity activity;
 
@@ -44,36 +48,42 @@ public class ChatFragment extends Fragment {
 
     MessageEncryption aes;
 
-       public ChatFragment() {
+    public ChatFragment() {
 
-       }
+    }
 
-       @Override
-       public void onCreate(Bundle savedInstanceState) {
-           super.onCreate(savedInstanceState);
-           activity = (AbstractYasmeActivity)getActivity();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activity = (AbstractYasmeActivity) getActivity();
 
            Intent intent = activity.getIntent();
            long chatId = intent.getLongExtra(activity.CHAT_ID, 1);
 
            storage = activity.getStorage();
 
-           //trying to get chat with chatId from local DB
-           try {
-               chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
-               Log.e(this.getClass().getSimpleName(), "number messages: " + chat.getMessages().size());
-           } catch (NullPointerException e) {
-               chat = null;
-               Log.w(this.getClass().getSimpleName(), "get chat from DB failed");
-           }
-           if(chat == null) {
-               chat = new Chat(chatId, activity.getSelfUser(), activity);
-           }
+        //Register at observer
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
+        FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+        obs.register(this);
 
-           //DEBUG, TODO: encryption speichern und auslesen
-           aes = new MessageEncryption(chat, activity.getSelfUser().getId());
-           chat.setEncryption(aes);
-       }
+        //trying to get chat with chatId from local DB
+        try {
+            chat = DatabaseManager.INSTANCE.getChat(chatId);
+            Log.e(this.getClass().getSimpleName(), "number messages: " + chat.getMessages().size());
+        } catch (NullPointerException e) {
+            chat = null;
+            Log.w(this.getClass().getSimpleName(), "get chat from DB failed");
+        }
+        if (chat == null) {
+            chat = new Chat(chatId, activity.getSelfUser(), activity);
+        }
+
+        //DEBUG, TODO: encryption speichern und auslesen
+        aes = new MessageEncryption(chat, activity.getSelfUser().getId());
+        chat.setEncryption(aes);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,19 +96,15 @@ public class ChatFragment extends Fragment {
 
         Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
         Button buttonUpdate = (Button) rootView.findViewById(R.id.button_update);
-        buttonSend.setOnClickListener(new View.OnClickListener()
-        {
+        buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 send(v);
             }
         });
-        buttonUpdate.setOnClickListener(new View.OnClickListener()
-        {
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 update(v);
             }
         });
@@ -118,6 +124,15 @@ public class ChatFragment extends Fragment {
         // TODO What's going on here?
         DatabaseManager.INSTANCE.getChatDAO().update(chat);
         super.onStop();
+        FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
+        Log.d(this.getClass().getSimpleName(), "Remove from observer");
+        obs.remove(this);
+    }
+
+    @Override
+    public void notifyFragment(List<Message> messages) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        updateViews((ArrayList<Message>) messages);
     }
 
     public TextView getStatus() {
@@ -138,7 +153,7 @@ public class ChatFragment extends Fragment {
         }
         //String msgEncrypted = aes.encrypt(editMessage.getText().toString());
 
-        new SendMessageTask((ChatActivity)activity, this, chat.getEncryption())
+        new SendMessageTask((ChatActivity) activity, this, chat.getEncryption())
                 .execute(msg, activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), Long.toString(activity.getSelfUser().getId()),
                         Long.toString(chat.getId()), activity.getAccessToken());
         editMessage.setText("");
@@ -147,9 +162,9 @@ public class ChatFragment extends Fragment {
 
     public void asyncUpdate() {
         status.setText("GET messages");
-        //TODO: folgende Methode loeschen
-        new GetMessageTaskInChat( this, chat.getEncryption(), storage)
-                .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());
+        //TODO: folgenden Aufruf loeschen
+        //new GetMessageTaskInChat(this, chat.getEncryption(), storage)
+        //        .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());
         new GetMessageTask(storage)
                 .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());
         status.setText("GET messages done");
@@ -160,7 +175,7 @@ public class ChatFragment extends Fragment {
     }
 
     public void updateViews(ArrayList<Message> messages) {
-        if(messages == null) {
+        if (messages == null) {
             Log.d(this.getClass().getSimpleName(), "Keine Nachrichten zum Ausgeben");
         }
         for (Message msg : messages) {
@@ -181,7 +196,7 @@ public class ChatFragment extends Fragment {
 
             String name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
 
-            if(name == null) {
+            if (name == null) {
                 Log.i(this.getClass().getSimpleName(), "User existiert nicht in DB");
                 name = "anonym";
             }
