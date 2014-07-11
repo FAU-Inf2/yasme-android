@@ -14,6 +14,7 @@ import net.yasme.android.R;
 import net.yasme.android.entities.Chat;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by martin on 18.06.2014.
@@ -22,9 +23,9 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 
     Context context;
     int layoutResourceId;
-    ArrayList<Chat> chats = null;
+    List<Chat> chats = null;
 
-    public ChatListAdapter(Context context, int layoutResourceId, ArrayList<Chat> chats) {
+    public ChatListAdapter(Context context, int layoutResourceId, List<Chat> chats) {
         super(context, layoutResourceId, chats);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -82,7 +83,7 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
     }
     */
 
-    public void updateChats(ArrayList<Chat> updatedChats) {
+    public void updateChats(List<Chat> updatedChats) {
         // This:
         // chats = updatedChats;
         // does not work. No update at runtime!
