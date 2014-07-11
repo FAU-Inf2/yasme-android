@@ -21,103 +21,91 @@ import java.util.ArrayList;
 
 public class MessageTask extends ConnectionTask {
 
-    private static MessageTask instance;
+	private static MessageTask instance;
 
-    public static MessageTask getInstance() {
-        if (instance == null) {
-            instance = new MessageTask();
-        }
-        return instance;
-    }
+	public static MessageTask getInstance() {
+		if (instance == null) { instance = new MessageTask(); }
+		return instance;
+	}
 
-    private MessageTask() {
-        try {
-            this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/msg").build();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
+	private MessageTask() {
+		try {
+			this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/msg").build();
+		} catch (URISyntaxException e) { e.printStackTrace(); }
+	}
 
-    public void sendMessage(Message message) throws RestServiceException {
-        executeRequest(Request.POST, "", message);
-        System.out.println("[DEBUG] Message stored!");
-    }
+	public void sendMessage(Message message) throws RestServiceException {
+		executeRequest(Request.POST, "", message);
+		Log.d(this.getClass().getSimpleName(), "[DEBUG] Message stored!");
+	}
 
-    public ArrayList<Message> getMessage(long lastMessageId)
-            throws RestServiceException {
+	public ArrayList<Message> getMessage(long lastMessageId) throws RestServiceException {
+		ArrayList<Message> messages = new ArrayList<Message>();
 
-        ArrayList<Message> messages = new ArrayList<Message>();
+		try {
+			HttpResponse httpResponse = executeRequest(Request.GET, Long.toString(lastMessageId));
+			String json = (new BufferedReader(
+				new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8")
+			)).readLine();
 
-        try {
-            HttpResponse httpResponse = executeRequest(Request.GET, Long.toString(lastMessageId));
-            String json = (new BufferedReader(new InputStreamReader(
-                    httpResponse.getEntity().getContent(), "UTF-8"))).readLine();
+			JSONArray jsonArray = new JSONArray(json);
 
-            JSONArray jsonArray = new JSONArray(json);
+			Log.d(this.getClass().getSimpleName(),"[DEBUG] getMessageRequest successful: " + jsonArray.length() + " new messages");// + json);
 
-            Log.d(this.getClass().getSimpleName(),
-                    "[DEBUG] getMessageRequest successful: " + jsonArray.length() + " new messages");// + json);
+			for (int i = 0; i < jsonArray.length(); i++) {
+				JSONObject obj = jsonArray.getJSONObject(i);
+				JSONObject sender = obj.getJSONObject("sender");
+				JSONObject chat = obj.getJSONObject("chat");
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
-                JSONObject sender = obj.getJSONObject("sender");
-                JSONObject chat = obj.getJSONObject("chat");
+				Log.d(this.getClass().getSimpleName(), "Message: " + obj.toString());
 
-                Log.d(this.getClass().getSimpleName(), "Message: " + obj.toString());
+				long chatId = chat.getLong("id");
+				long keyId = obj.getLong("messageKeyId");
 
-                long chatId = chat.getLong("id");
-                long keyId = obj.getLong("messageKeyId");
+				/* extracting Keys and save it */
+				JSONObject key;
+				try {
+					key = obj.getJSONObject("messageKey");
+				} catch (Exception e) { key = null; }
 
-                //System.out.println("Sender: " + sender.toString());
+				if (key != null) {
+					String messageKey = key.getString("messageKey");
+					String iv = key.getString("initVector");
+					//decrypt the key with RSA
+					//TODO: statt userId deviceId uebergeben
+					/*
+						MessageSignatur rsa = new MessageSignatur(context, userId);
+						String messageKey = rsa.decrypt(messageKeyEncrypted);
+					*/
 
-                        /* extracting Keys and save it */
-                JSONObject key;
-                try {
-                    key = obj.getJSONObject("messageKey");
-                } catch (Exception e) {
-                    key = null;
-                }
+					long timestamp = key.getLong("timestamp");
+					//MessageEncryption keyStorage = new MessageEncryption(context, chatId);
 
-                if (key != null) {
-                    String messageKey = key.getString("messageKey");
-                    String iv = key.getString("initVector");
-                    //decrypt the key with RSA
-                    //TODO: statt userId deviceId uebergeben
-                            /*
-                            MessageSignatur rsa = new MessageSignatur(context, userId);
-                            String messageKey = rsa.decrypt(messageKeyEncrypted);
-                            */
+					//keyStorage.saveKey(obj.getLong("messageKeyId"), messageKey, iv, timestamp);
+					// TODO: storeKeyToDatabase
+					Log.d(this.getClass().getSimpleName(), "[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
 
+					// Delete Key from Server
+					// TODO: Remove comment
+					//new DeleteMessageKeyTask().execute(keyId);
+				} else {
+					Log.d(this.getClass().getSimpleName(), "[???] Es wurde kein Key in der Message gefunden");
+				}
 
-                    long timestamp = key.getLong("timestamp");
+				Message msg = new Message(
+					new User(sender.getString("name"),sender.getLong("id")),
+					obj.getString("message"),
+					chatId,
+					keyId
+				);
+				messages.add(msg);
+				Log.d(this.getClass().getSimpleName(), "Message added: " + msg.getMessage());
+			} // end of for-loop
 
-                    //MessageEncryption keyStorage = new MessageEncryption(context, chatId);
+		} catch (IOException e) { throw new RestServiceException(Error.CONNECTION_ERROR);
+    } catch (JSONException e) { e.printStackTrace(); }
 
-                    //keyStorage.saveKey(obj.getLong("messageKeyId"), messageKey, iv, timestamp);
-                    // TODO: storeKeyToDatabase
-                            /*DEBUG*/
-                    System.out.println("[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
-                            /*DEBUG END*/
-
-                    // Delete Key from Server
-                    // TODO: Remove comment
-                    //new DeleteMessageKeyTask().execute(keyId);
-                } else {
-                    System.out.println("[???] Es wurde kein Key in der Message gefunden");
-                }
-
-                Message msg = new Message(new User(sender.getString("name"),
-                        sender.getLong("id")), obj.getString("message"), chatId, keyId);
-                messages.add(msg);
-                Log.d(this.getClass().getSimpleName(), "Message added: " + msg.getMessage());
-            }
-
-        } catch (IOException e) {
-            throw new RestServiceException(Error.CONNECTION_ERROR);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Number new Messages: " + messages.size());
-        return messages;
-    }
+		Log.d(this.getClass().getSimpleName(), "Number new Messages: " + messages.size());
+		return messages;
+	} // end of getMessage
 }

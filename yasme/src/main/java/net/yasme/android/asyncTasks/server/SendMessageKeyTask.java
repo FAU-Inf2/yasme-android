@@ -1,6 +1,7 @@
 package net.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.encryption.AESEncryption;
@@ -44,7 +45,7 @@ public class SendMessageKeyTask extends AsyncTask<String, Void, MessageKey> {
 
             return messageKey;
         } catch (Exception e) {
-            System.out.println("Fail to send key: "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"Fail to send key: "+e.getMessage());
         }
         return null;
     }

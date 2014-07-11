@@ -1,5 +1,7 @@
 package net.yasme.android.connection;
 
+import android.util.Log;
+
 import net.yasme.android.entities.DiffieHellmanPart;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
@@ -37,7 +39,7 @@ public class DiffieHellmanPartTask extends ConnectionTask {
 
     public void storeDHPart(DiffieHellmanPart dh) throws RestServiceException {
         executeRequest(Request.POST, "", dh);
-        System.out.println("[DEBUG] DH received");
+        Log.d(this.getClass().getSimpleName(),"[DEBUG] DH received");
     }
 
     public DiffieHellmanPart getNextKey(long devId) throws RestServiceException {

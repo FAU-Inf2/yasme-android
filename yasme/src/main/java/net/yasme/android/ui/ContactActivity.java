@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -137,7 +138,7 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
 
     @Override
     public void onOwnProfileFragmentInteraction(String s) {
-        System.out.println("-------------------- In der Activity ---------------------");
+        Log.d(this.getClass().getSimpleName(),"-------------------- In der Activity ---------------------");
     }
 
     private void callContact(String number){

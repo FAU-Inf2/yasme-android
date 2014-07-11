@@ -67,8 +67,8 @@ public class MessageSignature {
 
             return true;
         } catch (Exception e){
-            System.out.println("[???] saving rsa keys failed");
-            System.out.println("[???] "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"[???] saving rsa keys failed");
+            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
             return false;
         }
     }
@@ -86,7 +86,7 @@ public class MessageSignature {
         /*
         SharedPreferences rsakeys = context.getSharedPreferences(RSAKEYSTORAGE, Context.MODE_PRIVATE);
         String privKey_base64 = rsakeys.getString("privateKey", "");
-        System.out.println("[???] Private Key Base64:"+privKey_base64);
+        Log.d(this.getClass().getSimpleName(),"[???] Private Key Base64:"+privKey_base64);
 
         //if Key is available
         if (privKey_base64 != "") {
@@ -102,8 +102,8 @@ public class MessageSignature {
                 return privKey;
 
             } catch (Exception e){
-                System.out.println("[???] getting private key from storage failed");
-                System.out.println("[???] "+e.getMessage());
+                Log.d(this.getClass().getSimpleName(),"[???] getting private key from storage failed");
+                Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
                 return null;
             }
         }
@@ -136,8 +136,8 @@ public class MessageSignature {
                 return pubKey;
 
             } catch (Exception e){
-                System.out.println("[???] getting public key from storage failed");
-                System.out.println("[???] "+e.getMessage());
+                Log.d(this.getClass().getSimpleName(),"[???] getting public key from storage failed");
+                Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
                 return null;
             }
         }

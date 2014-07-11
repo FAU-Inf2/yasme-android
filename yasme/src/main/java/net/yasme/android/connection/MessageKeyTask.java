@@ -1,5 +1,7 @@
 package net.yasme.android.connection;
 
+import android.util.Log;
+
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.MessageKey;
@@ -43,7 +45,7 @@ public class MessageKeyTask extends ConnectionTask {
                               String key, String iv, byte encType, String sign) throws RestServiceException {
 
         try {
-            System.out.println("[???] Key wird an Server gesendet für insgesamt " + recipients.size() + " Users");
+            Log.d(this.getClass().getSimpleName(),"[???] Key wird an Server gesendet für insgesamt " + recipients.size() + " Users");
 
             int i = 0;
 
@@ -62,7 +64,7 @@ public class MessageKeyTask extends ConnectionTask {
                 messageKeys[i++] = new MessageKey(0, new Device(Long.parseLong(deviceId)),
                         new Device(recipient.getId()), chat, key, iv, encType, sign);
 
-                System.out.println("[???] Key gesendet für User " + recipient);
+                Log.d(this.getClass().getSimpleName(),"[???] Key gesendet für User " + recipient);
             }
 
             HttpResponse httpResponse = executeRequest(Request.POST, "", messageKeys);
@@ -70,7 +72,7 @@ public class MessageKeyTask extends ConnectionTask {
 
             String json = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent())).readLine();
             /**DEBUG**/
-            //System.out.println("[DEBUG] getKeyRequest successful: " + json);
+            //Log.d(this.getClass().getSimpleName(),"[DEBUG] getKeyRequest successful: " + json);
             /**DEBUG**/
 
             JSONObject obj = new JSONObject(json);

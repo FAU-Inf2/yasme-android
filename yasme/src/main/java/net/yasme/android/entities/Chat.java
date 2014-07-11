@@ -189,7 +189,7 @@ public class Chat implements Serializable {
 
     public MessageEncryption getEncryption() {
         if (aes == null)
-            System.out.println("[DEBUG] Chat wurde erstellt ohne gueltiges Encryption-Object --> Class: Chat.getEncryption())");
+            Log.d(this.getClass().getSimpleName(),"[DEBUG] Chat wurde erstellt ohne gueltiges Encryption-Object --> Class: Chat.getEncryption())");
         return aes;
     }
 

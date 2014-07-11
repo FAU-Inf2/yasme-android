@@ -104,7 +104,7 @@ public class CloudMessaging {
             regid = gcm.register(AbstractYasmeActivity.SENDER_ID);
             msg = "Device registered, registration ID=" + regid;
 
-            System.out.println("Device registered, registration ID=" + regid);
+            Log.d(this.getClass().getSimpleName(),"Device registered, registration ID=" + regid);
 
             // Persist the regID - no need to register again.
             storeRegistrationId(context, regid);
