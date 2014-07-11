@@ -18,7 +18,6 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.GetMessageTask;
 import net.yasme.android.asyncTasks.server.SendMessageTask;
-import net.yasme.android.connection.UserTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
@@ -27,7 +26,6 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,6 +81,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         //DEBUG, TODO: encryption speichern und auslesen
         aes = new MessageEncryption(chat, activity.getSelfUser().getId());
         chat.setEncryption(aes);
+
+        initializeViews();
+        updateViews(chat.getMessages());
     }
 
     @Override
@@ -109,17 +110,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             }
         });
 
-
-
-
         return rootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        initializeViews();
-        updateViews(chat.getMessages());
     }
 
 
@@ -136,7 +127,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     @Override
     public void notifyFragment(List<Message> messages) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        updateViews((ArrayList<Message>) messages);
+        updateViews(messages);
     }
 
     public TextView getStatus() {
@@ -144,7 +135,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     }
 
     private void initializeViews() {
-
         status.setText("Eingeloggt: " +
                 storage.getString(AbstractYasmeActivity.USER_NAME, "anonym"));
     }
@@ -178,12 +168,55 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         asyncUpdate();
     }
 
-    public void updateViews(ArrayList<Message> messages) {
+
+    public void showMessage(Message msg) {
+        TextView textView = new TextView(activity.getApplicationContext());
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+
+        RelativeLayout row = new RelativeLayout(activity.getApplicationContext());
+        row.setLayoutParams(new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT));
+
+        //textView.setText(msg.getSender().getName() + ": "+ msg.getMessage());
+
+        String name;
+        try {
+            name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
+        } catch (NullPointerException e) {
+            Log.d(this.getClass().getSimpleName(), "User nicht in DB gefunden");
+            name = "anonym";
+        }
+        textView.setText(name + ": " + msg.getMessage());
+
+        textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
+        textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
+
+        if (msg.getSender().getId() == activity.getSelfUser().getId()) {
+            textView.setGravity(Gravity.RIGHT);
+            row.setGravity(Gravity.RIGHT);
+            textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
+            textView.setTextColor(getResources().getColor(R.color.chat_text_color_self));
+        }
+        row.addView(textView);
+        layout.addView(row, layoutParams);
+
+        row.setFocusableInTouchMode(true);
+        row.requestFocus();
+        editMessage.requestFocus();
+    }
+
+
+    public void updateViews(List<Message> messages) {
         if (messages == null) {
             Log.d(this.getClass().getSimpleName(), "Keine Nachrichten zum Ausgeben");
         }
-        for (Message msg : messages) {
 
+
+        for (Message msg : messages) {
             msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
             TextView textView = new TextView(activity.getApplicationContext());
 
@@ -202,7 +235,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             try {
                 name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
             } catch (NullPointerException e) {
-                Log.d(this.getClass().getSimpleName(), "User nicht in DB grfunden");
+                Log.d(this.getClass().getSimpleName(), "User nicht in DB gefunden");
                 name = "anonym";
             }
             textView.setText(name + ": " + msg.getMessage());
