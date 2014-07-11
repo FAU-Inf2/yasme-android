@@ -22,7 +22,6 @@ public class ChatListActivity extends AbstractYasmeActivity {
             HttpClient.context = this.getApplicationContext();
         }
 
-
         if(!mSignedIn) {
             Log.i(this.getClass().getSimpleName(), "Not logged in, starting login activity");
             Intent intent = new Intent(this, LoginActivity.class);
@@ -31,11 +30,13 @@ public class ChatListActivity extends AbstractYasmeActivity {
         }
         Log.i(this.getClass().getSimpleName(), "User is authorized");
 
-        long userId = storage.getLong(AbstractYasmeActivity.USER_ID, 0);
-        String accessToken = storage.getString(AbstractYasmeActivity.ACCESSTOKEN, "");
-        //initConnection Session
-        //TODO: second Param should be deviceId
-        ConnectionTask.initSession(userId, userId, accessToken);
+        if(!ConnectionTask.isInitialized()) {
+            long userId = storage.getLong(AbstractYasmeActivity.USER_ID, 0);
+            String accessToken = storage.getString(AbstractYasmeActivity.ACCESSTOKEN, "");
+            //initConnection Session
+            //TODO: second Param should be deviceId
+            ConnectionTask.initSession(userId, userId, accessToken);
+        }
 
         if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()

@@ -371,22 +371,22 @@ public enum DatabaseManager {
 //            e.printStackTrace();
 //        }
 //    }
-
-
-    /**
-     * Message methods
-     */
-
-    public void storeMessages(List<Message> messages) {
-        for(Message msg : messages) {
-            try {
-                getHelper().getMessageDao().createIfNotExists(msg);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
+//
+//
+//    /**
+//     * Message methods
+//     */
+//
+//    public void storeMessages(List<Message> messages) {
+//        for(Message msg : messages) {
+//            try {
+//                getHelper().getMessageDao().createIfNotExists(msg);
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+//
     public List<Message> getMessagesForChat(long chatId) {
         Chat chat = new Chat();
         chat.setId(chatId);
