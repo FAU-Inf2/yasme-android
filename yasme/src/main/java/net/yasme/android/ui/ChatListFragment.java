@@ -103,7 +103,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     }
 
     public void showChat(long chatId) {
-        System.out.println("ShowChat: " + chatId);
+        Log.d(this.getClass().getSimpleName(),"ShowChat: " + chatId);
         Intent intent = new Intent(activity, ChatActivity.class);
         intent.putExtra(activity.USER_MAIL, activity.getUserMail());
         intent.putExtra(activity.USER_ID, activity.getUserId());

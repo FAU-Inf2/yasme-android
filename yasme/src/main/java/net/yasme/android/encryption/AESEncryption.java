@@ -1,5 +1,7 @@
 package net.yasme.android.encryption;
 
+import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -131,7 +133,7 @@ public class AESEncryption {
 			return Base64.encodeToString(encrypted, Base64.DEFAULT);
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			Log.d(this.getClass().getSimpleName(),e.getMessage());
 			return "Couldn't be encrypted: " + text;
 		}
 
@@ -151,7 +153,7 @@ public class AESEncryption {
 			
 			return new String(decrypted);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			Log.d(this.getClass().getSimpleName(),e.getMessage());
 			return "Couldn't be decrypted: " + encrypted;
 		}
 

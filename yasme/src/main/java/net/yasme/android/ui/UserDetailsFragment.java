@@ -154,7 +154,7 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
 
     switch (v.getId()) {
         case R.id.contact_detail_newchat:
-            System.out.println("------------------- Create New Chat ---------------------------");
+            Log.d(this.getClass().getSimpleName(),"------------------- Create New Chat ---------------------------");
             CreateSingleChatTask chatTask = new CreateSingleChatTask((ContactActivity) getActivity(),this, selfuser, contact);
             chatTask.execute(String.valueOf(activity.getUserId()), activity.getAccessToken());
         break;
@@ -163,7 +163,7 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
         contact.addToContacts();
         //db.createUserIfNotExists(user);
         userDAO.addOrUpdate(contact);
-        System.out.println("------------------- Contact Added ---------------------------" + userDAO.getContacts());
+        Log.d(this.getClass().getSimpleName(),"------------------- Contact Added ---------------------------" + userDAO.getContacts());
         break;
 
     case R.id.mail_image_button:

@@ -3,6 +3,7 @@ package net.yasme.android.asyncTasks.server;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.controller.FragmentObservable;
@@ -43,17 +44,17 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
         String password = params[1];
         try {
             // DEBUG:
-            System.out.println("e-Mail: " + email + " " + "Passwort: "
+            Log.d(this.getClass().getSimpleName(),"e-Mail: " + email + " " + "Passwort: "
                     + password);
 
             String loginReturn[] = AuthorizationTask.getInstance().loginUser(new User(email,
                     password));
 
-            System.out.println("LoginReturn:");
+            Log.d(this.getClass().getSimpleName(),"LoginReturn:");
             userId = Long.parseLong(loginReturn[0]);
             accessToken = loginReturn[1];
 
-            System.out.println(loginReturn[0]);
+            Log.d(this.getClass().getSimpleName(),loginReturn[0]);
 
             // storage
             SharedPreferences.Editor editor = storage.edit();

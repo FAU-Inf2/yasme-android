@@ -74,7 +74,7 @@ public class ChatTask extends ConnectionTask {
 
         // remember: only the owner can delete the chat
         executeRequest(Request.DELETE, Long.toString(chatId));
-        System.out.println("Chat deleted");
+        Log.d(this.getClass().getSimpleName(),"Chat deleted");
     }
 
     public Long createChatWithPar(Chat chat) throws RestServiceException {
@@ -108,33 +108,33 @@ public class ChatTask extends ConnectionTask {
             throws RestServiceException {
         String path = "par/" + participantId + "/" + chatId;
         executeRequest(Request.PUT, path);
-        System.out.println("User added to Chat!");
+        Log.d(this.getClass().getSimpleName(),"User added to Chat!");
     }
 
     public void changeOwnerOfChat(long chatId, long newOwnerId) throws RestServiceException {
         String path = chatId + "/owner/" + newOwnerId;
         executeRequest(Request.PUT, path);
-        System.out.println("Owner changed");
+        Log.d(this.getClass().getSimpleName(),"Owner changed");
     }
 
     public void removePartipantFromChat(long participantId, long chatId)
             throws RestServiceException {
         String path = "par/" + participantId + "/" + chatId;
         executeRequest(Request.DELETE, path);
-        System.out.println("User removed from Chat!");
+        Log.d(this.getClass().getSimpleName(),"User removed from Chat!");
     }
 
     public void removeOneSelfFromChat(long chatId)
             throws RestServiceException {
         String path = chatId + "/par/self";
         executeRequest(Request.DELETE, path);
-        System.out.println("I´m out of Chat No. " + chatId);
+        Log.d(this.getClass().getSimpleName(),"I´m out of Chat No. " + chatId);
     }
 
     public void updateStatus(Chat chat) throws RestServiceException {
         String path = chat.getId() + "/properties";
         executeRequest(Request.PUT, path, chat);
-        System.out.println("Status of chat updated");
+        Log.d(this.getClass().getSimpleName(),"Status of chat updated");
     }
 
     //TODO: implement lastSeen Rest Call

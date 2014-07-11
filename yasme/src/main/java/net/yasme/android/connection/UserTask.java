@@ -3,6 +3,7 @@ package net.yasme.android.connection;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
@@ -56,7 +57,7 @@ public class UserTask extends ConnectionTask {
 
     public void changeUserData(User user) throws RestServiceException {
         executeRequest(Request.PUT, "", user);
-        System.out.println("[DEBUG] User data changed");
+        Log.d(this.getClass().getSimpleName(),"[DEBUG] User data changed");
     }
 
     public User getUserData() throws RestServiceException {
