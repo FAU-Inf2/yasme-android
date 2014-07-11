@@ -1,18 +1,22 @@
 package net.yasme.android.encryption;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
+import android.util.Base64;
 
 import net.yasme.android.asyncTasks.server.SendMessageKeyTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.CurrentKey;
 import net.yasme.android.storage.DatabaseManager;
 
 import android.util.Base64;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 //um den Schluessel zum Verschluesseln abzurufen muss bekannt sein, mit welcher KeyId der Chat verschluesselt wird
 //hier wird vorausgesetzt, dass zum Verschluesseln nur ein Key vorhanden is
@@ -68,8 +72,10 @@ public class MessageEncryption {
         //        CURRENTKEY, Context.MODE_PRIVATE);
 
         // if no old key for this chat, then generate a new one, beginning with
-        if (db.getCurrentKey(chatId) < 0) {
-            Log.d(this.getClass().getSimpleName(),"[???] Generate Key");
+        List<CurrentKey> currentKeys = db.getCurrentKeyDAO().getCurrentKeysByChat(chatId);
+        if (currentKeys != null  && currentKeys.size() > 0
+                && currentKeys.get(0).getMessageKey().getId() < 1) {
+            System.out.println("[???] Generate Key");
             aes = new AESEncryption();
 
             // TODO pro User alle Devices suchen und in recipients speichern
@@ -87,9 +93,9 @@ public class MessageEncryption {
             }
             //TODO: If-Anweisung entfernen wenn participants in chat implementiert wurde
             //TODO: If sendkey nicht erfolgreich, dann Devices pro User updaten und nochmal versuchen!!!
-            if (recipients.size() > 0){
-                 //send Key to server
-                 MessageKey resultMessageKey = sendKey();
+            if (recipients.size() > 0) {
+                //send Key to server
+                MessageKey resultMessageKey = sendKey();
 
                 //if server has successfully saved the key
                 if (resultMessageKey != null) {
@@ -130,7 +136,7 @@ public class MessageEncryption {
 
 
     //update Key for Encryption
-    public void updateKey(){
+    public void updateKey() {
         try {
             // check, which Key is need to encrypt
             checkCurrentKeyId();
@@ -154,9 +160,8 @@ public class MessageEncryption {
     }
 
     // check, which Key is need to encrypt
-    public void checkCurrentKeyId(){
-
-        keyId = db.getCurrentKey(chatId);
+    public void checkCurrentKeyId() {
+        keyId = db.getCurrentKeyDAO().getCurrentKeysByChat(chatId).get(0).getMessageKey().getId();
         /*SharedPreferences currentKeyPref = context.getSharedPreferences(CURRENTKEY, Context.MODE_PRIVATE);
 
         long keyidfromstorage = currentKeyPref.getLong("keyId", 0);
@@ -211,14 +216,14 @@ public class MessageEncryption {
 
     // send Key to server
     public MessageKey sendKey() {
-       try{
-           SendMessageKeyTask task = new SendMessageKeyTask(aes, recipients, chat);
-           task.execute();
-           MessageKey result = task.get();
-           return result;
-       } catch (Exception e){
-           Log.d(this.getClass().getSimpleName(),e.getMessage());
-       }
+        try {
+            SendMessageKeyTask task = new SendMessageKeyTask(aes, recipients, chat);
+            task.execute();
+            MessageKey result = task.get();
+            return result;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         return null;
     }
     //delete a symmetric Key from server when the client got that key
@@ -267,7 +272,7 @@ public class MessageEncryption {
   */
     public MessageKey getKeyFromLocalStorage(long chatId, long keyId) {
 
-        return db.getMessageKey(keyId);
+        return db.getMessageKeyDAO().get(keyId);
 
         /*
         SharedPreferences sharedPref;

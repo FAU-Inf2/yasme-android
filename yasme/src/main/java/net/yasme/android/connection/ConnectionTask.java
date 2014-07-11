@@ -1,12 +1,10 @@
 package net.yasme.android.connection;
 
-import android.content.Context;
 import android.util.Log;
 
 import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.exception.RestServiceException;
 
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -17,12 +15,10 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
 import net.yasme.android.exception.Error;
-import net.yasme.android.ui.AbstractYasmeActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -89,17 +85,24 @@ public class ConnectionTask {
                 .withDefaultPrettyPrinter();
     }
 
-    public static void initSession(long userId, long deviceId, String accessToken) {
+    public static void initSession(long userId, String accessToken) {
 
         if (!initialized) {
-            System.err.println("Server Params not initialized");
-            return;
+            Log.e(ConnectionTask.class.getSimpleName(), "Server Params not initialized");
         }
         ConnectionTask.userId = Long.toString(userId);
+        ConnectionTask.accessToken = accessToken;
+        Log.i(ConnectionTask.class.getSimpleName(), "Bear in mind that deviceId has not been set yet.");
+        initializedSession = true;
+    }
 
-        //TODO: Change to real deviceId
+    public static void initSession(long userId, long deviceId, String accessToken) {
+        if (!initialized) {
+            Log.e(ConnectionTask.class.getSimpleName(), "Server Params not initialized");
+        }
+
+        ConnectionTask.userId = Long.toString(userId);
         ConnectionTask.deviceId = Long.toString(deviceId);
-
         ConnectionTask.accessToken = accessToken;
         ConnectionTask.initializedSession = true;
     }

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.UserLoginTask;
 import net.yasme.android.asyncTasks.server.DeviceRegistrationTask;
+import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
@@ -61,6 +62,11 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         // Restore preferencesNAME
         emailTmp = activity.getStorage().getString(AbstractYasmeActivity.USER_MAIL, "@yasme.net");
         accessToken = activity.getAccessToken();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
         //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).register(this);
         Log.d(this.getClass().getSimpleName(),"Try to get LoginObservableInstance");
@@ -68,14 +74,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         Log.d(this.getClass().getSimpleName(),"... successful");
 
         obs.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        FragmentObservable<LoginFragment,LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
-        Log.d(this.getClass().getSimpleName(),"Remove from observer");
-        obs.remove(this);
     }
 
     @Override
@@ -227,12 +225,14 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         }
     }
 
-    public void onPostLoginExecute(Boolean success, long userId, String accessToken) {
+    public void onPostLoginExecute(Boolean success, long userId) {
+
+        if(!ConnectionTask.isInitializedSession()) {
+            ConnectionTask.initSession(userId, accessToken);
+        }
+
         activity.getSelfUser().setId(userId);
         SharedPreferences.Editor editor = activity.getStorage().edit();
-        editor.putString(AbstractYasmeActivity.ACCESSTOKEN, accessToken);
-
-
         showProgress(false);
         activity.mSignedIn = success;
         editor.putBoolean(AbstractYasmeActivity.SIGN_IN, activity.mSignedIn);
@@ -243,8 +243,22 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 DatabaseManager.INSTANCE.init(activity.getApplicationContext(), userId);
             }
             // check if there is a device in the Database
-            if (yasmeDeviceCheck() == true) {
+            if (yasmeDeviceCheck()) {
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device exists in Database");
+
+                SharedPreferences devicePrefs = activity.getSharedPreferences(
+                        AbstractYasmeActivity.DEVICE_PREFS,
+                        AbstractYasmeActivity.MODE_PRIVATE);
+                long deviceId = devicePrefs.getLong(AbstractYasmeActivity.DEVICE_ID, -1);
+                if (deviceId < 0) {
+                   // Error ocurred
+                    Log.e(this.getClass().getSimpleName(), "Could not load registered device's id from shared prefs");
+                    return;
+                }
+
+                // Initialize the session a second time because the deviceId was missing
+                ConnectionTask.initSession(userId, deviceId, accessToken);
+
                 //Intent intent = new Intent(activity.getApplicationContext(), ChatListFragment.class);
                 Intent intent = new Intent(activity, ChatListActivity.class);
                 startActivity(intent);
@@ -254,7 +268,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device at yasme server");
                 //DeviceRegistrationTask yasmeDevRegTask =
                         new DeviceRegistrationTask(activity.getStorage())
-                        .execute(this.accessToken, Long.toString(userId),
+                        .execute(Long.toString(userId),
                         this.deviceProduct, this.googleRegId);
 
             }
@@ -268,6 +282,19 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
     public void onPostYasmeDeviceRegExecute(Boolean success, long deviceId) {
         if (success) {
+
+            // Initialize the session a second time because the deviceId was missing
+            SharedPreferences devicePrefs = activity.getSharedPreferences(
+                    AbstractYasmeActivity.DEVICE_PREFS,
+                    AbstractYasmeActivity.MODE_PRIVATE);
+            long userId = devicePrefs.getLong(AbstractYasmeActivity.USER_ID, -1);
+            if (userId < 0) {
+                // Error ocurred
+                Log.e(this.getClass().getSimpleName(), "Did not find user id in shared prefs");
+                return;
+            }
+            ConnectionTask.initSession(userId, deviceId, accessToken);
+
             Log.d(this.getClass().getSimpleName(), "[DEBUG] Login after device registration at yasme server");
             Intent intent = new Intent(activity, ChatListActivity.class);
             startActivity(intent);
@@ -299,8 +326,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 getSharedPreferences(LoginActivity.class.getSimpleName(),
                         AbstractYasmeActivity.MODE_PRIVATE);
 
-        String regId = pushPrefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID,null);
-        this.googleRegId = regId;
+        this.googleRegId = pushPrefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID, null);
         // TODO proper check
 
         if (deviceId == -1) {
@@ -318,15 +344,14 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         if(param instanceof LoginProcessParam)
             notifyFragment((LoginProcessParam)param);
-        else if(param instanceof DeviceRegistrationParam)
+        if(param instanceof DeviceRegistrationParam)
             notifyFragment((DeviceRegistrationParam)param);
     }
 
     public void notifyFragment(LoginProcessParam loginParam) {
         Log.d(super.getClass().getSimpleName(), "I have been notified with loginParam");
 
-            onPostLoginExecute(loginParam.getSuccess(), loginParam.getUserId(),
-                    loginParam.getAccessToken());
+            onPostLoginExecute(loginParam.getSuccess(), loginParam.getUserId());
             Log.d(super.getClass().getSimpleName(), "Login-Status: " + loginParam.getSuccess());
     }
 
@@ -352,20 +377,14 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
     public static class LoginProcessParam extends LoginParam {
         private Long userId;
-        private String accessToken;
 
-        public LoginProcessParam(Boolean success, Long userId, String accessToken) {
+        public LoginProcessParam(Boolean success, Long userId) {
             this.success = success;
             this.userId = userId;
-            this.accessToken = accessToken;
         }
 
         public Long getUserId() {
             return userId;
-        }
-
-        public String getAccessToken() {
-            return accessToken;
         }
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by robert on 11.07.14.
  */
-public interface MessageDAO {
+public interface MessageDAO extends DAO<Message> {
     /**
      * Creates a message but only if the ID does not already exist in the table. This
      * extracts the id from the chat parameter, queries for it's id, returning the data if it

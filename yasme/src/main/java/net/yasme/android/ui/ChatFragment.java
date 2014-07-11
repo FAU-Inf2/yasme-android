@@ -18,6 +18,7 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.GetMessageTask;
 import net.yasme.android.asyncTasks.server.SendMessageTask;
+import net.yasme.android.connection.UserTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
@@ -108,6 +109,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             }
         });
 
+
+
+
         return rootView;
     }
 
@@ -117,6 +121,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         initializeViews();
         updateViews(chat.getMessages());
     }
+
 
     @Override
     public void onStop() {
@@ -193,10 +198,11 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
             //textView.setText(msg.getSender().getName() + ": "+ msg.getMessage());
 
-            String name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
-
-            if (name == null) {
-                Log.i(this.getClass().getSimpleName(), "User existiert nicht in DB");
+            String name;
+            try {
+                name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
+            } catch (NullPointerException e) {
+                Log.d(this.getClass().getSimpleName(), "User nicht in DB grfunden");
                 name = "anonym";
             }
             textView.setText(name + ": " + msg.getMessage());

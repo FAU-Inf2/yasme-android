@@ -39,9 +39,9 @@ public class User implements Serializable {
     @JsonIgnore
     private String profilePicture;
 
-    @JsonIgnore
-    @DatabaseField(columnName = DatabaseConstants.CHAT_ID, foreign = true)
-    private Chat chat; // only for client Database
+    //@JsonIgnore
+    //@DatabaseField(columnName = DatabaseConstants.CHAT_ID, foreign = true)
+    //private Chat chat; // only for client Database
 
     @JsonIgnore
     @DatabaseField(columnName = DatabaseConstants.CONTACT)
