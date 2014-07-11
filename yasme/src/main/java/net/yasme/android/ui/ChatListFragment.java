@@ -62,10 +62,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         //Aktualisiert die Datenbank auf den aktuellen Stand des Servers
         new GetChatTask().execute(Long.toString(activity.getUserId()), activity.getAccessToken());
-        new GetMessageTask(activity.getStorage()).execute(Long.toString(activity.getUserId()), activity.getAccessToken());
-        //new UpdateDBTask(activity.storage)
-        //        .execute(Long.toString(activity.getUserId()), activity.getAccessToken());
-
+        new GetMessageTask(activity.getStorage()).execute();
 
         // Danach evtl nochmal aktualisieren
 
