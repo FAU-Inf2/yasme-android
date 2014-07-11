@@ -49,15 +49,15 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         name.setHint(R.string.registration_name);
 
         final EditText mail = new EditText(getActivity());
-        mail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        mail.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mail.setHint(R.string.registration_email);
 
         final EditText password = new EditText(getActivity());
-        password.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        password.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
         password.setHint(R.string.registration_password);
 
         final EditText password_check = new EditText(getActivity());
-        password_check.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        password_check.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
         password_check.setHint(R.string.registration_repeat_password);
 
         list.addView(name, layoutParams);
@@ -66,7 +66,6 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         list.addView(password_check, layoutParams);
 
         alert.setView(list);
-        //TODO: Input type seems to change nothing??
 
         // "OK" button to save the values
         alert.setPositiveButton(R.string.registration_button_ok,
