@@ -68,7 +68,7 @@ public class MessageEncryption {
         //        CURRENTKEY, Context.MODE_PRIVATE);
 
         // if no old key for this chat, then generate a new one, beginning with
-        if (db.getCurrentKey(chatId) < 0) {
+        if (db.getCurrentKeyDAO().getCurrentKeysByChat(chatId).get(0).getMessageKey().getId() < 0) {
             System.out.println("[???] Generate Key");
             aes = new AESEncryption();
 
@@ -156,7 +156,7 @@ public class MessageEncryption {
     // check, which Key is need to encrypt
     public void checkCurrentKeyId(){
 
-        keyId = db.getCurrentKey(chatId);
+        keyId = db.getCurrentKeyDAO().getCurrentKeysByChat(chatId).get(0).getMessageKey().getId();
         /*SharedPreferences currentKeyPref = context.getSharedPreferences(CURRENTKEY, Context.MODE_PRIVATE);
 
         long keyidfromstorage = currentKeyPref.getLong("keyId", 0);
@@ -267,7 +267,7 @@ public class MessageEncryption {
   */
     public MessageKey getKeyFromLocalStorage(long chatId, long keyId) {
 
-        return db.getMessageKey(keyId);
+        return db.getMessageKeyDAO().get(keyId);
 
         /*
         SharedPreferences sharedPref;

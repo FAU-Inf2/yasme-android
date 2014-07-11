@@ -9,8 +9,12 @@ import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.ChatDAOImpl;
+import net.yasme.android.storage.dao.CurrentKeyDAO;
+import net.yasme.android.storage.dao.CurrentKeyDAOImpl;
 import net.yasme.android.storage.dao.MessageDAO;
 import net.yasme.android.storage.dao.MessageDAOImpl;
+import net.yasme.android.storage.dao.MessageKeyDAO;
+import net.yasme.android.storage.dao.MessageKeyDAOImpl;
 import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.storage.dao.UserDAOImpl;
 
@@ -32,6 +36,8 @@ public enum DatabaseManager {
     private UserDAO userDAO;
     private ChatDAO chatDAO;
     private MessageDAO messageDAO;
+    private MessageKeyDAO messageKeyDAO;
+    private CurrentKeyDAO currentKeyDAO;
 
     public void init(Context context, long userId) {
         mContext = context;
@@ -60,6 +66,12 @@ public enum DatabaseManager {
 
         MessageDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
         messageDAO = MessageDAOImpl.INSTANCE;
+
+        MessageKeyDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
+        messageKeyDAO = MessageKeyDAOImpl.INSTANCE;
+
+        CurrentKeyDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
+        currentKeyDAO = CurrentKeyDAOImpl.INSTANCE;
     }
 
     public UserDAO getUserDAO() {
@@ -71,6 +83,15 @@ public enum DatabaseManager {
     public MessageDAO getMessageDAO() {
         return messageDAO;
     }
+
+    public MessageKeyDAO getMessageKeyDAO() {
+        return messageKeyDAO;
+    }
+
+    public CurrentKeyDAO getCurrentKeyDAO() {
+        return currentKeyDAO;
+    }
+
     /******* CRUD functions ******/
 
 //    /**
@@ -412,67 +433,65 @@ public enum DatabaseManager {
 //    }
 //
 //
-    /**
-     * MessageKey and CurrentKey methods
-     */
-
-    public long getCurrentKey(long chatId) {
-        List<CurrentKey> currentKeys = null;
-        Chat chat = new Chat();
-        chat.setId(chatId);
-        try {
-            currentKeys = getHelper().getCurrentKeyDao().queryForEq(DatabaseConstants.CURRENT_KEY_CHAT, chat);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return -1;
-        }
-        if(currentKeys.size() != 1) {
-            Log.e(this.getClass().getSimpleName(), "Mehrere currentKeys pro Chat");
-            return -1;
-        }
-        return currentKeys.get(0).getMessageKey().getId();
-    }
-
-    public void updateCurrentKey(long keyId, long chatId) {
-        Chat chat = new Chat();
-        chat.setId(chatId);
-        MessageKey messageKey = new MessageKey();
-        messageKey.setId(keyId);
-        CurrentKey newCurrentKey = new CurrentKey(chat, messageKey);
-        try {
-            getHelper().getCurrentKeyDao().update(newCurrentKey);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean existsCurrentKeyForChat(long chatId) {
-        //TODO: effektiver machen, evtl. SELECT
-        List<CurrentKey> currentKeys = null;
-        Chat chat = new Chat();
-        chat.setId(chatId);
-        try {
-            currentKeys = getHelper().getCurrentKeyDao().queryForEq(DatabaseConstants.CURRENT_KEY_CHAT, chat);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if(currentKeys.size() != 1) {
-            Log.e(this.getClass().getSimpleName(), "Mehrere currentKeys pro Chat");
-        }
-        return (currentKeys.size() != 0);
-    }
-
-    public MessageKey getMessageKey(long keyId) {
-        MessageKey messageKey = null;
-        try {
-            messageKey = getHelper().getMessageKeyDao().queryForId(keyId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return messageKey;
-    }
-
-
+//    /**
+//     * MessageKey and CurrentKey methods
+//     */
+//
+//    public long getCurrentKey(long chatId) {
+//        List<CurrentKey> currentKeys = null;
+//        Chat chat = new Chat();
+//        chat.setId(chatId);
+//        try {
+//            currentKeys = getHelper().getCurrentKeyDao().queryForEq(DatabaseConstants.CURRENT_KEY_CHAT, chat);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            return -1;
+//        }
+//        if(currentKeys.size() != 1) {
+//            Log.e(this.getClass().getSimpleName(), "Mehrere currentKeys pro Chat");
+//            return -1;
+//        }
+//        return currentKeys.get(0).getMessageKey().getId();
+//    }
+//
+//    public void updateCurrentKey(long keyId, long chatId) {
+//        Chat chat = new Chat();
+//        chat.setId(chatId);
+//        MessageKey messageKey = new MessageKey();
+//        messageKey.setId(keyId);
+//        CurrentKey newCurrentKey = new CurrentKey(chat, messageKey);
+//        try {
+//            getHelper().getCurrentKeyDao().update(newCurrentKey);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public boolean existsCurrentKeyForChat(long chatId) {
+//        //TODO: effektiver machen, evtl. SELECT
+//        List<CurrentKey> currentKeys = null;
+//        Chat chat = new Chat();
+//        chat.setId(chatId);
+//        try {
+//            currentKeys = getHelper().getCurrentKeyDao().queryForEq(DatabaseConstants.CURRENT_KEY_CHAT, chat);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        if(currentKeys.size() != 1) {
+//            Log.e(this.getClass().getSimpleName(), "Mehrere currentKeys pro Chat");
+//        }
+//        return (currentKeys.size() != 0);
+//    }
+//
+//    public MessageKey getMessageKey(long keyId) {
+//        MessageKey messageKey = null;
+//        try {
+//            messageKey = getHelper().getMessageKeyDao().queryForId(keyId);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return messageKey;
+//    }
 }
