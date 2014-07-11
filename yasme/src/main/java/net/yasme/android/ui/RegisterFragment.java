@@ -28,6 +28,8 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = (AbstractYasmeActivity) getActivity();
+
         SharedPreferences storage = activity.getStorage();
         regTask = new UserRegistrationTask(storage);
 
@@ -45,19 +47,24 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                 LinearLayout.LayoutParams.MATCH_PARENT);
         final EditText name = new EditText(getActivity());
         name.setHint(R.string.registration_name);
-        list.addView(name, layoutParams);
+
         final EditText mail = new EditText(getActivity());
-        mail.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
+        mail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mail.setHint(R.string.registration_email);
-        list.addView(mail, layoutParams);
+
         final EditText password = new EditText(getActivity());
-        password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
+        password.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
         password.setHint(R.string.registration_password);
-        list.addView(password, layoutParams);
+
         final EditText password_check = new EditText(getActivity());
-        password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
+        password_check.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
         password_check.setHint(R.string.registration_repeat_password);
+
+        list.addView(name, layoutParams);
+        list.addView(mail, layoutParams);
+        list.addView(password, layoutParams);
         list.addView(password_check, layoutParams);
+
         alert.setView(list);
         //TODO: Input type seems to change nothing??
 
