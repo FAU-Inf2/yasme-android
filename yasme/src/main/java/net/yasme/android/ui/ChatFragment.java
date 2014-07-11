@@ -198,10 +198,11 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
             //textView.setText(msg.getSender().getName() + ": "+ msg.getMessage());
 
-            String name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
-
-            if (name == null) {
-                Log.i(this.getClass().getSimpleName(), "User existiert nicht in DB");
+            String name;
+            try {
+                name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
+            } catch (NullPointerException e) {
+                Log.d(this.getClass().getSimpleName(), "User nicht in DB grfunden");
                 name = "anonym";
             }
             textView.setText(name + ": " + msg.getMessage());

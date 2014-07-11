@@ -9,6 +9,7 @@ import net.yasme.android.entities.User;
 import net.yasme.android.storage.ChatUser;
 import net.yasme.android.storage.DatabaseConstants;
 import net.yasme.android.storage.DatabaseHelper;
+import net.yasme.android.storage.dao.ChatDAO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

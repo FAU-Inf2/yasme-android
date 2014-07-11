@@ -25,22 +25,21 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         this.prefs = prefs;
     }
 
-    /*
-    * @params params[0] is accessToken
-    * @params params[1] is userId
-    * @param params[2] is product
-    * @param params[3] is regId
-    * */
-
-
+    /**
+    * @params params[0] is userId
+    * @params params[1] is product
+    * @params params[2] is regId
+    */
     @Override
     protected Boolean doInBackground(String... params) {
+
         long userId = Long.parseLong(params[0]);
 
         // the product : e.g Google Nexus
         String product = params[1];
 
         // regId from google for push
+        String regId = params[2];
         String regId = params[2];
 
         long deviceIdFromServer;
@@ -72,25 +71,22 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
 
+        Log.d(this.getClass().getSimpleName(),"[DEBUG] Device registered at yasme server");
+        // if device registration was a success
+        // store to SharedPreferences
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
+        editor.commit();
+        Log.d(this.getClass().getSimpleName(),"[DEBUG] Device stored to SharedPreferences");
+
         return true;
     }
 
     @Override
-    protected void onPostExecute(Boolean success) {
+    protected void onPostExecute(final Boolean success) {
         // after device registration
         if(success){
-            Log.d(this.getClass().getSimpleName(),"[DEBUG] Device registered at yasme server");
-            // if device registration was a success
-            // store to SharedPreferences
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
-            editor.commit();
-            Log.d(this.getClass().getSimpleName(),"[DEBUG] Device stored to SharedPreferences");
-
             ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(new LoginFragment.DeviceRegistrationParam(success, deviceId));
         }
-
     }
-
-
 }

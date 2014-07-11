@@ -32,6 +32,10 @@ public class CurrentKey implements Serializable {
         //ORMLite
     }
 
+    public long getId() {
+        return id;
+    }
+
     public Chat getChat() {
         return chat;
     }

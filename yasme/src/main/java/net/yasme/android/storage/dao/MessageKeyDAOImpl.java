@@ -4,6 +4,8 @@ import android.util.Log;
 
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.MessageKey;
+import net.yasme.android.storage.CurrentKey;
 import net.yasme.android.storage.DatabaseConstants;
 import net.yasme.android.storage.DatabaseHelper;
 
@@ -13,7 +15,7 @@ import java.util.List;
 /**
  * Created by robert on 11.07.14.
  */
-public enum MessageDAOImpl implements MessageDAO{
+public enum MessageKeyDAOImpl implements MessageKeyDAO {
     INSTANCE;
 
     private DatabaseHelper databaseHelper;
@@ -23,24 +25,25 @@ public enum MessageDAOImpl implements MessageDAO{
     }
 
     @Override
-    public Message add(Message message) {
+    public MessageKey add(MessageKey messageKey) {
+        MessageKey returnMessageKey;
         try {
-            databaseHelper.getMessageDao().createIfNotExists(message);
+            returnMessageKey = databaseHelper.getMessageKeyDao().createIfNotExists(messageKey);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;
         }
-        return message;
+        return returnMessageKey;
     }
 
     @Override
-    public Message addOrUpdate(Message message) {
+    public MessageKey addOrUpdate(MessageKey messageKey) {
         try {
-            Message fromDb = databaseHelper.getMessageDao().queryForId(message.getId());
+            MessageKey fromDb = databaseHelper.getMessageKeyDao().queryForId(messageKey.getId());
             if (null == fromDb) {
-                return add(message);
+                return add(messageKey);
             } else {
-                return update(message);
+                return update(messageKey);
             }
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
@@ -49,36 +52,36 @@ public enum MessageDAOImpl implements MessageDAO{
     }
 
     @Override
-    public Message get(long id) {
-        Message message;
+    public MessageKey get(long id) {
+        MessageKey messageKey;
         try {
-            message = databaseHelper.getMessageDao().queryForId(id);
+            messageKey = databaseHelper.getMessageKeyDao().queryForId(id);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;
         }
-        return message;
+        return messageKey;
     }
 
     @Override
-    public List<Message> getAll() {
-        List<Message> messageList;
+    public List<MessageKey> getAll() {
+        List<MessageKey> messageKeyList;
         try {
-            messageList = databaseHelper.getMessageDao().queryForAll();
+            messageKeyList = databaseHelper.getMessageKeyDao().queryForAll();
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;
         }
-        return messageList;
+        return messageKeyList;
     }
 
     @Override
-    public List<Message> getMessagesByChat(long chatId) {
+    public List<MessageKey> getMessageKeysByChat(long chatId) {
         Chat chat = new Chat();
         chat.setId(chatId);
-        List<Message> matching;
+        List<MessageKey> matching;
         try {
-            matching = databaseHelper.getMessageDao().queryForEq(DatabaseConstants.CHAT, chat);
+            matching = databaseHelper.getMessageKeyDao().queryForEq(DatabaseConstants.KEY_CHAT, chat);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;
@@ -87,10 +90,10 @@ public enum MessageDAOImpl implements MessageDAO{
     }
 
     @Override
-    public Message update(Message message) {
+    public MessageKey update(MessageKey messageKey) {
         try {
-            if(1 == databaseHelper.getMessageDao().update(message)) {
-                return message;
+            if(1 == databaseHelper.getMessageKeyDao().update(messageKey)) {
+                return messageKey;
             }
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
@@ -100,9 +103,9 @@ public enum MessageDAOImpl implements MessageDAO{
     }
 
     @Override
-    public boolean delete(Message message) {
+    public boolean delete(MessageKey messageKey) {
         try {
-            return (1 == databaseHelper.getMessageDao().delete(message));
+            return (1 == databaseHelper.getMessageKeyDao().delete(messageKey));
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
