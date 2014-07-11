@@ -26,32 +26,32 @@ import java.util.List;
  */
 public class ChatListFragment extends ListFragment implements NotifiableFragment<List<Chat>> {
 
-       private AbstractYasmeActivity activity;
-       private List<Chat> chatRooms = new ArrayList<Chat>();
-       private ChatListAdapter adapter;
+    private AbstractYasmeActivity activity;
+    private List<Chat> chatRooms = new ArrayList<Chat>();
+    private ChatListAdapter adapter;
 
-       public ChatListFragment() {
+    public ChatListFragment() {
 
-       }
+    }
 
-       @Override
-       public void onCreate(Bundle savedInstanceState) {
-           super.onCreate(savedInstanceState);
-           activity = (AbstractYasmeActivity)getActivity();
-           adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
-           setListAdapter(adapter);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activity = (AbstractYasmeActivity) getActivity();
+        adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
+        setListAdapter(adapter);
 
-            //Register at observer
-           //ChatListParam test = new ChatListParam(null);
-           //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
-           Log.d(this.getClass().getSimpleName(),"Try to get ChatListObservableInstance");
-           FragmentObservable<ChatListFragment,List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
-           Log.d(this.getClass().getSimpleName(),"... successful");
-           obs.register(this);
+        //Register at observer
+        //ChatListParam test = new ChatListParam(null);
+        //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
+        FragmentObservable<ChatListFragment, List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+        obs.register(this);
 
-           // TODO Holt erst die Chats aus der Datenbank ab
-           // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
-           // Danach evtl nochmal aktualisieren
+        // TODO Holt erst die Chats aus der Datenbank ab
+        // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
+        // Danach evtl nochmal aktualisieren
 
         // Holt erst die Chats aus der Datenbank ab
         List<Chat> chatRoomsFromDB = DatabaseManager.INSTANCE.getChatDAO().getAll();
@@ -61,7 +61,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         //holt vor allem den Namen des Users ab
         new GetProfileDataTask(activity.storage).execute();
 
-        
+
         // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
 
         //Aktualisiert die Datenbank auf den aktuellen Stand des Servers
@@ -100,7 +100,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     }
 
     public void showChat(long chatId) {
-        Log.d(this.getClass().getSimpleName(),"ShowChat: " + chatId);
+        Log.d(this.getClass().getSimpleName(), "ShowChat: " + chatId);
         Intent intent = new Intent(activity, ChatActivity.class);
         intent.putExtra(activity.USER_MAIL, activity.getUserMail());
         intent.putExtra(activity.USER_ID, activity.getUserId());
