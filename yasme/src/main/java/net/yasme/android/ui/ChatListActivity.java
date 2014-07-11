@@ -2,6 +2,7 @@ package net.yasme.android.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,11 +15,18 @@ public class ChatListActivity extends AbstractYasmeActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_with_single_fragment);
 
-		if (savedInstanceState == null) {
+        if(!mSignedIn) {
+            Log.i(this.getClass().getSimpleName(), "Not logged in, starting login activity");
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
+        Log.i(this.getClass().getSimpleName(), "User is authorized");
+
+        if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.singleFragmentContainer, new ChatListFragment()).commit();
 		}
-
     }
 
 	@Override

@@ -58,10 +58,6 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
             editor.putString(AbstractYasmeActivity.USER_NAME, name);
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
             editor.commit();
-
-            //Login after registration was successfull
-            UserLoginTask authTask = new UserLoginTask(storage);
-            authTask.execute(email, password);
         }
         //TODO: activity mit folgenden Sachen benachrichtigen
         //activity.onPostRegisterExecute(success, email, password);

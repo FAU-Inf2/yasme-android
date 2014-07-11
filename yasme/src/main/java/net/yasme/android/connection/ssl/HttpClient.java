@@ -2,8 +2,10 @@ package net.yasme.android.connection.ssl;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import net.yasme.android.R;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -31,7 +33,8 @@ public class HttpClient {
 
     public static Context context;
 
-    public static CloseableHttpClient createSSLClient() {
+    public static CloseableHttpClient createSSLClient(Context appContext) {
+
 
         SSLConnectionSocketFactory sslsf = null;
 
@@ -43,7 +46,12 @@ public class HttpClient {
             //String yasme_ca = "raw/yasme_ca.pem";
             //InputStream caInput = ClassLoader.getSystemResourceAsStream(yasme_ca);
 
-            InputStream caInput = context.getResources().openRawResource(R.raw.yasme_ca);
+            if(appContext == null) {
+                Log.e("ththththththhthththththth", "appContext");
+            }
+
+
+            InputStream caInput = appContext.getResources().openRawResource(R.raw.yasme_ca);
 
             Certificate ca = cf.generateCertificate(caInput);
 

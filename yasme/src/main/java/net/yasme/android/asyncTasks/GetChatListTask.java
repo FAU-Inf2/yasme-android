@@ -3,7 +3,6 @@ package net.yasme.android.asyncTasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.storage.DatabaseManager;
@@ -19,7 +18,8 @@ public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
 
     private List<Chat> chatRooms = null;
 
-    public GetChatListTask() { }
+    public GetChatListTask() {
+    }
 
 
     protected Boolean doInBackground(String... params) {

@@ -26,6 +26,7 @@ public abstract class AbstractYasmeActivity  extends Activity {
     public final static String LAST_MESSAGE_ID = "net.yasme.android.LAST_MESSAGE_ID";
 
     public final static String ACCESSTOKEN = "net.yasme.android.ACCESSTOKEN";
+    public final static String SIGN_IN = "net.yasme.android.SIGN_IN";
 
     public final static String STORAGE_PREFS = "net.yasme.android.STORAGE_PREFS";
     public final static String DEVICE_PREFS = "net.yasme.android.STORAGE_PREFS";
@@ -39,6 +40,7 @@ public abstract class AbstractYasmeActivity  extends Activity {
 
     protected User selfUser;
     protected String accessToken;
+    boolean mSignedIn;
 
 
 
@@ -59,6 +61,7 @@ public abstract class AbstractYasmeActivity  extends Activity {
         String userName = storage.getString(USER_NAME, "dummy"); //TODO: evtl. anderen dummy namen
         String userMail = storage.getString(USER_MAIL, "@yasme.net");
         String userPw = storage.getString(USER_PW, "password");
+        mSignedIn = storage.getBoolean(SIGN_IN, false);
 
         accessToken = storage.getString(ACCESSTOKEN, null);
 

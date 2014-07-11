@@ -1,5 +1,7 @@
 package net.yasme.android.connection;
 
+import android.content.Context;
+
 import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.exception.RestServiceException;
 
@@ -19,6 +21,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
 import net.yasme.android.exception.Error;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,6 +59,7 @@ public class ConnectionTask {
     protected static String userId;
     protected static String deviceId;
     protected static String accessToken;
+    protected static Context context;
 
     protected static boolean initializedSession = false;
 
@@ -85,7 +89,7 @@ public class ConnectionTask {
                 .withDefaultPrettyPrinter();
     }
 
-    public static void initSession(long userId, long deviceId, String accessToken) {
+    public static void initSession(long userId, long deviceId, String accessToken, Context context) {
 
         if (!initialized) {
             System.err.println("Server Params not initialized");
@@ -98,6 +102,9 @@ public class ConnectionTask {
 
         ConnectionTask.accessToken = accessToken;
         ConnectionTask.initializedSession = true;
+
+        //TODO: context wenn nicht mehr noetig wieder entfernen
+        ConnectionTask.context = context;
     }
 
 
@@ -274,7 +281,7 @@ public class ConnectionTask {
     private HttpResponse executeRequest(HttpRequestBase requestBase) throws RestServiceException {
 
         try {
-            HttpResponse httpResponse = HttpClient.createSSLClient().execute(requestBase);
+            HttpResponse httpResponse = HttpClient.createSSLClient(context).execute(requestBase);
             int statusCode = httpResponse.getStatusLine().getStatusCode();
             System.out.println("[DEBUG] StatusCode: " + statusCode);
             if (statusCode == 200 || statusCode == 201 || statusCode == 204)

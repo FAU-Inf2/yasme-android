@@ -1,5 +1,6 @@
 package net.yasme.android.asyncTasks;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
@@ -20,10 +21,11 @@ import net.yasme.android.ui.LoginFragment;
  */
 public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
     SharedPreferences storage;
+    Context context;
 
-
-    public UserLoginTask(SharedPreferences storage) {
+    public UserLoginTask(SharedPreferences storage, Context context) {
         this.storage = storage;
+        this.context = context;
     }
 
     long lastMessageId;
@@ -54,7 +56,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
             //initConnection Session
             //TODO: second Param should be deviceId
-            ConnectionTask.initSession(userId,userId,accessToken);
+            ConnectionTask.initSession(userId,userId,accessToken,context);
 
             System.out.println(loginReturn[0]);
 

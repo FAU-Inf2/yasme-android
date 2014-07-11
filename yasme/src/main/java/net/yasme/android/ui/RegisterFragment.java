@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import net.yasme.android.R;
+import net.yasme.android.asyncTasks.UserLoginTask;
 import net.yasme.android.asyncTasks.UserRegistrationTask;
 import net.yasme.android.controller.NotifiableFragment;
 
@@ -91,6 +92,9 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     public void onPostRegisterExecute(Boolean success, String email, String password) {
 
         if (success) {
+            //Login after registration was successfull
+            UserLoginTask authTask = new UserLoginTask(activity.getStorage(), activity.getApplicationContext());
+            authTask.execute(email, password);
             activity.getSelfUser().setEmail(email);
             Toast.makeText(
                     activity.getApplicationContext(),
