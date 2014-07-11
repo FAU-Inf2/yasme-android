@@ -34,6 +34,7 @@ public enum ChatDAOImpl implements ChatDAO {
             Chat ret = databaseHelper.getChatDao().createIfNotExists(chat);
             // Add participants
             for (User participant : chat.getParticipants()) {
+                databaseHelper.getUserDao().createIfNotExists(participant);
                 databaseHelper.getChatUserDao().create(new ChatUser(chat, participant));
             }
             return ret;
@@ -136,7 +137,7 @@ public enum ChatDAOImpl implements ChatDAO {
             else if ((null == dbParticipants || dbParticipants.isEmpty()) && (null != chat.getParticipants() && !chat.getParticipants().isEmpty())) {
                 // Insert them all
                 for (User participant : chat.getParticipants()) {
-                    // TODO Perhaps we have to add the user first to the user table
+                    databaseHelper.getUserDao().createIfNotExists(participant);
                     databaseHelper.getChatUserDao().create(new ChatUser(chat, participant));
                 }
             }
@@ -155,7 +156,7 @@ public enum ChatDAOImpl implements ChatDAO {
                     formerParticipantsStillThere.set(i-1);
                 } else {
                     // nowParticipant not found in list of former participants => Insert him
-                    // TODO Perhaps we have to add the user first to the user table
+                    databaseHelper.getUserDao().createIfNotExists(nowParticipant);
                     databaseHelper.getChatUserDao().create(new ChatUser(chat, nowParticipant));
                 }
             }
@@ -170,12 +171,6 @@ public enum ChatDAOImpl implements ChatDAO {
                 next = indexToBeRemoved;
                 size = formerParticipantsStillThere.size();
             }
-            //while ((indexToBeRemoved = formerParticipantsStillThere.nextClearBit(next)) < formerParticipantsStillThere.size() - 1) {
-            //    databaseHelper.getChatUserDao().delete(dbParticipants.get(indexToBeRemoved));
-            //    next = indexToBeRemoved;
-                // TODO test
-            //}
-
 
             databaseHelper.getChatDao().update(chat);
         } catch (SQLException e) {

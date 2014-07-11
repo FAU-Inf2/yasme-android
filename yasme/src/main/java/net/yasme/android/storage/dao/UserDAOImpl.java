@@ -32,6 +32,17 @@ public enum UserDAOImpl implements UserDAO {
         return user;
     }
 
+
+    @Override
+    public User addIfNotExists(User user) {
+        try {
+            return databaseHelper.getUserDao().createIfNotExists(user);
+        } catch (SQLException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return null;
+        }
+    }
+
     @Override
     public User addOrUpdate(User user) {
         try {
