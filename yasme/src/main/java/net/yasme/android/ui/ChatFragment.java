@@ -18,6 +18,7 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.GetMessageTask;
 import net.yasme.android.asyncTasks.server.SendMessageTask;
+import net.yasme.android.connection.UserTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
@@ -108,6 +109,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             }
         });
 
+
+
+
         return rootView;
     }
 
@@ -117,6 +121,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         initializeViews();
         updateViews(chat.getMessages());
     }
+
 
     @Override
     public void onStop() {

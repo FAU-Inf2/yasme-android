@@ -20,6 +20,7 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.UserLoginTask;
 import net.yasme.android.asyncTasks.server.DeviceRegistrationTask;
+import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
@@ -228,10 +229,14 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     }
 
     public void onPostLoginExecute(Boolean success, long userId, String accessToken) {
+
+        if(!ConnectionTask.isInitializedSession()) {
+            ConnectionTask.initSession(userId, accessToken);
+        }
+
         activity.getSelfUser().setId(userId);
         SharedPreferences.Editor editor = activity.getStorage().edit();
         editor.putString(AbstractYasmeActivity.ACCESSTOKEN, accessToken);
-
 
         showProgress(false);
         activity.mSignedIn = success;
@@ -245,6 +250,21 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             // check if there is a device in the Database
             if (yasmeDeviceCheck() == true) {
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device exists in Database");
+
+
+                SharedPreferences devicePrefs = activity.getSharedPreferences(
+                        AbstractYasmeActivity.DEVICE_PREFS,
+                        AbstractYasmeActivity.MODE_PRIVATE);
+                long deviceId = devicePrefs.getLong(AbstractYasmeActivity.DEVICE_ID, -1);
+                if (deviceId < 0) {
+                   // Error ocurred
+                    Log.e(this.getClass().getSimpleName(), "Could not load registered device's id from shared prefs");
+                    return;
+                }
+
+                // Initialize the session a second time because the deviceId was missing
+                ConnectionTask.initSession(userId, deviceId, accessToken);
+
                 //Intent intent = new Intent(activity.getApplicationContext(), ChatListFragment.class);
                 Intent intent = new Intent(activity, ChatListActivity.class);
                 startActivity(intent);
@@ -254,7 +274,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device at yasme server");
                 //DeviceRegistrationTask yasmeDevRegTask =
                         new DeviceRegistrationTask(activity.getStorage())
-                        .execute(this.accessToken, Long.toString(userId),
+                        .execute(Long.toString(userId),
                         this.deviceProduct, this.googleRegId);
 
             }
