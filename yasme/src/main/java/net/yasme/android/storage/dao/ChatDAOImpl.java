@@ -9,6 +9,7 @@ import net.yasme.android.entities.User;
 import net.yasme.android.storage.ChatUser;
 import net.yasme.android.storage.DatabaseConstants;
 import net.yasme.android.storage.DatabaseHelper;
+import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.ChatDAO;
 
 import java.sql.SQLException;
@@ -80,8 +81,9 @@ public enum ChatDAOImpl implements ChatDAO {
             // Get only the users from the chatUser objects
             List<User> participants = new ArrayList<>();
             for (ChatUser chatUser : participantsByChat) {
-                // TODO query for full user objects?
-                participants.add(chatUser.getUser());
+                DatabaseManager.INSTANCE.getUserDAO().get(chatUser.getUser().getId());
+                participants.add(DatabaseManager.INSTANCE.
+                        getUserDAO().get(chatUser.getUser().getId()));
             }
             return participants;
         }
@@ -197,6 +199,4 @@ public enum ChatDAOImpl implements ChatDAO {
             return false;
         }
     }
-
-
 }

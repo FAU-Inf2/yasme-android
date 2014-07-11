@@ -66,7 +66,6 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         list.addView(password_check, layoutParams);
 
         alert.setView(list);
-        //TODO: Input type seems to change nothing??
 
         // "OK" button to save the values
         alert.setPositiveButton(R.string.registration_button_ok,

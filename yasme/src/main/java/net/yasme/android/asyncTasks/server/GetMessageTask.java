@@ -50,6 +50,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
+        Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
         for(Message msg : messages) {
             DatabaseManager.INSTANCE.getMessageDAO().add(msg);//storeMessages(messages);
             DatabaseManager.INSTANCE.getMessageKeyDAO().add(msg.getMessageKey());
