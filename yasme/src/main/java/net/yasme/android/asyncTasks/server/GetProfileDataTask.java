@@ -2,6 +2,7 @@ package net.yasme.android.asyncTasks.server;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import net.yasme.android.connection.UserTask;
 import net.yasme.android.entities.User;

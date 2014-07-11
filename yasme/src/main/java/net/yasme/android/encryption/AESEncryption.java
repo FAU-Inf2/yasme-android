@@ -1,5 +1,7 @@
 package net.yasme.android.encryption;
 
+import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;

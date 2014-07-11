@@ -1,5 +1,7 @@
 package net.yasme.android.connection;
 
+import android.util.Log;
+
 import net.yasme.android.entities.DiffieHellmanPart;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;

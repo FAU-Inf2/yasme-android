@@ -3,6 +3,7 @@ package net.yasme.android.connection;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;

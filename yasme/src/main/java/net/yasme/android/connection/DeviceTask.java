@@ -1,5 +1,7 @@
 package net.yasme.android.connection;
 
+import android.util.Log;
+
 import net.yasme.android.entities.Device;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.Error;

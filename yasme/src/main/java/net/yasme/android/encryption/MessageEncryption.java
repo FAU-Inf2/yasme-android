@@ -1,6 +1,7 @@
 package net.yasme.android.encryption;
 
 import android.util.Base64;
+import android.util.Log;
 
 import net.yasme.android.asyncTasks.server.SendMessageKeyTask;
 import net.yasme.android.entities.Chat;

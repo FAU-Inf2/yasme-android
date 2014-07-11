@@ -1,6 +1,7 @@
 package net.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.encryption.AESEncryption;

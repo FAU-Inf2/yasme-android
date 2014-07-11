@@ -12,6 +12,7 @@ import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.Cipher;
 
 import android.util.Base64;
+import android.util.Log;
 
 public class RSAEncryption {
 
