@@ -70,7 +70,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         //trying to get chat with chatId from local DB
         try {
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
-            Log.e(this.getClass().getSimpleName(), "number messages: " + chat.getMessages().size());
+            Log.d(this.getClass().getSimpleName(), "number of messages from DB: " + chat.getMessages().size());
         } catch (NullPointerException e) {
             chat = null;
             Log.w(this.getClass().getSimpleName(), "get chat from DB failed");

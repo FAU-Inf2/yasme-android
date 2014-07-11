@@ -30,7 +30,7 @@ public class ChatListActivity extends AbstractYasmeActivity {
         }
         Log.i(this.getClass().getSimpleName(), "User is authorized");
 
-        if(!ConnectionTask.isInitialized()) {
+        if(!ConnectionTask.isInitializedSession()) {
             long userId = storage.getLong(AbstractYasmeActivity.USER_ID, 0);
             String accessToken = storage.getString(AbstractYasmeActivity.ACCESSTOKEN, "");
             //initConnection Session

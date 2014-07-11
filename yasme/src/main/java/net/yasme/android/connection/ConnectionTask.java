@@ -109,6 +109,10 @@ public class ConnectionTask {
         return initialized;
     }
 
+    public static boolean isInitializedSession() {
+        return initializedSession;
+    }
+
     private static void buildBaseURI() {
         try {
             ConnectionTask.baseURI = new URIBuilder().setScheme(ConnectionTask.serverScheme).
