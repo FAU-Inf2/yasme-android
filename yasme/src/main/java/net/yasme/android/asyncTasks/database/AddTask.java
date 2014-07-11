@@ -1,7 +1,9 @@
 package net.yasme.android.asyncTasks.database;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.storage.dao.DAO;
 
 /**
@@ -11,19 +13,27 @@ public class AddTask<D extends Object, T extends DAO<D>> extends AsyncTask<Void,
 
     private T specificDAO;
     private D data;
+    private Class classToNotify;
 
-    public AddTask(T specificDAO, D data) {
+    public AddTask(T specificDAO, D data, Class classToNotify) {
         this.specificDAO = specificDAO;
         this.data = data;
+        this.classToNotify = classToNotify;
     }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-        return null != specificDAO.add(data);
+        return null != (data = specificDAO.add(data));
     }
 
     @Override
-    protected void onPostExecute(Boolean aBoolean) {
-        super.onPostExecute(aBoolean);
+    protected void onPostExecute(Boolean success) {
+        if (success) {
+            // Notify
+            ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
+        }
+        else {
+            Log.w(this.getClass().getSimpleName(), "Did not invoke notification as task did not finish successfully.");
+        }
     }
 }
