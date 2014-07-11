@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.GetMessageTask;
-import net.yasme.android.asyncTasks.server.GetMessageTaskInChat;
 import net.yasme.android.asyncTasks.server.SendMessageTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
@@ -70,7 +69,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         //trying to get chat with chatId from local DB
         try {
-            chat = DatabaseManager.INSTANCE.getChat(chatId);
+            chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
             Log.e(this.getClass().getSimpleName(), "number messages: " + chat.getMessages().size());
         } catch (NullPointerException e) {
             chat = null;
