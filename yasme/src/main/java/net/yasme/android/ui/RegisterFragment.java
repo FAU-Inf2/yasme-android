@@ -28,7 +28,9 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = (AbstractYasmeActivity) getActivity();
         SharedPreferences storage = activity.getStorage();
+
         regTask = new UserRegistrationTask(storage);
 
         registerDialog();

@@ -40,7 +40,7 @@ public class DeviceTask extends ConnectionTask {
         try {
             HttpResponse httpResponse = executeRequest(Request.POST, "", device);
 
-            System.out.println("[DEBUG] Device registration was successful");
+            Log.d(this.getClass().getSimpleName(),"[DEBUG] Device registration was successful");
 
             return (new JSONObject((new BufferedReader(
                     new InputStreamReader(httpResponse.getEntity()
@@ -87,12 +87,12 @@ public class DeviceTask extends ConnectionTask {
             e.printStackTrace();
         }
 
-        System.out.println("[DEBUG] No.Devices: " + devices.size());
+        Log.d(this.getClass().getSimpleName(),"[DEBUG] No.Devices: " + devices.size());
         return devices;
     }
 
     public void deleteDevice(long deviceId) throws RestServiceException {
         executeRequest(Request.DELETE, Long.toString(deviceId));
-        System.out.println("[DEBUG] Device removed!");
+        Log.d(this.getClass().getSimpleName(),"[DEBUG] Device removed!");
     }
 }

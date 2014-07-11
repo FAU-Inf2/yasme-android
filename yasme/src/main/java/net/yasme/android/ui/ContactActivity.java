@@ -137,7 +137,7 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
 
     @Override
     public void onOwnProfileFragmentInteraction(String s) {
-        System.out.println("-------------------- In der Activity ---------------------");
+        Log.d(this.getClass().getSimpleName(),"-------------------- In der Activity ---------------------");
     }
 
     private void callContact(String number){

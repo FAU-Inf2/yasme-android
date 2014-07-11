@@ -44,9 +44,11 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         }
 
         if (messages == null) {
+            Log.w(this.getClass().getSimpleName(), "messages is null!");
             return false;
         }
         if (messages.isEmpty()) {
+            Log.w(this.getClass().getSimpleName(), "messages is empty");
             return false;
         }
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);

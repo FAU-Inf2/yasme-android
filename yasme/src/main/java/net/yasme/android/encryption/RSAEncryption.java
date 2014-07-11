@@ -52,8 +52,8 @@ public class RSAEncryption {
 
             /* END */
         }catch(Exception e){
-            System.out.println("[???] "+e.getMessage());
-            System.out.println("[???] RSA Keys could not be generated.");
+            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"[???] RSA Keys could not be generated.");
         }
 
     }
@@ -102,8 +102,8 @@ public class RSAEncryption {
 
             return Base64.encodeToString(signatured, Base64.DEFAULT);
         } catch (Exception e){
-            System.out.println("[???] sign failed");
-            System.out.println("[???] "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"[???] sign failed");
+            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
             return null;
         }
 
@@ -125,8 +125,8 @@ public class RSAEncryption {
             return sig.verify(signature);
 
         } catch (Exception e){
-            System.out.println("[???] verify failed");
-            System.out.println("[???]"+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"[???] verify failed");
+            Log.d(this.getClass().getSimpleName(),"[???]"+e.getMessage());
             return false;
         }
 
@@ -145,8 +145,8 @@ public class RSAEncryption {
 
             return Base64.encodeToString(encrypted, Base64.DEFAULT);
         } catch (Exception e){
-            System.out.println("[???] encrypt failed");
-            System.out.println("[???]" + e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"[???] encrypt failed");
+            Log.d(this.getClass().getSimpleName(),"[???]" + e.getMessage());
             return "Couldn't be encrypted: "+ text;
         }
 
@@ -164,8 +164,8 @@ public class RSAEncryption {
 
             return new String(decrypted);
         } catch (Exception e){
-            System.out.println("[???] decrypt failed");
-            System.out.println("[???] "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"[???] decrypt failed");
+            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
             return "Couldn't be decrypted: "+ encrypted;
         }
 

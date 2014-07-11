@@ -23,7 +23,7 @@ public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
         try {
             selfProfile = UserTask.getInstance().getUserData();
         } catch (RestServiceException e) {
-            System.out.println(e.getMessage());
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
         return selfProfile != null;

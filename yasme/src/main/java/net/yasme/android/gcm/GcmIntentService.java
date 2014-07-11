@@ -31,7 +31,7 @@ public class GcmIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        System.out.println("[DEBUG] GcmIntentService");
+        Log.d(this.getClass().getSimpleName(),"[DEBUG] GcmIntentService");
         Bundle extras = intent.getExtras();
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         // The getMessageType() intent parameter must be the intent you received
@@ -47,10 +47,10 @@ public class GcmIntentService extends IntentService {
              */
             if (GoogleCloudMessaging.
                     MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                System.out.println("Send error: " + extras.toString());
+                Log.d(this.getClass().getSimpleName(),"Send error: " + extras.toString());
             } else if (GoogleCloudMessaging.
                     MESSAGE_TYPE_DELETED.equals(messageType)) {
-                System.out.println("Deleted messages on server: " +
+                Log.d(this.getClass().getSimpleName(),"Deleted messages on server: " +
                        extras.toString());
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.
@@ -66,7 +66,7 @@ public class GcmIntentService extends IntentService {
                 }
                 Log.i(AbstractYasmeActivity.TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
-                System.out.println("Received: " + extras.toString());
+                Log.d(this.getClass().getSimpleName(),"Received: " + extras.toString());
                 Log.i(AbstractYasmeActivity.TAG, "Received: " + extras.toString());
             }
         }

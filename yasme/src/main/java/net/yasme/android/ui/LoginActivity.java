@@ -34,7 +34,7 @@ public class LoginActivity extends AbstractYasmeActivity {
 
         if (cloudMessaging.checkPlayServices()) {
             String regid = cloudMessaging.getRegistrationId();
-            System.out.println("[DEBUG] Empty?" + regid.isEmpty());
+            Log.d(this.getClass().getSimpleName(),"[DEBUG] Empty?" + regid.isEmpty());
             if (regid.isEmpty()) {
                 registerInBackground();
             }
@@ -77,7 +77,7 @@ public class LoginActivity extends AbstractYasmeActivity {
             protected void onPostExecute(String msg) {
                 //Zu diesem Zeitpunkt ist die RegId bereits als SharedPref.
                 // in AbstractYasmeActivity.PROPERTY_REG_ID abgelegt.
-                System.out.println(msg);
+                Log.d(this.getClass().getSimpleName(),msg);
 
             }
 

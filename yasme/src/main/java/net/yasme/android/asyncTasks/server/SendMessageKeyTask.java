@@ -44,7 +44,7 @@ public class SendMessageKeyTask extends AsyncTask<String, Void, MessageKey> {
 
             return messageKey;
         } catch (Exception e) {
-            System.out.println("Fail to send key: "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"Fail to send key: "+e.getMessage());
         }
         return null;
     }

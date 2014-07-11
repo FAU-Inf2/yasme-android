@@ -13,7 +13,7 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
 
-        System.out.println("[DEBUG] OnReceive");
+        Log.d(this.getClass().getSimpleName(),"[DEBUG] OnReceive");
         ComponentName comp = new ComponentName(context.getPackageName(),
                 GcmIntentService.class.getName());
 

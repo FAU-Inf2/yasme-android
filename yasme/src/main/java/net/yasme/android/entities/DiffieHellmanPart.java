@@ -80,11 +80,11 @@ public class DiffieHellmanPart {
 
     public boolean isValid() {
         if (device == null) {
-            System.out.println("dev is null");
+            Log.d(this.getClass().getSimpleName(),"dev is null");
             return false;
         }
         if (device.getId() < 0) {
-            System.out.println("devId");
+            Log.d(this.getClass().getSimpleName(),"devId");
             return false;
         }
         if (dhId < 0) {

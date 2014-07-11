@@ -69,7 +69,7 @@ public class MessageEncryption {
 
         // if no old key for this chat, then generate a new one, beginning with
         if (db.getCurrentKey(chatId) < 0) {
-            System.out.println("[???] Generate Key");
+            Log.d(this.getClass().getSimpleName(),"[???] Generate Key");
             aes = new AESEncryption();
 
             // TODO pro User alle Devices suchen und in recipients speichern
@@ -95,17 +95,17 @@ public class MessageEncryption {
                 if (resultMessageKey != null) {
                     keyId = resultMessageKey.getId();
                     long timestamp = resultMessageKey.getTimestamp();
-                    System.out.println("[???] Key wurde an Server gesendet, ID: "+keyId);
+                    Log.d(this.getClass().getSimpleName(),"[???] Key wurde an Server gesendet, ID: "+keyId);
                     //saveKey(keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
                     //TODO: saveKeyToDatabase
-                    System.out.println("[???] Key wurde lokal gespeichert, ID: "+keyId);
+                    Log.d(this.getClass().getSimpleName(),"[???] Key wurde lokal gespeichert, ID: "+keyId);
                 }else {
-                    System.out.println("[???] Fehler beim Senden des Keys an den Server");
+                    Log.d(this.getClass().getSimpleName(),"[???] Fehler beim Senden des Keys an den Server");
                 }
 
             }
             else{
-                System.out.println("[???] No recipients in chat could be found. Key was not sent to server!");
+                Log.d(this.getClass().getSimpleName(),"[???] No recipients in chat could be found. Key was not sent to server!");
             }
 
             //if (!ConnectionTask.isInitialized()) {
@@ -121,7 +121,7 @@ public class MessageEncryption {
             // get needed Key from LocalStorage
             updateKey();
             // ###DEBUG
-            System.out.println("[???]: Key " + keyId + " fuer Chat " + chatId + " wurde geladen");
+            Log.d(this.getClass().getSimpleName(),"[???]: Key " + keyId + " fuer Chat " + chatId + " wurde geladen");
             // /###
         }
 
@@ -149,7 +149,7 @@ public class MessageEncryption {
             }
         }
         catch (Exception e){
-            System.out.println(e.getMessage());
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
             }
     }
 
@@ -171,9 +171,9 @@ public class MessageEncryption {
 
     // decrypt
     public String decrypt(String encrypted, long keyid) {
-        System.out.println("[???] Decrypt with:");
-        System.out.println("[???] aktuelle KEYID:" + this.keyId);
-        System.out.println("[???] benoetigte KEYID:" + keyid);
+        Log.d(this.getClass().getSimpleName(),"[???] Decrypt with:");
+        Log.d(this.getClass().getSimpleName(),"[???] aktuelle KEYID:" + this.keyId);
+        Log.d(this.getClass().getSimpleName(),"[???] benoetigte KEYID:" + keyid);
 
         if (this.keyId == keyid) {
             return aes.decrypt(encrypted, aes.getKey(), aes.getIV());
@@ -195,7 +195,7 @@ public class MessageEncryption {
                 SecretKey key = new SecretKeySpec(keyBytes, "AES");
                 IvParameterSpec iv = new IvParameterSpec(ivBytes);
 
-                System.out.println("[???]: alter Key wurde zum Entschluesseln geladen");
+                Log.d(this.getClass().getSimpleName(),"[???]: alter Key wurde zum Entschluesseln geladen");
                 String decrypted = aes.decrypt(encrypted, key, iv);
 
                 return decrypted;
@@ -217,7 +217,7 @@ public class MessageEncryption {
            MessageKey result = task.get();
            return result;
        } catch (Exception e){
-           System.out.println(e.getMessage());
+           Log.d(this.getClass().getSimpleName(),e.getMessage());
        }
         return null;
     }

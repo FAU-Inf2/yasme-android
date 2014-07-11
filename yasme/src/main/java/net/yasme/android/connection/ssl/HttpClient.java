@@ -50,7 +50,7 @@ public class HttpClient {
 
             Certificate ca = cf.generateCertificate(caInput);
 
-            System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
+            Log.d(this.getClass().getSimpleName(),"ca=" + ((X509Certificate) ca).getSubjectDN());
             caInput.close();
 
             trustStore.load(null, null);
