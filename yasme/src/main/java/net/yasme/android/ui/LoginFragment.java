@@ -62,6 +62,11 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         // Restore preferencesNAME
         emailTmp = activity.getStorage().getString(AbstractYasmeActivity.USER_MAIL, "@yasme.net");
         accessToken = activity.getAccessToken();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
         //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).register(this);
         Log.d(this.getClass().getSimpleName(),"Try to get LoginObservableInstance");
@@ -69,14 +74,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         Log.d(this.getClass().getSimpleName(),"... successful");
 
         obs.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        FragmentObservable<LoginFragment,LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
-        Log.d(this.getClass().getSimpleName(),"Remove from observer");
-        obs.remove(this);
     }
 
     @Override
@@ -246,9 +243,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 DatabaseManager.INSTANCE.init(activity.getApplicationContext(), userId);
             }
             // check if there is a device in the Database
-            if (yasmeDeviceCheck() == true) {
+            if (yasmeDeviceCheck()) {
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Device exists in Database");
-
 
                 SharedPreferences devicePrefs = activity.getSharedPreferences(
                         AbstractYasmeActivity.DEVICE_PREFS,
@@ -286,6 +282,19 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
     public void onPostYasmeDeviceRegExecute(Boolean success, long deviceId) {
         if (success) {
+
+            // Initialize the session a second time because the deviceId was missing
+            SharedPreferences devicePrefs = activity.getSharedPreferences(
+                    AbstractYasmeActivity.DEVICE_PREFS,
+                    AbstractYasmeActivity.MODE_PRIVATE);
+            long userId = devicePrefs.getLong(AbstractYasmeActivity.USER_ID, -1);
+            if (userId < 0) {
+                // Error ocurred
+                Log.e(this.getClass().getSimpleName(), "Did not find user id in shared prefs");
+                return;
+            }
+            ConnectionTask.initSession(userId, deviceId, accessToken);
+
             Log.d(this.getClass().getSimpleName(), "[DEBUG] Login after device registration at yasme server");
             Intent intent = new Intent(activity, ChatListActivity.class);
             startActivity(intent);
@@ -317,8 +326,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 getSharedPreferences(LoginActivity.class.getSimpleName(),
                         AbstractYasmeActivity.MODE_PRIVATE);
 
-        String regId = pushPrefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID,null);
-        this.googleRegId = regId;
+        this.googleRegId = pushPrefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID, null);
         // TODO proper check
 
         if (deviceId == -1) {
