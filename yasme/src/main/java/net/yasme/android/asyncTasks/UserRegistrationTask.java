@@ -59,7 +59,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
             editor.commit();
         }
-        //TODO: activity mit folgenden Sachen benachrichtigen
+        //TODO: register fragment mit folgenden Sachen benachrichtigen
         //activity.onPostRegisterExecute(success, email, password);
         //ObserverRegistry.getRegistry(ObserverRegistry.Observers.REGISTERFRAGMENT).notifyFragments(new RegisterFragment.RegistrationParam(success, email, password));
     }

@@ -26,8 +26,8 @@ public class LoginActivity extends AbstractYasmeActivity {
                     .add(R.id.singleFragmentContainer, new LoginFragment()).commit();
         }
 
-        //TODO: temporäre Lösung:
-        HttpClient.context = this.getApplicationContext();
+        //TODO: temporäre Lösung: - moved to onCreate in ChatListActivity
+        //HttpClient.context = this.getApplicationContext();
 
         //GCM Begin
         cloudMessaging = CloudMessaging.getInstance(this);

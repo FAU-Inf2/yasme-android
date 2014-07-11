@@ -33,7 +33,7 @@ public class HttpClient {
 
     public static Context context;
 
-    public static CloseableHttpClient createSSLClient(Context appContext) {
+    public static CloseableHttpClient createSSLClient() {
 
 
         SSLConnectionSocketFactory sslsf = null;
@@ -46,12 +46,7 @@ public class HttpClient {
             //String yasme_ca = "raw/yasme_ca.pem";
             //InputStream caInput = ClassLoader.getSystemResourceAsStream(yasme_ca);
 
-            if(appContext == null) {
-                Log.e("ththththththhthththththth", "appContext");
-            }
-
-
-            InputStream caInput = appContext.getResources().openRawResource(R.raw.yasme_ca);
+            InputStream caInput = context.getResources().openRawResource(R.raw.yasme_ca);
 
             Certificate ca = cf.generateCertificate(caInput);
 

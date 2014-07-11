@@ -54,10 +54,6 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             userId = Long.parseLong(loginReturn[0]);
             accessToken = loginReturn[1];
 
-            //initConnection Session
-            //TODO: second Param should be deviceId
-            ConnectionTask.initSession(userId,userId,accessToken,context);
-
             System.out.println(loginReturn[0]);
 
             // storage
