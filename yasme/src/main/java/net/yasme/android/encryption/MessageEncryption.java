@@ -75,7 +75,7 @@ public class MessageEncryption {
         List<CurrentKey> currentKeys = db.getCurrentKeyDAO().getCurrentKeysByChat(chatId);
         if (currentKeys != null  && currentKeys.size() > 0
                 && currentKeys.get(0).getMessageKey().getId() < 1) {
-            System.out.println("[???] Generate Key");
+            Log.d(this.getClass().getSimpleName(),"[???] Generate Key");
             aes = new AESEncryption();
 
             // TODO pro User alle Devices suchen und in recipients speichern
@@ -222,7 +222,7 @@ public class MessageEncryption {
             MessageKey result = task.get();
             return result;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
         }
         return null;
     }
