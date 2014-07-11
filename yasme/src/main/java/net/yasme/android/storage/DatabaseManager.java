@@ -7,6 +7,8 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.dao.ChatDAO;
+import net.yasme.android.storage.dao.ChatDAOImpl;
 import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.storage.dao.UserDAOImpl;
 
@@ -26,6 +28,7 @@ public enum DatabaseManager {
     private long mUserId;
 
     private UserDAO userDAO;
+    private ChatDAO chatDAO;
 
     public void init(Context context, long userId) {
         mContext = context;
@@ -48,6 +51,9 @@ public enum DatabaseManager {
     private void initializeDAOs() {
         UserDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
         userDAO = UserDAOImpl.INSTANCE;
+
+        ChatDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
+        chatDAO = ChatDAOImpl.INSTANCE;
     }
 
     public UserDAO getUserDAO() {
