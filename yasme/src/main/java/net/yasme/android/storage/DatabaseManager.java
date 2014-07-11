@@ -210,8 +210,8 @@ public enum DatabaseManager {
     public void createChatUser(ChatUser cu) {
         try {
             Chat queryChat = new Chat();
-            queryChat.setId(cu.chat.getId());
-            ChatUser queryChatUser = new ChatUser(queryChat, cu.user);
+            queryChat.setId(cu.getChat().getId());
+            ChatUser queryChatUser = new ChatUser(queryChat, cu.getUser());
             getHelper().getChatUserDao().create(queryChatUser);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -226,8 +226,8 @@ public enum DatabaseManager {
         List<ChatUser> matching = new ArrayList<ChatUser>();
         try {
             Chat queryChat = new Chat();
-            queryChat.setId(cu.chat.getId());
-            ChatUser queryChatUser = new ChatUser(queryChat, cu.user);
+            queryChat.setId(cu.getChat().getId());
+            ChatUser queryChatUser = new ChatUser(queryChat, cu.getUser());
             matching = getHelper().getChatUserDao().queryForMatchingArgs(queryChatUser);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -238,7 +238,7 @@ public enum DatabaseManager {
             return;
         }
         try {
-            getHelper().getChatUserDao().deleteById(matching.get(0).id);
+            getHelper().getChatUserDao().deleteById(matching.get(0).getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -314,11 +314,11 @@ public enum DatabaseManager {
                 Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
             }
             for(ChatUser cu : temp) {
-                User tmp = getHelper().getUserDao().queryForId(cu.user.getId());
+                User tmp = getHelper().getUserDao().queryForId(cu.getUser().getId());
                 if(tmp == null) {
                     continue;
                 }
-                insert.add(getHelper().getUserDao().queryForId(cu.user.getId()));
+                insert.add(getHelper().getUserDao().queryForId(cu.getUser().getId()));
                 Log.d(this.getClass().getSimpleName(), "[Debug] name from DB: " + tmp.getName());
             }
             if(insert.isEmpty()) {

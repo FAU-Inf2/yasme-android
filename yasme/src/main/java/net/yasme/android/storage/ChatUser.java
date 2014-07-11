@@ -15,13 +15,13 @@ import java.io.Serializable;
 public class ChatUser implements Serializable{
 
     @DatabaseField(generatedId = true)
-    long id;
+    private long id;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_FIELD_NAME, foreign = true)
-    Chat chat;
+    private Chat chat;
 
     @DatabaseField(columnName = DatabaseConstants.USER_FIELD_NAME, foreign = true)
-    User user;
+    private User user;
 
     public ChatUser() {
         // ORMLite needs a no-arg constructor
@@ -29,6 +29,30 @@ public class ChatUser implements Serializable{
 
     public ChatUser(Chat chat, User user) {
         this.chat = chat;
+        this.user = user;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
         this.user = user;
     }
 }
