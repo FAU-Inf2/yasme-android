@@ -316,7 +316,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         if(param instanceof LoginProcessParam)
             notifyFragment((LoginProcessParam)param);
-        else if(param instanceof DeviceRegistrationParam)
+        if(param instanceof DeviceRegistrationParam)
             notifyFragment((DeviceRegistrationParam)param);
     }
 

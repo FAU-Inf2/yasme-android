@@ -99,14 +99,14 @@ public enum CurrentKeyDAOImpl implements CurrentKeyDAO{
         try {
             currentKeys = databaseHelper.getCurrentKeyDao().queryForEq(DatabaseConstants.CURRENT_KEY_CHAT, chat);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return null;
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;
         }
         if(currentKeys.size() != 1) {
-            Log.e(this.getClass().getSimpleName(), "Mehrere currentKeys pro Chat");
-            return null;
+            Log.i(this.getClass().getSimpleName(), "Mehrere currentKeys pro Chat");
         }
         return currentKeys;//.get(0).getMessageKey().getId();
     }

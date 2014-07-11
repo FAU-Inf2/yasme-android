@@ -1,18 +1,20 @@
 package net.yasme.android.encryption;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
+import android.util.Base64;
 
 import net.yasme.android.asyncTasks.server.SendMessageKeyTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.CurrentKey;
 import net.yasme.android.storage.DatabaseManager;
 
-import android.util.Base64;
-
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 //um den Schluessel zum Verschluesseln abzurufen muss bekannt sein, mit welcher KeyId der Chat verschluesselt wird
 //hier wird vorausgesetzt, dass zum Verschluesseln nur ein Key vorhanden is
@@ -45,7 +47,6 @@ public class MessageEncryption {
 
     private DatabaseManager db = DatabaseManager.INSTANCE;
 
-
     /*
     //Constructor for saving Key from server (Generating a key is not necessary)
     public MessageEncryption(long tets, Context context, long chatid){
@@ -68,7 +69,9 @@ public class MessageEncryption {
         //        CURRENTKEY, Context.MODE_PRIVATE);
 
         // if no old key for this chat, then generate a new one, beginning with
-        if (db.getCurrentKeyDAO().getCurrentKeysByChat(chatId).get(0).getMessageKey().getId() < 0) {
+        List<CurrentKey> currentKeys = db.getCurrentKeyDAO().getCurrentKeysByChat(chatId);
+        if (currentKeys != null  && currentKeys.size() > 0
+                && currentKeys.get(0).getMessageKey().getId() < 1) {
             System.out.println("[???] Generate Key");
             aes = new AESEncryption();
 
@@ -82,40 +85,33 @@ public class MessageEncryption {
                     if (userId != creator) {
                         recipients.add(user);
                     }
-
                 }
             }
             //TODO: If-Anweisung entfernen wenn participants in chat implementiert wurde
             //TODO: If sendkey nicht erfolgreich, dann Devices pro User updaten und nochmal versuchen!!!
-            if (recipients.size() > 0){
-                 //send Key to server
-                 MessageKey resultMessageKey = sendKey();
+            if (recipients.size() > 0) {
+                //send Key to server
+                MessageKey resultMessageKey = sendKey();
 
                 //if server has successfully saved the key
                 if (resultMessageKey != null) {
                     keyId = resultMessageKey.getId();
                     long timestamp = resultMessageKey.getTimestamp();
-                    System.out.println("[???] Key wurde an Server gesendet, ID: "+keyId);
+                    System.out.println("[???] Key wurde an Server gesendet, ID: " + keyId);
                     //saveKey(keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
                     //TODO: saveKeyToDatabase
-                    System.out.println("[???] Key wurde lokal gespeichert, ID: "+keyId);
-                }else {
+                    System.out.println("[???] Key wurde lokal gespeichert, ID: " + keyId);
+                } else {
                     System.out.println("[???] Fehler beim Senden des Keys an den Server");
                 }
 
-            }
-            else{
+            } else {
                 System.out.println("[???] No recipients in chat could be found. Key was not sent to server!");
             }
-
             //if (!ConnectionTask.isInitialized()) {
             //    ConnectionTask.initParams(context.getResources().getString(R.string.server_scheme),context.getResources().getString(R.string.server_host),context.getResources().getString(R.string.server_port));
             //}
-
-
-
         }
-
         // if old key is already available
         else {
             // get needed Key from LocalStorage
@@ -124,13 +120,11 @@ public class MessageEncryption {
             System.out.println("[???]: Key " + keyId + " fuer Chat " + chatId + " wurde geladen");
             // /###
         }
-
     }
 
 
-
     //update Key for Encryption
-    public void updateKey(){
+    public void updateKey() {
         try {
             // check, which Key is need to encrypt
             checkCurrentKeyId();
@@ -147,18 +141,15 @@ public class MessageEncryption {
 
                 aes = new AESEncryption(keyBytes, ivBytes);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-            }
+        }
     }
 
     // check, which Key is need to encrypt
-    public void checkCurrentKeyId(){
-
+    public void checkCurrentKeyId() {
         keyId = db.getCurrentKeyDAO().getCurrentKeysByChat(chatId).get(0).getMessageKey().getId();
         /*SharedPreferences currentKeyPref = context.getSharedPreferences(CURRENTKEY, Context.MODE_PRIVATE);
-
         long keyidfromstorage = currentKeyPref.getLong("keyId", 0);
         keyId = keyidfromstorage;
         */
@@ -202,7 +193,6 @@ public class MessageEncryption {
             }
             return "Key for Decryption could not be found";
         }
-
     }
 
     public long getKeyId() {
@@ -211,14 +201,14 @@ public class MessageEncryption {
 
     // send Key to server
     public MessageKey sendKey() {
-       try{
-           SendMessageKeyTask task = new SendMessageKeyTask(aes, recipients, chat);
-           task.execute();
-           MessageKey result = task.get();
-           return result;
-       } catch (Exception e){
-           System.out.println(e.getMessage());
-       }
+        try {
+            SendMessageKeyTask task = new SendMessageKeyTask(aes, recipients, chat);
+            task.execute();
+            MessageKey result = task.get();
+            return result;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         return null;
     }
     //delete a symmetric Key from server when the client got that key
@@ -264,7 +254,7 @@ public class MessageEncryption {
 
 
     }
-  */
+    */
     public MessageKey getKeyFromLocalStorage(long chatId, long keyId) {
 
         return db.getMessageKeyDAO().get(keyId);
@@ -302,6 +292,5 @@ public class MessageEncryption {
         */
 
     }
-
 }
 
