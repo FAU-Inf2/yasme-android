@@ -40,7 +40,6 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
 
         // regId from google for push
         String regId = params[2];
-        String regId = params[2];
 
         long deviceIdFromServer;
 
