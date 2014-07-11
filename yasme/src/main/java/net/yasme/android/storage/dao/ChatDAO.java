@@ -18,6 +18,15 @@ public interface ChatDAO {
      */
     public Chat add(Chat chat);
 
+
+    /**
+     * This method is a combination of add and update for the sake of convenience.
+     * Queries for a chat item with the specified id. If there is none, add is called, otherwise update.
+     * @param chat to be added or updated
+     * @return given chat after insertion / update
+     */
+    public Chat addOrUpdate(Chat chat);
+
     /**
      * Retrieves an object associated with a specific ID.
      * @param id Identifier that matches a specific row in the database to find and return.

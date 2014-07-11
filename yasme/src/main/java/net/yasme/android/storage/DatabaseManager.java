@@ -60,7 +60,7 @@ public enum DatabaseManager {
         return userDAO;
     }
 
-
+    public ChatDAO getChatDAO() { return chatDAO; }
     /******* CRUD functions ******/
 
     /**

@@ -2,6 +2,8 @@ package net.yasme.android.storage.dao;
 
 import android.util.Log;
 
+import com.j256.ormlite.dao.Dao;
+
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.ChatUser;
@@ -42,6 +44,21 @@ public enum ChatDAOImpl implements ChatDAO {
     }
 
     @Override
+    public Chat addOrUpdate(Chat chat) {
+        try {
+            Chat fromDb = databaseHelper.getChatDao().queryForId(chat.getId());
+            if (null == fromDb) {
+                return add(chat);
+            } else {
+                return update(chat);
+            }
+        } catch (SQLException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
     public Chat get(long id) {
         try {
             Chat ret = databaseHelper.getChatDao().queryForId(id);
@@ -75,7 +92,7 @@ public enum ChatDAOImpl implements ChatDAO {
             List<Chat> chats = databaseHelper.getChatDao().queryForAll();
             if (null != chats && !chats.isEmpty()) {
                 for (Chat chat : chats) {
-                    loadParticipants(chat);
+                    chat.setParticipants(loadParticipants(chat));
                 }
             }
             return chats;
@@ -138,12 +155,19 @@ public enum ChatDAOImpl implements ChatDAO {
 
             // All former participants which have not been visited during former iteration, you're out
             int next = 0;
-            int indexToBeRemoved;
-            while ((indexToBeRemoved = formerParticipantsStillThere.nextClearBit(next)) < formerParticipantsStillThere.size()) {
+            int size = dbParticipants.size();
+            int cardinality = formerParticipantsStillThere.cardinality();
+            for (int i=0; i<size - cardinality; i++) {
+                int indexToBeRemoved = formerParticipantsStillThere.nextClearBit(next);
                 databaseHelper.getChatUserDao().delete(dbParticipants.get(indexToBeRemoved));
                 next = indexToBeRemoved;
-                // TODO test
+                size = formerParticipantsStillThere.size();
             }
+            //while ((indexToBeRemoved = formerParticipantsStillThere.nextClearBit(next)) < formerParticipantsStillThere.size() - 1) {
+            //    databaseHelper.getChatUserDao().delete(dbParticipants.get(indexToBeRemoved));
+            //    next = indexToBeRemoved;
+                // TODO test
+            //}
 
 
             databaseHelper.getChatDao().update(chat);

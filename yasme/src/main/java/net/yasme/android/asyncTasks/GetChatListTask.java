@@ -10,33 +10,33 @@ import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.ChatListFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by robert on 19.06.14.
  */
 public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
-    int layoutId;
 
-    public GetChatListTask() {
-    }
+    private List<Chat> chatRooms = null;
 
-    ArrayList<Chat> chatRooms = null;
+    public GetChatListTask() { }
+
 
     protected Boolean doInBackground(String... params) {
-        chatRooms = DatabaseManager.INSTANCE.getAllChats();
+        //chatRooms = DatabaseManager.INSTANCE.getAllChats();
+        chatRooms = DatabaseManager.INSTANCE.getChatDAO().getAll();
         return chatRooms != null;
     }
 
     protected void onPostExecute(final Boolean success) {
-
         if (!success) {
             Log.d(this.getClass().getName(), "Fehler bei Datenbankzugriff");
-            createDummyChatRoomList();
+            //createDummyChatRoomList();
         }
 
-        if (chatRooms.size() <= 0) {
-            createDummyChatRoomList();
-        }
+        //if (chatRooms.size() <= 0) {
+        //    createDummyChatRoomList();
+        //}
 
         ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(chatRooms);
     }
