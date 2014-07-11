@@ -20,6 +20,10 @@ public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
         fragments.add(fragment);
     }
 
+    public boolean isRegistered(T fragment) {
+        return fragments.contains(fragment);
+    }
+
     public void remove(T fragment) {
         fragments.remove(fragment);
     }
