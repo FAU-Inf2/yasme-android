@@ -16,9 +16,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.GetMessageTask;
-import net.yasme.android.asyncTasks.GetMessageTaskInChat;
-import net.yasme.android.asyncTasks.SendMessageTask;
+import net.yasme.android.asyncTasks.server.GetMessageTask;
+import net.yasme.android.asyncTasks.server.GetMessageTaskInChat;
+import net.yasme.android.asyncTasks.server.SendMessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
@@ -60,7 +60,7 @@ public class ChatFragment extends Fragment {
 
            //trying to get chat with chatId from local DB
            try {
-               chat = DatabaseManager.INSTANCE.getChat(chatId);
+               chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
                Log.e(this.getClass().getSimpleName(), "number messages: " + chat.getMessages().size());
            } catch (NullPointerException e) {
                chat = null;
@@ -115,7 +115,8 @@ public class ChatFragment extends Fragment {
 
     @Override
     public void onStop() {
-        DatabaseManager.INSTANCE.updateChat(chat);
+        // TODO What's going on here?
+        DatabaseManager.INSTANCE.getChatDAO().update(chat);
         super.onStop();
     }
 

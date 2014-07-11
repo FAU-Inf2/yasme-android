@@ -8,29 +8,16 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.CreateSingleChatTask;
-import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.entities.User;
-import net.yasme.android.storage.DatabaseManager;
 
 public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener, SearchContactFragment.OnSearchFragmentInteractionListener, OwnProfileFragment.OnOwnProfileFragmentInteractionListener {
 

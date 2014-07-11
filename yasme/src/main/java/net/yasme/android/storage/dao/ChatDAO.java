@@ -1,13 +1,14 @@
 package net.yasme.android.storage.dao;
 
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.User;
 
 import java.util.List;
 
 /**
  * Created by bene on 11.07.14.
  */
-public interface ChatDAO {
+public interface ChatDAO extends DAO<Chat> {
 
     /**
      * Creates a chat item but only if the ID does not already exist in the table. This
@@ -40,6 +41,8 @@ public interface ChatDAO {
      */
     public List<Chat> getAll();
 
+
+    public List<Chat> getByParticipants(List<User> users);
 
     /**
      * Store the fields from an object to the database row corresponding to the id from the data parameter. If you have

@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.UserRegistrationTask;
+import net.yasme.android.asyncTasks.server.UserRegistrationTask;
 import net.yasme.android.controller.NotifiableFragment;
 
 /**

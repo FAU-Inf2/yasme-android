@@ -1,9 +1,7 @@
 package net.yasme.android.ui;
 
 import android.app.Fragment;
-import android.app.ListFragment;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -16,9 +14,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.CreateChatTask;
-import net.yasme.android.asyncTasks.GetAllUsersTask;
-import net.yasme.android.connection.UserTask;
+import net.yasme.android.asyncTasks.server.CreateChatTask;
+import net.yasme.android.asyncTasks.server.GetAllUsersTask;
 import net.yasme.android.entities.User;
 
 import java.util.ArrayList;

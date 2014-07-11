@@ -18,8 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.UserLoginTask;
-import net.yasme.android.asyncTasks.DeviceRegistrationTask;
+import net.yasme.android.asyncTasks.server.UserLoginTask;
+import net.yasme.android.asyncTasks.server.DeviceRegistrationTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;

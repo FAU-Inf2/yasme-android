@@ -63,201 +63,201 @@ public enum DatabaseManager {
     public ChatDAO getChatDAO() { return chatDAO; }
     /******* CRUD functions ******/
 
-    /**
-     * Chat methods
-     */
-    /**
-     * Adds one chat to database
-     * @param chat     Chat
-     */
-    public void createChat(Chat chat) {
-        try {
-            for(User user : chat.getParticipants()) {
-                getHelper().getUserDao().createIfNotExists(user);
-                getHelper().getChatUserDao().create(new ChatUser(chat, user));
-            }
-            getHelper().getChatDao().create(chat);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * This function will return all chats from database
-     * @return list of chats or an empty list on error
-     */
-    public ArrayList<Chat> getAllChats() {
-        List<Chat> chats = null;
-        try {
-            chats = getHelper().getChatDao().queryForAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        if(chats == null) {
-            return new ArrayList<Chat>();
-        }
-        for(Chat chat : chats) {
-            chat.setParticipants(getParticipantsForChat(chat.getId()));
-        }
-        ArrayList<Chat> chatsArray = new ArrayList(chats);
-        return chatsArray;
-    }
-
-    /**
-     * This function will return one chat from database with chatId
-     *
-     * @param chatId        ID (primary key) of chat
-     * @return chat with chatID or null if chat not exists
-     */
-    public Chat getChat(long chatId) {
-        Chat chat = null;
-        try {
-            chat = getHelper().getChatDao().queryForId(chatId);
-            if(chat == null) {
-                return null;
-            }
-            chat.setParticipants(getParticipantsForChat(chat.getId()));
-            chat.setMessages(new ArrayList<Message>(getMessagesForChat(chat.getId())));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return chat;
-    }
-
-    /**
-     * Retrieves the chat which all given users (and no one else) participate in
-     * @param users list of users who have joined the chat
-     * @return list of chats if existent, null or an empty list otherwise
-     */
-    public List<Chat> getChats(List<User> users) {
-        List<Chat> matchingChats = null;
-        Chat search = new Chat(0, users, null, null, null); //TODO: not working
-        try {
-            matchingChats = getHelper().getChatDao().queryForMatchingArgs(search);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        for(Chat chat : matchingChats) {
-            chat.setParticipants(getParticipantsForChat(chat.getId()));
-        }
-        return matchingChats;
-    }
-
-    /**
-     * This function will update a chat
-     * in table
-     *
-     * @param chat    Chat
-     */
-    public void updateChat(Chat chat) {
-        try {
-            List<User> dbParticipants = getParticipantsForChat(chat.getId());
-            if(dbParticipants == null) {
-                Log.e(this.getClass().getSimpleName(), "Error: Kein Teilnehmer in DB vorhanden");
-                return;
-            }
-            for(User u : dbParticipants) {
-                if(!chat.getParticipants().contains(u)) {
-                    Chat queryChat = new Chat();
-                    queryChat.setId(chat.getId());
-                    ChatUser queryChatUser = new ChatUser(queryChat, u);
-                    deleteChatUser(queryChatUser);
-                }
-            }
-            for(User u: chat.getParticipants()) {
-                if(!dbParticipants.contains(u)) {
-                    Chat queryChat = new Chat();
-                    queryChat.setId(chat.getId());
-                    ChatUser queryChatUser = new ChatUser(queryChat, u);
-                    createChatUser(queryChatUser);
-                }
-            }
-            getHelper().getChatDao().update(chat);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Updates the given chat or creates a new chat, if no such chat exists
-     * @param chat      Chat
-     */
-    public void createOrUpdateChat(Chat chat) {
-        try {
-            if(getHelper().getChatDao().idExists(chat.getId())) {
-            //if(getChat(chat.getId()) != null) {
-                updateChat(chat);
-                Log.d(this.getClass().getSimpleName(), "updated chat");
-            } else {
-                createChat(chat);
-                Log.d(this.getClass().getSimpleName(), "created chat");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * ChatUser methods
-     */
-    /**
-     * creates a new ChatUser object
-     * @param cu
-     */
-    public void createChatUser(ChatUser cu) {
-        try {
-            Chat queryChat = new Chat();
-            queryChat.setId(cu.getChat().getId());
-            ChatUser queryChatUser = new ChatUser(queryChat, cu.getUser());
-            getHelper().getChatUserDao().create(queryChatUser);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Removes a ChatUser object from the Database
-     * @param cu    ChatUser
-     */
-    public void deleteChatUser(ChatUser cu) {
-        List<ChatUser> matching = new ArrayList<ChatUser>();
-        try {
-            Chat queryChat = new Chat();
-            queryChat.setId(cu.getChat().getId());
-            ChatUser queryChatUser = new ChatUser(queryChat, cu.getUser());
-            matching = getHelper().getChatUserDao().queryForMatchingArgs(queryChatUser);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if(matching.isEmpty()) {
-            Log.e(this.getClass().getSimpleName(),
-                    "Error: Kein ChatUser zum Loeschen in DB vorhanden");
-            return;
-        }
-        try {
-            getHelper().getChatUserDao().deleteById(matching.get(0).getId());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * User methods
-     */
-    /**
-     * Adds one user to database (using createIfNotExists)
-     */
-    public void createUserIfNotExists(User u) {
-        try {
-            getHelper().getUserDao().createIfNotExists(u);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+//    /**
+//     * Chat methods
+//     */
+//    /**
+//     * Adds one chat to database
+//     * @param chat     Chat
+//     */
+//    public void createChat(Chat chat) {
+//        try {
+//            for(User user : chat.getParticipants()) {
+//                getHelper().getUserDao().createIfNotExists(user);
+//                getHelper().getChatUserDao().create(new ChatUser(chat, user));
+//            }
+//            getHelper().getChatDao().create(chat);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    /**
+//     * This function will return all chats from database
+//     * @return list of chats or an empty list on error
+//     */
+//    public ArrayList<Chat> getAllChats() {
+//        List<Chat> chats = null;
+//        try {
+//            chats = getHelper().getChatDao().queryForAll();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        if(chats == null) {
+//            return new ArrayList<Chat>();
+//        }
+//        for(Chat chat : chats) {
+//            chat.setParticipants(getParticipantsForChat(chat.getId()));
+//        }
+//        ArrayList<Chat> chatsArray = new ArrayList(chats);
+//        return chatsArray;
+//    }
+//
+//    /**
+//     * This function will return one chat from database with chatId
+//     *
+//     * @param chatId        ID (primary key) of chat
+//     * @return chat with chatID or null if chat not exists
+//     */
+//    public Chat getChat(long chatId) {
+//        Chat chat = null;
+//        try {
+//            chat = getHelper().getChatDao().queryForId(chatId);
+//            if(chat == null) {
+//                return null;
+//            }
+//            chat.setParticipants(getParticipantsForChat(chat.getId()));
+//            chat.setMessages(new ArrayList<Message>(getMessagesForChat(chat.getId())));
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return chat;
+//    }
+//
+//    /**
+//     * Retrieves the chat which all given users (and no one else) participate in
+//     * @param users list of users who have joined the chat
+//     * @return list of chats if existent, null or an empty list otherwise
+//     */
+//    public List<Chat> getChats(List<User> users) {
+//        List<Chat> matchingChats = null;
+//        Chat search = new Chat(0, users, null, null, null); //TODO: not working
+//        try {
+//            matchingChats = getHelper().getChatDao().queryForMatchingArgs(search);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        for(Chat chat : matchingChats) {
+//            chat.setParticipants(getParticipantsForChat(chat.getId()));
+//        }
+//        return matchingChats;
+//    }
+//
+//    /**
+//     * This function will update a chat
+//     * in table
+//     *
+//     * @param chat    Chat
+//     */
+//    public void updateChat(Chat chat) {
+//        try {
+//            List<User> dbParticipants = getParticipantsForChat(chat.getId());
+//            if(dbParticipants == null) {
+//                Log.e(this.getClass().getSimpleName(), "Error: Kein Teilnehmer in DB vorhanden");
+//                return;
+//            }
+//            for(User u : dbParticipants) {
+//                if(!chat.getParticipants().contains(u)) {
+//                    Chat queryChat = new Chat();
+//                    queryChat.setId(chat.getId());
+//                    ChatUser queryChatUser = new ChatUser(queryChat, u);
+//                    deleteChatUser(queryChatUser);
+//                }
+//            }
+//            for(User u: chat.getParticipants()) {
+//                if(!dbParticipants.contains(u)) {
+//                    Chat queryChat = new Chat();
+//                    queryChat.setId(chat.getId());
+//                    ChatUser queryChatUser = new ChatUser(queryChat, u);
+//                    createChatUser(queryChatUser);
+//                }
+//            }
+//            getHelper().getChatDao().update(chat);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    /**
+//     * Updates the given chat or creates a new chat, if no such chat exists
+//     * @param chat      Chat
+//     */
+//    public void createOrUpdateChat(Chat chat) {
+//        try {
+//            if(getHelper().getChatDao().idExists(chat.getId())) {
+//            //if(getChat(chat.getId()) != null) {
+//                updateChat(chat);
+//                Log.d(this.getClass().getSimpleName(), "updated chat");
+//            } else {
+//                createChat(chat);
+//                Log.d(this.getClass().getSimpleName(), "created chat");
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//
+//    /**
+//     * ChatUser methods
+//     */
+//    /**
+//     * creates a new ChatUser object
+//     * @param cu
+//     */
+//    public void createChatUser(ChatUser cu) {
+//        try {
+//            Chat queryChat = new Chat();
+//            queryChat.setId(cu.getChat().getId());
+//            ChatUser queryChatUser = new ChatUser(queryChat, cu.getUser());
+//            getHelper().getChatUserDao().create(queryChatUser);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    /**
+//     * Removes a ChatUser object from the Database
+//     * @param cu    ChatUser
+//     */
+//    public void deleteChatUser(ChatUser cu) {
+//        List<ChatUser> matching = new ArrayList<ChatUser>();
+//        try {
+//            Chat queryChat = new Chat();
+//            queryChat.setId(cu.getChat().getId());
+//            ChatUser queryChatUser = new ChatUser(queryChat, cu.getUser());
+//            matching = getHelper().getChatUserDao().queryForMatchingArgs(queryChatUser);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        if(matching.isEmpty()) {
+//            Log.e(this.getClass().getSimpleName(),
+//                    "Error: Kein ChatUser zum Loeschen in DB vorhanden");
+//            return;
+//        }
+//        try {
+//            getHelper().getChatUserDao().deleteById(matching.get(0).getId());
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//
+//    /**
+//     * User methods
+//     */
+//    /**
+//     * Adds one user to database (using createIfNotExists)
+//     */
+//    public void createUserIfNotExists(User u) {
+//        try {
+//            getHelper().getUserDao().createIfNotExists(u);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 //    /**
 //     * Updates the given user or creates a new user, if no such user exists
@@ -292,43 +292,43 @@ public enum DatabaseManager {
 //        }
 //        return false;
 //    }
-
-    /**
-     * This function returns all participants from the chat with the given chatId
-     * @param chatId    long
-     * @return a list of users
-     */
-    public List<User> getParticipantsForChat(long chatId) {
-        List<User> insert = null;
-        try {
-            Chat c = new Chat();
-            c.setId(chatId);
-            List<ChatUser> temp = null;
-            temp = getHelper().getChatUserDao().queryForMatchingArgs(new ChatUser(c, null));
-
-            insert = new ArrayList<User>();
-            if(temp == null) {
-                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
-            }
-            if(temp.isEmpty()) {
-                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
-            }
-            for(ChatUser cu : temp) {
-                User tmp = getHelper().getUserDao().queryForId(cu.getUser().getId());
-                if(tmp == null) {
-                    continue;
-                }
-                insert.add(getHelper().getUserDao().queryForId(cu.getUser().getId()));
-                Log.d(this.getClass().getSimpleName(), "[Debug] name from DB: " + tmp.getName());
-            }
-            if(insert.isEmpty()) {
-                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return insert;
-    }
+//
+//    /**
+//     * This function returns all participants from the chat with the given chatId
+//     * @param chatId    long
+//     * @return a list of users
+//     */
+//    public List<User> getParticipantsForChat(long chatId) {
+//        List<User> insert = null;
+//        try {
+//            Chat c = new Chat();
+//            c.setId(chatId);
+//            List<ChatUser> temp = null;
+//            temp = getHelper().getChatUserDao().queryForMatchingArgs(new ChatUser(c, null));
+//
+//            insert = new ArrayList<User>();
+//            if(temp == null) {
+//                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
+//            }
+//            if(temp.isEmpty()) {
+//                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
+//            }
+//            for(ChatUser cu : temp) {
+//                User tmp = getHelper().getUserDao().queryForId(cu.getUser().getId());
+//                if(tmp == null) {
+//                    continue;
+//                }
+//                insert.add(getHelper().getUserDao().queryForId(cu.getUser().getId()));
+//                Log.d(this.getClass().getSimpleName(), "[Debug] name from DB: " + tmp.getName());
+//            }
+//            if(insert.isEmpty()) {
+//                Log.d(this.getClass().getSimpleName(), "[Debug] keine participants in DB gefunden");
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return insert;
+//    }
 //
 //    /**
 //     * This function returns the user with userId

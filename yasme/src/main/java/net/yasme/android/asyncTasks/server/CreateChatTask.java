@@ -1,5 +1,6 @@
-package net.yasme.android.asyncTasks;
+package net.yasme.android.asyncTasks.server;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -8,45 +9,40 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.ui.ContactActivity;
-import net.yasme.android.ui.UserDetailsFragment;
+import net.yasme.android.ui.InviteToChatFragment;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Stefan on 29.06.14.
+ * Created by bene on 22.06.14.
  */
-public class CreateSingleChatTask extends AsyncTask<String, Void, Boolean> {
+public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
 
     private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
-    private ContactActivity activity;
-    private User user;
+    protected InviteToChatFragment fragment;
     private User selfUser;
-    private long userId;
-    private String accessToken;
-    private UserDetailsFragment userDetailsFragment;
+    private List<User> selectedUsers;
     private long newChatId = -1;
     private Chat newChat;
 
-
-    public CreateSingleChatTask(ContactActivity activity,UserDetailsFragment userDetailsFragment, User selfUser, User user){
-        this.activity = activity;
+    public CreateChatTask(InviteToChatFragment fragment, User selfUser, List<User> selectedUsers) {
         this.selfUser = selfUser;
-        this.user = user;
+        this.fragment = fragment;
+        this.selectedUsers = selectedUsers;
     }
 
 
-
+    /**
+     * @param params
+     *              0 is userId
+     *              1 is accessToken
+     * @return Returns true if it was successful, otherwise false
+     */
     @Override
     protected Boolean doInBackground(String... params) {
-        userId = Long.parseLong(params[0]);
-        accessToken = params[1];
 
-        List<User> userList = new ArrayList<User>();
-        userList.add(user);
-        List<Chat> matchingChats = databaseManager.getChats(userList);
+        List<Chat> matchingChats = databaseManager.getChatDAO().getByParticipants(selectedUsers);
         if (null != matchingChats && matchingChats.size() > 0) {
             // Take first chat
             newChatId = matchingChats.get(0).getId();
@@ -54,11 +50,16 @@ public class CreateSingleChatTask extends AsyncTask<String, Void, Boolean> {
             // No chat found in database. Create a new one
 
             // Concatenate chat name according to the participant's names
-            String name = user.getName();
-
+            String name = "";
+            for (int i=0; i<selectedUsers.size(); i++) {
+                name += selectedUsers.get(i).getName();
+                if (i != selectedUsers.size() - 1) {
+                    name += ", ";
+                }
+            }
 
             newChat = new Chat(selfUser, "Created: " + new Date().toString(), name);
-            newChat.setParticipants(userList);
+            newChat.setParticipants(selectedUsers);
             try {
                 newChatId = ChatTask.getInstance().createChatWithPar(newChat);
             } catch (RestServiceException e) {
@@ -72,8 +73,11 @@ public class CreateSingleChatTask extends AsyncTask<String, Void, Boolean> {
         return true;
     }
 
-    @Override
-    protected void onPostExecute(Boolean success) {
+
+    /**
+     * Invokes the fragment's method to show the chat activity
+     */
+    protected void onPostExecute(final Boolean success) {
         if (newChatId == -1) {
             // Something went wrong
             Log.e(this.getClass().getSimpleName(), "newChatId is still -1.");
@@ -82,9 +86,9 @@ public class CreateSingleChatTask extends AsyncTask<String, Void, Boolean> {
         if (success) {
             // If a new chat was created, store it in the internal database
             if (null != newChat) {
-                databaseManager.createChat(newChat);
+                databaseManager.getChatDAO().add(newChat);
             }
-            userDetailsFragment.startChat(newChatId);
+            fragment.startChat(newChatId);
         }
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by bene on 10.07.14.
  */
-public interface UserDAO {
+public interface UserDAO extends DAO<User> {
 
     /**
      * Create a new row in the database from an object. The id field will be modified and set with the corresponding id

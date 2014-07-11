@@ -102,6 +102,13 @@ public enum ChatDAOImpl implements ChatDAO {
         }
     }
 
+
+    @Override
+    public List<Chat> getByParticipants(List<User> users) {
+        // TODO
+        return getAll();
+    }
+
     @Override
     public Chat update(Chat chat) {
         try {

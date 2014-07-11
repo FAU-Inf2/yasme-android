@@ -3,7 +3,6 @@ package net.yasme.android.ui;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -14,10 +13,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.j256.ormlite.dao.DaoManager;
-
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.CreateSingleChatTask;
+import net.yasme.android.asyncTasks.server.CreateSingleChatTask;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;

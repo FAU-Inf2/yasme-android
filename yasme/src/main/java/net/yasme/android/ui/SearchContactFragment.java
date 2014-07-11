@@ -15,13 +15,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.SearchUserTask;
+import net.yasme.android.asyncTasks.server.SearchUserTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.entities.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<SearchContactFragment.SearchContactParam> {
 

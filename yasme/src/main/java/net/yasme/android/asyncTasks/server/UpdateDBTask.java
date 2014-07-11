@@ -1,4 +1,4 @@
-package net.yasme.android.asyncTasks;
+package net.yasme.android.asyncTasks.server;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * Created by robert on 26.06.14.
  */
+@Deprecated
 public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
 
     DatabaseManager dbManager;
@@ -93,14 +94,14 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
                 }
                 userDAO.addOrUpdate(user);
                 // TODO Seperate logic from persistence layer
-                dbManager.createChatUser(new ChatUser(chat, user));
+                //dbManager.createChatUser(new ChatUser(chat, user));
                 Log.d(this.getClass().getSimpleName(), "User and ChatUser added to DB");
             }
 
             Log.d(this.getClass().getSimpleName(),
                     "Number of messages from server: " + serverMessages.size());
 
-            dbManager.createOrUpdateChat(chat);
+            dbManager.getChatDAO().addOrUpdate(chat);
         }
         //Nachrichten in passende Chats einfuegen - wird von DB erledigt
         dbManager.storeMessages(serverMessages);

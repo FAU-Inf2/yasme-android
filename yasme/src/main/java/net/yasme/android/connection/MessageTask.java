@@ -1,10 +1,7 @@
 package net.yasme.android.connection;
 
-import android.content.Context;
 import android.util.Log;
 
-import net.yasme.android.asyncTasks.DeleteMessageKeyTask;
-import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.Error;

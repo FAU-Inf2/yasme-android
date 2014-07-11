@@ -8,11 +8,10 @@ import android.view.View;
 import android.widget.ListView;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.GetChatListTask;
-import net.yasme.android.asyncTasks.GetChatTask;
-import net.yasme.android.asyncTasks.GetMessageTask;
-import net.yasme.android.asyncTasks.GetProfileDataTask;
-import net.yasme.android.asyncTasks.UpdateDBTask;
+import net.yasme.android.asyncTasks.server.GetChatListTask;
+import net.yasme.android.asyncTasks.server.GetChatTask;
+import net.yasme.android.asyncTasks.server.GetMessageTask;
+import net.yasme.android.asyncTasks.server.GetProfileDataTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;

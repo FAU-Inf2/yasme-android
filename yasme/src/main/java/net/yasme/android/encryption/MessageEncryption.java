@@ -4,7 +4,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import net.yasme.android.asyncTasks.SendMessageKeyTask;
+import net.yasme.android.asyncTasks.server.SendMessageKeyTask;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;

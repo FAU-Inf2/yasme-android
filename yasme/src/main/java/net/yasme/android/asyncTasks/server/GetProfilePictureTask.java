@@ -1,4 +1,4 @@
-package net.yasme.android.asyncTasks;
+package net.yasme.android.asyncTasks.server;
 
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
