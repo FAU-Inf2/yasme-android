@@ -227,11 +227,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         }
     }
 
-    public void onPostLoginExecute(Boolean success, long userId, String accessToken) {
+    public void onPostLoginExecute(Boolean success, long userId) {
         activity.getSelfUser().setId(userId);
         SharedPreferences.Editor editor = activity.getStorage().edit();
-        editor.putString(AbstractYasmeActivity.ACCESSTOKEN, accessToken);
-
 
         showProgress(false);
         activity.mSignedIn = success;
@@ -254,7 +252,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device at yasme server");
                 //DeviceRegistrationTask yasmeDevRegTask =
                         new DeviceRegistrationTask(activity.getStorage())
-                        .execute(this.accessToken, Long.toString(userId),
+                        .execute(Long.toString(userId),
                         this.deviceProduct, this.googleRegId);
 
             }
@@ -325,8 +323,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     public void notifyFragment(LoginProcessParam loginParam) {
         Log.d(super.getClass().getSimpleName(), "I have been notified with loginParam");
 
-            onPostLoginExecute(loginParam.getSuccess(), loginParam.getUserId(),
-                    loginParam.getAccessToken());
+            onPostLoginExecute(loginParam.getSuccess(), loginParam.getUserId());
             Log.d(super.getClass().getSimpleName(), "Login-Status: " + loginParam.getSuccess());
     }
 
@@ -352,20 +349,14 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
     public static class LoginProcessParam extends LoginParam {
         private Long userId;
-        private String accessToken;
 
-        public LoginProcessParam(Boolean success, Long userId, String accessToken) {
+        public LoginProcessParam(Boolean success, Long userId) {
             this.success = success;
             this.userId = userId;
-            this.accessToken = accessToken;
         }
 
         public Long getUserId() {
             return userId;
-        }
-
-        public String getAccessToken() {
-            return accessToken;
         }
     }
 

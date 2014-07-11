@@ -28,7 +28,6 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
         this.context = context;
     }
 
-    long lastMessageId;
     String accessToken;
     long userId;
 
@@ -61,9 +60,6 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             editor.putLong(AbstractYasmeActivity.USER_ID, userId);
             editor.putString(AbstractYasmeActivity.ACCESSTOKEN, accessToken);
             editor.putString(AbstractYasmeActivity.USER_MAIL, email);
-
-            lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
-
             editor.commit();
 
         } catch (RestServiceException e) {
@@ -75,6 +71,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
-        ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(new LoginFragment.LoginProcessParam(success, userId, accessToken));
+        ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(
+                new LoginFragment.LoginProcessParam(success, userId));
     }
 }
