@@ -50,7 +50,9 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
-        DatabaseManager.INSTANCE.storeMessages(messages);
+        for(Message msg : messages) {
+            DatabaseManager.INSTANCE.getMessageDAO().add(msg);//storeMessages(messages);
+        }
         return true;
     }
 

@@ -104,7 +104,9 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
             dbManager.getChatDAO().addOrUpdate(chat);
         }
         //Nachrichten in passende Chats einfuegen - wird von DB erledigt
-        dbManager.storeMessages(serverMessages);
+        for(Message msg : serverMessages) {
+            dbManager.getMessageDAO().add(msg);//storeMessages(serverMessages);
+        }
 
         return 0;
     }

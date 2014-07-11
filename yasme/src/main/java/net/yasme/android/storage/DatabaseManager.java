@@ -9,6 +9,8 @@ import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.ChatDAOImpl;
+import net.yasme.android.storage.dao.MessageDAO;
+import net.yasme.android.storage.dao.MessageDAOImpl;
 import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.storage.dao.UserDAOImpl;
 
@@ -29,6 +31,7 @@ public enum DatabaseManager {
 
     private UserDAO userDAO;
     private ChatDAO chatDAO;
+    private MessageDAO messageDAO;
 
     public void init(Context context, long userId) {
         mContext = context;
@@ -54,6 +57,9 @@ public enum DatabaseManager {
 
         ChatDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
         chatDAO = ChatDAOImpl.INSTANCE;
+
+        MessageDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
+        messageDAO = MessageDAOImpl.INSTANCE;
     }
 
     public UserDAO getUserDAO() {
@@ -61,6 +67,10 @@ public enum DatabaseManager {
     }
 
     public ChatDAO getChatDAO() { return chatDAO; }
+
+    public MessageDAO getMessageDAO() {
+        return messageDAO;
+    }
     /******* CRUD functions ******/
 
 //    /**
@@ -387,21 +397,21 @@ public enum DatabaseManager {
 //        }
 //    }
 //
-    public List<Message> getMessagesForChat(long chatId) {
-        Chat chat = new Chat();
-        chat.setId(chatId);
-        Message matchingObj = new Message(null, null, null, chat, 0);
-        List<Message> matching = null;
-        try {
-            matching = getHelper().getMessageDao().queryForEq(DatabaseConstants.CHAT, chat);
-            //matching = getHelper().getMessageDao().queryForMatchingArgs(matchingObj);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return matching;
-    }
-
-
+//    public List<Message> getMessagesForChat(long chatId) {
+//        Chat chat = new Chat();
+//        chat.setId(chatId);
+//        Message matchingObj = new Message(null, null, null, chat, 0);
+//        List<Message> matching = null;
+//        try {
+//            matching = getHelper().getMessageDao().queryForEq(DatabaseConstants.CHAT, chat);
+//            //matching = getHelper().getMessageDao().queryForMatchingArgs(matchingObj);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return matching;
+//    }
+//
+//
     /**
      * MessageKey and CurrentKey methods
      */
