@@ -7,10 +7,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.yasme.android.connection.MessageTask;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Message;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.ChatFragment;
 
 import java.util.ArrayList;
 
@@ -28,8 +30,6 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
 
     ArrayList<Message> messages;
     long lastMessageId;
-    long userId;
-    String accessToken;
 
     /**
      * @return Returns true if it was successful, otherwise false
@@ -49,6 +49,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         if (messages.isEmpty()) {
             return false;
         }
+        ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
         DatabaseManager.INSTANCE.storeMessages(messages);
         return true;
     }
@@ -75,7 +76,6 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
         editor.commit();
 
-        //TODO: abrufen der neuen nachrichten durch den Chat triggern
-        //Observer benachrichtigen
+        // Fragment wird schon weiter oben benachrichtigt
     }
 }
