@@ -44,7 +44,7 @@ public class MessageTask extends ConnectionTask {
 
 	public void sendMessage(Message message) throws RestServiceException {
 		executeRequest(Request.POST, "", message);
-		Log.d(this.getClass().getSimpleName(), "[DEBUG] Message stored!");
+		Log.d(this.getClass().getSimpleName(), "Message stored!");
 	}
 
 	public List<Message> getMessage(long lastMessageId) throws RestServiceException {
@@ -58,7 +58,7 @@ public class MessageTask extends ConnectionTask {
 
 			JSONArray jsonArray = new JSONArray(json);
 
-			Log.d(this.getClass().getSimpleName(),"[DEBUG] getMessageRequest successful: " + jsonArray.length() + " new messages");// + json);
+			Log.d(this.getClass().getSimpleName(),"getMessageRequest successful: " + jsonArray.length() + " new messages");// + json);
 
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject messageObj = jsonArray.getJSONObject(i);

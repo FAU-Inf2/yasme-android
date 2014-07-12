@@ -271,14 +271,14 @@ public class ConnectionTask {
             }
         }
 
-        Log.d(this.getClass().getSimpleName(),"[DEBUG] Session initialized? " + initializedSession);
+        Log.d(this.getClass().getSimpleName(),"Session initialized? " + initializedSession);
 
         if (initializedSession) {
             requestBase.setHeader("userId", userId);
             requestBase.setHeader("Authorization", accessToken);
             requestBase.setHeader("deviceId", deviceId);
 
-            Log.d(this.getClass().getSimpleName(),"[DEBUG] userId:  " + userId + " accessToken: " + accessToken);
+            Log.d(this.getClass().getSimpleName(),"userId:  " + userId + " accessToken: " + accessToken);
         }
     }
 
@@ -287,7 +287,7 @@ public class ConnectionTask {
         try {
             HttpResponse httpResponse = HttpClient.createSSLClient().execute(requestBase);
             int statusCode = httpResponse.getStatusLine().getStatusCode();
-            Log.d(this.getClass().getSimpleName(),"[DEBUG] StatusCode: " + statusCode);
+            Log.d(this.getClass().getSimpleName(),"StatusCode: " + statusCode);
             if (statusCode == 200 || statusCode == 201 || statusCode == 204)
                 return httpResponse;
             else

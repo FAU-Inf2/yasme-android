@@ -41,13 +41,13 @@ public class AuthorizationTask extends ConnectionTask {
         Header userID = httpResponse.getFirstHeader("userId");
         Header token = httpResponse.getFirstHeader("Authorization");
 
-        Log.d(this.getClass().getSimpleName(),"[DEBUG] Login successful!");
+        Log.d(this.getClass().getSimpleName(),"Login successful!");
         return new String[]{userID.getValue(), token.getValue()};
     }
 
     public void logoutUser()
             throws RestServiceException {
         executeRequest(Request.POST, "out");
-        Log.d(this.getClass().getSimpleName(),"[DEBUG] Signed out successful");
+        Log.d(this.getClass().getSimpleName(),"Signed out successful");
     }
 }
