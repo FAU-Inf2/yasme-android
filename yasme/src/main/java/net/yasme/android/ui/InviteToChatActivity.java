@@ -56,7 +56,7 @@ public class InviteToChatActivity extends AbstractYasmeActivity { // implements 
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment()).commit();
+                    .addIfNotExists(R.id.container, new PlaceholderFragment()).commit();
         }
 
         findViewsById();
@@ -106,8 +106,8 @@ public class InviteToChatActivity extends AbstractYasmeActivity { // implements 
             int position = checked.keyAt(i);
             // Add sport if it is checked i.e.) == TRUE!
             if (checked.valueAt(i)) {
-                selectedItems.add(users.get(position).getId());
-                selectedUsers.add(users.get(position).getName());
+                selectedItems.addIfNotExists(users.get(position).getId());
+                selectedUsers.addIfNotExists(users.get(position).getName());
             }
         }
 

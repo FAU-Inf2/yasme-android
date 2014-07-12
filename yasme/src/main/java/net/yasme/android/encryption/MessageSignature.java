@@ -39,7 +39,7 @@ public class MessageSignature {
         //this.context = context;
         this.selfDeviceId = selfDeviceId;
         this.rsa = new RSAEncryption(privKey,pubKey);
-        //add UserId to the storagename, because there are more than one user on device who need a private key
+        //addIfNotExists UserId to the storagename, because there are more than one user on device who need a private key
         //RSAKEYSTORAGE += "_" + Long.toString(creatorDevice);
     }
 

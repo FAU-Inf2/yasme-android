@@ -24,7 +24,9 @@ public enum UserDAOImpl implements UserDAO {
     @Override
     public User add(User user) {
         try {
-            user = databaseHelper.getUserDao().createIfNotExists(user);
+            if (1 != databaseHelper.getUserDao().create(user)) {
+                return null;
+            }
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;

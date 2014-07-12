@@ -17,11 +17,11 @@ public interface CurrentKeyDAO extends DAO<CurrentKey> {
      * @param currentKey to be added
      * @return given currentKey or null if an error occurs
      */
-    public CurrentKey add(CurrentKey currentKey);
+    public CurrentKey addIfNotExists(CurrentKey currentKey);
 
     /**
-     * This method is a combination of add and update for the sake of convenience.
-     * Queries for a currentKey item with the specified id. If there is none, add is called,
+     * This method is a combination of addIfNotExists and update for the sake of convenience.
+     * Queries for a currentKey item with the specified id. If there is none, addIfNotExists is called,
      * otherwise update.
      * @param currentKey to be added or updated
      * @return given chat after insertion / update

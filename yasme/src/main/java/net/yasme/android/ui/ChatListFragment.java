@@ -162,7 +162,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
             Chat chat = new Chat();
             chat.setId(i);
             chat.setName("Chat " + i);
-            chatRooms.add(chat);
+            chatRooms.addIfNotExists(chat);
         }
     }
     */

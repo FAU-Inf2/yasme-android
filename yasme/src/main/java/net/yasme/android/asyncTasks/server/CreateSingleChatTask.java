@@ -83,7 +83,7 @@ public class CreateSingleChatTask extends AsyncTask<String, Void, Boolean> {
         if (success) {
             // If a new chat was created, store it in the internal database
             if (null != newChat) {
-                databaseManager.getChatDAO().add(newChat);
+                databaseManager.getChatDAO().addIfNotExists(newChat);
             }
             userDetailsFragment.startChat(newChatId);
         }

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.yasme.android.asyncTasks.database.AddIfNotExistsTask;
 import net.yasme.android.asyncTasks.database.AddOrUpdateTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.ObservableRegistry;
@@ -55,10 +56,14 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
         Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
         for(Message msg : messages) {
-            new AddOrUpdateTask(DatabaseManager.INSTANCE.getMessageDAO(),
-                    msg, ChatActivity.class).execute();
-            //DatabaseManager.INSTANCE.getMessageDAO().add(msg);//storeMessages(messages);
-            //DatabaseManager.INSTANCE.getMessageKeyDAO().add(msg.getMessageKey());
+            new AddOrUpdateTask(DatabaseManager.INSTANCE.getMessageDAO(), msg, ChatActivity.class)
+                    .execute();
+            if (null != msg.getMessageKey()) {
+                new AddIfNotExistsTask(DatabaseManager.INSTANCE.getMessageKeyDAO(), msg.getMessageKey(), ChatActivity.class)
+                    .execute();
+            }
+            //DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(msg);//storeMessages(messages);
+            //DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(msg.getMessageKey());
         }
         return true;
     }

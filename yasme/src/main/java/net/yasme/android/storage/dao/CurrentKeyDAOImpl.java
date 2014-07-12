@@ -24,7 +24,7 @@ public enum CurrentKeyDAOImpl implements CurrentKeyDAO{
     }
 
     @Override
-    public CurrentKey add(CurrentKey currentKey) {
+    public CurrentKey addIfNotExists(CurrentKey currentKey) {
         CurrentKey returnCurrentKey;
         try {
             returnCurrentKey = databaseHelper.getCurrentKeyDao().createIfNotExists(currentKey);
@@ -40,7 +40,7 @@ public enum CurrentKeyDAOImpl implements CurrentKeyDAO{
         try {
             CurrentKey fromDb = databaseHelper.getCurrentKeyDao().queryForId(currentKey.getId());
             if (null == fromDb) {
-                return add(currentKey);
+                return addIfNotExists(currentKey);
             } else {
                 return update(currentKey);
             }
