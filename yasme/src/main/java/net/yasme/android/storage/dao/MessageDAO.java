@@ -17,7 +17,7 @@ public interface MessageDAO extends DAO<Message> {
      * @param message to be added
      * @return given chat or null if an error occurs
      */
-    public Message add(Message message);
+    public Message addIfNotExists(Message message);
 
     /**
      * Retrieves an object associated with a specific ID.

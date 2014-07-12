@@ -121,12 +121,12 @@ public class User implements Serializable {
      */
     //@JsonIgnore
     //public void addChat(Chat chat) {
-    //    this.chats.add(chat);
+    //    this.chats.addIfNotExists(chat);
     //}
 
     //TODO: Aufruf von setChat in addChat umwandeln
     //public void setChat(Chat chat) {
-    //    this.chats.add(chat);
+    //    this.chats.addIfNotExists(chat);
     //}
 
     //@JsonIgnore

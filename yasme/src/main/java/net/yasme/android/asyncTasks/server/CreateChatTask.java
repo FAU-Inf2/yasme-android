@@ -1,6 +1,5 @@
 package net.yasme.android.asyncTasks.server;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -86,7 +85,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
         if (success) {
             // If a new chat was created, store it in the internal database
             if (null != newChat) {
-                databaseManager.getChatDAO().add(newChat);
+                databaseManager.getChatDAO().addIfNotExists(newChat);
             }
             fragment.startChat(newChatId);
         }

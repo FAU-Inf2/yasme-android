@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.yasme.android.asyncTasks.database.AddIfNotExistsTask;
 import net.yasme.android.asyncTasks.database.AddOrUpdateTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.ObservableRegistry;
@@ -57,12 +58,16 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         //add new messages to DB
         for(Message msg : messages) {
             Log.d(this.getClass().getSimpleName(), msg.getMessage() + " " + msg.getId());
-            DatabaseManager.INSTANCE.getMessageDAO().add(msg);//storeMessages(messages);
-            DatabaseManager.INSTANCE.getMessageKeyDAO().add(msg.getMessageKey());
+            //DatabaseManager.INSTANCE.getMessageDAO().add(msg);//storeMessages(messages);
+            //DatabaseManager.INSTANCE.getMessageKeyDAO().add(msg.getMessageKey());
 
             //TODO: ein AsyncTask in einem AsyncTask? Wuerde ich wieder durch das normale ersetzen
-            //new AddOrUpdateTask(DatabaseManager.INSTANCE.getMessageDAO(),
-            //        msg, ChatActivity.class).execute();
+            new AddOrUpdateTask(DatabaseManager.INSTANCE.getMessageDAO(), msg, ChatActivity.class)
+                    .execute();
+            if (null != msg.getMessageKey()) {
+                new AddIfNotExistsTask(DatabaseManager.INSTANCE.getMessageKeyDAO(), msg.getMessageKey(), ChatActivity.class)
+                    .execute();
+            }
         }
 
         //increase and store lastMessageId

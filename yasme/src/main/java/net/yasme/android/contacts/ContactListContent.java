@@ -25,13 +25,13 @@ public class ContactListContent {
     }
 
    /* private static void addItem(ContactListItem item) {
-        ITEMS.add(item);
+        ITEMS.addIfNotExists(item);
         ITEM_MAP.put(item.id, item);
 
         Map<String,String> map = new HashMap<String,String>(2);
         map.put("name", item.content);
         map.put("mail", item.subContent);
-        LISTMAP.add(map);
+        LISTMAP.addIfNotExists(map);
     } */
 
     public void addItem(ContactListItem item){

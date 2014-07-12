@@ -17,12 +17,12 @@ public interface ChatDAO extends DAO<Chat> {
      * @param chat to be added
      * @return given chat or null if an error occurs
      */
-    public Chat add(Chat chat);
+    public Chat addIfNotExists(Chat chat);
 
 
     /**
-     * This method is a combination of add and update for the sake of convenience.
-     * Queries for a chat item with the specified id. If there is none, add is called, otherwise update.
+     * This method is a combination of addIfNotExists and update for the sake of convenience.
+     * Queries for a chat item with the specified id. If there is none, addIfNotExists is called, otherwise update.
      * @param chat to be added or updated
      * @return given chat after insertion / update
      */

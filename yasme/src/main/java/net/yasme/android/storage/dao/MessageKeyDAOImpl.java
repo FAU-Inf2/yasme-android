@@ -3,9 +3,7 @@ package net.yasme.android.storage.dao;
 import android.util.Log;
 
 import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
-import net.yasme.android.storage.CurrentKey;
 import net.yasme.android.storage.DatabaseConstants;
 import net.yasme.android.storage.DatabaseHelper;
 
@@ -24,8 +22,9 @@ public enum MessageKeyDAOImpl implements MessageKeyDAO {
         this.databaseHelper = databaseHelper;
     }
 
+
     @Override
-    public MessageKey add(MessageKey messageKey) {
+    public MessageKey addIfNotExists(MessageKey messageKey) {
         MessageKey returnMessageKey;
         try {
             returnMessageKey = databaseHelper.getMessageKeyDao().createIfNotExists(messageKey);
@@ -41,7 +40,7 @@ public enum MessageKeyDAOImpl implements MessageKeyDAO {
         try {
             MessageKey fromDb = databaseHelper.getMessageKeyDao().queryForId(messageKey.getId());
             if (null == fromDb) {
-                return add(messageKey);
+                return addIfNotExists(messageKey);
             } else {
                 return update(messageKey);
             }

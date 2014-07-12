@@ -18,11 +18,12 @@ public interface MessageKeyDAO extends DAO<MessageKey> {
      * @param messageKey to be added
      * @return given messageKey or null if an error occurs
      */
-    public MessageKey add(MessageKey messageKey);
+    public MessageKey addIfNotExists(MessageKey messageKey);
+
 
     /**
-     * This method is a combination of add and update for the sake of convenience.
-     * Queries for a messageKey item with the specified id. If there is none, add is called,
+     * This method is a combination of addIfNotExists and update for the sake of convenience.
+     * Queries for a messageKey item with the specified id. If there is none, addIfNotExists is called,
      * otherwise update.
      * @param messageKey to be added or updated
      * @return given chat after insertion / update

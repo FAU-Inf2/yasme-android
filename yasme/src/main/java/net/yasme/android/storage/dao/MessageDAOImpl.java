@@ -23,7 +23,7 @@ public enum MessageDAOImpl implements MessageDAO{
     }
 
     @Override
-    public Message add(Message message) {
+    public Message addIfNotExists(Message message) {
         try {
             databaseHelper.getMessageDao().createIfNotExists(message);
         } catch (SQLException e) {
@@ -38,7 +38,7 @@ public enum MessageDAOImpl implements MessageDAO{
         try {
             Message fromDb = databaseHelper.getMessageDao().queryForId(message.getId());
             if (null == fromDb) {
-                return add(message);
+                return addIfNotExists(message);
             } else {
                 return update(message);
             }

@@ -8,7 +8,7 @@ import java.util.List;
 public interface DAO<T> {
 
 
-    public T add(T data);
+    public T addIfNotExists(T data);
 
 
     public T addOrUpdate(T data);

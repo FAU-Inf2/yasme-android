@@ -21,7 +21,7 @@ public interface UserDAO extends DAO<User> {
     /**
      * This is a convenience method to creating a data item but only if the ID does not already exist in the table. This
      * extracts the id from the data parameter, queries for the id, returning the data if it
-     * exists. If it does not exist add will be called with the parameter.
+     * exists. If it does not exist addIfNotExists will be called with the parameter.
      *
      * @param user to be added
      * @return Either the data parameter if it was inserted (now with the ID field set via the create method) or the

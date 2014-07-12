@@ -2,15 +2,12 @@ package net.yasme.android.storage.dao;
 
 import android.util.Log;
 
-import com.j256.ormlite.dao.Dao;
-
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.ChatUser;
 import net.yasme.android.storage.DatabaseConstants;
 import net.yasme.android.storage.DatabaseHelper;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.storage.dao.ChatDAO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,7 +28,7 @@ public enum ChatDAOImpl implements ChatDAO {
     }
 
     @Override
-    public Chat add(Chat chat) {
+    public Chat addIfNotExists(Chat chat) {
         try {
             Chat ret = databaseHelper.getChatDao().createIfNotExists(chat);
             // Add participants
@@ -51,7 +48,7 @@ public enum ChatDAOImpl implements ChatDAO {
         try {
             Chat fromDb = databaseHelper.getChatDao().queryForId(chat.getId());
             if (null == fromDb) {
-                return add(chat);
+                return addIfNotExists(chat);
             } else {
                 return update(chat);
             }
@@ -207,7 +204,7 @@ public enum ChatDAOImpl implements ChatDAO {
         if (null == oldChats || oldChats.isEmpty()) {
             // Add all
             for (Chat chat : newChats) {
-                add(chat);
+                addIfNotExists(chat);
             }
             return true;
         }
@@ -226,7 +223,7 @@ public enum ChatDAOImpl implements ChatDAO {
                 update(newChat);
             }
             else {
-                add(newChat);
+                addIfNotExists(newChat);
             }
         }
 

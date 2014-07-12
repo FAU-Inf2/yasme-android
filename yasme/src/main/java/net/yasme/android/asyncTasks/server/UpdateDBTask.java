@@ -10,7 +10,6 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.storage.ChatUser;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.ui.AbstractYasmeActivity;
@@ -105,7 +104,7 @@ public class UpdateDBTask extends AsyncTask<String, Void, Integer>{
         }
         //Nachrichten in passende Chats einfuegen - wird von DB erledigt
         for(Message msg : serverMessages) {
-            dbManager.getMessageDAO().add(msg);//storeMessages(serverMessages);
+            dbManager.getMessageDAO().addIfNotExists(msg);//storeMessages(serverMessages);
         }
 
         return 0;

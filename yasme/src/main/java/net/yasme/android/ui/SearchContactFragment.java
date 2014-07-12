@@ -142,10 +142,10 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
                         uList = searchTask.userByLike(String.valueOf(searchText.getText()));
                         return uList;
                     case 1:
-                        uList.add(searchTask.userByMail(String.valueOf(searchText.getText())));
+                        uList.addIfNotExists(searchTask.userByMail(String.valueOf(searchText.getText())));
                         return uList;
                     case 2:
-                        uList.add(searchTask.userByNumber(String.valueOf(searchText.getText())));
+                        uList.addIfNotExists(searchTask.userByNumber(String.valueOf(searchText.getText())));
                         return uList;
                 }
             }catch(RestServiceException rse){

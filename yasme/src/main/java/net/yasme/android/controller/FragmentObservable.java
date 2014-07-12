@@ -28,7 +28,7 @@ public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
         fragments.remove(fragment);
     }
 
-    //add
+    //addIfNotExists
     public void notifyFragments(P parameter) {
         for (T fragment : fragments) {
             try {
