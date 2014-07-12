@@ -171,7 +171,7 @@ public enum ChatDAOImpl implements ChatDAO {
             for (int i=0; i<size - cardinality; i++) {
                 int indexToBeRemoved = formerParticipantsStillThere.nextClearBit(next);
                 databaseHelper.getChatUserDao().delete(dbParticipants.get(indexToBeRemoved));
-                next = indexToBeRemoved;
+                next = indexToBeRemoved + 1;
             }
 
             databaseHelper.getChatDao().update(chat);
@@ -209,6 +209,7 @@ public enum ChatDAOImpl implements ChatDAO {
             for (Chat chat : newChats) {
                 add(chat);
             }
+            return true;
         }
 
         // Determine difference of new chats and old chats
@@ -236,7 +237,7 @@ public enum ChatDAOImpl implements ChatDAO {
         for (int i=0; i<size - cardinality; i++) {
             int indexToBeRemoved = oldChatsUsed.nextClearBit(next);
             delete(oldChats.get(indexToBeRemoved));
-            next = indexToBeRemoved;
+            next = indexToBeRemoved + 1;
         }
 
         return true;
