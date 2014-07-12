@@ -15,6 +15,11 @@ public class AddIfNotExistsTask<D extends Object, T extends DAO<D>> extends Asyn
     private D data;
     private Class classToNotify;
 
+    public AddIfNotExistsTask(T specificDAO, D data) {
+        this.specificDAO = specificDAO;
+        this.data = data;
+    }
+
     public AddIfNotExistsTask(T specificDAO, D data, Class classToNotify) {
         this.specificDAO = specificDAO;
         this.data = data;
@@ -30,7 +35,9 @@ public class AddIfNotExistsTask<D extends Object, T extends DAO<D>> extends Asyn
     protected void onPostExecute(Boolean success) {
         if (success) {
             // Notify
-            ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
+            if (null != classToNotify) {
+                ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
+            }
         }
         else {
             Log.w(this.getClass().getSimpleName(), "Did not invoke notification as task did not finish successfully.");
