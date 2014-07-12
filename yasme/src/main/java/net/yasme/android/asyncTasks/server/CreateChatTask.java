@@ -3,12 +3,14 @@ package net.yasme.android.asyncTasks.server;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.yasme.android.asyncTasks.database.AddIfNotExistsTask;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.InviteToChatFragment;
 import net.yasme.android.ui.UserDetailsFragment;
 
@@ -80,8 +82,10 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
 
         if (success) {
             // If a new chat was created, store it in the internal database
-            if (null != newChat) {
-                databaseManager.getChatDAO().addIfNotExists(newChat);
+            if (null != newChat) { //TODO: Abfrage eigentlich ueberfluessig
+                new AddIfNotExistsTask(databaseManager.getChatDAO(), newChat,
+                        AbstractYasmeActivity.class).execute();
+                //databaseManager.getChatDAO().addIfNotExists(newChat);
             }
 
             //Observer mit zwei Fragments UserDetailFragment und Invite to Chat benachrichtigen
