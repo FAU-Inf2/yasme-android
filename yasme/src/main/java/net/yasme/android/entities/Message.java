@@ -17,7 +17,7 @@ import java.util.Date;
 @DatabaseTable(tableName = DatabaseConstants.MESSAGE_TABLE)
 public class Message implements Serializable {
 
-    @DatabaseField(columnName = DatabaseConstants.MESSAGE_ID, generatedId = true, allowGeneratedIdInsert = true)
+    @DatabaseField(columnName = DatabaseConstants.MESSAGE_ID, id = true)// generatedId = true, allowGeneratedIdInsert = true)
     private long id;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT, canBeNull = false, foreign = true,

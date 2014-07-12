@@ -4,15 +4,12 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.yasme.android.asyncTasks.database.AddTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Message;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.storage.dao.MessageDAO;
 import net.yasme.android.ui.AbstractYasmeActivity;
-import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.ui.ChatFragment;
 
 import java.util.ArrayList;
@@ -55,10 +52,8 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
         Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
         for(Message msg : messages) {
-            new AddTask<Message, MessageDAO>(DatabaseManager.INSTANCE.getMessageDAO(),
-                    msg, ChatActivity.class);
-            //DatabaseManager.INSTANCE.getMessageDAO().add(msg);//storeMessages(messages);
-            //DatabaseManager.INSTANCE.getMessageKeyDAO().add(msg.getMessageKey());
+            DatabaseManager.INSTANCE.getMessageDAO().add(msg);//storeMessages(messages);
+            DatabaseManager.INSTANCE.getMessageKeyDAO().add(msg.getMessageKey());
         }
         return true;
     }
