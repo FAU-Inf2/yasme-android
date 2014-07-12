@@ -42,9 +42,10 @@ public class MessageTask extends ConnectionTask {
 		} catch (URISyntaxException e) { e.printStackTrace(); }
 	}
 
-	public void sendMessage(Message message) throws RestServiceException {
+	public Message sendMessage(Message message) throws RestServiceException {
 		executeRequest(Request.POST, "", message);
 		Log.d(this.getClass().getSimpleName(), "Message stored!");
+		return null;
 	}
 
 	public List<Message> getMessage(long lastMessageId) throws RestServiceException {

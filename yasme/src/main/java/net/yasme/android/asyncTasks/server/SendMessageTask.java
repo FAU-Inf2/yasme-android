@@ -16,17 +16,12 @@ import net.yasme.android.ui.ChatFragment;
 /**
  * Created by robert on 19.06.14.
  */
-public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
+public class SendMessageTask extends AsyncTask<Message, Void, Boolean> {
 
-    ChatActivity activity;
     MessageEncryption aes;
-    ChatFragment fragment;
 
-    public SendMessageTask(ChatActivity activity, ChatFragment fragment, MessageEncryption aes) {
-
-        this.activity = activity;
+    public SendMessageTask(MessageEncryption aes) {
         this.aes = aes;
-        this.fragment = fragment;
     }
 
     MessageTask messageTask = MessageTask.getInstance();
@@ -44,8 +39,8 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
      *              5 is accessToken
      * @return true on success and false on error
      */
-    protected Boolean doInBackground(String... params) {
-
+    protected Boolean doInBackground(Message... msgs) {
+/*
         msg = params[0];
 
         String uName = params[1];
@@ -67,10 +62,11 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
         Message createdMessage = new Message(user, msgEncrypted, chat, aesId);
         Log.d(this.getClass().getSimpleName(), "AES getKeyID: " + aes.getKeyId());
+*/
         /*Log.d(this.getClass().getSimpleName(), "[Debug] " + createdMessage.getMessage() +
                 ", " + createdMessage.getId() + ", " + createdMessage.getChatId());
-        */
         /*DEBUG*/
+/*
         if(createdMessage == null) {
             Log.d(this.getClass().getSimpleName(), "1 createdMessage is null!");
         }
@@ -88,7 +84,9 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         }
         Log.e(this.getClass().getSimpleName(), msgEncrypted + " " + user.getId() + " " +
                 chatId + " " + aesId);
+*/
         /*DEBUG END*/
+/*
         try {
             if(createdMessage == null) {
                 Log.e(this.getClass().getSimpleName(), "createdMessage is null!");
@@ -100,15 +98,24 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
             Log.w(this.getClass().getSimpleName(), e.getMessage());
         }
         return false;
+*/
+			Message msg = msgs[0];
+			try {
+				if(null!=msg) Log.e(this.getClass().getSimpleName(),"Received message is null!");
+				Message ret = messageTask.sendMessage(msg);
+				if(null!=DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(ret)) return false;
+				return true;
+			} catch (RestServiceException rse) {
+				rse.printStackTrace();
+				Log.w(this.getClass().getSimpleName(),rse.getMessage());
+			}
+			return false;
     }
 
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            //activity.asyncUpdate();
-            fragment.getStatus().setText("Gesendet: " + msg);
             Log.i(this.getClass().getSimpleName(), "Gesendet: " + msg);
         } else {
-            fragment.getStatus().setText("Senden fehlgeschlagen");
             Log.w(this.getClass().getSimpleName(), "Senden fehlgeschlagen");
         }
     }

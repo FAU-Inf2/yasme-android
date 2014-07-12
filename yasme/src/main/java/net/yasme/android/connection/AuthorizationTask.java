@@ -35,7 +35,7 @@ public class AuthorizationTask extends ConnectionTask {
     }
 
     public String[] loginUser(User user) throws RestServiceException {
-
+				Log.d(this.getClass().getSimpleName(),"Logging in..."); //TODO RM
         HttpResponse httpResponse = executeRequest(Request.POST, "in", user);
 
         Header userID = httpResponse.getFirstHeader("userId");

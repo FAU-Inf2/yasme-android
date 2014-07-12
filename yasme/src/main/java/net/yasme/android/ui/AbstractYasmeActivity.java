@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.MenuItem;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
+
 
 /**
  * Created by robert on 15.06.14.

@@ -24,6 +24,7 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 
 import java.util.List;
@@ -139,10 +140,22 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             return;
         }
         //String msgEncrypted = aes.encrypt(editMessage.getText().toString());
-
-        new SendMessageTask((ChatActivity) activity, this, chat.getEncryption())
-                .execute(msg, activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), Long.toString(activity.getSelfUser().getId()),
-                        Long.toString(chat.getId()), activity.getAccessToken());
+				String msgEncrypted = msg;
+				User user = new User(activity.getSelfUser().getName(),activity.getSelfUser().getEmail(),activity.getSelfUser().getId());
+				long aesId = aes.getKeyId();
+//				Chat chat = new Chat();
+//				chat.setId(chatId);
+				//chat.setParticipants(DatabaseManager.INSTANCE.getParticipantsForChat(chatId));
+        new SendMessageTask(chat.getEncryption()).execute(new Message(user,msgEncrypted,chat.getId(),aesId));
+/*
+					msg,
+					activity.getSelfUser().getName(),
+					activity.getSelfUser().getEmail(),
+					Long.toString(activity.getSelfUser().getId()),
+          Long.toString(chat.getId()),
+					activity.getAccessToken()
+				);
+*/
         editMessage.setText("");
         update(view);
     }
