@@ -16,6 +16,7 @@ import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.ui.ChatFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by robert on 19.06.14.
@@ -29,7 +30,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         this.storage = storage;
     }
 
-    ArrayList<Message> messages;
+    List<Message> messages;
     long lastMessageId;
 
     /**
