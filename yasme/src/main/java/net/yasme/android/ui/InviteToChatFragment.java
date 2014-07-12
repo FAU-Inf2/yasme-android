@@ -44,7 +44,6 @@ public class InviteToChatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         //Register at observer
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
         FragmentObservable<InviteToChatFragment, Long> obs =
@@ -160,7 +159,6 @@ public class InviteToChatFragment
             obs.register(this);
         }
     }
-
 
     @Override
     public void onStop() {

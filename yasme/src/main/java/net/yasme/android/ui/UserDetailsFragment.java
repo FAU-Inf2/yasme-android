@@ -226,10 +226,12 @@ public class UserDetailsFragment
     @Override
     public void notifyFragment(UserDetailsFragmentParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        if (param instanceof NewChatParam)
+        if (param instanceof NewChatParam) {
             notifyFragment((NewChatParam) param);
-        else if (param instanceof UserDetailsParam)
+        }
+        if (param instanceof UserDetailsParam) {
             notifyFragment((UserDetailsParam) param);
+        }
     }
 
     public void notifyFragment(NewChatParam newChatParam) {

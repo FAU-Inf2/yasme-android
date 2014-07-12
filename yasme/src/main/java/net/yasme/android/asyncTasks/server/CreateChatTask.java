@@ -85,8 +85,10 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
             }
 
             //Observer mit zwei Fragments UserDetailFragment und Invite to Chat benachrichtigen
-            ObservableRegistry.getObservable(UserDetailsFragment.class).notifyFragments(newChatId);
-            ObservableRegistry.getObservable(InviteToChatFragment.class).notifyFragments(newChatId);
+            ObservableRegistry.getObservable(UserDetailsFragment.class).
+                    notifyFragments(new UserDetailsFragment.NewChatParam(newChatId));
+            ObservableRegistry.getObservable(InviteToChatFragment.class).
+                    notifyFragments(newChatId);
         }
     }
 }
