@@ -21,6 +21,7 @@ public class DatabaseConstants {
     public static final String SENDER = "sender";
     public static final String DATE = "date";
     public static final String MESSAGE = "message";
+    public static final String MESSAGE_MESSAGEKEY_ID = "messageKeyId";
 
     //User
     public static final String USER_TABLE = "users";
