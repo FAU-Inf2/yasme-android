@@ -127,6 +127,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     public void notifyFragment(List<Message> messages) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         updateViews(messages);
+        status.setText("Received " + messages.size() + " messages");
     }
 
     public TextView getStatus() {
@@ -149,6 +150,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         // Send message and get new messages afterwards
         new SendMessageTask(chat.getEncryption(), new GetMessageTask(activity.getStorage()))
                 .execute(new Message(activity.getSelfUser(), msgEncrypted, chat.getId(), aesId));
+        status.setText("Send message in bg");
 /*
 					msg,
 					activity.getSelfUser().getName(),
@@ -166,7 +168,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         status.setText("GET messages");
         new GetMessageTask(storage)
                 .execute();
-        status.setText("GET messages done");
+        status.setText("GET messages in bg");
     }
 
     public void update(View view) {
