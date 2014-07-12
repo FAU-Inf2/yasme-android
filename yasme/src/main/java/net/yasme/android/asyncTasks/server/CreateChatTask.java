@@ -83,8 +83,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
         if (success) {
             // If a new chat was created, store it in the internal database
             if (null != newChat) { //TODO: Abfrage eigentlich ueberfluessig
-                new AddIfNotExistsTask(databaseManager.getChatDAO(), newChat,
-                        AbstractYasmeActivity.class).execute();
+                new AddIfNotExistsTask(databaseManager.getChatDAO(), newChat).execute();
                 //databaseManager.getChatDAO().addIfNotExists(newChat);
             }
 
