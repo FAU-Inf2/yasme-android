@@ -39,9 +39,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     private View loginStatusView;
     private TextView loginStatusMessageView;
 
-    // values for devices google + yasme server
+    // values for devices yasme server
     private String deviceProduct;
-    private String googleRegId;
 
     // Values for name, email and password at the time of the login attempt.
     private String emailTmp;
@@ -51,7 +50,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     private View focusView = null;
 
     protected String accessToken;
-    AbstractYasmeActivity activity;
+    protected AbstractYasmeActivity activity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -252,13 +251,15 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             if (!DatabaseManager.INSTANCE.isInitialized()) {
                 DatabaseManager.INSTANCE.init(activity.getApplicationContext(), userId);
             }
+
+            SharedPreferences devicePrefs = activity.getSharedPreferences(
+                    AbstractYasmeActivity.DEVICE_PREFS,
+                    AbstractYasmeActivity.MODE_PRIVATE);
+
             // check if there is a device in the Database
             if (yasmeDeviceCheck()) {
                 Log.d(this.getClass().getSimpleName(), "Device exists in Database");
 
-                SharedPreferences devicePrefs = activity.getSharedPreferences(
-                        AbstractYasmeActivity.DEVICE_PREFS,
-                        AbstractYasmeActivity.MODE_PRIVATE);
                 long deviceId = devicePrefs.getLong(AbstractYasmeActivity.DEVICE_ID, -1);
                 if (deviceId < 0) {
                     // Error ocurred
@@ -277,9 +278,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 Log.d(this.getClass().getSimpleName(), "Device does not exist in Database");
                 Log.d(this.getClass().getSimpleName(), "Starting task to register device at yasme server");
                 //DeviceRegistrationTask yasmeDevRegTask =
-                new DeviceRegistrationTask(activity.getStorage())
-                        .execute(Long.toString(userId),
-                                this.deviceProduct, this.googleRegId);
+
+                new DeviceRegistrationTask(activity.getStorage(), activity)
+                        .execute(Long.toString(userId), this.deviceProduct);
 
             }
             editor.commit();
@@ -335,7 +336,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 getSharedPreferences(AbstractYasmeActivity.PUSH_PREFS,
                         AbstractYasmeActivity.MODE_PRIVATE);
 
-        this.googleRegId = pushPrefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID, null);
+        String googleRegId = pushPrefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID, null);
         // TODO proper check
 
         if (deviceId == -1) {
