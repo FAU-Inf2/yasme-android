@@ -18,8 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.server.UserLoginTask;
 import net.yasme.android.asyncTasks.server.DeviceRegistrationTask;
+import net.yasme.android.asyncTasks.server.UserLoginTask;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
@@ -346,7 +346,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         if(param instanceof LoginProcessParam)
             notifyFragment((LoginProcessParam)param);
-        if(param instanceof DeviceRegistrationParam)
+        else if(param instanceof DeviceRegistrationParam)
             notifyFragment((DeviceRegistrationParam)param);
     }
 

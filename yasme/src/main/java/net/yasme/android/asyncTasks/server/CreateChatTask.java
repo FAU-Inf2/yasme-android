@@ -4,10 +4,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.connection.ChatTask;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.InviteToChatFragment;
+import net.yasme.android.ui.UserDetailsFragment;
 
 import java.util.Date;
 import java.util.List;
@@ -30,9 +33,6 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
 
 
     /**
-     * @param params
-     *              0 is userId
-     *              1 is accessToken
      * @return Returns true if it was successful, otherwise false
      */
     @Override
@@ -85,6 +85,9 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
             }
 
             //TODO: Observer benachrichtigen, mit zwei Fragments UserDetailFragment und Invite to Chat
+            ObservableRegistry.getObservable(InviteToChatFragment.class).notifyFragments(newChatId);
+            ObservableRegistry.getObservable(UserDetailsFragment.class).notifyFragments(newChatId);
+
         }
     }
 }

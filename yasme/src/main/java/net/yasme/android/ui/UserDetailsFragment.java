@@ -30,9 +30,12 @@ import java.util.List;
  * to handle interaction events.
  * Use the {@link UserDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
-public class UserDetailsFragment extends DialogFragment implements View.OnClickListener, NotifiableFragment<UserDetailsFragment.UserDetailsParam> {
+public class UserDetailsFragment
+        extends DialogFragment
+        implements View.OnClickListener,
+        NotifiableFragment<UserDetailsFragment.UserDetailsFragmentParam> {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_USER = "userparam";
@@ -78,9 +81,9 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
 
         return fragment;
     }
+
     public UserDetailsFragment() {
         // Required empty public constructor
-
     }
 
     @Override
@@ -122,7 +125,7 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
 
         userDAO = DatabaseManager.INSTANCE.getUserDAO();
 
-        if (!getArguments().getBoolean(ARG_CONTACTBUTTON)){
+        if (!getArguments().getBoolean(ARG_CONTACTBUTTON)) {
             addContact.setVisibility(View.GONE);
         }
 
@@ -131,7 +134,7 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
 
     public void onButtonPressed(String s) {
         if (mListener != null) {
-            mListener.onDetailsFragmentInteraction(contact,0);
+            mListener.onDetailsFragmentInteraction(contact, 0);
         }
     }
 
@@ -155,38 +158,36 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
     @Override
     public void onClick(View v) {
 
-    switch (v.getId()) {
-        case R.id.contact_detail_newchat:
-            Log.d(this.getClass().getSimpleName(),"------------------- Create New Chat ---------------------------");
-            List<User> selectedUsers = new ArrayList<User>();
-            selectedUsers.add(contact);
-            CreateChatTask chatTask = new CreateChatTask(selfUser, selectedUsers);
-            chatTask.execute(String.valueOf(activity.getUserId()), activity.getAccessToken());
-        break;
+        switch (v.getId()) {
+            case R.id.contact_detail_newchat:
+                Log.d(this.getClass().getSimpleName(), "------------------- Create New Chat ---------------------------");
+                List<User> selectedUsers = new ArrayList<User>();
+                selectedUsers.add(contact);
+                new CreateChatTask(selfUser, selectedUsers).execute();
+                break;
 
-    case R.id.contact_detail_addcontact:
-        contact.addToContacts();
-        //db.createUserIfNotExists(user);
-        userDAO.addOrUpdate(contact);
-        Log.d(this.getClass().getSimpleName(),"------------------- Contact Added ---------------------------" + userDAO.getContacts());
-        break;
+            case R.id.contact_detail_addcontact:
+                contact.addToContacts();
+                //db.createUserIfNotExists(user);
+                userDAO.addOrUpdate(contact);
+                Log.d(this.getClass().getSimpleName(), "------------------- Contact Added ---------------------------" + userDAO.getContacts());
+                break;
 
-    case R.id.mail_image_button:
-        this.sendMail(contact.getEmail());
-        break;
-    case R.id.number_image_button:
-        break;
-}
+            case R.id.mail_image_button:
+                this.sendMail(contact.getEmail());
+                break;
+            case R.id.number_image_button:
+                break;
+        }
 
     }
 
-    private void sendMail(String email){
-
+    private void sendMail(String email) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{email});
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
         i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
-        i.putExtra(Intent.EXTRA_TEXT   , "Message powered by YASME");
+        i.putExtra(Intent.EXTRA_TEXT, "Message powered by YASME");
         try {
             startActivity(Intent.createChooser(i, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
@@ -208,17 +209,47 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
 
 
     public interface OnDetailsFragmentInteractionListener {
-
         public void onDetailsFragmentInteraction(User user, Integer buttonId);
     }
 
 
-    public void notifyFragment(UserDetailsParam param) {
+    @Override
+    public void notifyFragment(UserDetailsFragmentParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        if (param instanceof NewChatParam)
+            notifyFragment((NewChatParam) param);
+        else if (param instanceof UserDetailsParam)
+            notifyFragment((UserDetailsParam) param);
     }
 
+    public void notifyFragment(NewChatParam newChatParam) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified with newChatParam");
+        startChat(newChatParam.getChatId());
+    }
 
-    public static class UserDetailsParam {
+    public void notifyFragment(UserDetailsParam userDetailsParam) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified with userDetailsParam");
+
+    }
+
+    //superclass of notifyParameters
+    public static class UserDetailsFragmentParam {
+
+    }
+
+    public static class NewChatParam extends UserDetailsFragmentParam {
+        private Long chatId;
+
+        public NewChatParam(Long chatId) {
+            this.chatId = chatId;
+        }
+
+        public Long getChatId() {
+            return chatId;
+        }
+    }
+
+    public static class UserDetailsParam extends UserDetailsFragmentParam {
         private Boolean success;
         private Long userId;
         private String accessToken;
