@@ -3,6 +3,7 @@ package net.yasme.android.asyncTasks.server;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.ChatActivity;
@@ -12,6 +13,7 @@ import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.ui.ChatFragment;
+import net.yasme.android.ui.InviteToChatFragment;
 
 /**
  * Created by robert on 19.06.14.
@@ -30,7 +32,7 @@ public class SendMessageTask extends AsyncTask<Message, Void, Boolean> {
 
     /**
      *
-     * @param params
+     * @param msgs
      *              0 is message
      *              1 is userName
      *              2 is userMail
@@ -115,6 +117,7 @@ public class SendMessageTask extends AsyncTask<Message, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         if (success) {
             Log.i(this.getClass().getSimpleName(), "Gesendet: " + msg);
+            // TODO ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(msg);
         } else {
             Log.w(this.getClass().getSimpleName(), "Senden fehlgeschlagen");
         }
