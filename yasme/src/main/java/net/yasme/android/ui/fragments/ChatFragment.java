@@ -129,6 +129,15 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Register at observer
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
+        FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+        obs.register(this);
+    }
 
     @Override
     public void onStop() {
