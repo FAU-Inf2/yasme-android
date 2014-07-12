@@ -165,7 +165,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         }
 
         for (Message msg : messages) {
-            msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
+            //msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
             TextView textView = new TextView(activity.getApplicationContext());
 
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
