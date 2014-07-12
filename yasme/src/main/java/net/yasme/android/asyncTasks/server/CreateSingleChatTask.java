@@ -7,7 +7,7 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.ui.UserDetailsFragment;
+import net.yasme.android.ui.fragments.UserDetailsFragment;
 
 import java.util.ArrayList;
 import java.util.Date;

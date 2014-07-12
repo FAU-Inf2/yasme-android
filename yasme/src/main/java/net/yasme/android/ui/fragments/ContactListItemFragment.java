@@ -1,10 +1,9 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.fragments;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
 import net.yasme.android.R;
 import net.yasme.android.connection.SearchTask;
 import net.yasme.android.contacts.ContactListContent;
@@ -22,11 +22,9 @@ import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.UserDAO;
+import net.yasme.android.ui.activities.ContactActivity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<ContactListItemFragment.ContactListItemParam> {

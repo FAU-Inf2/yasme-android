@@ -1,4 +1,4 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -25,6 +25,8 @@ import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.activities.ChatListActivity;
 
 
 public class LoginFragment extends Fragment implements NotifiableFragment<LoginFragment.LoginParam> {
@@ -244,8 +246,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         activity.getSelfUser().setId(userId);
         SharedPreferences.Editor editor = activity.getStorage().edit();
         showProgress(false);
-        activity.mSignedIn = success;
-        editor.putBoolean(AbstractYasmeActivity.SIGN_IN, activity.mSignedIn);
+        activity.setSignedInFlag(success);
+        editor.putBoolean(AbstractYasmeActivity.SIGN_IN, activity.getSignedInFlag());
 
         if (success) {
             //Initialize database (once in application)

@@ -3,15 +3,11 @@ package net.yasme.android.asyncTasks.server;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.yasme.android.entities.Chat;
-import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
-import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.ui.ChatFragment;
+import net.yasme.android.storage.DatabaseManager;
 
 /**
  * Created by robert on 19.06.14.
@@ -107,7 +103,7 @@ public class SendMessageTask extends AsyncTask<Message, Void, Boolean> {
 				return true;
 			} catch (RestServiceException rse) {
 				rse.printStackTrace();
-				Log.w(this.getClass().getSimpleName(),rse.getMessage());
+				Log.w(this.getClass().getSimpleName(), rse.getMessage());
 			}
 			return false;
     }

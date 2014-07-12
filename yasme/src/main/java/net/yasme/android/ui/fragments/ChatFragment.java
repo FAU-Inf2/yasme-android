@@ -1,4 +1,4 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -26,6 +26,7 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 import java.util.List;
 
@@ -140,15 +141,15 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             return;
         }
         //String msgEncrypted = aes.encrypt(editMessage.getText().toString());
-				String msgEncrypted = msg;
-				User user = new User(activity.getSelfUser().getName(),activity.getSelfUser().getEmail(),activity.getSelfUser().getId());
-				long aesId = aes.getKeyId();
+        String msgEncrypted = msg;
+        User user = new User(activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), activity.getSelfUser().getId());
+        long aesId = aes.getKeyId();
 //				Chat chat = new Chat();
 //				chat.setId(chatId);
-				//chat.setParticipants(DatabaseManager.INSTANCE.getParticipantsForChat(chatId));
-        new SendMessageTask(chat.getEncryption()).execute(new Message(user,msgEncrypted,chat.getId(),aesId));
+        //chat.setParticipants(DatabaseManager.INSTANCE.getParticipantsForChat(chatId));
+        new SendMessageTask(chat.getEncryption()).execute(new Message(user, msgEncrypted, chat.getId(), aesId));
 /*
-					msg,
+                    msg,
 					activity.getSelfUser().getName(),
 					activity.getSelfUser().getEmail(),
 					Long.toString(activity.getSelfUser().getId()),
@@ -180,6 +181,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         for (Message msg : messages) {
             //msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
             TextView textView = new TextView(activity.getApplicationContext());
+            TextView timeView = new TextView(activity.getApplicationContext());
+
 
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -190,8 +193,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT));
 
-            //textView.setText(msg.getSender().getName() + ": "+ msg.getMessage());
-
             String name;
             try {
                 name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
@@ -201,15 +202,33 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             }
             textView.setText(name + ": " + msg.getMessage());
 
-            textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
-            textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
+            String time;
+            time = msg.getDateSent().toString();
+            timeView.setText("Gesendet: " + time);
 
             if (msg.getSender().getId() == activity.getSelfUser().getId()) {
                 textView.setGravity(Gravity.RIGHT);
                 row.setGravity(Gravity.RIGHT);
                 textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
                 textView.setTextColor(getResources().getColor(R.color.chat_text_color_self));
+
+                timeView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
+                timeView.setTextColor(getResources().getColor(R.color.chat_text_color_self));
+            } else {
+                textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
+                textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
+
+                timeView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
+                timeView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
             }
+
+            //ViewGroup fullMessage = new ViewGroup(activity.getApplicationContext());
+
+            //fullMessage.setTextView(textView);
+            //fullMessage.setTimeView(timeView);
+            //fullMessage.addView(textView);
+            //fullMessage.addView(timeView);
+            //row.addView(fullMessage);
             row.addView(textView);
             layout.addView(row, layoutParams);
 

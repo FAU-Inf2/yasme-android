@@ -11,6 +11,8 @@ import net.yasme.android.R;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.activities.ChatListActivity;
+import net.yasme.android.ui.activities.ContactActivity;
 
 
 /**
@@ -43,7 +45,7 @@ public abstract class AbstractYasmeActivity  extends Activity {
 
     protected User selfUser;
     protected String accessToken;
-    boolean mSignedIn;
+    protected boolean mSignedIn;
 
 
 
@@ -78,7 +80,14 @@ public abstract class AbstractYasmeActivity  extends Activity {
         selfUser.setName(userName);
         selfUser.setEmail(userMail);
         selfUser.setPw(userPw);
+    }
 
+    public boolean getSignedInFlag() {
+        return mSignedIn;
+    }
+
+    public void setSignedInFlag(boolean newSignedIn) {
+        mSignedIn = newSignedIn;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

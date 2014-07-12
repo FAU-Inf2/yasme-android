@@ -1,6 +1,4 @@
-package net.yasme.android.ui;
-
-import java.util.Locale;
+package net.yasme.android.ui.activities;
 
 import android.app.ActionBar;
 import android.app.DialogFragment;
@@ -9,8 +7,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +17,13 @@ import android.view.View;
 
 import net.yasme.android.R;
 import net.yasme.android.entities.User;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.fragments.ContactListItemFragment;
+import net.yasme.android.ui.fragments.OwnProfileFragment;
+import net.yasme.android.ui.fragments.SearchContactFragment;
+import net.yasme.android.ui.fragments.UserDetailsFragment;
+
+import java.util.Locale;
 
 public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener, SearchContactFragment.OnSearchFragmentInteractionListener, OwnProfileFragment.OnOwnProfileFragmentInteractionListener {
 

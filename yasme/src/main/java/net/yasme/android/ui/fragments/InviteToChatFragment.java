@@ -1,4 +1,4 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -20,6 +20,8 @@ import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.activities.ChatActivity;
 
 import java.util.ArrayList;
 import java.util.List;

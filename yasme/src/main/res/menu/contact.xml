@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="net.yasme.android.ui.ContactActivity" >
+    tools:context="net.yasme.android.ui.activities.ContactActivity" >
 
     <item
         android:id="@+id/action_search_contact"

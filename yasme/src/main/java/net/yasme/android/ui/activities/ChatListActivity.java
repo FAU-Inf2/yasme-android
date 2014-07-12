@@ -1,4 +1,4 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import net.yasme.android.R;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.connection.ssl.HttpClient;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.fragments.ChatListFragment;
 
 public class ChatListActivity extends AbstractYasmeActivity {
 
@@ -22,7 +24,7 @@ public class ChatListActivity extends AbstractYasmeActivity {
             HttpClient.context = this.getApplicationContext();
         }
 
-        if(!mSignedIn) {
+        if(!getSignedInFlag()) {
             Log.i(this.getClass().getSimpleName(), "Not logged in, starting login activity");
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);

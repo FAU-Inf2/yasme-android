@@ -1,4 +1,4 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.activities;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -6,8 +6,9 @@ import android.util.Log;
 import android.view.Menu;
 
 import net.yasme.android.R;
-import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.gcm.CloudMessaging;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.fragments.LoginFragment;
 
 /**
  * Activity which displays a login screen to the user, offering registration as

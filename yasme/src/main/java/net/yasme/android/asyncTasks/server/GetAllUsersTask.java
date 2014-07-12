@@ -2,11 +2,10 @@ package net.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
 
-import net.yasme.android.ui.InviteToChatActivity;
 import net.yasme.android.connection.SearchTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.ui.InviteToChatFragment;
+import net.yasme.android.ui.fragments.InviteToChatFragment;
 
 import java.util.List;
 

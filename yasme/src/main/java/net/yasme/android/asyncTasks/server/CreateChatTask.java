@@ -11,8 +11,8 @@ import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
-import net.yasme.android.ui.InviteToChatFragment;
-import net.yasme.android.ui.UserDetailsFragment;
+import net.yasme.android.ui.fragments.InviteToChatFragment;
+import net.yasme.android.ui.fragments.UserDetailsFragment;
 
 import java.util.Date;
 import java.util.List;

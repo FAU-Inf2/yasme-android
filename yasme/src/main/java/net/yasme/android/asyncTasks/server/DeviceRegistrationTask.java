@@ -4,15 +4,13 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.yasme.android.controller.FragmentObservable;
-import net.yasme.android.controller.ObservableRegistry;
-import net.yasme.android.ui.AbstractYasmeActivity;
-
 import net.yasme.android.connection.DeviceTask;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.ui.LoginFragment;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.fragments.LoginFragment;
 
 /**
  * Created by cuong on 21/06/14.

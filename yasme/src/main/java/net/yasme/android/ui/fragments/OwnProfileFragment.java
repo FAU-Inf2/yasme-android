@@ -1,15 +1,14 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,11 +22,9 @@ import net.yasme.android.connection.UserTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
-import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
-
-import java.util.ArrayList;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 /**
  * A simple {@link Fragment} subclass.

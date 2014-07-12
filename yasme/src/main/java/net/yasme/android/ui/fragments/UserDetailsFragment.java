@@ -1,4 +1,4 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -21,6 +21,8 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.UserDAO;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.activities.ChatActivity;
 
 import java.util.ArrayList;
 import java.util.List;

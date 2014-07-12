@@ -4,22 +4,13 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.yasme.android.connection.ChatTask;
 import net.yasme.android.connection.UserTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.ObservableRegistry;
-import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.ui.ChatListFragment;
-import net.yasme.android.ui.ContactActivity;
-import net.yasme.android.ui.OwnProfileFragment;
-import net.yasme.android.ui.UserDetailsFragment;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import net.yasme.android.ui.fragments.ChatListFragment;
+import net.yasme.android.ui.fragments.OwnProfileFragment;
 
 /**
  * Created by bene on 09.07.14.
