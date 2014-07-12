@@ -22,7 +22,7 @@ import java.util.List;
  */
 // TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach
 // geloescht werden
-public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
+public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
     SharedPreferences storage;
 
     public GetMessageTask(SharedPreferences storage) {
@@ -35,7 +35,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
     /**
      * @return Returns true if it was successful, otherwise false
      */
-    protected Boolean doInBackground(String... params) {
+    protected Boolean doInBackground(Object... params) {
         lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
         try {

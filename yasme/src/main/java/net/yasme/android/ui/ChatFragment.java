@@ -140,13 +140,15 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             return;
         }
         //String msgEncrypted = aes.encrypt(editMessage.getText().toString());
-				String msgEncrypted = msg;
-				User user = new User(activity.getSelfUser().getName(),activity.getSelfUser().getEmail(),activity.getSelfUser().getId());
-				long aesId = aes.getKeyId();
+        String msgEncrypted = msg;
+        long aesId = aes.getKeyId();
 //				Chat chat = new Chat();
 //				chat.setId(chatId);
-				//chat.setParticipants(DatabaseManager.INSTANCE.getParticipantsForChat(chatId));
-        new SendMessageTask(chat.getEncryption()).execute(new Message(user,msgEncrypted,chat.getId(),aesId));
+        //chat.setParticipants(DatabaseManager.INSTANCE.getParticipantsForChat(chatId));
+
+        // Send message and get new messages afterwards
+        new SendMessageTask(chat.getEncryption(), new GetMessageTask(activity.getStorage()))
+                .execute(new Message(activity.getSelfUser(), msgEncrypted, chat.getId(), aesId));
 /*
 					msg,
 					activity.getSelfUser().getName(),
@@ -157,7 +159,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 				);
 */
         editMessage.setText("");
-        update(view);
+        //update(view);
     }
 
     public void asyncUpdate() {
