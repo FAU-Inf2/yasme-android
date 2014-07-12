@@ -34,6 +34,7 @@ public class Message implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.MESSAGE)
     private String message;
 
+    @DatabaseField(columnName = DatabaseConstants.MESSAGE_MESSAGEKEY_ID)
     private long messageKeyId;
 
     private MessageKey messageKey;
