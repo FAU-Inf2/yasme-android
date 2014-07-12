@@ -9,7 +9,7 @@ import net.yasme.android.storage.dao.DAO;
 /**
  * Created by bene on 11.07.14.
  */
-public class AddOrUpdateTask<D extends Object, T extends DAO<D>> extends AsyncTask<Void, Void, Boolean> {
+public class AddOrUpdateTask<D extends Object, T extends DAO<D>> extends AsyncTask<Object, Void, Boolean> {
 
     private T specificDAO;
     private D data;
@@ -22,7 +22,7 @@ public class AddOrUpdateTask<D extends Object, T extends DAO<D>> extends AsyncTa
     }
 
     @Override
-    protected Boolean doInBackground(Void... voids) {
+    protected Boolean doInBackground(Object... objects) {
         return null != (data = specificDAO.addOrUpdate(data));
     }
 
