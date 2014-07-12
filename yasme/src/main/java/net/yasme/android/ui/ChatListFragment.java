@@ -32,25 +32,25 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
    private List<Chat> chatRooms = new ArrayList<Chat>();
    private ChatListAdapter adapter;
 
-   public ChatListFragment() {
+    public ChatListFragment() {
 
-   }
+    }
 
-   @Override
-   public void onCreate(Bundle savedInstanceState) {
-       super.onCreate(savedInstanceState);
-       activity = (AbstractYasmeActivity)getActivity();
-       adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
-       setListAdapter(adapter);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activity = (AbstractYasmeActivity) getActivity();
+        adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
+        setListAdapter(adapter);
 
-       //Register at observer
-       //ChatListParam test = new ChatListParam(null);
-       //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
-       Log.d(this.getClass().getSimpleName(),"Try to get ChatListObservableInstance");
-       FragmentObservable<ChatListFragment,List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
-       Log.d(this.getClass().getSimpleName(),"... successful");
+        //Register at observer
+        //ChatListParam test = new ChatListParam(null);
+        //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
+        FragmentObservable<ChatListFragment, List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
        if (!obs.isRegistered(this)) {
-           obs.register(this);
+        obs.register(this);
        }
 
        // TODO Holt erst die Chats aus der Datenbank ab
@@ -58,7 +58,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
        // Danach evtl nochmal aktualisieren
        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
        new GetAllTask(chatDAO, ChatListFragment.class).execute();
-
         // Holt erst die Chats aus der Datenbank ab
         List<Chat> chatRoomsFromDB = DatabaseManager.INSTANCE.getChatDAO().getAll();
         adapter.updateChats(chatRooms);

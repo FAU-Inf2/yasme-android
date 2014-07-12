@@ -55,10 +55,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         super.onCreate(savedInstanceState);
         activity = (AbstractYasmeActivity) getActivity();
 
-           Intent intent = activity.getIntent();
-           long chatId = intent.getLongExtra(activity.CHAT_ID, 1);
+        Intent intent = activity.getIntent();
+        long chatId = intent.getLongExtra(activity.CHAT_ID, 1);
 
-           storage = activity.getStorage();
+        storage = activity.getStorage();
 
         //Register at observer
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
@@ -81,9 +81,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         //DEBUG, TODO: encryption speichern und auslesen
         aes = new MessageEncryption(chat, activity.getSelfUser().getId());
         chat.setEncryption(aes);
-
-        initializeViews();
-        updateViews(chat.getMessages());
     }
 
     @Override
@@ -92,6 +89,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         editMessage = (EditText) rootView.findViewById(R.id.text_message);
         status = (TextView) rootView.findViewById(R.id.text_status);
+        status.setText("Eingeloggt: " +
+                storage.getString(AbstractYasmeActivity.USER_NAME, "anonym"));
         layout = (LinearLayout) rootView.findViewById(R.id.scrollLayout);
 
         Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
@@ -108,6 +107,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 update(v);
             }
         });
+
+        updateViews(chat.getMessages());
 
         return rootView;
     }
@@ -131,11 +132,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         return status;
     }
 
-    private void initializeViews() {
-        status.setText("Eingeloggt: " +
-                storage.getString(AbstractYasmeActivity.USER_NAME, "anonym"));
-    }
-
     public void send(View view) {
         String msg = editMessage.getText().toString();
         if (msg.isEmpty()) {
@@ -153,9 +149,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     public void asyncUpdate() {
         status.setText("GET messages");
-        //TODO: folgenden Aufruf loeschen
-        //new GetMessageTaskInChat(this, chat.getEncryption(), storage)
-        //        .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());
         new GetMessageTask(storage)
                 .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());
         status.setText("GET messages done");
@@ -165,53 +158,11 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         asyncUpdate();
     }
 
-
-    public void showMessage(Message msg) {
-        TextView textView = new TextView(activity.getApplicationContext());
-
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-
-        RelativeLayout row = new RelativeLayout(activity.getApplicationContext());
-        row.setLayoutParams(new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT));
-
-        //textView.setText(msg.getSender().getName() + ": "+ msg.getMessage());
-
-        String name;
-        try {
-            name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
-        } catch (NullPointerException e) {
-            Log.d(this.getClass().getSimpleName(), "User nicht in DB gefunden");
-            name = "anonym";
-        }
-        textView.setText(name + ": " + msg.getMessage());
-
-        textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
-        textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
-
-        if (msg.getSender().getId() == activity.getSelfUser().getId()) {
-            textView.setGravity(Gravity.RIGHT);
-            row.setGravity(Gravity.RIGHT);
-            textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
-            textView.setTextColor(getResources().getColor(R.color.chat_text_color_self));
-        }
-        row.addView(textView);
-        layout.addView(row, layoutParams);
-
-        row.setFocusableInTouchMode(true);
-        row.requestFocus();
-        editMessage.requestFocus();
-    }
-
-
     public void updateViews(List<Message> messages) {
         if (messages == null) {
             Log.d(this.getClass().getSimpleName(), "Keine Nachrichten zum Ausgeben");
+            return;
         }
-
 
         for (Message msg : messages) {
             msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
@@ -240,12 +191,12 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
             textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
 
-            /*if (msg.getSender().getId() == activity.getSelfUser().getId()) {
+            if (msg.getSender().getId() == activity.getSelfUser().getId()) {
                 textView.setGravity(Gravity.RIGHT);
                 row.setGravity(Gravity.RIGHT);
                 textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
                 textView.setTextColor(getResources().getColor(R.color.chat_text_color_self));
-            }*/
+            }
             row.addView(textView);
             layout.addView(row, layoutParams);
 
