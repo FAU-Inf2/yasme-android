@@ -49,10 +49,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
 
-        // TODO Holt erst die Chats aus der Datenbank ab
-        // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
-        // Danach evtl nochmal aktualisieren
-
         // Holt erst die Chats aus der Datenbank ab
         List<Chat> chatRoomsFromDB = DatabaseManager.INSTANCE.getChatDAO().getAll();
         adapter.updateChats(chatRooms);
