@@ -46,32 +46,20 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
         if (messages.isEmpty()) {
-            Log.w(this.getClass().getSimpleName(), "messages is empty");
-            return false;
+            Log.i(this.getClass().getSimpleName(), "messages is empty");
+            return true;
         }
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
         Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
+
+        //add new messages to DB
         for(Message msg : messages) {
+            Log.d(this.getClass().getSimpleName(), msg.getMessage() + " " + msg.getId());
             DatabaseManager.INSTANCE.getMessageDAO().add(msg);//storeMessages(messages);
             DatabaseManager.INSTANCE.getMessageKeyDAO().add(msg.getMessageKey());
         }
-        return true;
-    }
 
-
-    /**
-     * stores lastMessageId
-     */
-    @Override
-    protected void onPostExecute(final Boolean success) {
-
-        if (!success) {
-            Log.w(this.getClass().getSimpleName(), "UpdateDB not successfull");
-            return;
-        }
-
-        Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
-
+        //increase and store lastMessageId
         lastMessageId = messages.size() + lastMessageId;
         Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
 
@@ -79,6 +67,16 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
         editor.commit();
 
+        return true;
+    }
+
+    @Override
+    protected void onPostExecute(final Boolean success) {
+        if (!success) {
+            Log.w(this.getClass().getSimpleName(), "UpdateDB not successfull");
+            return;
+        }
+        Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
         // Fragment wird schon weiter oben benachrichtigt
     }
 }
