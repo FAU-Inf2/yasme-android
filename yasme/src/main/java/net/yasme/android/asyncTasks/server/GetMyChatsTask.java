@@ -10,7 +10,7 @@ import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.UserDAO;
-import net.yasme.android.ui.ChatListFragment;
+import net.yasme.android.ui.fragments.ChatListFragment;
 
 import java.util.List;
 

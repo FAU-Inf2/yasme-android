@@ -1,11 +1,12 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import net.yasme.android.R;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.fragments.InviteToChatFragment;
 
 public class InviteToChatActivity extends AbstractYasmeActivity { // implements OnClickListener{
 

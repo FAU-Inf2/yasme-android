@@ -1,4 +1,4 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -15,6 +15,7 @@ import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.UserLoginTask;
 import net.yasme.android.asyncTasks.server.UserRegistrationTask;
 import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 /**
  * Created by robert on 06.07.14.

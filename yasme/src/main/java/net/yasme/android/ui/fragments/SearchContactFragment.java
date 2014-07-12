@@ -1,7 +1,7 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.fragments;
 
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +19,7 @@ import net.yasme.android.asyncTasks.server.SearchUserTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.entities.User;
+import net.yasme.android.ui.activities.ContactActivity;
 
 public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<SearchContactFragment.SearchContactParam> {
 

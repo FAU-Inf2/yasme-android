@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -13,7 +12,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import net.yasme.android.ui.AbstractYasmeActivity;
-import net.yasme.android.ui.LoginActivity;
+import net.yasme.android.ui.activities.LoginActivity;
 
 import java.io.IOException;
 

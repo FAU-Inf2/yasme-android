@@ -14,12 +14,14 @@ import net.yasme.android.connection.DeviceTask;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.ui.LoginFragment;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.fragments.LoginFragment;
 
 /**
  * Created by cuong on 21/06/14.
  */
 public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
+
 
     private SharedPreferences prefs;
     private long deviceId;
@@ -112,6 +114,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
         editor.commit();
         Log.d(this.getClass().getSimpleName(),"Device stored to SharedPreferences");
+
         return true;
     }
 

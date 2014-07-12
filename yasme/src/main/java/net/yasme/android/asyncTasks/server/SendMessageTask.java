@@ -3,13 +3,13 @@ package net.yasme.android.asyncTasks.server;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.yasme.android.controller.ObservableRegistry;
-import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.connection.MessageTask;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.ui.ChatFragment;
+import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.fragments.ChatFragment;
 
 import java.util.ArrayList;
 import java.util.List;

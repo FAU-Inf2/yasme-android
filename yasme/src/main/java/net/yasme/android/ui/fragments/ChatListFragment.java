@@ -1,4 +1,4 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.fragments;
 
 import android.app.ListFragment;
 import android.content.Intent;
@@ -18,6 +18,9 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.ChatDAO;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.ChatListAdapter;
+import net.yasme.android.ui.activities.ChatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +46,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         setListAdapter(adapter);
 
         //Register at observer
-        //ChatListParam test = new ChatListParam(null);
-        //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
         FragmentObservable<ChatListFragment, List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
@@ -55,13 +56,11 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         // At first, retrieve the chats from the database
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
         new GetAllTask(chatDAO, ChatListFragment.class).execute();
-        // Holt erst die Chats aus der Datenbank ab
-        //List<Chat> chatRoomsFromDB = DatabaseManager.INSTANCE.getChatDAO().getAll();
         //adapter.updateChats(chatRooms);
         //adapter.notifyDataSetChanged();
 
         //holt vor allem den Namen des Users ab
-        new GetProfileDataTask(activity.storage).execute();
+        new GetProfileDataTask(activity.getStorage()).execute();
 
         // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
         // Aktualisiert die Datenbank auf den aktuellen Stand des Servers

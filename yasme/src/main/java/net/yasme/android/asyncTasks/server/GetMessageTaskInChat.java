@@ -4,14 +4,13 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.ui.ChatFragment;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.fragments.ChatFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -1,4 +1,4 @@
-package net.yasme.android.ui;
+package net.yasme.android.ui.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,6 +27,8 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.ChatAdapter;
 
 import java.util.List;
 
@@ -37,11 +40,13 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     private AbstractYasmeActivity activity;
 
     private SharedPreferences storage;
+    private ChatAdapter adapter;
 
     //UI references
     private EditText editMessage;
     private TextView status;
     private LinearLayout layout;
+    private ListView list;
 
     private Chat chat;
 
@@ -93,6 +98,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         status.setText("Eingeloggt: " +
                 storage.getString(AbstractYasmeActivity.USER_NAME, "anonym"));
         layout = (LinearLayout) rootView.findViewById(R.id.scrollLayout);
+        list = (ListView) rootView.findViewById(R.id.chat_messageList);
 
         Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
         Button buttonUpdate = (Button) rootView.findViewById(R.id.button_update);
@@ -109,11 +115,29 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             }
         });
 
-        updateViews(chat.getMessages());
+        boolean old = true;
+        if(old) {
+            updateViews(chat.getMessages());
+        } else {
+            //Get adapter and set old messages
+            adapter = new ChatAdapter(activity, R.layout.chat_item,
+                    activity.getUserId(), chat.getMessages());
+            list.setAdapter(adapter);
+            adapter.setNotifyOnChange(true);
+        }
 
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Register at observer
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
+        FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+        obs.register(this);
+    }
 
     @Override
     public void onStop() {
@@ -142,17 +166,18 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         }
         //String msgEncrypted = aes.encrypt(editMessage.getText().toString());
         String msgEncrypted = msg;
+        User user = new User(activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), activity.getSelfUser().getId());
         long aesId = aes.getKeyId();
 //				Chat chat = new Chat();
 //				chat.setId(chatId);
         //chat.setParticipants(DatabaseManager.INSTANCE.getParticipantsForChat(chatId));
-
+        new SendMessageTask(chat.getEncryption()).execute(new Message(user, msgEncrypted, chat.getId(), aesId));
         // Send message and get new messages afterwards
         new SendMessageTask(chat.getEncryption(), new GetMessageTask(activity.getStorage()))
                 .execute(new Message(activity.getSelfUser(), msgEncrypted, chat.getId(), aesId));
         status.setText("Send message in bg");
 /*
-					msg,
+                    msg,
 					activity.getSelfUser().getName(),
 					activity.getSelfUser().getEmail(),
 					Long.toString(activity.getSelfUser().getId()),
@@ -180,46 +205,51 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             Log.d(this.getClass().getSimpleName(), "Keine Nachrichten zum Ausgeben");
             return;
         }
-
-        for (Message msg : messages) {
-            //msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
-            TextView textView = new TextView(activity.getApplicationContext());
-
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT);
-
-            RelativeLayout row = new RelativeLayout(activity.getApplicationContext());
-            row.setLayoutParams(new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT));
-
-            //textView.setText(msg.getSender().getName() + ": "+ msg.getMessage());
-
-            String name;
-            try {
-                name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
-            } catch (NullPointerException e) {
-                Log.d(this.getClass().getSimpleName(), "User nicht in DB gefunden");
-                name = "anonym";
-            }
-            textView.setText(name + ": " + msg.getMessage());
-
-            textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
-            textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
-
-            if (msg.getSender().getId() == activity.getSelfUser().getId()) {
-                textView.setGravity(Gravity.RIGHT);
-                row.setGravity(Gravity.RIGHT);
-                textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
-                textView.setTextColor(getResources().getColor(R.color.chat_text_color_self));
-            }
-            row.addView(textView);
-            layout.addView(row, layoutParams);
-
-            row.setFocusableInTouchMode(true);
-            row.requestFocus();
+        boolean old = true;
+        if(!old) {
+            adapter.add(messages);
             editMessage.requestFocus();
+        } else {
+            for (Message msg : messages) {
+                //msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
+                TextView textView = new TextView(activity.getApplicationContext());
+
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+
+                RelativeLayout row = new RelativeLayout(activity.getApplicationContext());
+                row.setLayoutParams(new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT));
+
+                String name;
+                try {
+                    name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
+                } catch (NullPointerException e) {
+                    Log.d(this.getClass().getSimpleName(), "User nicht in DB gefunden");
+                    name = "anonym";
+                }
+                textView.setText(name + ": " + msg.getMessage());
+
+                if (msg.getSender().getId() == activity.getSelfUser().getId()) {
+                    textView.setGravity(Gravity.RIGHT);
+                    row.setGravity(Gravity.RIGHT);
+                    textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
+                    textView.setTextColor(getResources().getColor(R.color.chat_text_color_self));
+                } else {
+                    textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
+                    textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
+                }
+
+                row.addView(textView);
+                layout.addView(row, layoutParams);
+
+                row.setFocusableInTouchMode(true);
+                row.requestFocus();
+                editMessage.requestFocus();
+            }
         }
     }
 }

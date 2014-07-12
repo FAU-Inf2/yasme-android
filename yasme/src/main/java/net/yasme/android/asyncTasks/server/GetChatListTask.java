@@ -6,7 +6,7 @@ import android.util.Log;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.ui.ChatListFragment;
+import net.yasme.android.ui.fragments.ChatListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
