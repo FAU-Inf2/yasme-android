@@ -73,7 +73,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         FragmentObservable<LoginFragment, LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
         Log.d(this.getClass().getSimpleName(),"... successful");
 
-        obs.register(this);
+        if (!obs.isRegistered(this)) {
+            obs.register(this);
+        }
     }
 
     @Override
@@ -108,7 +110,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.d(this.getClass().getSimpleName(), "[DEBUG] SignIn-Button pushed");
+                        Log.d(this.getClass().getSimpleName(), "SignIn-Button pushed");
                         attemptLogin();
                     }
                 }
@@ -118,7 +120,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.d(this.getClass().getSimpleName(), "[DEBUG] Register-Button pushed");
+                        Log.d(this.getClass().getSimpleName(), "Register-Button pushed");
                         registerDialog();
                     }
                 }
@@ -140,7 +142,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     public void attemptLogin() {
         if (authTask == null) {
             authTask = new UserLoginTask(activity.getStorage(), activity.getApplicationContext());
-            Log.d(this.getClass().getSimpleName(), "[DEBUG] AuthTask is null");
+            Log.d(this.getClass().getSimpleName(), "AuthTask is null");
         }
 
         // Reset errors.
@@ -244,7 +246,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             }
             // check if there is a device in the Database
             if (yasmeDeviceCheck()) {
-                Log.d(this.getClass().getSimpleName(), "[DEBUG] Device exists in Database");
+                Log.d(this.getClass().getSimpleName(), "Device exists in Database");
 
                 SharedPreferences devicePrefs = activity.getSharedPreferences(
                         AbstractYasmeActivity.DEVICE_PREFS,
@@ -264,8 +266,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 startActivity(intent);
             } else {
                 // TODO register device
-                Log.d(this.getClass().getSimpleName(), "[DEBUG] Device does not exist in Database");
-                Log.d(this.getClass().getSimpleName(), "[DEBUG] Starting task to register device at yasme server");
+                Log.d(this.getClass().getSimpleName(), "Device does not exist in Database");
+                Log.d(this.getClass().getSimpleName(), "Starting task to register device at yasme server");
                 //DeviceRegistrationTask yasmeDevRegTask =
                         new DeviceRegistrationTask(activity.getStorage())
                         .execute(Long.toString(userId),
@@ -295,7 +297,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             }
             ConnectionTask.initSession(userId, deviceId, accessToken);
 
-            Log.d(this.getClass().getSimpleName(), "[DEBUG] Login after device registration at yasme server");
+            Log.d(this.getClass().getSimpleName(), "Login after device registration at yasme server");
             Intent intent = new Intent(activity, ChatListActivity.class);
             startActivity(intent);
         }
@@ -308,12 +310,12 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
         //set the deviceProduct
         this.deviceProduct = Build.MANUFACTURER + " " + Build.MODEL ;
-        Log.d(this.getClass().getSimpleName(), "[DEBUG] MODEL is " + Build.MODEL);
-        Log.d(this.getClass().getSimpleName(), "[DEBUG] DEVICE is " + Build.DEVICE);
-        Log.d(this.getClass().getSimpleName(), "[DEBUG] PRODUCT is " + Build.PRODUCT);
-        Log.d(this.getClass().getSimpleName(), "[DEBUG] MANUFACTURER is " + Build.MANUFACTURER);
-        Log.d(this.getClass().getSimpleName(), "[DEBUG] BRAND is " + Build.BRAND);
-        Log.d(this.getClass().getSimpleName(), "[DEBUG] NOW is " + this.deviceProduct);
+        Log.d(this.getClass().getSimpleName(), "MODEL is " + Build.MODEL);
+        Log.d(this.getClass().getSimpleName(), "DEVICE is " + Build.DEVICE);
+        Log.d(this.getClass().getSimpleName(), "PRODUCT is " + Build.PRODUCT);
+        Log.d(this.getClass().getSimpleName(), "MANUFACTURER is " + Build.MANUFACTURER);
+        Log.d(this.getClass().getSimpleName(), "BRAND is " + Build.BRAND);
+        Log.d(this.getClass().getSimpleName(), "NOW is " + this.deviceProduct);
         //try to load device from shared preferences
         SharedPreferences devicePrefs = activity.getSharedPreferences(
                 AbstractYasmeActivity.DEVICE_PREFS,
@@ -335,7 +337,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         // TODO devices from server
         // TODO use case : plain app + old user + old device
 
-        Log.d(this.getClass().getSimpleName(), "[DEBUG] deviceId is " + deviceId);
+        Log.d(this.getClass().getSimpleName(), "deviceId is " + deviceId);
         return true;
     }
 

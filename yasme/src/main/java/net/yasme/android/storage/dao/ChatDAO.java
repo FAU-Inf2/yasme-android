@@ -60,4 +60,12 @@ public interface ChatDAO extends DAO<Chat> {
      * @return true on success, false otherwise
      */
     public boolean delete(Chat chat);
+
+
+    /**
+     * Replaces all currently stored chats with given ones. Updates old chats with the values from the new one if their id matches.
+     * @param newChats to be stored
+     * @return true if successful, false otherwise
+     */
+    public boolean refreshAll(List<Chat> newChats);
 }

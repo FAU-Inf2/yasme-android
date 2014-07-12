@@ -57,7 +57,7 @@ public class UserTask extends ConnectionTask {
 
     public void changeUserData(User user) throws RestServiceException {
         executeRequest(Request.PUT, "", user);
-        Log.d(this.getClass().getSimpleName(),"[DEBUG] User data changed");
+        Log.d(this.getClass().getSimpleName(),"User data changed");
     }
 
     public User getUserData() throws RestServiceException {

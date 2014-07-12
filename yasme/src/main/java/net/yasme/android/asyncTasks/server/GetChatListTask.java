@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * Created by robert on 19.06.14.
  */
+@Deprecated
 public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
 
     private List<Chat> chatRooms = null;

@@ -4,15 +4,17 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.yasme.android.asyncTasks.database.AddOrUpdateTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Message;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.ChatActivity;
 import net.yasme.android.ui.ChatFragment;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by robert on 19.06.14.
@@ -26,7 +28,7 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
         this.storage = storage;
     }
 
-    ArrayList<Message> messages;
+    List<Message> messages;
     long lastMessageId;
 
     /**
@@ -57,6 +59,10 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
             Log.d(this.getClass().getSimpleName(), msg.getMessage() + " " + msg.getId());
             DatabaseManager.INSTANCE.getMessageDAO().add(msg);//storeMessages(messages);
             DatabaseManager.INSTANCE.getMessageKeyDAO().add(msg.getMessageKey());
+
+            //TODO: ein AsyncTask in einem AsyncTask? Wuerde ich wieder durch das normale ersetzen
+            //new AddOrUpdateTask(DatabaseManager.INSTANCE.getMessageDAO(),
+            //        msg, ChatActivity.class).execute();
         }
 
         //increase and store lastMessageId

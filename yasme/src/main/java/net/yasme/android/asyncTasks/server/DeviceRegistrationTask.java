@@ -56,7 +56,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         // TODO the phone number
         String number = "00000000";
 
-        Log.d(this.getClass().getSimpleName(),"[DEBUG] product name: " + product);
+        Log.d(this.getClass().getSimpleName(),"product name: " + product);
 
         Device deviceToBeRegistered = new Device(user, Device.Platform.ANDROID, type, number, product, regId);
 
@@ -66,17 +66,17 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
             deviceId = deviceIdFromServer;
         }catch(RestServiceException e){
             // if error occurs return false
-            Log.d(this.getClass().getSimpleName(),"[DEBUG] RestServiceException");
+            Log.d(this.getClass().getSimpleName(),"RestServiceException");
             return false;
         }
 
-        Log.d(this.getClass().getSimpleName(),"[DEBUG] Device registered at yasme server");
+        Log.d(this.getClass().getSimpleName(),"Device registered at yasme server");
         // if device registration was a success
         // store to SharedPreferences
         SharedPreferences.Editor editor = prefs.edit();
         editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
         editor.commit();
-        Log.d(this.getClass().getSimpleName(),"[DEBUG] Device stored to SharedPreferences");
+        Log.d(this.getClass().getSimpleName(),"Device stored to SharedPreferences");
 
         return true;
     }

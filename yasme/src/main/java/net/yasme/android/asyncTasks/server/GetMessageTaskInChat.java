@@ -12,6 +12,7 @@ import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.ui.ChatFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by robert on 19.06.14.
@@ -28,7 +29,7 @@ public class GetMessageTaskInChat extends AsyncTask<String, Void, Boolean> {
         this.aes = aes;
     }
 
-    ArrayList<Message> messages;
+    List<Message> messages;
     MessageTask messageTask = MessageTask.getInstance();
     long lastMessageId;
     long userId;

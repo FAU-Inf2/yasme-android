@@ -171,8 +171,7 @@ public enum ChatDAOImpl implements ChatDAO {
             for (int i=0; i<size - cardinality; i++) {
                 int indexToBeRemoved = formerParticipantsStillThere.nextClearBit(next);
                 databaseHelper.getChatUserDao().delete(dbParticipants.get(indexToBeRemoved));
-                next = indexToBeRemoved;
-                size = formerParticipantsStillThere.size();
+                next = indexToBeRemoved + 1;
             }
 
             databaseHelper.getChatDao().update(chat);
@@ -199,4 +198,49 @@ public enum ChatDAOImpl implements ChatDAO {
             return false;
         }
     }
+
+
+    @Override
+    public boolean refreshAll(List<Chat> newChats) {
+        List<Chat> oldChats = getAll();
+        // Add all new chats if we haven't had any chats at present
+        if (null == oldChats || oldChats.isEmpty()) {
+            // Add all
+            for (Chat chat : newChats) {
+                add(chat);
+            }
+            return true;
+        }
+
+        // Determine difference of new chats and old chats
+        BitSet oldChatsUsed = new BitSet(oldChats.size());
+        for (Chat newChat : newChats) {
+            boolean found = false;
+            int i=0;
+            for(; i<oldChats.size() && !found; i++) {
+                found |= newChat.getId() == oldChats.get(i).getId();
+            }
+
+            if (found) {
+                oldChatsUsed.set(i-1);
+                update(newChat);
+            }
+            else {
+                add(newChat);
+            }
+        }
+
+        // Remove old chats which are not present in newChats list
+        int next = 0;
+        int size = oldChats.size();
+        int cardinality = oldChatsUsed.cardinality();
+        for (int i=0; i<size - cardinality; i++) {
+            int indexToBeRemoved = oldChatsUsed.nextClearBit(next);
+            delete(oldChats.get(indexToBeRemoved));
+            next = indexToBeRemoved + 1;
+        }
+
+        return true;
+    }
+
 }

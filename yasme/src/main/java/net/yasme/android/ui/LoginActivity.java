@@ -34,7 +34,7 @@ public class LoginActivity extends AbstractYasmeActivity {
 
         if (cloudMessaging.checkPlayServices()) {
             String regid = cloudMessaging.getRegistrationId();
-            Log.d(this.getClass().getSimpleName(),"[DEBUG] Empty?" + regid.isEmpty());
+            Log.d(this.getClass().getSimpleName(),"Empty?" + regid.isEmpty());
             if (regid.isEmpty()) {
                 registerInBackground();
             }

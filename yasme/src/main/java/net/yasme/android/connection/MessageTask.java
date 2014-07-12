@@ -2,10 +2,14 @@ package net.yasme.android.connection;
 
 import android.util.Log;
 
+import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.dao.ChatDAO;
+import net.yasme.android.storage.dao.UserDAO;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
@@ -18,10 +22,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class MessageTask extends ConnectionTask {
 
 	private static MessageTask instance;
+    private ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+    private UserDAO userDAO = DatabaseManager.INSTANCE.getUserDAO();
 
 	public static MessageTask getInstance() {
 		if (instance == null) { instance = new MessageTask(); }
@@ -36,11 +44,11 @@ public class MessageTask extends ConnectionTask {
 
 	public void sendMessage(Message message) throws RestServiceException {
 		executeRequest(Request.POST, "", message);
-		Log.d(this.getClass().getSimpleName(), "[DEBUG] Message stored!");
+		Log.d(this.getClass().getSimpleName(), "Message stored!");
 	}
 
-	public ArrayList<Message> getMessage(long lastMessageId) throws RestServiceException {
-		ArrayList<Message> messages = new ArrayList<Message>();
+	public List<Message> getMessage(long lastMessageId) throws RestServiceException {
+		List<Message> messages = new ArrayList<Message>();
 
 		try {
 			HttpResponse httpResponse = executeRequest(Request.GET, Long.toString(lastMessageId));
@@ -50,22 +58,23 @@ public class MessageTask extends ConnectionTask {
 
 			JSONArray jsonArray = new JSONArray(json);
 
-			Log.d(this.getClass().getSimpleName(),"[DEBUG] getMessageRequest successful: " + jsonArray.length() + " new messages");// + json);
+			Log.d(this.getClass().getSimpleName(),"getMessageRequest successful: " + jsonArray.length() + " new messages");// + json);
 
 			for (int i = 0; i < jsonArray.length(); i++) {
-				JSONObject obj = jsonArray.getJSONObject(i);
-				JSONObject sender = obj.getJSONObject("sender");
-				JSONObject chat = obj.getJSONObject("chat");
+				JSONObject messageObj = jsonArray.getJSONObject(i);
+				JSONObject senderObj = messageObj.getJSONObject("sender");
+				JSONObject chatObj = messageObj.getJSONObject("chat");
 
-				Log.d(this.getClass().getSimpleName(), "Message: " + obj.toString());
+				Log.d(this.getClass().getSimpleName(), "Message: " + messageObj.toString());
 
-				long chatId = chat.getLong("id");
-				long keyId = obj.getLong("messageKeyId");
+				long chatId = chatObj.getLong("id");
+                long senderId = senderObj.getLong("id");
+				long keyId = messageObj.getLong("messageKeyId");
 
 				/* extracting Keys and save it */
 				JSONObject key;
 				try {
-					key = obj.getJSONObject("messageKey");
+					key = messageObj.getJSONObject("messageKey");
 				} catch (Exception e) { key = null; }
 
 				if (key != null) {
@@ -92,18 +101,25 @@ public class MessageTask extends ConnectionTask {
 					Log.d(this.getClass().getSimpleName(), "[???] Es wurde kein Key in der Message gefunden");
 				}
 
+                // Get chat and sender from database
+                Chat chat = chatDAO.get(chatId);
+                User sender = userDAO.get(senderId);
+
 				Message msg = new Message(
-					new User(sender.getString("name"),sender.getLong("id")),
-					obj.getString("message"),
-					chatId,
-					keyId
+                    Long.valueOf(messageObj.getString("id")),
+                    chat,
+                    sender,
+                    new Date(messageObj.getLong("dateSent")),
+                    messageObj.getString("message"),
+                    keyId
 				);
 				messages.add(msg);
 				Log.d(this.getClass().getSimpleName(), "Message added: " + msg.getMessage());
 			} // end of for-loop
 
-		} catch (IOException e) { throw new RestServiceException(Error.CONNECTION_ERROR);
-    } catch (JSONException e) { e.printStackTrace(); }
+		} catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        } catch (JSONException e) { e.printStackTrace(); }
 
 		Log.d(this.getClass().getSimpleName(), "Number new Messages: " + messages.size());
 		return messages;

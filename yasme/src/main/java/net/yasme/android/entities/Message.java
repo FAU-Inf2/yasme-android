@@ -45,6 +45,15 @@ public class Message implements Serializable {
         // ORMLite needs a no-arg constructor
     }
 
+    public Message(long id, Chat chat, User sender, Date dateSent, String message, long messageKeyId) {
+        this.id = id;
+        this.chat = chat;
+        this.sender = sender;
+        this.dateSent = dateSent;
+        this.message = message;
+        this.messageKeyId = messageKeyId;
+    }
+
     public Message(User sender, String message, long chatId, long messageKeyId) {
         Chat chat = new Chat();
         chat.setId(chatId);
