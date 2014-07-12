@@ -56,7 +56,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (AbstractYasmeActivity)getActivity();
+        activity = (AbstractYasmeActivity) getActivity();
 
         // open storagePreferences
         // Restore preferencesNAME
@@ -67,15 +67,23 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     @Override
     public void onStart() {
         super.onStart();
-
         //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).register(this);
-        Log.d(this.getClass().getSimpleName(),"Try to get LoginObservableInstance");
+        Log.d(this.getClass().getSimpleName(), "Try to get LoginObservableInstance");
         FragmentObservable<LoginFragment, LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
-        Log.d(this.getClass().getSimpleName(),"... successful");
+        Log.d(this.getClass().getSimpleName(), "... successful");
 
         if (!obs.isRegistered(this)) {
             obs.register(this);
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        FragmentObservable<LoginFragment, LoginParam> obs =
+                ObservableRegistry.getObservable(LoginFragment.class);
+        Log.d(this.getClass().getSimpleName(), "Remove from observer");
+        obs.remove(this);
     }
 
     @Override
@@ -229,7 +237,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
     public void onPostLoginExecute(Boolean success, long userId) {
 
-        if(!ConnectionTask.isInitializedSession()) {
+        if (!ConnectionTask.isInitializedSession()) {
             ConnectionTask.initSession(userId, accessToken);
         }
 
@@ -253,7 +261,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                         AbstractYasmeActivity.MODE_PRIVATE);
                 long deviceId = devicePrefs.getLong(AbstractYasmeActivity.DEVICE_ID, -1);
                 if (deviceId < 0) {
-                   // Error ocurred
+                    // Error ocurred
                     Log.e(this.getClass().getSimpleName(), "Could not load registered device's id from shared prefs");
                     return;
                 }
@@ -269,9 +277,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 Log.d(this.getClass().getSimpleName(), "Device does not exist in Database");
                 Log.d(this.getClass().getSimpleName(), "Starting task to register device at yasme server");
                 //DeviceRegistrationTask yasmeDevRegTask =
-                        new DeviceRegistrationTask(activity.getStorage())
+                new DeviceRegistrationTask(activity.getStorage())
                         .execute(Long.toString(userId),
-                        this.deviceProduct, this.googleRegId);
+                                this.deviceProduct, this.googleRegId);
 
             }
             editor.commit();
@@ -309,7 +317,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     public boolean yasmeDeviceCheck() {
 
         //set the deviceProduct
-        this.deviceProduct = Build.MANUFACTURER + " " + Build.MODEL ;
+        this.deviceProduct = Build.MANUFACTURER + " " + Build.MODEL;
         Log.d(this.getClass().getSimpleName(), "MODEL is " + Build.MODEL);
         Log.d(this.getClass().getSimpleName(), "DEVICE is " + Build.DEVICE);
         Log.d(this.getClass().getSimpleName(), "PRODUCT is " + Build.PRODUCT);
@@ -323,9 +331,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         long deviceId = devicePrefs.getLong(AbstractYasmeActivity.DEVICE_ID, -1);
 
         // load regId
-        //TODO: SharedPrefs umbenennen und als String in der AbstractYasmeActivity speichern
         SharedPreferences pushPrefs = activity.
-                getSharedPreferences(LoginActivity.class.getSimpleName(),
+                getSharedPreferences(AbstractYasmeActivity.PUSH_PREFS,
                         AbstractYasmeActivity.MODE_PRIVATE);
 
         this.googleRegId = pushPrefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID, null);
@@ -344,30 +351,26 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     @Override
     public void notifyFragment(LoginParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        if(param instanceof LoginProcessParam)
-            notifyFragment((LoginProcessParam)param);
-        else if(param instanceof DeviceRegistrationParam)
-            notifyFragment((DeviceRegistrationParam)param);
+        if (param instanceof LoginProcessParam)
+            notifyFragment((LoginProcessParam) param);
+        else if (param instanceof DeviceRegistrationParam)
+            notifyFragment((DeviceRegistrationParam) param);
     }
 
     public void notifyFragment(LoginProcessParam loginParam) {
         Log.d(super.getClass().getSimpleName(), "I have been notified with loginParam");
 
-            onPostLoginExecute(loginParam.getSuccess(), loginParam.getUserId());
-            Log.d(super.getClass().getSimpleName(), "Login-Status: " + loginParam.getSuccess());
+        onPostLoginExecute(loginParam.getSuccess(), loginParam.getUserId());
+        Log.d(super.getClass().getSimpleName(), "Login-Status: " + loginParam.getSuccess());
     }
 
     public void notifyFragment(DeviceRegistrationParam deviceRegistrationParam) {
         Log.d(super.getClass().getSimpleName(), "I have been notified with deviceRegistrationParam");
 
-            onPostYasmeDeviceRegExecute(deviceRegistrationParam.getSuccess(),
-                    deviceRegistrationParam.getDeviceId());
+        onPostYasmeDeviceRegExecute(deviceRegistrationParam.getSuccess(),
+                deviceRegistrationParam.getDeviceId());
 
     }
-
-
-
-
 
     public static class LoginParam {
         protected Boolean success;

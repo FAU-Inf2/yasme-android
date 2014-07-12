@@ -37,7 +37,8 @@ public class InviteToChatFragment
     private Button startChat;
     private ArrayAdapter<String> adapter;
 
-    public InviteToChatFragment() { }
+    public InviteToChatFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,9 +72,11 @@ public class InviteToChatFragment
     }
 
 
-    /** Will be called by the GetAllUsersTask after the list of users has been retrieved
-    * @param users list
-    */
+    /**
+     * Will be called by the GetAllUsersTask after the list of users has been retrieved
+     *
+     * @param users list
+     */
     public void updateChatPartnersList(List<User> users) {
         if (null == chatPartners || null == startChat) {
             findViewsById();
@@ -85,8 +88,8 @@ public class InviteToChatFragment
         // Exclude self
         String[] userNames = new String[users.size() - 1];
 
-        int i=0;
-        for (int cur=0; cur<users.size(); cur++) {
+        int i = 0;
+        for (int cur = 0; cur < users.size(); cur++) {
             User user = users.get(cur);
 
             // Skip self
@@ -149,10 +152,10 @@ public class InviteToChatFragment
     public void onStart() {
         super.onStart();
         //Register at observer
-        Log.d(this.getClass().getSimpleName(),"Try to get ChatListObservableInstance");
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
         FragmentObservable<InviteToChatFragment, Long> obs =
                 ObservableRegistry.getObservable(InviteToChatFragment.class);
-        Log.d(this.getClass().getSimpleName(),"... successful");
+        Log.d(this.getClass().getSimpleName(), "... successful");
         if (!obs.isRegistered(this)) {
             obs.register(this);
         }

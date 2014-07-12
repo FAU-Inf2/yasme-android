@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.MenuItem;
 
 import net.yasme.android.R;
@@ -32,6 +31,8 @@ public abstract class AbstractYasmeActivity  extends Activity {
 
     public final static String STORAGE_PREFS = "net.yasme.android.STORAGE_PREFS";
     public final static String DEVICE_PREFS = "net.yasme.android.STORAGE_PREFS";
+    public final static String PUSH_PREFS = "net.yasme.android.STORAGE_PREFS";
+
 
     //GCM Properties
     public static final String PROPERTY_REG_ID = "registration_id";

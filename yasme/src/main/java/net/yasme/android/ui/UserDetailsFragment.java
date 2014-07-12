@@ -15,7 +15,9 @@ import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.CreateChatTask;
+import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.UserDAO;
@@ -95,6 +97,15 @@ public class UserDetailsFragment
             //contact.setName(getArguments().getString(ARG_USERNAME));
             //contact.setEmail(getArguments().getString(ARG_USERMAIL));
             //contact.setId(Long.valueOf(getArguments().getString(ARG_USERID)));
+        }
+
+        //Register at observer
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
+        FragmentObservable<UserDetailsFragment, UserDetailsFragmentParam> obs =
+                ObservableRegistry.getObservable(UserDetailsFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+        if (!obs.isRegistered(this)) {
+            obs.register(this);
         }
     }
 
@@ -196,7 +207,6 @@ public class UserDetailsFragment
 
     }
 
-
     public void startChat(long chatId) {
         //Log.d(this.getClass().getSimpleName(), "Start chat: " + chatId);
         Intent intent = new Intent(activity, ChatActivity.class);
@@ -271,5 +281,27 @@ public class UserDetailsFragment
         public Boolean getSuccess() {
             return success;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Register at observer
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
+        FragmentObservable<UserDetailsFragment, UserDetailsFragmentParam> obs =
+                ObservableRegistry.getObservable(UserDetailsFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+        if (!obs.isRegistered(this)) {
+            obs.register(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        FragmentObservable<UserDetailsFragment, UserDetailsFragmentParam> obs =
+                ObservableRegistry.getObservable(UserDetailsFragment.class);
+        Log.d(this.getClass().getSimpleName(), "Remove from observer");
+        obs.remove(this);
     }
 }

@@ -47,7 +47,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
 
             // Concatenate chat name according to the participant's names
             String name = "";
-            for (int i=0; i<selectedUsers.size(); i++) {
+            for (int i = 0; i < selectedUsers.size(); i++) {
                 name += selectedUsers.get(i).getName();
                 if (i != selectedUsers.size() - 1) {
                     name += ", ";
@@ -84,10 +84,9 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
                 databaseManager.getChatDAO().addIfNotExists(newChat);
             }
 
-            //TODO: Observer benachrichtigen, mit zwei Fragments UserDetailFragment und Invite to Chat
-            ObservableRegistry.getObservable(InviteToChatFragment.class).notifyFragments(newChatId);
+            //Observer mit zwei Fragments UserDetailFragment und Invite to Chat benachrichtigen
             ObservableRegistry.getObservable(UserDetailsFragment.class).notifyFragments(newChatId);
-
+            ObservableRegistry.getObservable(InviteToChatFragment.class).notifyFragments(newChatId);
         }
     }
 }
