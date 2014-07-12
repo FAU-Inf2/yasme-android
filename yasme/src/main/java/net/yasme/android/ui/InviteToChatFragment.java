@@ -16,6 +16,9 @@ import android.widget.Toast;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.CreateChatTask;
 import net.yasme.android.asyncTasks.server.GetAllUsersTask;
+import net.yasme.android.controller.FragmentObservable;
+import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
 
 import java.util.ArrayList;
@@ -24,7 +27,9 @@ import java.util.List;
 /**
  * Created by bene on 22.06.14.
  */
-public class InviteToChatFragment extends Fragment implements View.OnClickListener {
+public class InviteToChatFragment
+        extends Fragment
+        implements View.OnClickListener, NotifiableFragment<Long> {
 
     private AbstractYasmeActivity activity;
     private List<User> users;
@@ -34,19 +39,23 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
 
     public InviteToChatFragment() { }
 
-
-    public AbstractYasmeActivity getAbstractYasmeActivity() {
-        return activity;
-    }
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        //Register at observer
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
+        FragmentObservable<InviteToChatFragment, Long> obs =
+                ObservableRegistry.getObservable(InviteToChatFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+        if (!obs.isRegistered(this)) {
+            obs.register(this);
+        }
+
         activity = (AbstractYasmeActivity) getActivity();
         findViewsById();
-        new GetAllUsersTask(this).execute(Long.toString(activity.getUserId()), activity.getAccessToken());
+        new GetAllUsersTask(this).execute();
     }
 
     @Override
@@ -115,7 +124,7 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
             }
         }
 
-        new CreateChatTask(this, activity.getSelfUser(), selectedUsers).execute(Long.toString(activity.getUserId()), activity.getAccessToken());
+        new CreateChatTask(activity.getSelfUser(), selectedUsers).execute();
         return;
     }
 
@@ -128,5 +137,35 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
         intent.putExtra(activity.CHAT_ID, chatId);
         intent.putExtra(activity.USER_NAME, activity.getSelfUser().getName());
         startActivity(intent);
+    }
+
+    @Override
+    public void notifyFragment(Long chatId) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        startChat(chatId);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Register at observer
+        Log.d(this.getClass().getSimpleName(),"Try to get ChatListObservableInstance");
+        FragmentObservable<InviteToChatFragment, Long> obs =
+                ObservableRegistry.getObservable(InviteToChatFragment.class);
+        Log.d(this.getClass().getSimpleName(),"... successful");
+        if (!obs.isRegistered(this)) {
+            obs.register(this);
+        }
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //De-Register at observer
+        FragmentObservable<InviteToChatFragment, Long> obs =
+                ObservableRegistry.getObservable(InviteToChatFragment.class);
+        Log.d(this.getClass().getSimpleName(), "Remove from observer");
+        obs.remove(this);
     }
 }

@@ -4,11 +4,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.connection.ChatTask;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.InviteToChatFragment;
+import net.yasme.android.ui.UserDetailsFragment;
 
 import java.util.Date;
 import java.util.List;
@@ -19,23 +21,18 @@ import java.util.List;
 public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
 
     private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
-    protected InviteToChatFragment fragment;
     private User selfUser;
     private List<User> selectedUsers;
     private long newChatId = -1;
     private Chat newChat;
 
-    public CreateChatTask(InviteToChatFragment fragment, User selfUser, List<User> selectedUsers) {
+    public CreateChatTask(User selfUser, List<User> selectedUsers) {
         this.selfUser = selfUser;
-        this.fragment = fragment;
         this.selectedUsers = selectedUsers;
     }
 
 
     /**
-     * @param params
-     *              0 is userId
-     *              1 is accessToken
      * @return Returns true if it was successful, otherwise false
      */
     @Override
@@ -62,8 +59,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
             try {
                 newChatId = ChatTask.getInstance().createChatWithPar(newChat);
             } catch (RestServiceException e) {
-                // TODO
-                e.printStackTrace();
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
                 return false;
             }
             newChat.setId(newChatId);
@@ -87,7 +83,11 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
             if (null != newChat) {
                 databaseManager.getChatDAO().addIfNotExists(newChat);
             }
-            fragment.startChat(newChatId);
+
+            //TODO: Observer benachrichtigen, mit zwei Fragments UserDetailFragment und Invite to Chat
+            ObservableRegistry.getObservable(InviteToChatFragment.class).notifyFragments(newChatId);
+            ObservableRegistry.getObservable(UserDetailsFragment.class).notifyFragments(newChatId);
+
         }
     }
 }
