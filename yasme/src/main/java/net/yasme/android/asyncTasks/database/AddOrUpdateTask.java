@@ -15,6 +15,11 @@ public class AddOrUpdateTask<D extends Object, T extends DAO<D>> extends AsyncTa
     private D data;
     private Class classToNotify;
 
+    public AddOrUpdateTask(T specificDAO, D data) {
+        this.specificDAO = specificDAO;
+        this.data = data;
+    }
+
     public AddOrUpdateTask(T specificDAO, D data, Class classToNotify) {
         this.specificDAO = specificDAO;
         this.data = data;
@@ -30,7 +35,9 @@ public class AddOrUpdateTask<D extends Object, T extends DAO<D>> extends AsyncTa
     protected void onPostExecute(Boolean success) {
         if (success) {
             // Notify
-            ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
+            if (null != classToNotify) {
+                ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
+            }
         }
         else {
             Log.w(this.getClass().getSimpleName(), "Did not invoke notification as task did not finish successfully.");

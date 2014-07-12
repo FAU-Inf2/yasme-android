@@ -192,7 +192,10 @@ public class ConnectionTask {
 
         if (contentValue != null) {
             try {
-                requestBase.setEntity(new StringEntity(objectToJsonMapper(contentValue)));
+                StringEntity entity = new StringEntity(objectToJsonMapper(contentValue));
+                entity.setContentEncoding("UTF-8");
+                entity.setContentType("application/json");
+                requestBase.setEntity(entity);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -261,7 +264,7 @@ public class ConnectionTask {
 
     private void addRequestHeader(HttpRequestBase requestBase, Map<String, String> additionalHeaders) {
 
-        requestBase.setHeader("Content-type", "application/json");
+        requestBase.setHeader("Content-Type", "application/json");
         requestBase.setHeader("Accept", "application/json");
 
         // Copy additional header properties. Content-Type and Accept may be overriden

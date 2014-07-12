@@ -60,7 +60,7 @@ public class Message implements Serializable {
         chat.setId(chatId);
 
         this.chat = chat;
-        this.dateSent = new Date();
+        //this.dateSent = new Date(); // Set date at server. Otherwise dates may differ from device to device
         this.sender = sender;
         this.message = message;
         this.messageKeyId = messageKeyId;
@@ -70,7 +70,7 @@ public class Message implements Serializable {
 
     public Message(User sender, String message, Chat chat, long messageKeyId) {
         this.chat = chat;
-        this.dateSent = new Date();
+        //this.dateSent = new Date();   // Set date at server. Otherwise dates may differ from device to device
         this.sender = sender;
         this.message = message;
         this.messageKeyId = messageKeyId;

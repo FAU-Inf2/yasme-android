@@ -9,24 +9,32 @@ import net.yasme.android.entities.Message;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by robert on 19.06.14.
  */
 public class SendMessageTask extends AsyncTask<Message, Void, Boolean> {
 
-    MessageEncryption aes;
+    private MessageEncryption aes;
+    private MessageTask messageTask = MessageTask.getInstance();
+    private AsyncTask onPostExecute;
+    private List<Message> messages = new ArrayList<>();
 
     public SendMessageTask(MessageEncryption aes) {
         this.aes = aes;
     }
 
-    MessageTask messageTask = MessageTask.getInstance();
+    public SendMessageTask(MessageEncryption aes, AsyncTask onPostExecute) {
+        this.aes = aes;
+        this.onPostExecute = onPostExecute;
+    }
 
-    String msg;
 
     /**
      *
-     * @param params
+     * @param msgs
      *              0 is message
      *              1 is userName
      *              2 is userMail
@@ -95,22 +103,34 @@ public class SendMessageTask extends AsyncTask<Message, Void, Boolean> {
         }
         return false;
 */
-			Message msg = msgs[0];
-			try {
-				if(null!=msg) Log.e(this.getClass().getSimpleName(),"Received message is null!");
-				Message ret = messageTask.sendMessage(msg);
-				if(null!=DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(ret)) return false;
-				return true;
-			} catch (RestServiceException rse) {
-				rse.printStackTrace();
-				Log.w(this.getClass().getSimpleName(), rse.getMessage());
-			}
-			return false;
+        for (Message msg : msgs) {
+            this.messages.add(msg);
+            try {
+                if (null == msg) {
+                    Log.e(this.getClass().getSimpleName(), "Received message is null!");
+                }
+                Message ret = messageTask.sendMessage(msg);
+                if (null == DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(ret)) {
+                    return false;
+                }
+            } catch (RestServiceException rse) {
+                rse.printStackTrace();
+                Log.w(this.getClass().getSimpleName(), rse.getMessage());
+                return false;
+            }
+        }
+        return true;
     }
 
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            Log.i(this.getClass().getSimpleName(), "Gesendet: " + msg);
+            Log.i(this.getClass().getSimpleName(), "Sent " + messages.size() + " messages");
+            if (null != this.onPostExecute) {
+                onPostExecute.execute();
+                // onPostExecute async task will call notify the registered fragments
+            } else {
+                ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
+            }
         } else {
             Log.w(this.getClass().getSimpleName(), "Senden fehlgeschlagen");
         }

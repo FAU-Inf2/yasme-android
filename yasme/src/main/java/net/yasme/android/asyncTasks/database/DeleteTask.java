@@ -15,6 +15,11 @@ public class DeleteTask<D extends Object, T extends DAO<D>> extends AsyncTask<Vo
     private D objectToDelete;
     private Class classToNotify;
 
+    public DeleteTask(T specificDAO, D objectToDelete) {
+        this.specificDAO = specificDAO;
+        this.objectToDelete = objectToDelete;
+    }
+
     public DeleteTask(T specificDAO, D objectToDelete, Class classToNotify) {
         this.specificDAO = specificDAO;
         this.objectToDelete = objectToDelete;
@@ -30,7 +35,9 @@ public class DeleteTask<D extends Object, T extends DAO<D>> extends AsyncTask<Vo
     protected void onPostExecute(Boolean success) {
         if (success) {
             // Notify
-            ObservableRegistry.getObservable(classToNotify).notifyFragments(success);
+            if (null != classToNotify) {
+                ObservableRegistry.getObservable(classToNotify).notifyFragments(success);
+            }
         }
         else {
             Log.w(this.getClass().getSimpleName(), "Did not invoke notification as task did not finish successfully.");
