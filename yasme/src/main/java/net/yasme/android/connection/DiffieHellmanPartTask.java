@@ -39,7 +39,7 @@ public class DiffieHellmanPartTask extends ConnectionTask {
 
     public void storeDHPart(DiffieHellmanPart dh) throws RestServiceException {
         executeRequest(Request.POST, "", dh);
-        Log.d(this.getClass().getSimpleName(),"[DEBUG] DH received");
+        Log.d(this.getClass().getSimpleName(),"DH received");
     }
 
     public DiffieHellmanPart getNextKey(long devId) throws RestServiceException {

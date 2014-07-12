@@ -121,7 +121,7 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
 
 
     public void startChat(long chatId) {
-        Log.d(this.getClass().getSimpleName(), "[DEBUG] Start chat: " + chatId);
+        Log.d(this.getClass().getSimpleName(), "Start chat: " + chatId);
         Intent intent = new Intent(activity, ChatActivity.class);
         intent.putExtra(activity.USER_MAIL, activity.getUserMail());
         intent.putExtra(activity.USER_ID, activity.getUserId());

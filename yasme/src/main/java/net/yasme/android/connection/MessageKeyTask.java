@@ -72,7 +72,7 @@ public class MessageKeyTask extends ConnectionTask {
 
             String json = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent())).readLine();
             /**DEBUG**/
-            //Log.d(this.getClass().getSimpleName(),"[DEBUG] getKeyRequest successful: " + json);
+            //Log.d(this.getClass().getSimpleName(),"getKeyRequest successful: " + json);
             /**DEBUG**/
 
             JSONObject obj = new JSONObject(json);
