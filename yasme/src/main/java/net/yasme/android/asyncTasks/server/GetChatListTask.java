@@ -30,6 +30,7 @@ public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
 
     protected void onPostExecute(final Boolean success) {
         if (!success) {
+            // TODO Remove chats
             Log.d(this.getClass().getName(), "Fehler bei Datenbankzugriff");
             //createDummyChatRoomList();
         }
