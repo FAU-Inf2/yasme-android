@@ -90,6 +90,7 @@ public class ChatAdapter extends ArrayAdapter {
 
         imageView.setImageResource(R.drawable.chat_default_icon); //TODO
 
+        rowView.requestFocus();
         return rowView;
     }
 }

@@ -115,7 +115,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             }
         });
 
-        boolean old = false;
+        boolean old = true;
         if(old) {
             updateViews(chat.getMessages());
         } else {
@@ -205,9 +205,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             Log.d(this.getClass().getSimpleName(), "Keine Nachrichten zum Ausgeben");
             return;
         }
-        boolean old = false;
+        boolean old = true;
         if(!old) {
             adapter.add(messages);
+            editMessage.requestFocus();
         } else {
             for (Message msg : messages) {
                 //msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
