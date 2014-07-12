@@ -89,8 +89,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_chat, container,
-                false);
+        View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         editMessage = (EditText) rootView.findViewById(R.id.text_message);
         status = (TextView) rootView.findViewById(R.id.text_status);
         layout = (LinearLayout) rootView.findViewById(R.id.scrollLayout);

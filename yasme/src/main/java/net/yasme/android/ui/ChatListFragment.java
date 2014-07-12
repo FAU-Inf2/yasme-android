@@ -43,20 +43,29 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
        adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
        setListAdapter(adapter);
 
+       //Register at observer
+       //ChatListParam test = new ChatListParam(null);
+       //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
+       Log.d(this.getClass().getSimpleName(),"Try to get ChatListObservableInstance");
+       FragmentObservable<ChatListFragment,List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
+       Log.d(this.getClass().getSimpleName(),"... successful");
+       if (!obs.isRegistered(this)) {
+           obs.register(this);
+       }
+
        // TODO Holt erst die Chats aus der Datenbank ab
        // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
        // Danach evtl nochmal aktualisieren
        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-       new GetAllTask(chatDAO, ChatListFragment.class);
+       new GetAllTask(chatDAO, ChatListFragment.class).execute();
 
         // Holt erst die Chats aus der Datenbank ab
-        //List<Chat> chatRoomsFromDB = DatabaseManager.INSTANCE.getChatDAO().getAll();
-        //adapter.updateChats(chatRooms);
-        //adapter.notifyDataSetChanged();
+        List<Chat> chatRoomsFromDB = DatabaseManager.INSTANCE.getChatDAO().getAll();
+        adapter.updateChats(chatRooms);
+        adapter.notifyDataSetChanged();
 
         //holt vor allem den Namen des Users ab
         new GetProfileDataTask(activity.storage).execute();
-
 
         // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
 
@@ -68,14 +77,13 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         //Laedt die Liste aller Chats von der Datenbank in das Fragment
         new GetChatListTask().execute();
-}
+    }
 
 
     @Override
     public void onStart() {
+        super.onStart();
         //Register at observer
-        //ChatListParam test = new ChatListParam(null);
-        //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).register(this);
         Log.d(this.getClass().getSimpleName(),"Try to get ChatListObservableInstance");
         FragmentObservable<ChatListFragment,List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
         Log.d(this.getClass().getSimpleName(),"... successful");

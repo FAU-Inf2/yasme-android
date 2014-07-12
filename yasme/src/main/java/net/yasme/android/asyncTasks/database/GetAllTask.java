@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by bene on 11.07.14.
  */
-public class GetAllTask<D extends Object, T extends DAO<D>> extends AsyncTask<Void, Void, Boolean> {
+public class GetAllTask<D extends Object, T extends DAO<D>> extends AsyncTask<Object, Void, Boolean> {
 
     private T specificDAO;
     private List<D> data;
@@ -23,7 +23,7 @@ public class GetAllTask<D extends Object, T extends DAO<D>> extends AsyncTask<Vo
     }
 
     @Override
-    protected Boolean doInBackground(Void... voids) {
+    protected Boolean doInBackground(Object... objects) {
         return null != (data = specificDAO.getAll());
     }
 
