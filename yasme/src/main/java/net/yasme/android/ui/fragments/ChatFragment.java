@@ -171,7 +171,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 //				Chat chat = new Chat();
 //				chat.setId(chatId);
         //chat.setParticipants(DatabaseManager.INSTANCE.getParticipantsForChat(chatId));
-        new SendMessageTask(chat.getEncryption()).execute(new Message(user, msgEncrypted, chat.getId(), aesId));
         // Send message and get new messages afterwards
         new SendMessageTask(chat.getEncryption(), new GetMessageTask(activity.getStorage()))
                 .execute(new Message(activity.getSelfUser(), msgEncrypted, chat.getId(), aesId));
