@@ -2,9 +2,9 @@ package net.yasme.android.ui;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +14,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.server.CreateSingleChatTask;
+import net.yasme.android.asyncTasks.server.CreateChatTask;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.UserDAO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +44,7 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
     // TODO: Rename and change types of parameters
 
     private User contact;
-    private User selfuser;
+    private User selfUser;
     private AbstractYasmeActivity activity;
 
     private TextView contactName;
@@ -115,7 +118,7 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
         numberButton.setOnClickListener(this);
 
         activity = (AbstractYasmeActivity) getActivity();
-        selfuser = activity.getSelfUser();
+        selfUser = activity.getSelfUser();
 
         userDAO = DatabaseManager.INSTANCE.getUserDAO();
 
@@ -155,7 +158,9 @@ public class UserDetailsFragment extends DialogFragment implements View.OnClickL
     switch (v.getId()) {
         case R.id.contact_detail_newchat:
             Log.d(this.getClass().getSimpleName(),"------------------- Create New Chat ---------------------------");
-            CreateSingleChatTask chatTask = new CreateSingleChatTask((ContactActivity) getActivity(),this, selfuser, contact);
+            List<User> selectedUsers = new ArrayList<User>();
+            selectedUsers.add(contact);
+            CreateChatTask chatTask = new CreateChatTask(selfUser, selectedUsers);
             chatTask.execute(String.valueOf(activity.getUserId()), activity.getAccessToken());
         break;
 
