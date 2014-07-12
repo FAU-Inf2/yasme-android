@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.connection.ChatTask;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
@@ -11,6 +12,7 @@ import net.yasme.android.storage.ChatUser;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.UserDAO;
+import net.yasme.android.ui.ChatListFragment;
 
 import java.util.Date;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.List;
 /**
  * Created by robert on 07.07.14.
  */
-public class GetChatTask extends AsyncTask<String, Void, Boolean> {
+public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
 
     private DatabaseManager dbManager;
     private UserDAO userDAO;
@@ -26,19 +28,18 @@ public class GetChatTask extends AsyncTask<String, Void, Boolean> {
 
     private List<Chat> chatsToReturn;
 
-    public GetChatTask() {
+    public GetMyChatsTask() {
         dbManager = DatabaseManager.INSTANCE;
         userDAO = DatabaseManager.INSTANCE.getUserDAO();
         chatDAO = DatabaseManager.INSTANCE.getChatDAO();
     }
 
     /**
+     * Requests the user's chats from the server and updates the database.
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
-
         List<Chat> serverChats = null;
-
         try {
             serverChats = ChatTask.getInstance().getAllChatsForUser();
         } catch (RestServiceException e) {
@@ -50,46 +51,9 @@ public class GetChatTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
 
-
-        for (Chat chat : serverChats) {
-            //if (chat.getLastModified().after(new Date())) {
-                Chat chatWithInfo;
-
-                //Infos fuer jeden chat abrufen
-                //try {
-                //    chatWithInfo = ChatTask.getInstance().getInfoOfChat(chat.getId());
-                //} catch (RestServiceException e) {
-                //    Log.w(this.getClass().getSimpleName(), e.getMessage());
-                //    return false;
-                //}
-
-
-                //chat.setParticipants(chatWithInfo.getParticipants());
-                //chat.setStatus(chatWithInfo.getStatus());
-
-                //Participants in DB speichern, Beziehungstabelle aktualisieren
-
-                //List<User> users = chat.getParticipants();
-                //for (User user : users) {
-                //    if (user.getName() != null) {
-                //        Log.d(this.getClass().getSimpleName(), "[Debug] added " + user.getName());
-                //    } else {
-                //        continue;
-                //    }
-                //    userDAO.addOrUpdate(user);
-                //    dbManager.createChatUser(new ChatUser(chat, user));
-                //    Log.d(this.getClass().getSimpleName(), "User and ChatUser added to DB");
-                //}
-                //dbManager.createOrUpdateChat(chat);
-
-                Chat insertedChat = chatDAO.addOrUpdate(chat);
-                if (null == insertedChat) {
-                    Log.e(this.getClass().getSimpleName(), "An error occurred while add or updating a chat object to the database");
-                    return false;
-                }
-            //} else {
-            //    continue;
-            //}
+        // Swap the complete database table with the new chats
+        if (!chatDAO.refreshAll(serverChats)) {
+            Log.e(this.getClass().getSimpleName(), "Refreshing all chats failed");
         }
 
         if (null == (chatsToReturn = chatDAO.getAll())) {
@@ -100,10 +64,6 @@ public class GetChatTask extends AsyncTask<String, Void, Boolean> {
     }
 
 
-    /**
-     * updates Database,
-     * stores lastMessageId
-     */
     @Override
     protected void onPostExecute(final Boolean success) {
         if (!success) {
@@ -112,8 +72,8 @@ public class GetChatTask extends AsyncTask<String, Void, Boolean> {
         }
 
         Log.i(this.getClass().getSimpleName(), "success");
+        ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(chatsToReturn);
 
         //TODO: abrufen der neuen nachrichten durch den Chat triggern
-        //Observer benachrichtigen
     }
 }

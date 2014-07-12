@@ -9,8 +9,7 @@ import android.widget.ListView;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.database.GetAllTask;
-import net.yasme.android.asyncTasks.server.GetChatListTask;
-import net.yasme.android.asyncTasks.server.GetChatTask;
+import net.yasme.android.asyncTasks.server.GetMyChatsTask;
 import net.yasme.android.asyncTasks.server.GetMessageTask;
 import net.yasme.android.asyncTasks.server.GetProfileDataTask;
 import net.yasme.android.controller.FragmentObservable;
@@ -53,29 +52,23 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         obs.register(this);
        }
 
-       // TODO Holt erst die Chats aus der Datenbank ab
-       // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
-       // Danach evtl nochmal aktualisieren
+       // At first, retrieve the chats from the database
        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
        new GetAllTask(chatDAO, ChatListFragment.class).execute();
         // Holt erst die Chats aus der Datenbank ab
-        List<Chat> chatRoomsFromDB = DatabaseManager.INSTANCE.getChatDAO().getAll();
-        adapter.updateChats(chatRooms);
-        adapter.notifyDataSetChanged();
+        //List<Chat> chatRoomsFromDB = DatabaseManager.INSTANCE.getChatDAO().getAll();
+        //adapter.updateChats(chatRooms);
+        //adapter.notifyDataSetChanged();
 
         //holt vor allem den Namen des Users ab
         new GetProfileDataTask(activity.storage).execute();
 
         // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
+        // Aktualisiert die Datenbank auf den aktuellen Stand des Servers
+        new GetMyChatsTask().execute();
 
-        //Aktualisiert die Datenbank auf den aktuellen Stand des Servers
-        new GetChatTask().execute(Long.toString(activity.getUserId()), activity.getAccessToken());
         new GetMessageTask(activity.getStorage()).execute();
-
-        // Danach evtl nochmal aktualisieren
-
-        //Laedt die Liste aller Chats von der Datenbank in das Fragment
-        new GetChatListTask().execute();
+        new GetAllTask(chatDAO, ChatListFragment.class).execute();
     }
 
 

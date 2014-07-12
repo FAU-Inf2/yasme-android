@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * Created by robert on 19.06.14.
  */
+@Deprecated
 public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
 
     private List<Chat> chatRooms = null;
@@ -30,7 +31,6 @@ public class GetChatListTask extends AsyncTask<String, Void, Boolean> {
 
     protected void onPostExecute(final Boolean success) {
         if (!success) {
-            // TODO Remove chats
             Log.d(this.getClass().getName(), "Fehler bei Datenbankzugriff");
             //createDummyChatRoomList();
         }
