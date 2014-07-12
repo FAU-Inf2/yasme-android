@@ -9,8 +9,8 @@ import android.widget.ListView;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.database.GetAllTask;
-import net.yasme.android.asyncTasks.server.GetMyChatsTask;
 import net.yasme.android.asyncTasks.server.GetMessageTask;
+import net.yasme.android.asyncTasks.server.GetMyChatsTask;
 import net.yasme.android.asyncTasks.server.GetProfileDataTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
@@ -27,9 +27,9 @@ import java.util.List;
  */
 public class ChatListFragment extends ListFragment implements NotifiableFragment<List<Chat>> {
 
-   private AbstractYasmeActivity activity;
-   private List<Chat> chatRooms = new ArrayList<Chat>();
-   private ChatListAdapter adapter;
+    private AbstractYasmeActivity activity;
+    private List<Chat> chatRooms = new ArrayList<Chat>();
+    private ChatListAdapter adapter;
 
     public ChatListFragment() {
 
@@ -48,13 +48,13 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
         FragmentObservable<ChatListFragment, List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
-       if (!obs.isRegistered(this)) {
-        obs.register(this);
-       }
+        if (!obs.isRegistered(this)) {
+            obs.register(this);
+        }
 
-       // At first, retrieve the chats from the database
-       ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-       new GetAllTask(chatDAO, ChatListFragment.class).execute();
+        // At first, retrieve the chats from the database
+        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+        new GetAllTask(chatDAO, ChatListFragment.class).execute();
         // Holt erst die Chats aus der Datenbank ab
         //List<Chat> chatRoomsFromDB = DatabaseManager.INSTANCE.getChatDAO().getAll();
         //adapter.updateChats(chatRooms);
@@ -76,9 +76,9 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     public void onStart() {
         super.onStart();
         //Register at observer
-        Log.d(this.getClass().getSimpleName(),"Try to get ChatListObservableInstance");
-        FragmentObservable<ChatListFragment,List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
-        Log.d(this.getClass().getSimpleName(),"... successful");
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
+        FragmentObservable<ChatListFragment, List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
         if (!obs.isRegistered(this)) {
             obs.register(this);
         }

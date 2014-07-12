@@ -163,7 +163,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     public void asyncUpdate() {
         status.setText("GET messages");
         new GetMessageTask(storage)
-                .execute(Long.toString(activity.getSelfUser().getId()), activity.getAccessToken());
+                .execute();
         status.setText("GET messages done");
     }
 

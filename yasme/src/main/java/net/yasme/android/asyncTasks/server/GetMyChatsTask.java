@@ -6,15 +6,12 @@ import android.util.Log;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.storage.ChatUser;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.ui.ChatListFragment;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -73,7 +70,5 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
 
         Log.i(this.getClass().getSimpleName(), "success");
         ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(chatsToReturn);
-
-        //TODO: abrufen der neuen nachrichten durch den Chat triggern
     }
 }

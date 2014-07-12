@@ -52,21 +52,22 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
             Log.i(this.getClass().getSimpleName(), "messages is empty");
             return true;
         }
-        ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
-        Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
 
         //add new messages to DB
+        Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
         for(Message msg : messages) {
             Log.d(this.getClass().getSimpleName(), msg.getMessage() + " " + msg.getId());
             //DatabaseManager.INSTANCE.getMessageDAO().add(msg);//storeMessages(messages);
             //DatabaseManager.INSTANCE.getMessageKeyDAO().add(msg.getMessageKey());
 
-            //TODO: ein AsyncTask in einem AsyncTask? Wuerde ich wieder durch das normale ersetzen
-            new AddOrUpdateTask(DatabaseManager.INSTANCE.getMessageDAO(), msg, ChatActivity.class)
-                    .execute();
+            if (null == DatabaseManager.INSTANCE.getMessageDAO().addOrUpdate(msg)) {
+                Log.e(this.getClass().getSimpleName(), "Storing a message in database failed");
+            }
+
             if (null != msg.getMessageKey()) {
-                new AddIfNotExistsTask(DatabaseManager.INSTANCE.getMessageKeyDAO(), msg.getMessageKey(), ChatActivity.class)
-                    .execute();
+                if (null == DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(msg.getMessageKey())) {
+                    Log.e(this.getClass().getSimpleName(), "Storing a message key in database failed");
+                }
             }
         }
 
@@ -84,10 +85,11 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         if (!success) {
-            Log.w(this.getClass().getSimpleName(), "UpdateDB not successfull");
+            Log.w(this.getClass().getSimpleName(), "No success");
             return;
         }
         Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
-        // Fragment wird schon weiter oben benachrichtigt
+
+        ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
     }
 }
