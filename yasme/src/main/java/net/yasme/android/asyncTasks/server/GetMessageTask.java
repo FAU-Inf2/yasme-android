@@ -69,7 +69,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         }
 
         //increase and store lastMessageId
-        lastMessageId = messages.size() + lastMessageId;
+        lastMessageId = messages.get(messages.size()-1).getId();
         Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
 
         SharedPreferences.Editor editor = storage.edit();

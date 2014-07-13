@@ -70,7 +70,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
         FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
-        obs.register(this);
+
+        if (!obs.isRegistered(this)) {
+            obs.register(this);
+        }
 
         //trying to get chat with chatId from local DB
         try {
@@ -136,7 +139,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
         FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
-        obs.register(this);
+
+        if (!obs.isRegistered(this)) {
+            obs.register(this);
+        }
     }
 
     @Override
@@ -171,7 +177,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 //				Chat chat = new Chat();
 //				chat.setId(chatId);
         //chat.setParticipants(DatabaseManager.INSTANCE.getParticipantsForChat(chatId));
-        new SendMessageTask(chat.getEncryption()).execute(new Message(user, msgEncrypted, chat.getId(), aesId));
         // Send message and get new messages afterwards
         new SendMessageTask(chat.getEncryption(), new GetMessageTask(activity.getStorage()))
                 .execute(new Message(activity.getSelfUser(), msgEncrypted, chat.getId(), aesId));
@@ -213,7 +218,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             for (Message msg : messages) {
                 //msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
                 TextView textView = new TextView(activity.getApplicationContext());
-
 
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,

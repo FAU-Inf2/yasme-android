@@ -31,17 +31,17 @@ public class LoginActivity extends AbstractYasmeActivity {
         //HttpClient.context = this.getApplicationContext();
 
         //GCM Begin
-        cloudMessaging = CloudMessaging.getInstance(this);
-
-        if (cloudMessaging.checkPlayServices()) {
-            String regid = cloudMessaging.getRegistrationId();
-            Log.d(this.getClass().getSimpleName(),"Empty?" + regid.isEmpty());
-            if (regid.isEmpty()) {
-                registerInBackground();
-            }
-        } else {
-            Log.i(AbstractYasmeActivity.TAG, "No valid Google Play Services APK found.");
-        }
+//        cloudMessaging = CloudMessaging.getInstance(this);
+//
+//        if (cloudMessaging.checkPlayServices()) {
+//            String regid = cloudMessaging.getRegistrationId();
+//            Log.d(this.getClass().getSimpleName(),"Google reg id is empty? " + regid.isEmpty());
+//            if (regid.isEmpty()) {
+//                registerInBackground();
+//            }
+//        } else {
+//            Log.i(AbstractYasmeActivity.TAG, "No valid Google Play Services APK found.");
+//        }
         //GCM End
     }
 
@@ -56,32 +56,32 @@ public class LoginActivity extends AbstractYasmeActivity {
 
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        cloudMessaging.checkPlayServices();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    public void registerInBackground() {
-
-        new AsyncTask<Void, Void, String>() {
-
-            protected String doInBackground(Void[] params) {
-                return cloudMessaging.registerInBackground();
-            }
-
-            protected void onPostExecute(String msg) {
-                //Zu diesem Zeitpunkt ist die RegId bereits als SharedPref.
-                // in AbstractYasmeActivity.PROPERTY_REG_ID abgelegt.
-                Log.d(this.getClass().getSimpleName(),msg);
-
-            }
-
-        }.execute(null, null, null);
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        cloudMessaging.checkPlayServices();
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//    }
+//
+//    public void registerInBackground() {
+//
+//        new AsyncTask<Void, Void, String>() {
+//
+//            protected String doInBackground(Void[] params) {
+//                return cloudMessaging.registerInBackground();
+//            }
+//
+//            protected void onPostExecute(String msg) {
+//                //Zu diesem Zeitpunkt ist die RegId bereits als SharedPref.
+//                // in AbstractYasmeActivity.PROPERTY_REG_ID abgelegt.
+//                Log.d(this.getClass().getSimpleName(),msg);
+//
+//            }
+//
+//        }.execute(null, null, null);
+//    }
 }

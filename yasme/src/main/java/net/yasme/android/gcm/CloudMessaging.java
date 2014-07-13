@@ -94,26 +94,26 @@ public class CloudMessaging {
     }
 
     public String registerInBackground() {
-
-        String msg = "";
         try {
             if (gcm == null) {
                 gcm = GoogleCloudMessaging.getInstance(context);
             }
             regid = gcm.register(AbstractYasmeActivity.SENDER_ID);
-            msg = "Device registered, registration ID=" + regid;
+            //msg = "Device registered, registration ID=" + regid;
 
-            Log.d(this.getClass().getSimpleName(),"Device registered, registration ID=" + regid);
+            Log.d(this.getClass().getSimpleName(), "Device registered, registration ID=" + regid);
 
             // Persist the regID - no need to register again.
             storeRegistrationId(context, regid);
-        } catch (IOException ex) {
-            msg = "Error :" + ex.getMessage();
+            return regid;
+        } catch (IOException e) {
             // If there is an error, don't just keep trying to register.
             // Require the user to click a button again, or perform
             // exponential back-off.
+            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return null;
         }
-        return msg;
     }
 
     private void storeRegistrationId(Context context, String regId) {
