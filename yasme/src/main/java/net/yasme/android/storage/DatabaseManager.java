@@ -54,6 +54,10 @@ public enum DatabaseManager {
         return mSharedPreferences;
     }
 
+    public Context getContext() {
+        return mContext;
+    }
+
     private void initializeDAOs() {
         UserDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
         userDAO = UserDAOImpl.INSTANCE;
