@@ -4,6 +4,7 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:padding="6dip" >
 
+    <!--android:layout_height="?android:attr/listPreferredItemHeight"-->
     <ImageView
         android:id="@+id/chat_item_picture_other"
         android:layout_width="wrap_content"
@@ -16,7 +17,7 @@
     <TextView
         android:id="@+id/chat_item_date_other"
         android:layout_width="fill_parent"
-        android:layout_height="26dip"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:ellipsize="marquee"
         android:textSize="12sp"
@@ -50,7 +51,7 @@
     <TextView
         android:id="@+id/chat_item_date_own"
         android:layout_width="fill_parent"
-        android:layout_height="26dip"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:ellipsize="marquee"

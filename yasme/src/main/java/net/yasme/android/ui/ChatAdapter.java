@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by robert on 12.07.14.
  */
-public class ChatAdapter extends ArrayAdapter {
+public class ChatAdapter extends ArrayAdapter<Message> {
     private final Context context;
     private List<Message> messages;
     private long selfId;
@@ -48,46 +48,31 @@ public class ChatAdapter extends ArrayAdapter {
             dateView = (TextView) rowView.findViewById(R.id.chat_item_date_own);
             imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture_own);
 
-            String time = msg.getDateSent().toString();
-            String name;
-            try {
-                name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
-            } catch (NullPointerException e) {
-                Log.d(this.getClass().getSimpleName(), "User nicht in DB gefunden");
-                name = "anonym";
-            }
-            //Log.d(this.getClass().getSimpleName(), name + time);
-
-            textView.setText(name + ": " + msg.getMessage());
-            dateView.setText("Gesendet: " + time);
-
             textView.setGravity(Gravity.RIGHT);
             dateView.setGravity(Gravity.RIGHT);
-            //textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.chat_text_bg_self));
-            //textView.setTextColor(context.getResources().getColor(R.color.chat_text_color_self));
+            textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.chat_text_bg_self));
+            textView.setTextColor(context.getResources().getColor(R.color.chat_text_color_self));
         } else {
             textView = (TextView) rowView.findViewById(R.id.chat_item_message_other);
             dateView = (TextView) rowView.findViewById(R.id.chat_item_date_other);
             imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture_other);
 
-            String time = msg.getDateSent().toString();
-            String name;
-            try {
-                name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
-            } catch (NullPointerException e) {
-                Log.d(this.getClass().getSimpleName(), "User nicht in DB gefunden");
-                name = "anonym";
-            }
-            //Log.d(this.getClass().getSimpleName(), name + time);
-
-            textView.setText(name + ": " + msg.getMessage());
-            dateView.setText("Gesendet: " + time);
-
-            //textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.chat_text_bg_other));
-            //textView.setTextColor(context.getResources().getColor(R.color.chat_text_color_other));
+            textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.chat_text_bg_other));
+            textView.setTextColor(context.getResources().getColor(R.color.chat_text_color_other));
         }
 
+        String time = msg.getDateSent().toString();
+        String name;
+        try {
+            name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
+        } catch (NullPointerException e) {
+            Log.d(this.getClass().getSimpleName(), "User nicht in DB gefunden");
+            name = "anonym";
+        }
+        //Log.d(this.getClass().getSimpleName(), name + time);
 
+        textView.setText(name + ": " + msg.getMessage());
+        dateView.setText("Gesendet: " + time);
         imageView.setImageResource(R.drawable.chat_default_icon); //TODO
 
         rowView.requestFocus();

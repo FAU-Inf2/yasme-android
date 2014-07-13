@@ -40,7 +40,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     private AbstractYasmeActivity activity;
 
     private SharedPreferences storage;
-    private ChatAdapter adapter;
+    private ChatAdapter mAdapter;
 
     //UI references
     private EditText editMessage;
@@ -118,15 +118,15 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             }
         });
 
-        boolean old = true;
+        boolean old = false;
         if(old) {
             updateViews(chat.getMessages());
         } else {
             //Get adapter and set old messages
-            adapter = new ChatAdapter(activity, R.layout.chat_item,
+            mAdapter = new ChatAdapter(activity, R.layout.chat_item,
                     activity.getUserId(), chat.getMessages());
-            list.setAdapter(adapter);
-            adapter.setNotifyOnChange(true);
+            list.setAdapter(mAdapter);
+            mAdapter.setNotifyOnChange(true);
         }
 
         return rootView;
@@ -186,12 +186,11 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 					activity.getSelfUser().getName(),
 					activity.getSelfUser().getEmail(),
 					Long.toString(activity.getSelfUser().getId()),
-          Long.toString(chat.getId()),
+                    Long.toString(chat.getId()),
 					activity.getAccessToken()
 				);
 */
         editMessage.setText("");
-        //update(view);
     }
 
     public void asyncUpdate() {
@@ -210,9 +209,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             Log.d(this.getClass().getSimpleName(), "Keine Nachrichten zum Ausgeben");
             return;
         }
-        boolean old = true;
+        boolean old = false;
         if(!old) {
-            adapter.add(messages);
+            mAdapter.addAll(messages);
             editMessage.requestFocus();
         } else {
             for (Message msg : messages) {
