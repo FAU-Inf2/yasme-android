@@ -56,26 +56,13 @@ public class GcmIntentService extends IntentService {
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.
                     MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                // This loop represents the service doing some work.
+
+                Log.d(this.getClass().getSimpleName(), "Received message with type message from GCM");
                 if (extras.containsKey("type")) {
                     if (extras.get("type").equals("msg")) {
                         new GetMessageTask().execute();
                     }
                 }
-
-
-                for (int i=0; i<5; i++) {
-                    Log.i(AbstractYasmeActivity.TAG, "Working... " + (i+1)
-                            + "/5 @ " + SystemClock.elapsedRealtime());
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                    }
-                }
-                Log.i(AbstractYasmeActivity.TAG, "Completed work @ " + SystemClock.elapsedRealtime());
-                // Post notification of received message.
-                Log.d(this.getClass().getSimpleName(),"Received: " + extras.toString());
-                Log.i(AbstractYasmeActivity.TAG, "Received: " + extras.toString());
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
