@@ -251,7 +251,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         if (success) {
             //Initialize database (once in application)
             if (!DatabaseManager.INSTANCE.isInitialized()) {
-                DatabaseManager.INSTANCE.init(activity.getApplicationContext(), userId);
+                DatabaseManager.INSTANCE.init(activity.getApplicationContext(), activity.getStorage(), userId);
             }
 
             SharedPreferences devicePrefs = activity.getSharedPreferences(

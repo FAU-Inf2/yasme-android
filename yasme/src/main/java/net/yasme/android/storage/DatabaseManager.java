@@ -1,6 +1,7 @@
 package net.yasme.android.storage;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.ChatDAOImpl;
@@ -23,6 +24,7 @@ public enum DatabaseManager {
     private DatabaseHelper mHelper;
     private Context mContext;
     private long mUserId;
+    private SharedPreferences mSharedPreferences;
 
     private UserDAO userDAO;
     private ChatDAO chatDAO;
@@ -30,8 +32,9 @@ public enum DatabaseManager {
     private MessageKeyDAO messageKeyDAO;
     private CurrentKeyDAO currentKeyDAO;
 
-    public void init(Context context, long userId) {
+    public void init(Context context, SharedPreferences sharedPreferences, long userId) {
         mContext = context;
+        mSharedPreferences = sharedPreferences;
         mUserId = userId;
         mHelper = new DatabaseHelper(context, userId);
         initializeDAOs();
@@ -47,6 +50,9 @@ public enum DatabaseManager {
         return mHelper;
     }
 
+    public SharedPreferences getSharedPreferences() {
+        return mSharedPreferences;
+    }
 
     private void initializeDAOs() {
         UserDAOImpl.INSTANCE.setDatabaseHelper(mHelper);

@@ -22,8 +22,8 @@ import java.util.List;
 public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
     SharedPreferences storage;
 
-    public GetMessageTask(SharedPreferences storage) {
-        this.storage = storage;
+    public GetMessageTask() {
+        this.storage = DatabaseManager.INSTANCE.getSharedPreferences();
     }
 
     List<Message> messages;

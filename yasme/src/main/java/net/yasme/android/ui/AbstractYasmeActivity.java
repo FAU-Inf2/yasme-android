@@ -39,7 +39,7 @@ public abstract class AbstractYasmeActivity  extends Activity {
     //GCM Properties
     public static final String PROPERTY_REG_ID = "registration_id";
     public static final String PROPERTY_APP_VERSION = "appVersion";
-    public static final String SENDER_ID = "104759172131";
+    public static final String SENDER_ID = "688782154540"; //"104759172131";
     public static final  int   PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public static final String TAG = "YasmeGCM";
 
@@ -72,7 +72,7 @@ public abstract class AbstractYasmeActivity  extends Activity {
 
         //Initialize database (once in application)
         if(!DatabaseManager.INSTANCE.isInitialized()) {
-            DatabaseManager.INSTANCE.init(this, userId);
+            DatabaseManager.INSTANCE.init(this, storage, userId);
         }
 
         selfUser = new User();

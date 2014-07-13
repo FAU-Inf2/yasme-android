@@ -178,7 +178,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 //				chat.setId(chatId);
         //chat.setParticipants(DatabaseManager.INSTANCE.getParticipantsForChat(chatId));
         // Send message and get new messages afterwards
-        new SendMessageTask(chat.getEncryption(), new GetMessageTask(activity.getStorage()))
+        new SendMessageTask(chat.getEncryption(), new GetMessageTask())
                 .execute(new Message(activity.getSelfUser(), msgEncrypted, chat.getId(), aesId));
         status.setText("Send message in bg");
 /*
@@ -195,8 +195,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     public void asyncUpdate() {
         status.setText("GET messages");
-        new GetMessageTask(storage)
-                .execute();
+        new GetMessageTask().execute();
         status.setText("GET messages in bg");
     }
 
