@@ -57,7 +57,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.ChatListActivity"/>
+                android:value=".ui.activities.ChatListActivity"/>
         </activity>
         <activity
             android:name=".ui.activities.InviteToChatActivity"
@@ -65,7 +65,7 @@
             android:parentActivityName=".ui.activities.ChatListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.ChatListActivity" />
+                android:value=".ui.activities.ChatListActivity" />
             android:name=".contacts.YasmeContact"
             android:label="@string/title_activity_yasme_contact" >
         </activity>
