@@ -147,7 +147,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
                 break;
         }
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.mm.yyyy hh:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy hh:mm");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+2"));
         String formattedDate = formatter.format(date);
         if(day.isEmpty()) {
