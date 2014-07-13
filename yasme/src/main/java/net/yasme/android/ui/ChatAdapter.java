@@ -47,18 +47,17 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             textView = (TextView) rowView.findViewById(R.id.chat_item_message_own);
             dateView = (TextView) rowView.findViewById(R.id.chat_item_date_own);
             imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture_own);
-
             textView.setGravity(Gravity.RIGHT);
             dateView.setGravity(Gravity.RIGHT);
-            textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.chat_text_bg_self));
-            textView.setTextColor(context.getResources().getColor(R.color.chat_text_color_self));
+            //textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.chat_text_bg_self));
+            //textView.setTextColor(context.getResources().getColor(R.color.chat_text_color_self));
         } else {
             textView = (TextView) rowView.findViewById(R.id.chat_item_message_other);
             dateView = (TextView) rowView.findViewById(R.id.chat_item_date_other);
             imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture_other);
 
-            textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.chat_text_bg_other));
-            textView.setTextColor(context.getResources().getColor(R.color.chat_text_color_other));
+            //textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.chat_text_bg_other));
+            //textView.setTextColor(context.getResources().getColor(R.color.chat_text_color_other));
         }
 
         String time = msg.getDateSent().toString();
