@@ -3,10 +3,12 @@ package net.yasme.android.asyncTasks.server;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
-import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.connection.UserTask;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.fragments.RegisterFragment;
 
 /**
  * Created by robert on 19.06.14.
@@ -62,11 +64,13 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
         //TODO: register fragment mit folgenden Sachen benachrichtigen
         //activity.onPostRegisterExecute(success, email, password);
         //ObserverRegistry.getRegistry(ObserverRegistry.Observers.REGISTERFRAGMENT).notifyFragments(new RegisterFragment.RegistrationParam(success, email, password));
+        ObservableRegistry.getObservable(RegisterFragment.class).notifyFragments(
+                new RegisterFragment.RegistrationParam(success, email, password));
     }
 
     @Override
     protected void onCancelled() {
-        //TODO: hier ebenfalls observer
+        //TODO: hier ebenfalls observer für progress
         //activity.showProgress(false);
     }
 }
