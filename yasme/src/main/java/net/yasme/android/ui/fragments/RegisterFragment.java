@@ -14,13 +14,15 @@ import android.widget.Toast;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.UserLoginTask;
 import net.yasme.android.asyncTasks.server.UserRegistrationTask;
+import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
 /**
  * Created by robert on 06.07.14.
  */
-public class RegisterFragment extends Fragment implements NotifiableFragment<RegisterFragment.RegistrationParam> {
+public class RegisterFragment extends Fragment implements NotifiableFragment<RegisterFragment.RegParam> {
 
 
     AbstractYasmeActivity activity;
@@ -100,15 +102,15 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
 
         if (success) {
             //Login after registration was successfull
-            UserLoginTask authTask = new UserLoginTask(activity.getStorage(), activity.getApplicationContext());
-            authTask.execute(email, password);
-            activity.getSelfUser().setEmail(email);
             Toast.makeText(
                     activity.getApplicationContext(),
                     getResources().getString(
                             R.string.registration_successful),
                     Toast.LENGTH_SHORT
             ).show();
+            UserLoginTask authTask = new UserLoginTask(activity.getStorage(), activity.getApplicationContext());
+            authTask.execute(email, password);
+            activity.getSelfUser().setEmail(email);
         } else {
             Toast.makeText(
                     activity.getApplicationContext(),
@@ -120,14 +122,68 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(this.getClass().getSimpleName(), "Try to get LoginObservableInstance");
+        FragmentObservable<RegisterFragment, RegParam> obs =
+                ObservableRegistry.getObservable(RegisterFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+
+        if (!obs.isRegistered(this)) {
+            obs.register(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        FragmentObservable<RegisterFragment, RegParam> obs =
+                ObservableRegistry.getObservable(LoginFragment.class);
+        Log.d(this.getClass().getSimpleName(), "Remove from observer");
+        obs.remove(this);
+    }
+
+    @Override
+    public void notifyFragment(RegParam param) {
+        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        if (param instanceof RegLoginParam)
+            notifyFragment((RegLoginParam) param);
+        else if (param instanceof RegistrationParam)
+            notifyFragment((RegistrationParam) param);
+    }
+
+    public void notifyFragment(RegLoginParam regParam) {
+        //TODO: activity starten, wird eventuell auch schon von LoginFragment erledigt
+    }
+
     public void notifyFragment(RegistrationParam regParam) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         onPostRegisterExecute(regParam.getSuccess(), regParam.getEmail(), regParam.getPassword());
     }
 
+    public static class RegParam {
+        protected Boolean success;
 
-    public static class RegistrationParam {
-        private Boolean success;
+        public Boolean getSuccess() {
+            return success;
+        }
+    }
+
+    public static class RegLoginParam extends RegParam{
+        private long userId;
+
+        public long getUserId() {
+            return userId;
+        }
+
+        public RegLoginParam(Boolean success, long userId) {
+            this.success = success;
+            this.userId = userId;
+
+        }
+    }
+
+    public static class RegistrationParam extends RegParam{
         private String email;
         private String password;
 
@@ -143,10 +199,6 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
 
         public String getEmail() {
             return email;
-        }
-
-        public Boolean getSuccess() {
-            return success;
         }
     }
 }

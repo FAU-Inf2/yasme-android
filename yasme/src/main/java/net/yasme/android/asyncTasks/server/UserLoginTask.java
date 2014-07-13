@@ -11,6 +11,7 @@ import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.LoginFragment;
+import net.yasme.android.ui.fragments.RegisterFragment;
 
 /**
  * Created by robert on 19.06.14.
@@ -72,5 +73,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(
                 new LoginFragment.LoginProcessParam(success, userId));
+        ObservableRegistry.getObservable(RegisterFragment.class).notifyFragments(
+                new RegisterFragment.RegLoginParam(success, userId));
     }
 }
