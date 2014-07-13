@@ -7,9 +7,9 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.storage.DatabaseConstants;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -124,7 +124,7 @@ public class Chat implements Serializable {
             User dummy = new User("Dummy", 12);
             participants.add(dummy);
             // Without cast IntelliJ is not happy
-            Log.d(((Object)this).getClass().getSimpleName(), "Dummy-User hinzugefuegt");
+            Log.d(((Object)this).getClass().getSimpleName(), "participants sind null, Dummy-User hinzugefuegt");
         }
         return new ArrayList<User>(participants);
     }

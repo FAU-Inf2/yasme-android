@@ -15,7 +15,12 @@ import net.yasme.android.R;
 import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by robert on 12.07.14.
@@ -60,7 +65,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             //textView.setTextColor(context.getResources().getColor(R.color.chat_text_color_other));
         }
 
-        String time = msg.getDateSent().toString();
+        String time = getDateOfMessage(msg);
         String name;
         try {
             name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
@@ -76,5 +81,79 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
         rowView.requestFocus();
         return rowView;
+    }
+
+    private String getDateOfMessage(Message message) {
+        String returnDate = "";
+
+        Date dateSent = message.getDateSent();
+        Date currentDate =  new Date(System.currentTimeMillis());
+
+        Calendar sent = new GregorianCalendar();
+        sent.setTimeInMillis(dateSent.getTime());
+
+        Calendar current = new GregorianCalendar();
+        current.setTimeInMillis(currentDate.getTime());
+
+        boolean today = (sent.get(Calendar.YEAR) == current.get(Calendar.YEAR))
+                &&(sent.get(Calendar.DAY_OF_YEAR) == current.get(Calendar.DAY_OF_YEAR));
+
+        if(today) {
+            returnDate = formatDateToday(dateSent);
+        } else {
+            returnDate = formatDate(dateSent);;
+        }
+        return returnDate;
+    }
+
+    public String formatDateToday(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT+2"));
+        String formattedDate = formatter.format(date);
+        return formattedDate + " Uhr";
+    }
+
+    public String formatDate(Date date) {
+        Calendar calendarDate = new GregorianCalendar();
+        calendarDate.setTimeInMillis(date.getTime());
+
+
+        int dayNumber = calendarDate.get(Calendar.DAY_OF_WEEK);
+        String day;
+        switch(dayNumber) {
+            case 1:
+                day = "Montag";
+                break;
+            case 2:
+                day = "Dienstag";
+                break;
+            case 3:
+                day = "Mittwoch";
+                break;
+            case 4:
+                day = "Donnerstag";
+                break;
+            case 5:
+                day = "Freitag";
+                break;
+            case 6:
+                day = "Samstag";
+                break;
+            case 7:
+                day = "Sonntag";
+                break;
+            default:
+                day = "";
+                break;
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.mm.yyyy hh:mm");
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT+2"));
+        String formattedDate = formatter.format(date);
+        if(day.isEmpty()) {
+            return formattedDate + " Uhr";
+        }
+        day = day + ", ";
+        return day + formattedDate + " Uhr";
     }
 }
