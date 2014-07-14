@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_height="wrap_content"
     android:padding="6dip" >
 
     <!--android:layout_height="?android:attr/listPreferredItemHeight"-->
     <ImageView
         android:id="@+id/chat_item_picture_other"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
+        android:layout_width="180dip"
+        android:layout_height="180dip"
         android:layout_alignParentTop="true"
         android:layout_marginRight="6dip"
         />
@@ -22,7 +21,7 @@
         android:ellipsize="marquee"
         android:textSize="12sp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
         android:gravity="left"
         android:layout_toRightOf="@+id/chat_item_picture_other" />
 
@@ -41,12 +40,10 @@
 
     <ImageView
         android:id="@+id/chat_item_picture_own"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
+        android:layout_width="180dip"
+        android:layout_height="180dip"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentRight="true" />
 
     <TextView
         android:id="@+id/chat_item_date_own"
@@ -60,16 +57,16 @@
         android:layout_alignEnd="@+id/chat_item_message_own"
         android:layout_toLeftOf="@+id/chat_item_picture_own" />
 
-<TextView
-    android:id="@+id/chat_item_message_own"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_above="@id/chat_item_date_own"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentTop="true"
-    android:layout_alignWithParentIfMissing="true"
-    android:layout_toLeftOf="@id/chat_item_picture_own"
-    android:gravity="center_vertical|right"
-    android:textSize="16sp" />
+    <TextView
+        android:id="@+id/chat_item_message_own"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/chat_item_date_own"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_toLeftOf="@id/chat_item_picture_own"
+        android:gravity="center_vertical|right"
+        android:textSize="16sp" />
 
 </RelativeLayout>
