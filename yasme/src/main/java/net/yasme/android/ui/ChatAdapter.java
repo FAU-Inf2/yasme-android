@@ -84,6 +84,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
         textView.setText(name + ": " + msg.getMessage());
         dateView.setText("Gesendet: " + time);
+        Log.d(this.getClass().getSimpleName(), name + ": " + msg.getMessage());
         imageView.setImageResource(R.drawable.chat_default_icon); //TODO
 
         rowView.requestFocus();

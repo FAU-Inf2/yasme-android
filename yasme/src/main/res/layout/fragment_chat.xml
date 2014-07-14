@@ -73,5 +73,7 @@
         android:layout_alignParentStart="true"
         android:layout_above="@+id/button_send"
         android:layout_alignParentRight="true"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"
         android:layout_alignEnd="@+id/text_status" />
 </RelativeLayout>
