@@ -98,29 +98,29 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
 
         // Vibrate
-        if (messages.size() > 0) {
-            Context context = DatabaseManager.INSTANCE.getContext();
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            Intent targetIntent = new Intent(context, ChatActivity.class);
-            targetIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                    targetIntent, 0);
-
-            String content = "Received " + messages.size() + " new message";
-            content += (messages.size() > 1) ? "s" : "";
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(context)
-                            .setSmallIcon(R.drawable.ic_launcher)
-                            .setContentTitle("YASME")
-                            .setStyle(new NotificationCompat.BigTextStyle()
-                                    .bigText(content))
-                            .setContentText(content)
-                            .setDefaults(Notification.DEFAULT_VIBRATE | Notification.FLAG_AUTO_CANCEL);
-
-            mBuilder.setContentIntent(contentIntent);
-            notificationManager.notify(1, mBuilder.build());
-        }
+//        if (messages.size() > 0) {
+//            Context context = DatabaseManager.INSTANCE.getContext();
+//            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//            Intent targetIntent = new Intent(context, ChatActivity.class);
+//            targetIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+//                    targetIntent, 0);
+//
+//            String content = "Received " + messages.size() + " new message";
+//            content += (messages.size() > 1) ? "s" : "";
+//            NotificationCompat.Builder mBuilder =
+//                    new NotificationCompat.Builder(context)
+//                            .setSmallIcon(R.drawable.ic_launcher)
+//                            .setContentTitle("YASME")
+//                            .setStyle(new NotificationCompat.BigTextStyle()
+//                                    .bigText(content))
+//                            .setContentText(content)
+//                            .setDefaults(Notification.DEFAULT_VIBRATE | Notification.FLAG_AUTO_CANCEL);
+//
+//            mBuilder.setContentIntent(contentIntent);
+//            notificationManager.notify(1, mBuilder.build());
+//        }
 
         //Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
