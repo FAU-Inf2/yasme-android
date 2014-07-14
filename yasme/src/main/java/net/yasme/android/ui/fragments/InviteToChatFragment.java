@@ -24,7 +24,9 @@ import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.activities.ChatActivity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by bene on 22.06.14.
@@ -113,7 +115,7 @@ public class InviteToChatFragment
     @Override
     public void onClick(View v) {
         SparseBooleanArray checked = chatPartners.getCheckedItemPositions();
-        ArrayList<User> selectedUsers = new ArrayList<>();
+        Set<User> selectedUsers = new HashSet<>();
         ArrayList<String> selectedUserNames = new ArrayList<>();
 
         if (checked.size() == 0) {
@@ -130,6 +132,8 @@ public class InviteToChatFragment
             }
         }
 
+        // Add self to participants list. Since we're working on a set, it doesn't matter in case the set already contains self
+        selectedUsers.add(activity.getSelfUser());
         new CreateChatTask(activity.getSelfUser(), selectedUsers).execute();
     }
 

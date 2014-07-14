@@ -14,8 +14,11 @@ import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.InviteToChatFragment;
 import net.yasme.android.ui.fragments.UserDetailsFragment;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by bene on 22.06.14.
@@ -24,11 +27,11 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
 
     private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
     private User selfUser;
-    private List<User> selectedUsers;
+    private Set<User> selectedUsers;
     private long newChatId = -1;
     private Chat newChat;
 
-    public CreateChatTask(User selfUser, List<User> selectedUsers) {
+    public CreateChatTask(User selfUser, Set<User> selectedUsers) {
         this.selfUser = selfUser;
         this.selectedUsers = selectedUsers;
     }
@@ -50,9 +53,10 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
 
             // Concatenate chat name according to the participant's names
             String name = "";
-            for (int i = 0; i < selectedUsers.size(); i++) {
-                name += selectedUsers.get(i).getName();
-                if (i < selectedUsers.size() - 1) {
+            Iterator<User> iterator = selectedUsers.iterator();
+            while (iterator.hasNext()) {
+                name += iterator.next().getName();
+                if (iterator.hasNext()) {
                     name += ", ";
                 }
             }
@@ -64,7 +68,10 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
             }
 
             newChat = new Chat(selfUser, "Created: " + new Date().toString(), name);
-            newChat.setParticipants(selectedUsers);
+            // Convert selected user's set to list as expected by chat entity
+            List<User> participants = new ArrayList<>();
+            participants.addAll(selectedUsers);
+            newChat.setParticipants(participants);
             try {
                 newChatId = ChatTask.getInstance().createChatWithPar(newChat);
             } catch (RestServiceException e) {

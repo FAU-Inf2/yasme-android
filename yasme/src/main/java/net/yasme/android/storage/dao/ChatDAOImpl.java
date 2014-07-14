@@ -17,7 +17,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by bene on 11.07.14.
@@ -109,7 +111,7 @@ public enum ChatDAOImpl implements ChatDAO {
 
 
     @Override
-    public List<Chat> getByParticipantsExact(List<User> users) {
+    public List<Chat> getByParticipantsExact(Set<User> users) {
         List<Chat> theseParticipantsOrMore = getByTheseParticipantsOrMore(users);
         List<Chat> exactMatch = new ArrayList<>();
         for (Chat chat : theseParticipantsOrMore) {
@@ -122,12 +124,15 @@ public enum ChatDAOImpl implements ChatDAO {
 
 
     @Override
-    public List<Chat> getByTheseParticipantsOrMore(List<User> users) {
+    public List<Chat> getByTheseParticipantsOrMore(Set<User> users) {
         final String count = "hitcount";
+
         StringBuilder conditionBuilder = new StringBuilder();
-        for (int i=0; i<users.size(); i++) {
-            conditionBuilder.append(DatabaseConstants.USER_FIELD_NAME + " = " + users.get(i).getId());
-            if (i < users.size() - 1) {
+        Iterator<User> iterator = users.iterator();
+        while(iterator.hasNext()) {
+            User user = iterator.next();
+            conditionBuilder.append(DatabaseConstants.USER_FIELD_NAME + " = " + user.getId());
+            if (iterator.hasNext()) {
                 conditionBuilder.append(" OR ");
             }
         }

@@ -4,6 +4,7 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by bene on 11.07.14.
@@ -44,10 +45,10 @@ public interface ChatDAO extends DAO<Chat> {
 
     /**
      * Retrieves all chats from the database which are held between the exact list of given users
-     * @param users who participate in the chat to return
+     * @param users who participate in the chat to return. Don't forget that you are a participant as well and thus should be present in the list
      * @return list of chats which matched the conditions
      */
-    public List<Chat> getByParticipantsExact(List<User> users);
+    public List<Chat> getByParticipantsExact(Set<User> users);
 
 
     /**
@@ -55,7 +56,7 @@ public interface ChatDAO extends DAO<Chat> {
      * @param users who participate in the chat to look for
      * @return list of chats which have the given users (and more) as participants
      */
-    public List<Chat> getByTheseParticipantsOrMore(List<User> users);
+    public List<Chat> getByTheseParticipantsOrMore(Set<User> users);
 
     /**
      * Store the fields from an object to the database row corresponding to the id from the data parameter. If you have

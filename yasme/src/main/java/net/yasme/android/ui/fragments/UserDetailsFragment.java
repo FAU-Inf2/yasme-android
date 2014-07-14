@@ -25,7 +25,9 @@ import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.activities.ChatActivity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -172,7 +174,7 @@ public class UserDetailsFragment
         switch (v.getId()) {
             case R.id.contact_detail_newchat:
                 Log.d(this.getClass().getSimpleName(), "------------------- Create New Chat ---------------------------");
-                List<User> selectedUsers = new ArrayList<User>();
+                Set<User> selectedUsers = new HashSet<User>();
                 selectedUsers.add(contact);
                 new CreateChatTask(selfUser, selectedUsers).execute();
                 break;
