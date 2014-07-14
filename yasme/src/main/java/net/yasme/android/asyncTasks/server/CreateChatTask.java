@@ -58,7 +58,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
             }
 
             // Add self to selected users and names
-            if (selectedUsers.contains(selfUser)) {
+            if (!selectedUsers.contains(selfUser)) {
                 name += ", " + selfUser.getName();
                 selectedUsers.add(selfUser);
             }

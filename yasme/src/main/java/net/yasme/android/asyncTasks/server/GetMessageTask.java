@@ -35,8 +35,8 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         this.storage = DatabaseManager.INSTANCE.getSharedPreferences();
     }
 
-    List<Message> messages;
-    long lastMessageId;
+    private List<Message> messages;
+    private long lastMessageId;
 
     /**
      * @return Returns true if it was successful, otherwise false
@@ -66,13 +66,18 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
             if (null == DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(msg)) {//changed from addOrUpdate
                 Log.e(this.getClass().getSimpleName(), "Storing a message in database failed");
+                return false;
             }
+            lastMessageId = Math.max(lastMessageId, msg.getId());
 
             if (null != msg.getMessageKey()) {
                 if (null == DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(msg.getMessageKey())) {
                     Log.e(this.getClass().getSimpleName(), "Storing a message key in database failed");
+                    return false;
                 }
             }
+
+
         }
         return true;
     }
@@ -86,9 +91,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
 
         if(messages.size() > 0) {
-            //increase and store lastMessageId
-            //lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0) + messages.size();
-            lastMessageId = messages.get(messages.size()-1).getId();
+            // Store lastMessageId
             Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
 
             SharedPreferences.Editor editor = storage.edit();
