@@ -60,7 +60,7 @@
         android:layout_toLeftOf="@+id/button_send"
         android:ems="10"
         android:hint="@string/type_text" >
-        
+
         <requestFocus />
     </EditText>
 

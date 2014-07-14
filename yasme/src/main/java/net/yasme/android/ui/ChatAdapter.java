@@ -39,6 +39,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Boolean self;
         Message msg = messages.get(position);
         View rowView;
         TextView textView;
@@ -46,7 +47,8 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         ImageView imageView;
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-        rowView = inflater.inflate(R.layout.chat_item, parent, false);
+        //rowView = inflater.inflate(R.layout.chat_item, parent, false);
+        //rowView = inflater.inflate(R.layout.chat_item_own, parent, false);
 
         if(msg == null) {
             Log.e(this.getClass().getSimpleName(), "msg == null");
@@ -55,22 +57,29 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             Log.e(this.getClass().getSimpleName(), "sender == null");
         }
 
-        if (msg.getSender().getId() == selfId) {
-            textView = (TextView) rowView.findViewById(R.id.chat_item_message_own);
-            dateView = (TextView) rowView.findViewById(R.id.chat_item_date_own);
-            imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture_own);
-            textView.setGravity(Gravity.RIGHT);
-            dateView.setGravity(Gravity.RIGHT);
+        self = msg.getSender().getId() == selfId;
+        if (self) {
+            rowView = inflater.inflate(R.layout.chat_item_own, parent, false);
+            //textView = (TextView) rowView.findViewById(R.id.chat_item_message_own);
+            //dateView = (TextView) rowView.findViewById(R.id.chat_item_date_own);
+            //imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture_own);
+            //textView.setGravity(Gravity.RIGHT);
+            //dateView.setGravity(Gravity.RIGHT);
             //textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.chat_text_bg_self));
             //textView.setTextColor(context.getResources().getColor(R.color.chat_text_color_self));
         } else {
-            textView = (TextView) rowView.findViewById(R.id.chat_item_message_other);
-            dateView = (TextView) rowView.findViewById(R.id.chat_item_date_other);
-            imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture_other);
+            rowView = inflater.inflate(R.layout.chat_item_other, parent, false);
+            //textView = (TextView) rowView.findViewById(R.id.chat_item_message_own);
+            //dateView = (TextView) rowView.findViewById(R.id.chat_item_date_own);
+            //imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture_own);
 
             //textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.chat_text_bg_other));
             //textView.setTextColor(context.getResources().getColor(R.color.chat_text_color_other));
         }
+
+        textView = (TextView) rowView.findViewById(R.id.chat_item_message);
+        dateView = (TextView) rowView.findViewById(R.id.chat_item_date);
+        imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture);
 
         String time = getDateOfMessage(msg);
         String name;
@@ -82,10 +91,19 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         }
         //Log.d(this.getClass().getSimpleName(), name + time);
 
-        textView.setText(name + ": " + msg.getMessage());
+        if (self) {
+            textView.setText( msg.getMessage());
+        } else {
+            textView.setText(name + ": " + msg.getMessage());
+        }
+
         dateView.setText("Gesendet: " + time);
         Log.d(this.getClass().getSimpleName(), name + ": " + msg.getMessage());
         imageView.setImageResource(R.drawable.chat_default_icon); //TODO
+
+        //ViewGroup.LayoutParams params = rowView.getLayoutParams();
+        //params.height = textView.getLayoutParams().height;
+        //rowView.setLayoutParams(params);
 
         rowView.requestFocus();
         return rowView;
