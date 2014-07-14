@@ -84,14 +84,18 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             return;
         }
         Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
-        //increase and store lastMessageId
-        //lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0) + messages.size();
-        lastMessageId = messages.get(messages.size()-1).getId();
-        Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
 
-        SharedPreferences.Editor editor = storage.edit();
-        editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
-        editor.commit();
+        if(messages.size() > 0) {
+            //increase and store lastMessageId
+            //lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0) + messages.size();
+            lastMessageId = messages.get(messages.size()-1).getId();
+            Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
+
+            SharedPreferences.Editor editor = storage.edit();
+            editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
+            editor.commit();
+        }
+
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
 
         // Vibrate

@@ -108,7 +108,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         if(today) {
             returnDate = formatDateToday(dateSent);
         } else {
-            returnDate = formatDate(dateSent);;
+            returnDate = formatDate(dateSent);
         }
         return returnDate;
     }
