@@ -30,6 +30,7 @@ import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.ChatAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -173,22 +174,11 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         String msgEncrypted = msg;
         User user = new User(activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), activity.getSelfUser().getId());
         long aesId = aes.getKeyId();
-//				Chat chat = new Chat();
-//				chat.setId(chatId);
-        //chat.setParticipants(DatabaseManager.INSTANCE.getParticipantsForChat(chatId));
+
         // Send message and get new messages afterwards
         new SendMessageTask(chat.getEncryption(), new GetMessageTask())
                 .execute(new Message(activity.getSelfUser(), msgEncrypted, chat.getId(), aesId));
         status.setText("Send message in bg");
-/*
-                    msg,
-					activity.getSelfUser().getName(),
-					activity.getSelfUser().getEmail(),
-					Long.toString(activity.getSelfUser().getId()),
-                    Long.toString(chat.getId()),
-					activity.getAccessToken()
-				);
-*/
         editMessage.setText("");
     }
 
@@ -207,6 +197,16 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             Log.d(this.getClass().getSimpleName(), "Keine Nachrichten zum Ausgeben");
             return;
         }
+
+        //TODO: evtl aendern
+        List<Message> tmp = new ArrayList<>();
+        for(Message msg : messages) {
+            if(msg.getChatId() == this.chat.getId()) {
+                tmp.add(msg);
+            }
+        }
+        messages = tmp;
+
         boolean old = false;
         if(!old) {
             mAdapter.addAll(messages);

@@ -48,6 +48,13 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         rowView = inflater.inflate(R.layout.chat_item, parent, false);
 
+        if(msg == null) {
+            Log.e(this.getClass().getSimpleName(), "msg == null");
+        }
+        if(msg.getSender() == null) {
+            Log.e(this.getClass().getSimpleName(), "sender == null");
+        }
+
         if (msg.getSender().getId() == selfId) {
             textView = (TextView) rowView.findViewById(R.id.chat_item_message_own);
             dateView = (TextView) rowView.findViewById(R.id.chat_item_date_own);
@@ -101,7 +108,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         if(today) {
             returnDate = formatDateToday(dateSent);
         } else {
-            returnDate = formatDate(dateSent);;
+            returnDate = formatDate(dateSent);
         }
         return returnDate;
     }
