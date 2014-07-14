@@ -38,6 +38,7 @@ public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
                 fragment.notifyFragment(parameter);
             } catch (Exception e) {
                 Log.d(this.getClass().getSimpleName(), "Notify fragment failed: " + fragment.getClass().getSimpleName());
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
             }
         }
     }

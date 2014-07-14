@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class InviteToChatFragment
         extends Fragment
-        implements View.OnClickListener, NotifiableFragment<Long> {
+        implements View.OnClickListener, NotifiableFragment<InviteToChatFragment.InviteToChatParam> {
 
     private AbstractYasmeActivity activity;
     private List<User> users;
@@ -48,7 +48,7 @@ public class InviteToChatFragment
 
         //Register at observer
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
-        FragmentObservable<InviteToChatFragment, Long> obs =
+        FragmentObservable<InviteToChatFragment, InviteToChatParam> obs =
                 ObservableRegistry.getObservable(InviteToChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
@@ -75,7 +75,7 @@ public class InviteToChatFragment
     /**
      * Will be called by the GetAllUsersTask after the list of users has been retrieved
      *
-     * @param users list
+     * @param allUsers list
      */
     public void updateChatPartnersList(List<User> allUsers) {
         if (null == chatPartners || null == startChat) {
@@ -86,11 +86,11 @@ public class InviteToChatFragment
 
         // Exclude self
         User myself = null;
-        String[] userNames = new String[users.size() - 1];
+        String[] userNames = new String[allUsers.size() - 1];
 
         int i = 0;
-        for (int cur = 0; cur < users.size(); cur++) {
-            User user = users.get(cur);
+        for (int cur = 0; cur < allUsers.size(); cur++) {
+            User user = allUsers.get(cur);
 
             // Skip self
             if (user.getId() == self.getId()) {
@@ -145,17 +145,24 @@ public class InviteToChatFragment
     }
 
     @Override
-    public void notifyFragment(Long chatId) {
+    public void notifyFragment(InviteToChatParam inviteToChatParam) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        startChat(chatId);
+        if (inviteToChatParam instanceof ChatRegisteredParam) {
+            ChatRegisteredParam param = (ChatRegisteredParam) inviteToChatParam;
+            startChat(param.getChatId());
+        } else if (inviteToChatParam instanceof ContactsFetchedParam) {
+            ContactsFetchedParam contactsFetchedParam = (ContactsFetchedParam) inviteToChatParam;
+            updateChatPartnersList(contactsFetchedParam.getContacts());
+        }
     }
+
 
     @Override
     public void onStart() {
         super.onStart();
         //Register at observer
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
-        FragmentObservable<InviteToChatFragment, Long> obs =
+        FragmentObservable<InviteToChatFragment, InviteToChatParam> obs =
                 ObservableRegistry.getObservable(InviteToChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
@@ -166,9 +173,45 @@ public class InviteToChatFragment
     public void onStop() {
         super.onStop();
         //De-Register at observer
-        FragmentObservable<InviteToChatFragment, Long> obs =
+        FragmentObservable<InviteToChatFragment, InviteToChatParam> obs =
                 ObservableRegistry.getObservable(InviteToChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "Remove from observer");
         obs.remove(this);
+    }
+
+
+
+    public static abstract class InviteToChatParam {
+        protected Boolean success;
+
+        public Boolean getSuccess() {
+            return success;
+        }
+    }
+
+    public static class ChatRegisteredParam extends InviteToChatParam {
+        private Long chatId;
+
+        public ChatRegisteredParam(Boolean success, Long chatId) {
+            this.success = success;
+            this.chatId = chatId;
+        }
+
+        public Long getChatId() {
+            return this.chatId;
+        }
+    }
+
+    public static class ContactsFetchedParam extends InviteToChatParam {
+        private List<User> contacts;
+
+        public ContactsFetchedParam(Boolean success, List<User> contacts) {
+            this.success = success;
+            this.contacts = contacts;
+        }
+
+        public List<User> getContacts() {
+            return contacts;
+        }
     }
 }

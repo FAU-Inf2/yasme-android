@@ -1,8 +1,10 @@
 package net.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import net.yasme.android.connection.SearchTask;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.ui.fragments.InviteToChatFragment;
@@ -30,12 +32,14 @@ public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
     protected Boolean doInBackground(String... params) {
         try {
             allUsers = searchTask.getAllUsers();
+            if (null == allUsers) {
+                return false;
+            }
+            return true;
         } catch (RestServiceException e) {
-            // TODO
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
-        return true;
     }
 
     /**
@@ -43,7 +47,7 @@ public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
      */
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            fragment.updateChatPartnersList(allUsers);
+            ObservableRegistry.getObservable(InviteToChatFragment.class).notifyFragments(new InviteToChatFragment.ContactsFetchedParam(true, allUsers));
         }
     }
 }
