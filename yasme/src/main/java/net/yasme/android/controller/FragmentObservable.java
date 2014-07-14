@@ -13,6 +13,7 @@ import java.util.Set;
  */
 public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
     private Set<T> fragments;
+    private P buffer;
 
     public FragmentObservable() {
         fragments = new HashSet<T>();
@@ -20,6 +21,9 @@ public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
 
     public void register(T fragment) {
         fragments.add(fragment);
+        if (buffer != null) {
+            notifyFragments(buffer);
+        }
     }
 
     //public boolean isRegistered(T fragment) {
@@ -32,10 +36,12 @@ public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
 
     //addIfNotExists
     public void notifyFragments(P parameter) {
+        buffer = parameter;
         for (T fragment : fragments) {
             try {
                 Log.d(this.getClass().getSimpleName(), "Notify fragment: " + fragment.getClass().getSimpleName());
                 fragment.notifyFragment(parameter);
+                buffer = null;
             } catch (Exception e) {
                 Log.d(this.getClass().getSimpleName(), "Notify fragment failed: " + fragment.getClass().getSimpleName());
                 Log.e(this.getClass().getSimpleName(), e.getMessage());

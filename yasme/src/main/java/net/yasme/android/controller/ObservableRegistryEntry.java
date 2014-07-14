@@ -3,7 +3,7 @@ package net.yasme.android.controller;
 /**
  * Created by martin on 27.06.14.
  */
-public class ObservableRegistryEntry {
+public class ObservableRegistryEntry<P> {
 
     private FragmentObservable<?, ?> obs;
     private Class fragment;
