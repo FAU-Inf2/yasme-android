@@ -85,8 +85,8 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         }
         Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
         //increase and store lastMessageId
-        lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0) + messages.size();
-        //lastMessageId = messages.get(messages.size()-1).getId();
+        //lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0) + messages.size();
+        lastMessageId = messages.get(messages.size()-1).getId();
         Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
 
         SharedPreferences.Editor editor = storage.edit();
