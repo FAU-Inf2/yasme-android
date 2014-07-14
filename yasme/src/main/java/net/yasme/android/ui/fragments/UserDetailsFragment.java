@@ -106,9 +106,7 @@ public class UserDetailsFragment
         FragmentObservable<UserDetailsFragment, UserDetailsFragmentParam> obs =
                 ObservableRegistry.getObservable(UserDetailsFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
-        if (!obs.isRegistered(this)) {
-            obs.register(this);
-        }
+        obs.register(this);
     }
 
     @Override
@@ -295,9 +293,7 @@ public class UserDetailsFragment
         FragmentObservable<UserDetailsFragment, UserDetailsFragmentParam> obs =
                 ObservableRegistry.getObservable(UserDetailsFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
-        if (!obs.isRegistered(this)) {
-            obs.register(this);
-        }
+        obs.register(this);
     }
 
     @Override

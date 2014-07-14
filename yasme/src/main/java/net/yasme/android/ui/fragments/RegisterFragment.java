@@ -129,9 +129,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                 ObservableRegistry.getObservable(RegisterFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
 
-        if (!obs.isRegistered(this)) {
-            obs.register(this);
-        }
+        obs.register(this);
     }
 
     @Override

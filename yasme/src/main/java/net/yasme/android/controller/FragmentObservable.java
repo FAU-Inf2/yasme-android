@@ -5,24 +5,26 @@ import android.util.Log;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by martin on 26.06.2014.
  */
 public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
-    private ArrayList<T> fragments;
+    private Set<T> fragments;
 
     public FragmentObservable() {
-        fragments = new ArrayList<T>();
+        fragments = new HashSet<T>();
     }
 
     public void register(T fragment) {
         fragments.add(fragment);
     }
 
-    public boolean isRegistered(T fragment) {
-        return fragments.contains(fragment);
-    }
+    //public boolean isRegistered(T fragment) {
+    //    return fragments.contains(fragment);
+    //}
 
     public void remove(T fragment) {
         fragments.remove(fragment);

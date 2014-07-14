@@ -71,9 +71,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
 
-        if (!obs.isRegistered(this)) {
-            obs.register(this);
-        }
+        obs.register(this);
+
 
         //trying to get chat with chatId from local DB
         try {
@@ -140,9 +139,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
 
-        if (!obs.isRegistered(this)) {
-            obs.register(this);
-        }
+        obs.register(this);
+
     }
 
     @Override

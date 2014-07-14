@@ -51,9 +51,8 @@ public class InviteToChatFragment
         FragmentObservable<InviteToChatFragment, Long> obs =
                 ObservableRegistry.getObservable(InviteToChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
-        if (!obs.isRegistered(this)) {
-            obs.register(this);
-        }
+        obs.register(this);
+
 
         activity = (AbstractYasmeActivity) getActivity();
         findViewsById();
@@ -157,9 +156,8 @@ public class InviteToChatFragment
         FragmentObservable<InviteToChatFragment, Long> obs =
                 ObservableRegistry.getObservable(InviteToChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
-        if (!obs.isRegistered(this)) {
-            obs.register(this);
-        }
+        obs.register(this);
+
     }
 
     @Override

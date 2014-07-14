@@ -73,9 +73,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         FragmentObservable<LoginFragment, LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
 
-        if (!obs.isRegistered(this)) {
-            obs.register(this);
-        }
+        obs.register(this);
     }
 
     @Override
