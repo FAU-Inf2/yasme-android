@@ -97,7 +97,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
             ObservableRegistry.getObservable(UserDetailsFragment.class).
                     notifyFragments(new UserDetailsFragment.NewChatParam(newChatId));
             ObservableRegistry.getObservable(InviteToChatFragment.class).
-                    notifyFragments(newChatId);
+                    notifyFragments(new InviteToChatFragment.ChatRegisteredParam(true, newChatId));
         }
     }
 }
