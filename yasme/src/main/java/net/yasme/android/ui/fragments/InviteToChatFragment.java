@@ -77,15 +77,15 @@ public class InviteToChatFragment
      *
      * @param users list
      */
-    public void updateChatPartnersList(List<User> users) {
+    public void updateChatPartnersList(List<User> allUsers) {
         if (null == chatPartners || null == startChat) {
             findViewsById();
         }
 
         User self = activity.getSelfUser();
-        this.users = users;
 
         // Exclude self
+        User myself = null;
         String[] userNames = new String[users.size() - 1];
 
         int i = 0;
@@ -94,11 +94,14 @@ public class InviteToChatFragment
 
             // Skip self
             if (user.getId() == self.getId()) {
+                myself = user;
                 continue;
             }
 
             userNames[i++] = user.getName();
         }
+        allUsers.remove(myself);
+        this.users = allUsers;  // without myself
 
         adapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_multiple_choice, userNames);
         chatPartners.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -128,7 +131,6 @@ public class InviteToChatFragment
         }
 
         new CreateChatTask(activity.getSelfUser(), selectedUsers).execute();
-        return;
     }
 
 
