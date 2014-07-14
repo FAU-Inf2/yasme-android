@@ -56,20 +56,20 @@
         android:layout_alignParentLeft="true"
         android:ellipsize="marquee"
         android:textSize="12sp"
-        android:layout_alignEnd="@+id/chat_item_message_own"
         android:gravity="right"
-        android:layout_toLeftOf="@+id/chat_item_message_own" />
+        android:layout_alignEnd="@+id/chat_item_message_own"
+        android:layout_toLeftOf="@+id/chat_item_picture_own" />
 
-    <TextView
-        android:id="@+id/chat_item_message_own"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/chat_item_date_own"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toLeftOf="@id/chat_item_picture_own"
-        android:gravity="center_vertical|right"
-        android:textSize="16sp" />
+<TextView
+    android:id="@+id/chat_item_message_own"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@id/chat_item_date_own"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:layout_alignWithParentIfMissing="true"
+    android:layout_toLeftOf="@id/chat_item_picture_own"
+    android:gravity="center_vertical|right"
+    android:textSize="16sp" />
 
 </RelativeLayout>
