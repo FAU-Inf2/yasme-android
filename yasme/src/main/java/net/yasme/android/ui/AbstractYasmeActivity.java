@@ -61,7 +61,7 @@ public abstract class AbstractYasmeActivity  extends Activity {
                     getResources().getString(R.string.server_port));
         }
 
-        storage = getSharedPreferences(STORAGE_PREFS, 0);
+        storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
         Long userId = storage.getLong(USER_ID, 0);
         String userName = storage.getString(USER_NAME, "dummy"); //TODO: evtl. anderen dummy namen
         String userMail = storage.getString(USER_MAIL, "@yasme.net");
@@ -70,16 +70,16 @@ public abstract class AbstractYasmeActivity  extends Activity {
 
         accessToken = storage.getString(ACCESSTOKEN, null);
 
-        //Initialize database (once in application)
-        if(!DatabaseManager.INSTANCE.isInitialized()) {
-            DatabaseManager.INSTANCE.init(this, storage, userId);
-        }
-
         selfUser = new User();
         selfUser.setId(userId);
         selfUser.setName(userName);
         selfUser.setEmail(userMail);
         selfUser.setPw(userPw);
+
+        //Initialize database (once in application)
+        if(!DatabaseManager.INSTANCE.isInitialized()) {
+            DatabaseManager.INSTANCE.init(this, storage, userId);
+        }
     }
 
     public boolean getSignedInFlag() {

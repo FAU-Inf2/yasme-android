@@ -35,82 +35,16 @@ public class SendMessageTask extends AsyncTask<Message, Void, Boolean> {
 
 
     /**
-     *
      * @param msgs
-     *              0 is message
-     *              1 is userName
-     *              2 is userMail
-     *              3 is userId
-     *              4 is chatId
-     *              5 is accessToken
      * @return true on success and false on error
      */
     protected Boolean doInBackground(Message... msgs) {
-/*
-        msg = params[0];
-
-        String uName = params[1];
-        String uMail = params[2];
-        long uId = Long.parseLong(params[3]);
-        long chatId = Long.parseLong(params[4]);
-
-        // encrypt Message
-        //String msgEncrypted = aes.encrypt(msg); //TODO
-        String msgEncrypted = msg;
-        Log.d(this.getClass().getSimpleName(), "Zu sendende Nachricht: " + msgEncrypted);
-
-        // create Message
-        User user = new User(uName, uMail,  uId);
-        long aesId = aes.getKeyId();
-        Chat chat = new Chat();
-        chat.setId(chatId);
-        // chat.setParticipants(DatabaseManager.INSTANCE.getParticipantsForChat(chatId));
-
-        Message createdMessage = new Message(user, msgEncrypted, chat, aesId);
-        Log.d(this.getClass().getSimpleName(), "AES getKeyID: " + aes.getKeyId());
-*/
-        /*Log.d(this.getClass().getSimpleName(), "[Debug] " + createdMessage.getMessage() +
-                ", " + createdMessage.getId() + ", " + createdMessage.getChatId());
-        /*DEBUG*/
-/*
-        if(createdMessage == null) {
-            Log.d(this.getClass().getSimpleName(), "1 createdMessage is null!");
-        }
-        if(user == null) {
-            Log.d(this.getClass().getSimpleName(), "2 createdMessage is null!");
-        }
-        if(msgEncrypted == null) {
-            Log.d(this.getClass().getSimpleName(), "3 createdMessage is null!");
-        }
-        if(chatId == 0) {
-            Log.d(this.getClass().getSimpleName(), "4 createdMessage is null!");
-        }
-        if(aesId == 0) {
-            Log.d(this.getClass().getSimpleName(), "5 createdMessage is null!");
-        }
-        Log.e(this.getClass().getSimpleName(), msgEncrypted + " " + user.getId() + " " +
-                chatId + " " + aesId);
-*/
-        /*DEBUG END*/
-/*
-        try {
-            if(createdMessage == null) {
-                Log.e(this.getClass().getSimpleName(), "createdMessage is null!");
-            }
-            messageTask.sendMessage(createdMessage);
-            return true;
-        } catch (RestServiceException e) {
-            e.printStackTrace();
-            Log.w(this.getClass().getSimpleName(), e.getMessage());
-        }
-        return false;
-*/
         for (Message msg : msgs) {
+            if (null == msg) {
+                Log.e(this.getClass().getSimpleName(), "Received message is null!");
+            }
             this.messages.add(msg);
             try {
-                if (null == msg) {
-                    Log.e(this.getClass().getSimpleName(), "Received message is null!");
-                }
                 Message ret = messageTask.sendMessage(msg);
                 if (null == DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(ret)) {
                     return false;
@@ -128,7 +62,7 @@ public class SendMessageTask extends AsyncTask<Message, Void, Boolean> {
         if (success) {
             Log.i(this.getClass().getSimpleName(), "Sent " + messages.size() + " messages");
             if (null != this.onPostExecute) {
-                onPostExecute.execute();
+                onPostExecute.execute(); // onPostExecute is a GetMessageTask
                 // onPostExecute async task will call notify the registered fragments
             } else {
                 ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
