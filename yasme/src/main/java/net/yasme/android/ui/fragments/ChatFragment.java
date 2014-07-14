@@ -79,6 +79,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
             Log.d(this.getClass().getSimpleName(), "number of messages from DB: " + chat.getMessages().size());
         } catch (NullPointerException e) {
+            // Occurs when new chat has been generated, but id hasn't been returned by the server yet
             chat = null;
             Log.w(this.getClass().getSimpleName(), "get chat from DB failed");
         }

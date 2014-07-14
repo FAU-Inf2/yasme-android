@@ -1,6 +1,10 @@
 package net.yasme.android.storage.dao;
 
+import android.database.Cursor;
 import android.util.Log;
+
+import com.j256.ormlite.dao.GenericRawResults;
+import com.j256.ormlite.stmt.PreparedQuery;
 
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
@@ -105,9 +109,48 @@ public enum ChatDAOImpl implements ChatDAO {
 
 
     @Override
-    public List<Chat> getByParticipants(List<User> users) {
-        // TODO
-        return getAll();
+    public List<Chat> getByParticipantsExact(List<User> users) {
+        List<Chat> theseParticipantsOrMore = getByTheseParticipantsOrMore(users);
+        List<Chat> exactMatch = new ArrayList<>();
+        for (Chat chat : theseParticipantsOrMore) {
+            if (chat.getParticipants().size() == users.size()) {
+                exactMatch.add(chat);
+            }
+        }
+        return exactMatch;
+    }
+
+
+    @Override
+    public List<Chat> getByTheseParticipantsOrMore(List<User> users) {
+        final String count = "hitcount";
+        StringBuilder conditionBuilder = new StringBuilder();
+        for (int i=0; i<users.size(); i++) {
+            conditionBuilder.append(DatabaseConstants.USER_FIELD_NAME + " = " + users.get(i).getId());
+            if (i < users.size() - 1) {
+                conditionBuilder.append(" OR ");
+            }
+        }
+
+        String query = "SELECT " + DatabaseConstants.CHAT_FIELD_NAME + ", count(*) AS " + count + " FROM " + DatabaseConstants.CHAT_USER_TABLE + " WHERE " + conditionBuilder.toString() + " GROUP BY " + DatabaseConstants.CHAT_FIELD_NAME + ";";
+        Log.d(this.getClass().getSimpleName(), "Get by participants query: " + query);
+
+        try {
+            GenericRawResults result = databaseHelper.getChatUserDao().queryRaw(query);
+            List<String[]> matches = result.getResults();
+            List<Chat> chats = new ArrayList<>();
+            for (String[] match : matches) {
+                // match[0] chatId, match[1] number of matching participants
+                if (Integer.valueOf(match[1]) >= users.size()) {
+                    // All participants found
+                    chats.add(get(Long.valueOf(match[0])));
+                }
+            }
+            return chats;
+        } catch (Exception e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return null;
+        }
     }
 
     @Override

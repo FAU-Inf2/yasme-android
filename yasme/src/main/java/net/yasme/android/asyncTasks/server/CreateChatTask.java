@@ -40,9 +40,10 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected Boolean doInBackground(String... params) {
 
-        List<Chat> matchingChats = databaseManager.getChatDAO().getByParticipants(selectedUsers);
+        // Make sure that there is no such chat between the given participants yet
+        List<Chat> matchingChats = databaseManager.getChatDAO().getByParticipantsExact(selectedUsers);
         if (null != matchingChats && matchingChats.size() > 0) {
-            // Take first chat
+            // Take first chat and open it
             newChatId = matchingChats.get(0).getId();
         } else {
             // No chat found in database. Create a new one
@@ -51,9 +52,15 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
             String name = "";
             for (int i = 0; i < selectedUsers.size(); i++) {
                 name += selectedUsers.get(i).getName();
-                if (i != selectedUsers.size() - 1) {
+                if (i < selectedUsers.size() - 1) {
                     name += ", ";
                 }
+            }
+
+            // Add self to selected users and names
+            if (selectedUsers.contains(selfUser)) {
+                name += ", " + selfUser.getName();
+                selectedUsers.add(selfUser);
             }
 
             newChat = new Chat(selfUser, "Created: " + new Date().toString(), name);
@@ -65,6 +72,11 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
                 return false;
             }
             newChat.setId(newChatId);
+            // If a new chat was created, store it in the internal database
+            if (null == DatabaseManager.INSTANCE.getChatDAO().addIfNotExists(newChat)) {
+                Log.e(this.getClass().getSimpleName(), "Could not store new chat in database");
+                return false;
+            }
         }
 
         return true;
@@ -81,12 +93,6 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
         }
 
         if (success) {
-            // If a new chat was created, store it in the internal database
-            if (null != newChat) { //TODO: Abfrage eigentlich ueberfluessig
-                new AddIfNotExistsTask(databaseManager.getChatDAO(), newChat).execute();
-                //databaseManager.getChatDAO().addIfNotExists(newChat);
-            }
-
             //Observer mit zwei Fragments UserDetailFragment und Invite to Chat benachrichtigen
             ObservableRegistry.getObservable(UserDetailsFragment.class).
                     notifyFragments(new UserDetailsFragment.NewChatParam(newChatId));

@@ -42,7 +42,20 @@ public interface ChatDAO extends DAO<Chat> {
     public List<Chat> getAll();
 
 
-    public List<Chat> getByParticipants(List<User> users);
+    /**
+     * Retrieves all chats from the database which are held between the exact list of given users
+     * @param users who participate in the chat to return
+     * @return list of chats which matched the conditions
+     */
+    public List<Chat> getByParticipantsExact(List<User> users);
+
+
+    /**
+     * Retrieves all chats from the database which are held between the given users or more
+     * @param users who participate in the chat to look for
+     * @return list of chats which have the given users (and more) as participants
+     */
+    public List<Chat> getByTheseParticipantsOrMore(List<User> users);
 
     /**
      * Store the fields from an object to the database row corresponding to the id from the data parameter. If you have
