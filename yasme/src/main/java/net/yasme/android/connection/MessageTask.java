@@ -55,8 +55,15 @@ public class MessageTask extends ConnectionTask {
                     new InputStreamReader(response.getEntity().getContent(), "UTF-8")
             )).readLine();
 
+            Log.e(this.getClass().getSimpleName(), "JsonOut: " + json);
+
             JSONObject messageObj = new JSONObject(json);
+            JSONObject senderObj = messageObj.getJSONObject("sender");
             message.setId(messageObj.getLong("id"));
+
+            User sender = new User();
+            sender.setId(senderObj.getLong("id"));
+            message.setSender(sender);
             return message;
 
         } catch (IOException | JSONException e) {
@@ -126,10 +133,10 @@ public class MessageTask extends ConnectionTask {
 
 				Message msg = new Message(
                     Long.valueOf(messageObj.getString("id")),
-                    chat,
-                    sender,
                     new Date(messageObj.getLong("dateSent")),
+                    sender,
                     messageObj.getString("message"),
+                    chat,
                     keyId
 				);
 				messages.add(msg);

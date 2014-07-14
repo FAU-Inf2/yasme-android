@@ -54,10 +54,8 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
         for(Message msg : messages) {
             Log.d(this.getClass().getSimpleName(), msg.getMessage() + " " + msg.getId());
-            //DatabaseManager.INSTANCE.getMessageDAO().add(msg);//storeMessages(messages);
-            //DatabaseManager.INSTANCE.getMessageKeyDAO().add(msg.getMessageKey());
 
-            if (null == DatabaseManager.INSTANCE.getMessageDAO().addOrUpdate(msg)) {
+            if (null == DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(msg)) {//changed from addOrUpdate
                 Log.e(this.getClass().getSimpleName(), "Storing a message in database failed");
             }
 
@@ -67,15 +65,6 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
                 }
             }
         }
-
-        //increase and store lastMessageId
-        lastMessageId = messages.get(messages.size()-1).getId();
-        Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
-
-        SharedPreferences.Editor editor = storage.edit();
-        editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
-        editor.commit();
-
         return true;
     }
 
@@ -87,6 +76,14 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         }
         Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
 
+        //increase and store lastMessageId
+        lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0) + messages.size();
+        //lastMessageId = messages.get(messages.size()-1).getId();
+        Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
+
+        SharedPreferences.Editor editor = storage.edit();
+        editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
+        editor.commit();
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
     }
 }
