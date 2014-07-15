@@ -1,5 +1,6 @@
 package net.yasme.android.entities;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -28,7 +29,7 @@ public class Message implements Serializable {
             foreignAutoCreate=true, foreignAutoRefresh=true)
     private User sender;
 
-    @DatabaseField(columnName = DatabaseConstants.DATE)
+    @DatabaseField(columnName = DatabaseConstants.DATE, dataType = DataType.DATE_LONG)
     private Date dateSent;
 
     @DatabaseField(columnName = DatabaseConstants.MESSAGE)

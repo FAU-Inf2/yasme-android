@@ -1,10 +1,7 @@
 package net.yasme.android.controller;
 
-import android.app.Fragment;
 import android.util.Log;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,7 +41,7 @@ public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
                 buffer = null;
             } catch (Exception e) {
                 Log.d(this.getClass().getSimpleName(), "Notify fragment failed: " + fragment.getClass().getSimpleName());
-                Log.e(this.getClass().getSimpleName(), e.getMessage());
+//                Log.e(this.getClass().getSimpleName(), e.getMessage());
             }
         }
     }
