@@ -16,13 +16,11 @@ import java.util.List;
  */
 public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
 
-    protected InviteToChatFragment fragment;
-
     protected SearchTask searchTask = SearchTask.getInstance();
     private List<User> allUsers;
 
-    public GetAllUsersTask(InviteToChatFragment fragment) {
-        this.fragment = fragment;
+    public GetAllUsersTask() {
+
     }
 
     /**

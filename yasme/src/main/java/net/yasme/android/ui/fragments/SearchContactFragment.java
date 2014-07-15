@@ -17,11 +17,17 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.SearchUserTask;
 import net.yasme.android.contacts.ContactListContent;
+import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.ui.activities.ContactActivity;
 
-public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<SearchContactFragment.SearchContactParam> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<ArrayList<User>> {
 
     private Spinner searchSpinner;
     private Button searchButton;
@@ -36,6 +42,21 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FragmentObservable<SearchContactFragment, ArrayList<User>> obs = ObservableRegistry.getObservable(SearchContactFragment.class);
+        obs.register(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FragmentObservable<SearchContactFragment, ArrayList<User>> obs = ObservableRegistry.getObservable(SearchContactFragment.class);
+        obs.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        FragmentObservable<SearchContactFragment, ArrayList<User>> obs = ObservableRegistry.getObservable(SearchContactFragment.class);
+        obs.remove(this);
     }
 
     @Override
@@ -83,9 +104,9 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
         }else{
             contactListContent.clearItems();
-            new SearchUserTask(searchSpinner,searchText,contactListContent,mAdapter).execute();
+            //new SearchUserTask(searchSpinner,searchText,contactListContent,mAdapter).execute();
+            new SearchUserTask(SearchUserTask.SearchBy.getSearchBy(searchSpinner.getSelectedItemPosition()),searchText.getText().toString()).execute();
         }
-
     }
 
     @Override
@@ -99,6 +120,7 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
         public void onSearchFragmentInteraction(User user);
     }
 
+    /*
     public void notifyFragment(SearchContactParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
     }
@@ -125,6 +147,20 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
         public Boolean getSuccess() {
             return success;
+        }
+    }
+    */
+
+    @Override
+    public void notifyFragment(ArrayList<User> userList) {
+        Log.d(getClass().getSimpleName(),"SearchContactFragment has been notified!");
+        if (userList != null && userList.size() != 0) {
+            for (User u : userList) {
+                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
+            }
+            mAdapter.notifyDataSetChanged();
+        } else {
+            contactListContent.addItem(new ContactListContent.ContactListItem("null", "Sorry, No Contact Found", ""));
         }
     }
 

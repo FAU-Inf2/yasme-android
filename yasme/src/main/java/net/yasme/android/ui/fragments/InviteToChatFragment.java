@@ -58,7 +58,7 @@ public class InviteToChatFragment
 
         activity = (AbstractYasmeActivity) getActivity();
         findViewsById();
-        new GetAllUsersTask(this).execute();
+        new GetAllUsersTask().execute();
     }
 
     @Override

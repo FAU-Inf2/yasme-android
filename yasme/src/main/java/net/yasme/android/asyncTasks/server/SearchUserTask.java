@@ -7,8 +7,11 @@ import android.widget.TextView;
 
 import net.yasme.android.connection.SearchTask;
 import net.yasme.android.contacts.ContactListContent;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.ui.fragments.LoginFragment;
+import net.yasme.android.ui.fragments.SearchContactFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +22,25 @@ import java.util.List;
 
 public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
 
-    private Spinner searchSpinner;
-    private TextView searchText;
-    private ContactListContent contactListContent;
-    private SimpleAdapter mAdapter;
+    //private Spinner searchSpinner;
+    //private TextView searchText;
+    //private ContactListContent contactListContent;
+    //private SimpleAdapter mAdapter;
+    private SearchBy searchBy;
+    private String searchText;
 
+    /*
     public SearchUserTask(Spinner searchSpinner, TextView searchText,
                           ContactListContent contactListContent, SimpleAdapter mAdapter) {
         this.searchSpinner = searchSpinner;
         this.searchText = searchText;
         this.contactListContent = contactListContent;
         this.mAdapter = mAdapter;
+    }
+    */
+    public SearchUserTask(SearchBy searchBy, String searchText) {
+        this.searchBy = searchBy;
+        this.searchText = searchText;
     }
 
     @Override
@@ -39,15 +50,17 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
         List<User> uList = new ArrayList<User>();
 
         try {
-            switch (searchSpinner.getSelectedItemPosition()) {
-                case 0:
-                    uList = searchTask.userByLike(String.valueOf(searchText.getText()));
+            switch (searchBy) {
+                case LIKE:
+                    uList = searchTask.userByLike(String.valueOf(searchText));
                     return uList;
-                case 1:
-                    uList.add(searchTask.userByMail(String.valueOf(searchText.getText())));
+                case MAIL:
+                    uList.add(searchTask.userByMail(String.valueOf(searchText)));
                     return uList;
-                case 2:
-                    uList.add(searchTask.userByNumber(String.valueOf(searchText.getText())));
+                case NUMBER:
+                    uList.add(searchTask.userByNumber(String.valueOf(searchText)));
+                    return uList;
+                default:
                     return uList;
             }
         } catch (RestServiceException rse) {
@@ -59,14 +72,25 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
 
 
     protected void onPostExecute(List<User> userList) {
+        ObservableRegistry.getObservable(SearchContactFragment.class).notifyFragments(userList);
+    }
 
-        if (userList != null && userList.size() != 0) {
-            for (User u : userList) {
-                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
+    public enum SearchBy {
+        LIKE,
+        MAIL,
+        NUMBER,
+        UNKNOWN;
+
+        public static SearchBy getSearchBy(int searchBy) {
+            switch (searchBy) {
+                case 0:
+                    return LIKE;
+                case 1:
+                    return MAIL;
+                case 2:
+                    return NUMBER;
             }
-            mAdapter.notifyDataSetChanged();
-        } else {
-            contactListContent.addItem(new ContactListContent.ContactListItem("null", "Sorry, No Contact Found", ""));
+            return UNKNOWN;
         }
     }
 }
