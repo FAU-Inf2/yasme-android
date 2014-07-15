@@ -40,7 +40,11 @@ public enum ChatDAOImpl implements ChatDAO {
             // Add participants
             for (User participant : chat.getParticipants()) {
                 databaseHelper.getUserDao().createIfNotExists(participant);
-                databaseHelper.getChatUserDao().create(new ChatUser(chat, participant));
+
+                ChatUser addParticipantIfNotExists = new ChatUser(ret, participant);
+                if (databaseHelper.getChatUserDao().queryForMatching(addParticipantIfNotExists) == null) {
+                    databaseHelper.getChatUserDao().create(addParticipantIfNotExists);
+                }
             }
             return ret;
         } catch (SQLException e) {
