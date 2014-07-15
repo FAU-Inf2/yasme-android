@@ -15,12 +15,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@drawable/chat_text_bg_other"
+        android:textColor="@color/chat_text_color_other"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/chat_item_message"
-            android:background="@drawable/chat_text_bg_other"
-            android:textColor="@color/chat_text_color_other"
+
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|left"

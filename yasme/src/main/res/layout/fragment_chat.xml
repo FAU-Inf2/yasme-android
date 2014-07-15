@@ -75,5 +75,7 @@
         android:layout_alignParentRight="true"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         android:layout_alignEnd="@+id/text_status" />
 </RelativeLayout>
