@@ -15,6 +15,8 @@
 
         <TextView
             android:id="@+id/chat_item_message"
+            android:background="@drawable/chat_text_bg_self"
+            android:textColor="@color/chat_text_color_self"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|right"
