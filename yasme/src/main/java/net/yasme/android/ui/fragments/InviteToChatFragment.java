@@ -132,8 +132,6 @@ public class InviteToChatFragment
             }
         }
 
-        // Add self to participants list. Since we're working on a set, it doesn't matter in case the set already contains self
-        selectedUsers.add(activity.getSelfUser());
         new CreateChatTask(activity.getSelfUser(), selectedUsers).execute();
     }
 
