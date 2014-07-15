@@ -1,5 +1,7 @@
 package net.yasme.android.entities;
 
+import java.util.Date;
+
 /**
  * Created by Stefan on 15.05.14.
  */
@@ -20,6 +22,10 @@ public class Device {
     private String publicKey;
     private String product; // product name e.g. Google Nexux 5
     private String googleRegId;
+
+    private Date created;
+
+    private Date lastModified;
 
     public Device(User user, Platform platform, String type, String number, String product, String googleRegId) {
         this.user = user;
@@ -53,6 +59,14 @@ public class Device {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
     }
 
     public long getId() {
@@ -91,5 +105,13 @@ public class Device {
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
+    }
+
+    public Date getCreated() {
+        return this.created;
+    }
+
+    public Date getLastModified() {
+        return this.lastModified;
     }
 }

@@ -34,8 +34,10 @@ public class User implements Serializable {
 
     @JsonIgnore
     private Date lastModified;
+
     @JsonIgnore
     private Date created;
+
     @JsonIgnore
     private String profilePicture;
 
