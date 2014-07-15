@@ -42,11 +42,10 @@ public class Chat implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.OWNER, foreign = true)
     private User owner;
 
-    @JsonIgnore
-    @DatabaseField(columnName = DatabaseConstants.LAST_MODIFIED, dataType = DataType.DATE)
+    @DatabaseField(columnName = DatabaseConstants.CHAT_LAST_MODIFIED, dataType = DataType.DATE)
     private Date lastModified;
 
-    @JsonIgnore
+    @DatabaseField(columnName = DatabaseConstants.CHAT_CREATED)
     private Date created;
 
     @JsonIgnore
