@@ -32,13 +32,12 @@ public class User implements Serializable {
 
     private List<Device> devices;   // Just for convenience
 
-    @JsonIgnore
+    @DatabaseField(columnName = DatabaseConstants.USER_LAST_MODIFIED)
     private Date lastModified;
 
-    @JsonIgnore
+    @DatabaseField(columnName = DatabaseConstants.USER_CREATED)
     private Date created;
 
-    @JsonIgnore
     private String profilePicture;
 
     //@JsonIgnore
