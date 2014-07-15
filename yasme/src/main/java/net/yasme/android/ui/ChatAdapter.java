@@ -3,7 +3,6 @@ package net.yasme.android.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -147,25 +146,25 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         int dayNumber = calendarDate.get(Calendar.DAY_OF_WEEK);
         String day;
         switch(dayNumber) {
-            case 1:
+            case 2:
                 day = "Montag";
                 break;
-            case 2:
+            case 3:
                 day = "Dienstag";
                 break;
-            case 3:
+            case 4:
                 day = "Mittwoch";
                 break;
-            case 4:
+            case 5:
                 day = "Donnerstag";
                 break;
-            case 5:
+            case 6:
                 day = "Freitag";
                 break;
-            case 6:
+            case 7:
                 day = "Samstag";
                 break;
-            case 7:
+            case 1:
                 day = "Sonntag";
                 break;
             default:
