@@ -8,7 +8,6 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.fragments.ChatFragment;
 
 import java.util.ArrayList;
@@ -46,9 +45,9 @@ public class SendMessageTask extends AsyncTask<Message, Void, Boolean> {
             this.messages.add(msg);
             try {
                 Message ret = messageTask.sendMessage(msg);
-                if (null == DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(ret)) {
-                    return false;
-                }
+                //if (null == DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(ret)) {
+                //    return false;
+                //} //Nachricht wird hier ohne Datum abgespeichert -> NullPointerException
             } catch (RestServiceException rse) {
                 rse.printStackTrace();
                 Log.w(this.getClass().getSimpleName(), rse.getMessage());
