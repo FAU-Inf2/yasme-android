@@ -54,8 +54,8 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
             if (null == msgText) {
                 Log.e(this.getClass().getSimpleName(), "Received message is null!");
             }
-            //String encrypted = messageEncryption.encrypt(msgText);
-            String encrypted = msgText;
+            String encrypted = messageEncryption.encrypt(msgText);
+            //String encrypted = msgText;
             Message msg = new Message(sender, encrypted, chat.getId(), messageEncryption.getKeyId());
             this.messages.add(msg);
             try {

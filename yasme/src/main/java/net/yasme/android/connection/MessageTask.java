@@ -128,8 +128,8 @@ public class MessageTask extends ConnectionTask {
 
 					//keyStorage.saveKey(obj.getLong("messageKeyId"), messageKey, iv, timestamp);
 					// TODO: storeKeyToDatabase
-                    //MessageKey messageKey = new MessageKey(key.getLong("messageKeyId"),chat,messageKeyString,iv);
-                    //keyDAO.addIfNotExists(messageKey);
+                    MessageKey messageKey = new MessageKey(key.getLong("messageKeyId"),chat,messageKeyString,iv);
+                    keyDAO.addIfNotExists(messageKey);
 					Log.d(this.getClass().getSimpleName(), "[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
 
 					// Delete Key from Server
@@ -142,8 +142,8 @@ public class MessageTask extends ConnectionTask {
 
 
                 MessageEncryption messageEncryption = new MessageEncryption(chat,sender);
-                //String msgText = messageEncryption.decrypt(messageObj.getString("message"), keyId);
-                String msgText = messageObj.getString("message");
+                String msgText = messageEncryption.decrypt(messageObj.getString("message"), keyId);
+                //String msgText = messageObj.getString("message");
 
 				Message msg = new Message(
                     Long.valueOf(messageObj.getString("id")),

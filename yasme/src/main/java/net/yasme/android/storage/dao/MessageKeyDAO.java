@@ -50,6 +50,12 @@ public interface MessageKeyDAO extends DAO<MessageKey> {
     public List<MessageKey> getMessageKeysByChat(long chatId);
 
     /**
+     * Returns the latest key for the specific chat
+     * @return latest key for the specific chat
+     */
+    public MessageKey getCurrentKeyByChat(long chatId);
+
+    /**
      * Store the fields from an object to the database row corresponding to the id from the
      * data parameter. If you have made changes to an object, this is how you persist those
      * changes to the database. You cannot use this method to update the id field

@@ -127,6 +127,8 @@ public class AESEncryption {
 			
 			Cipher cipher;
 			cipher = Cipher.getInstance(MODE);
+            Log.d(getClass().getSimpleName(),"Encrypt with key: " + Arrays.toString(key.getEncoded()));
+            Log.d(getClass().getSimpleName(),"Encrypt with iv: " + Arrays.toString(iv.getIV()));
 			cipher.init(Cipher.ENCRYPT_MODE, key, iv);		
 			encrypted = cipher.doFinal(text.getBytes("UTF-8"));
 				
@@ -148,6 +150,8 @@ public class AESEncryption {
 			
 			Cipher cipher;
 			cipher = Cipher.getInstance(MODE);
+            Log.d(getClass().getSimpleName(),"Decrypt with key: " + Arrays.toString(key.getEncoded()));
+            Log.d(getClass().getSimpleName(),"Decrypt with iv: " + Arrays.toString(iv.getIV()));
 			cipher.init(Cipher.DECRYPT_MODE, key, iv);		
 			decrypted = cipher.doFinal(encrypted_decode);
 			

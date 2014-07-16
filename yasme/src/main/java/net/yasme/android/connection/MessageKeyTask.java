@@ -64,16 +64,18 @@ public class MessageKeyTask extends ConnectionTask {
                 messageKeys[i++] = new MessageKey(0, new Device(Long.parseLong(deviceId)),
                         new Device(recipient.getId()), chat, key, iv, encType, sign);
 
-                Log.d(this.getClass().getSimpleName(),"[???] Key gesendet für User " + recipient);
+                Log.d(this.getClass().getSimpleName(),"[???] Key gesendet für User " + recipient.getId());
             }
 
             HttpResponse httpResponse = executeRequest(Request.POST, "", messageKeys);
 
+            Log.d(this.getClass().getSimpleName(),"[???] Antwort auswerten");
 
             String json = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent())).readLine();
             /**DEBUG**/
             //Log.d(this.getClass().getSimpleName(),"getKeyRequest successful: " + json);
             /**DEBUG**/
+            Log.d(this.getClass().getSimpleName(),"[???] Antwort: " + json);
 
             JSONObject obj = new JSONObject(json);
 

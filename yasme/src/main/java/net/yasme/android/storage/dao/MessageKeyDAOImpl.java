@@ -89,6 +89,20 @@ public enum MessageKeyDAOImpl implements MessageKeyDAO {
     }
 
     @Override
+    public MessageKey getCurrentKeyByChat(long chatId) {
+        MessageKey result = null;
+        for (MessageKey key : getMessageKeysByChat(chatId)) {
+            if (result == null) {
+                result = key;
+            }
+            if (key.getTimestamp() > result.getTimestamp()) {
+                result = key;
+            }
+        }
+        return result;
+    }
+
+    @Override
     public MessageKey update(MessageKey messageKey) {
         try {
             if(1 == databaseHelper.getMessageKeyDao().update(messageKey)) {
