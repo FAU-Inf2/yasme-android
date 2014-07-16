@@ -1,14 +1,19 @@
 package net.yasme.android.connection;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 
+import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Device;
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.ChatDAO;
+import net.yasme.android.storage.dao.MessageKeyDAO;
 import net.yasme.android.storage.dao.UserDAO;
 
 import org.apache.http.HttpResponse;
@@ -28,6 +33,7 @@ import java.util.List;
 public class MessageTask extends ConnectionTask {
 
 	private static MessageTask instance;
+    private MessageKeyDAO keyDAO = DatabaseManager.INSTANCE.getMessageKeyDAO();
     private ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
     private UserDAO userDAO = DatabaseManager.INSTANCE.getUserDAO();
 
@@ -97,6 +103,10 @@ public class MessageTask extends ConnectionTask {
                 long senderId = senderObj.getLong("id");
 				long keyId = messageObj.getLong("messageKeyId");
 
+                // Get chat and sender from database
+                Chat chat = chatDAO.get(chatId);
+                User sender = userDAO.get(senderId);
+
 				/* extracting Keys and save it */
 				JSONObject key;
 				try {
@@ -104,7 +114,7 @@ public class MessageTask extends ConnectionTask {
 				} catch (Exception e) { key = null; }
 
 				if (key != null) {
-					String messageKey = key.getString("messageKey");
+					String messageKeyString = key.getString("messageKey");
 					String iv = key.getString("initVector");
 					//decrypt the key with RSA
 					//TODO: statt userId deviceId uebergeben
@@ -118,6 +128,8 @@ public class MessageTask extends ConnectionTask {
 
 					//keyStorage.saveKey(obj.getLong("messageKeyId"), messageKey, iv, timestamp);
 					// TODO: storeKeyToDatabase
+                    //MessageKey messageKey = new MessageKey(key.getLong("messageKeyId"),chat,messageKeyString,iv);
+                    //keyDAO.addIfNotExists(messageKey);
 					Log.d(this.getClass().getSimpleName(), "[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
 
 					// Delete Key from Server
@@ -127,15 +139,17 @@ public class MessageTask extends ConnectionTask {
 					Log.d(this.getClass().getSimpleName(), "[???] Es wurde kein Key in der Message gefunden");
 				}
 
-                // Get chat and sender from database
-                Chat chat = chatDAO.get(chatId);
-                User sender = userDAO.get(senderId);
+
+
+                MessageEncryption messageEncryption = new MessageEncryption(chat,sender);
+                //String msgText = messageEncryption.decrypt(messageObj.getString("message"), keyId);
+                String msgText = messageObj.getString("message");
 
 				Message msg = new Message(
                     Long.valueOf(messageObj.getString("id")),
                     new Date(messageObj.getLong("dateSent")),
                     sender,
-                    messageObj.getString("message"),
+                    msgText,
                     chat,
                     keyId
 				);

@@ -65,6 +65,14 @@ public class MessageKey implements Serializable {
 		this.sign = sign;
 	}
 
+    public MessageKey(long id, Chat chat, String key,String initVector) {
+        this.id = id;
+        this.chat = chat;
+        this.messageKey = key;
+        this.initVector = initVector;
+        encType = 0; // unencrypted
+    }
+
 	public MessageKey() {
         // ORMLite needs a no-arg constructor
     }

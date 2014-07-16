@@ -62,14 +62,14 @@ public class Chat implements Serializable {
     /**
      * Constructors *
      */
-    public Chat(long id, User user, AbstractYasmeActivity activity) {
+    public Chat(long id, User user) {
         this.id = id;
         this.participants = new ArrayList<User>();
         this.messages = new ArrayList<Message>();
         // setup Encryption for this chat
         // TODO: DEVICE-ID statt USERID uebergeben
-        long creatorDevice = user.getId();
-        aes = new MessageEncryption(this, creatorDevice);
+        //long creatorDevice = user.getId();
+        aes = new MessageEncryption(this, user);
 
         //new Chat(id, participants, "", "", null, new ArrayList<Message>(), aes);
     }
@@ -186,7 +186,7 @@ public class Chat implements Serializable {
         return new ArrayList<Message>(messages);
     }
 
-    public MessageEncryption getEncryption() {
+    public MessageEncryption sgetEncryption() {
         if (aes == null)
             Log.d(this.getClass().getSimpleName(),"Chat wurde erstellt ohne gueltiges Encryption-Object --> Class: Chat.getEncryption())");
         return aes;

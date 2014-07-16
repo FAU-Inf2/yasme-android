@@ -4,7 +4,9 @@ import android.util.Base64;
 import android.util.Log;
 
 import net.yasme.android.asyncTasks.server.SendMessageKeyTask;
+import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Device;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.CurrentKey;
@@ -33,105 +35,30 @@ import javax.crypto.spec.SecretKeySpec;
 
 
 public class MessageEncryption {
-
-    long keyId = -1; // contains the latest keyid for encryption (get it from server, after sending the key)
-
-    long chatId;
+    private long keyId;
     Chat chat;
-    long creatorDevice; //TODO: make DEVICE
-    ArrayList<User> recipients = new ArrayList<User>(); //Send generated Key to this recipients
-    //Context context;
-    //String accessToken;
-
-    //private String CURRENTKEY = "CurrentKey"; // tablename for "currentKey-Storage" per Chat
-    //private String KEYSTORAGE = "KeyStorage"; //tablename for "KeyStorage" per Chat
+    User creator;
+    //ArrayList<User> recipients = new ArrayList<User>(); //Send generated Key to this recipients
 
     private AESEncryption aes;
-
     private DatabaseManager db = DatabaseManager.INSTANCE;
 
-
-    /*
-    //Constructor for saving Key from server (Generating a key is not necessary)
-    public MessageEncryption(long tets, Context context, long chatid){
-        this.context = context;
-        this.chatId = chatid;
-        this.CURRENTKEY = this.CURRENTKEY + "_" + Long.toString(chatId);
-        this.KEYSTORAGE = this.KEYSTORAGE + "_" + Long.toString(chatId);
-    }
-    */
-
     // Constructor fuer Chat-Verschluesselung--> holt bzw. generiert Key, falls noetig
-    public MessageEncryption(Chat chat, long creator) {
+    public MessageEncryption(Chat chat, User creator) {
 
-        //this(context, chat.getId());
         this.chat = chat;
-        //this.accessToken = accessToken;
-        this.creatorDevice = creator;
-
-        //SharedPreferences currentKeyPref = context.getSharedPreferences(
-        //        CURRENTKEY, Context.MODE_PRIVATE);
+        this.creator = creator;
 
         // if no old key for this chat, then generate a new one, beginning with
-        List<CurrentKey> currentKeys = db.getCurrentKeyDAO().getCurrentKeysByChat(chatId);
-        if (currentKeys != null  && currentKeys.size() > 0
-                && currentKeys.get(0).getMessageKey().getId() < 1) {
-            Log.d(this.getClass().getSimpleName(),"[???] Generate Key");
-            aes = new AESEncryption();
-
-            // TODO pro User alle Devices suchen und in recipients speichern
-            //suche alle Empfaenger des Schluessels
-            if (chat.getParticipants() != null) {
-                for (User user : chat.getParticipants()) {
-                    long userId = user.getId();
-                    //nicht an sich selbst schicken
-                    //TODO TEST
-                    if (userId != creator) {
-                        recipients.add(user);
-                    }
-
-                }
-            }
-            //TODO: If-Anweisung entfernen wenn participants in chat implementiert wurde
-            //TODO: If sendkey nicht erfolgreich, dann Devices pro User updaten und nochmal versuchen!!!
-            if (recipients.size() > 0) {
-                //send Key to server
-                MessageKey resultMessageKey = sendKey();
-
-                //if server has successfully saved the key
-                if (resultMessageKey != null) {
-                    keyId = resultMessageKey.getId();
-                    long timestamp = resultMessageKey.getTimestamp();
-                    Log.d(this.getClass().getSimpleName(),"[???] Key wurde an Server gesendet, ID: "+keyId);
-                    //saveKey(keyId, aes.getKeyinBase64(), aes.getIVinBase64(), timestamp);
-                    //TODO: saveKeyToDatabase
-                    Log.d(this.getClass().getSimpleName(),"[???] Key wurde lokal gespeichert, ID: "+keyId);
-                }else {
-                    Log.d(this.getClass().getSimpleName(),"[???] Fehler beim Senden des Keys an den Server");
-                }
-
-            }
-            else{
-                Log.d(this.getClass().getSimpleName(),"[???] No recipients in chat could be found. Key was not sent to server!");
-            }
-
-            //if (!ConnectionTask.isInitialized()) {
-            //    ConnectionTask.initParams(context.getResources().getString(R.string.server_scheme),context.getResources().getString(R.string.server_host),context.getResources().getString(R.string.server_port));
-            //}
-
-
-
+        List<CurrentKey> currentKeys = db.getCurrentKeyDAO().getCurrentKeysByChat(chat.getId());
+        if (currentKeys == null  || currentKeys.size() <= 0 || currentKeys.get(0).getMessageKey().getId() < 1) {
+            generateKey();
         }
-
         // if old key is already available
         else {
             // get needed Key from LocalStorage
             updateKey();
-            // ###DEBUG
-            Log.d(this.getClass().getSimpleName(),"[???]: Key " + keyId + " fuer Chat " + chatId + " wurde geladen");
-            // /###
         }
-
     }
 
 
@@ -140,10 +67,10 @@ public class MessageEncryption {
     public void updateKey() {
         try {
             // check, which Key is need to encrypt
-            checkCurrentKeyId();
+            keyId = getCurrentKeyId();
 
             // get Key from storage
-            MessageKey key = getKeyFromLocalStorage(chatId, keyId);
+            MessageKey key = getKeyFromLocalStorage(chat.getId(), keyId);
             // if Key is available
             if (key != null) {
                 String keyBase64 = key.getMessageKey();
@@ -157,22 +84,66 @@ public class MessageEncryption {
         }
         catch (Exception e){
             Log.d(this.getClass().getSimpleName(),e.getMessage());
-            }
+        }
     }
 
-    // check, which Key is need to encrypt
-    public void checkCurrentKeyId() {
-        keyId = db.getCurrentKeyDAO().getCurrentKeysByChat(chatId).get(0).getMessageKey().getId();
-        /*SharedPreferences currentKeyPref = context.getSharedPreferences(CURRENTKEY, Context.MODE_PRIVATE);
+    public void generateKey() {
+        Log.d(this.getClass().getSimpleName(),"[???] Generate Key");
+        aes = new AESEncryption();
 
-        long keyidfromstorage = currentKeyPref.getLong("keyId", 0);
-        keyId = keyidfromstorage;
-        */
+        ArrayList<User> recipients = new ArrayList<User>();
+
+        // TODO pro User alle Devices suchen und in recipients speichern
+        //suche alle Empfaenger des Schluessels
+        if (chat.getParticipants() != null) {
+            for (User user : chat.getParticipants()) {
+                long userId = user.getId();
+                //nicht an sich selbst schicken
+                //TODO TEST
+                if (userId != creator.getId()) {
+                    recipients.add(user);
+                } else { // DEBUG TODO: REMOVE
+                    //recipients.add(user);
+                }
+            }
+        }
+        //TODO: If-Anweisung entfernen wenn participants in chat implementiert wurde
+        //TODO: If sendkey nicht erfolgreich, dann Devices pro User updaten und nochmal versuchen!!!
+        if (recipients.size() > 0) {
+            //send Key to server
+            Log.d(this.getClass().getSimpleName(),"[???] Send Key to server ...");
+            MessageKey resultMessageKey = sendKey(recipients);
+            Log.d(this.getClass().getSimpleName(),"[???] ... done");
+
+            //if server has successfully saved the key
+            if (resultMessageKey != null) {
+                keyId = resultMessageKey.getId();
+                long timestamp = resultMessageKey.getTimestamp();
+                Log.d(this.getClass().getSimpleName(),"[???] Key wurde an Server gesendet, ID: "+keyId);
+                db.getMessageKeyDAO().addIfNotExists(resultMessageKey);
+                Log.d(this.getClass().getSimpleName(),"[???] Key wurde lokal gespeichert, ID: "+keyId);
+            }else {
+                Log.d(this.getClass().getSimpleName(),"[???] Fehler beim Senden des Keys an den Server");
+            }
+        }
+        else{
+            Log.d(this.getClass().getSimpleName(),"[???] No recipients in chat could be found. Key was not sent to server!");
+        }
+
+        //if (!ConnectionTask.isInitialized()) {
+        //    ConnectionTask.initParams(context.getResources().getString(R.string.server_scheme),context.getResources().getString(R.string.server_host),context.getResources().getString(R.string.server_port));
+        //}
+    }
+
+    // get Id of which Key is need to encrypt
+    public long getCurrentKeyId() {
+        return db.getCurrentKeyDAO().getCurrentKeysByChat(chat.getId()).get(0).getMessageKey().getId();
     }
 
     // encrypt
     public String encrypt(String text) {
         return aes.encrypt(text);
+        //return text;
     }
 
     // decrypt
@@ -188,7 +159,7 @@ public class MessageEncryption {
         // another key is needed
         else {
             // get Key from storage
-            MessageKey messageKey = getKeyFromLocalStorage(chatId, keyId);
+            MessageKey messageKey = getKeyFromLocalStorage(chat.getId(), keyId);
             // if Key is available
             if (messageKey != null) {
                 String keyBase64 = messageKey.getMessageKey();
@@ -201,14 +172,16 @@ public class MessageEncryption {
                 SecretKey key = new SecretKeySpec(keyBytes, "AES");
                 IvParameterSpec iv = new IvParameterSpec(ivBytes);
 
-                Log.d(this.getClass().getSimpleName(),"[???]: alter Key wurde zum Entschluesseln geladen");
+                Log.d(this.getClass().getSimpleName(),"[???]: alter Key wurde zum Entschluesseln geladen:");
+                Log.d(this.getClass().getSimpleName(),"[???]: Key: " + keyBase64);
+                Log.d(this.getClass().getSimpleName(),"[???]: IV: " + ivBase64);
+
                 String decrypted = aes.decrypt(encrypted, key, iv);
 
                 return decrypted;
             }
             return "Key for Decryption could not be found";
         }
-
     }
 
     public long getKeyId() {
@@ -216,17 +189,47 @@ public class MessageEncryption {
     }
 
     // send Key to server
-    public MessageKey sendKey() {
+
+    public MessageKey sendKey(ArrayList<User> recipients) {
+        /*
         try {
+            Log.d(this.getClass().getSimpleName(),"[???] Create task");
             SendMessageKeyTask task = new SendMessageKeyTask(aes, recipients, chat);
+            Log.d(this.getClass().getSimpleName(),"[???] Execute task");
             task.execute();
+            Log.d(this.getClass().getSimpleName(),"[???] Wait ...");
             MessageKey result = task.get();
             return result;
         } catch (Exception e) {
             Log.d(this.getClass().getSimpleName(),e.getMessage());
         }
         return null;
+        */
+        if (true) return null;
+
+        try {
+            Log.d(this.getClass().getSimpleName(),"Try to send MessageKey");
+            String keyBase64 = aes.getKeyinBase64();
+            String iv = aes.getIVinBase64();
+            String sign = "test";
+            //TODO: encType je nach Verschluesselung anpassen
+            byte encType = 0;
+
+            // send Key to all Recipients
+            MessageKeyTask messageKeyTask = MessageKeyTask.getInstance();
+            MessageKey messageKey = messageKeyTask.saveKey(recipients, chat,
+                    keyBase64, iv, encType, sign);
+
+            Log.d(this.getClass().getSimpleName(),"Key sent");
+            return messageKey;
+        } catch (Exception e) {
+            Log.d(this.getClass().getSimpleName(),"Fail to send key: "+e.getMessage());
+            return null;
+        }
     }
+
+
+
     //delete a symmetric Key from server when the client got that key
     //public void deleteKeyFromServer(long keyId){
     //    new DeleteMessageKeyTask().execute(keyId);

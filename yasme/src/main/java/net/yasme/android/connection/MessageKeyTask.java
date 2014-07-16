@@ -82,7 +82,7 @@ public class MessageKeyTask extends ConnectionTask {
 
             //return keyId and timestamp from serverresponse
             //TODO: Dummy_IV
-            MessageKey result = new MessageKey(keyId, new Device(Long.parseLong(deviceId)), new Device(0), chat, key, "DummyIV", encType, sign);
+            MessageKey result = new MessageKey(keyId, new Device(Long.parseLong(deviceId)), new Device(0), chat, key, iv, encType, sign);
             result.setTimestamp(timestamp);
 
             return result;

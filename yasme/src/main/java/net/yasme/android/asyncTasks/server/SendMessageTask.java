@@ -6,7 +6,10 @@ import android.util.Log;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.MessageEncryption;
+import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Device;
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.ui.fragments.ChatFragment;
 
@@ -16,19 +19,24 @@ import java.util.List;
 /**
  * Created by robert on 19.06.14.
  */
-public class SendMessageTask extends AsyncTask<Message, Void, Boolean> {
+public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
-    private MessageEncryption aes;
+    private MessageEncryption messageEncryption;
     private MessageTask messageTask = MessageTask.getInstance();
     private AsyncTask onPostExecute;
     private List<Message> messages = new ArrayList<>();
+    private Chat chat;
+    private User sender;
 
-    public SendMessageTask(MessageEncryption aes) {
-        this.aes = aes;
-    }
 
-    public SendMessageTask(MessageEncryption aes, AsyncTask onPostExecute) {
-        this.aes = aes;
+
+    //public SendMessageTask(MessageEncryption aes) {
+    //    this.aes = aes;
+    //}
+
+    public SendMessageTask(Chat chat, User sender, AsyncTask onPostExecute) {
+        this.sender = sender;
+        this.chat = chat;
         this.onPostExecute = onPostExecute;
     }
 
@@ -37,11 +45,18 @@ public class SendMessageTask extends AsyncTask<Message, Void, Boolean> {
      * @param msgs
      * @return true on success and false on error
      */
-    protected Boolean doInBackground(Message... msgs) {
-        for (Message msg : msgs) {
-            if (null == msg) {
+    protected Boolean doInBackground(String... msgs) {
+        Log.e(this.getClass().getSimpleName(), "Init Encryption ...");
+        messageEncryption = new MessageEncryption(chat, sender);
+        Log.e(this.getClass().getSimpleName(), "... done");
+
+        for (String msgText : msgs) {
+            if (null == msgText) {
                 Log.e(this.getClass().getSimpleName(), "Received message is null!");
             }
+            //String encrypted = messageEncryption.encrypt(msgText);
+            String encrypted = msgText;
+            Message msg = new Message(sender, encrypted, chat.getId(), messageEncryption.getKeyId());
             this.messages.add(msg);
             try {
                 Message ret = messageTask.sendMessage(msg);

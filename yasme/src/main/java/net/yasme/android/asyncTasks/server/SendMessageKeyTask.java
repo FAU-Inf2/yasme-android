@@ -31,11 +31,11 @@ public class SendMessageKeyTask extends AsyncTask<String, Void, MessageKey> {
     protected MessageKey doInBackground(String... params) {
 
         try {
-
+            Log.d(this.getClass().getSimpleName(),"Try to send MessageKey");
             String keyBase64 = aes.getKeyinBase64();
             String iv = aes.getIVinBase64();
             String sign = "test";
-            //TODO: encTyoe je nach Verschluesselung anpassen
+            //TODO: encType je nach Verschluesselung anpassen
             byte encType = 0;
 
             // send Key to all Recipients
@@ -43,6 +43,7 @@ public class SendMessageKeyTask extends AsyncTask<String, Void, MessageKey> {
             MessageKey messageKey = messageKeyTask.saveKey(recipients, chat,
                     keyBase64, iv, encType, sign);
 
+            Log.d(this.getClass().getSimpleName(),"Key sent");
             return messageKey;
         } catch (Exception e) {
             Log.d(this.getClass().getSimpleName(),"Fail to send key: "+e.getMessage());

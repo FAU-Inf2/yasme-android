@@ -85,11 +85,11 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             Log.w(this.getClass().getSimpleName(), "get chat from DB failed");
         }
         if (chat == null) {
-            chat = new Chat(chatId, activity.getSelfUser(), activity);
+            chat = new Chat(chatId, activity.getSelfUser());
         }
 
         //DEBUG, TODO: encryption speichern und auslesen
-        aes = new MessageEncryption(chat, activity.getSelfUser().getId());
+        aes = new MessageEncryption(chat, activity.getSelfUser());
         chat.setEncryption(aes);
     }
 
@@ -165,19 +165,19 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     }
 
     public void send(View view) {
-        String msg = editMessage.getText().toString();
-        if (msg.isEmpty()) {
+        String msgText = editMessage.getText().toString();
+        if (msgText.isEmpty()) {
             status.setText("Nichts eingegeben");
             return;
         }
         //String msgEncrypted = aes.encrypt(editMessage.getText().toString());
-        String msgEncrypted = msg;
-        User user = new User(activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), activity.getSelfUser().getId());
-        long aesId = aes.getKeyId();
+        //String msgEncrypted = msg;
+        //User user = new User(activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), activity.getSelfUser().getId());
+        //long aesId = aes.getKeyId();
 
         // Send message and get new messages afterwards
-        new SendMessageTask(chat.getEncryption(), new GetMessageTask())
-                .execute(new Message(activity.getSelfUser(), msgEncrypted, chat.getId(), aesId));
+        new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask())
+                .execute(msgText);
         status.setText("Send message in bg");
         editMessage.setText("");
     }
