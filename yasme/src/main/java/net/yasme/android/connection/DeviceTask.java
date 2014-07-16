@@ -69,12 +69,12 @@ public class DeviceTask extends ConnectionTask {
         }
     }
 
-    public ArrayList<Device> getAllDevices() throws RestServiceException {
+    public ArrayList<Device> getAllDevices(Long userId) throws RestServiceException {
 
         ArrayList<Device> devices = new ArrayList<Device>();
 
         try {
-            HttpResponse httpResponse = executeRequest(Request.GET, "all");
+            HttpResponse httpResponse = executeRequest(Request.GET, "all/" + userId);
 
             JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine());

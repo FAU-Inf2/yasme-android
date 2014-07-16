@@ -50,21 +50,27 @@ public class MessageKeyTask extends ConnectionTask {
             int i = 0;
 
             //messageKey Array
-            MessageKey[] messageKeys = new MessageKey[recipients.size()];
+            //MessageKey[] messageKeys = new MessageKey[recipients.size()];
+            ArrayList<MessageKey> messageKeys = new ArrayList<MessageKey>();
 
-            for (User recipient : recipients) {
+            for (User user : recipients) {
+                //TODO: Change
+                Log.d(this.getClass().getSimpleName(),"[???] Get Devices for User " + user.getId());
+                //for (Device recipientDevice : user.getDevices()) {
+                for (Device recipientDevice : DeviceTask.getInstance().getAllDevices(user.getId())) {
+                    Log.d(this.getClass().getSimpleName(),"[???] Send Key for Device" + recipientDevice.getId());
+                    //encrypt the key with RSA
+                    /*
+                    MessageSignatur rsa = new MessageSignatur(context, creatorDevice);
+                    PublicKey pubKey = rsa.getPubKeyFromUser(recipient);
+                    String keyEncrypted = rsa.encrypt(key, pubKey);
+                    */
+                    //TODO: Dummy_IV
+                    messageKeys.add(new MessageKey(0, new Device(Long.parseLong(deviceId)),
+                            new Device(recipientDevice.getId()), chat, key, iv, encType, sign));
 
-                //encrypt the key with RSA
-                /*
-                MessageSignatur rsa = new MessageSignatur(context, creatorDevice);
-                PublicKey pubKey = rsa.getPubKeyFromUser(recipient);
-                String keyEncrypted = rsa.encrypt(key, pubKey);
-                */
-                //TODO: Dummy_IV
-                messageKeys[i++] = new MessageKey(0, new Device(Long.parseLong(deviceId)),
-                        new Device(recipient.getId()), chat, key, iv, encType, sign);
-
-                Log.d(this.getClass().getSimpleName(),"[???] Key gesendet für User " + recipient.getId());
+                    Log.d(this.getClass().getSimpleName(),"[???] Key gesendet für Device " + recipientDevice.getId());
+                }
             }
 
             HttpResponse httpResponse = executeRequest(Request.POST, "", messageKeys);
@@ -102,3 +108,4 @@ public class MessageKeyTask extends ConnectionTask {
         return true;
     }
 }
+
