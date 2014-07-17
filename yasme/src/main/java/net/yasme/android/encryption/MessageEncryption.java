@@ -10,7 +10,7 @@ import net.yasme.android.entities.Device;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
-import net.yasme.android.storage.CurrentKey;
+//import net.yasme.android.storage.CurrentKey;
 import net.yasme.android.storage.DatabaseManager;
 
 import android.util.Base64;

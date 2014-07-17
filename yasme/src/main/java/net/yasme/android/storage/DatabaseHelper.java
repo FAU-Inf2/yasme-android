@@ -36,7 +36,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<User, Long> userDao = null;
     private Dao<Message, Long> messageDao = null;
     private Dao<ChatUser, Long> chatUserDao = null;
-    private Dao<CurrentKey, Long> currentKeyDao = null;
+    //private Dao<CurrentKey, Long> currentKeyDao = null;
     private Dao<MessageKey, Long> messageKeyDao = null;
 
 
@@ -52,7 +52,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, User.class);
             TableUtils.createTable(connectionSource, ChatUser.class);
             TableUtils.createTable(connectionSource, MessageKey.class);
-            TableUtils.createTable(connectionSource, CurrentKey.class);
+            //TableUtils.createTable(connectionSource, CurrentKey.class);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), "Can't create database");
             Log.e(this.getClass().getSimpleName(), e.getMessage());
@@ -67,7 +67,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, User.class, true);
             TableUtils.dropTable(connectionSource, ChatUser.class, true);
             TableUtils.dropTable(connectionSource, MessageKey.class, true);
-            TableUtils.dropTable(connectionSource, CurrentKey.class, true);
+            //TableUtils.dropTable(connectionSource, CurrentKey.class, true);
             onCreate(db, connectionSource);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), "Can't drop databases");
@@ -126,6 +126,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return chatUserDao;
     }
 
+    /*
     public Dao<CurrentKey, Long> getCurrentKeyDao() {
         if(null == currentKeyDao) {
             try {
@@ -136,6 +137,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return currentKeyDao;
     }
+    */
 
     public Dao<MessageKey, Long> getMessageKeyDao() {
         if(null == messageKeyDao) {
