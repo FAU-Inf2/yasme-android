@@ -61,7 +61,9 @@ public class MessageEncryption {
         // if old key is already available
         else {
             // get needed Key from LocalStorage
-            updateKey();
+            // TODO: change
+            //updateKey();
+            generateKey();
         }
     }
 
