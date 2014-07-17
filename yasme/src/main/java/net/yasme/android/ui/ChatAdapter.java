@@ -111,6 +111,8 @@ public class ChatAdapter extends ArrayAdapter<Message> {
     private String getDateOfMessage(Message message) {
         String returnDate = "";
 
+
+
         Date dateSent = message.getDateSent();
         Date currentDate =  new Date(System.currentTimeMillis());
 
@@ -120,65 +122,70 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         Calendar current = new GregorianCalendar();
         current.setTimeInMillis(currentDate.getTime());
 
-        boolean today = (sent.get(Calendar.YEAR) == current.get(Calendar.YEAR))
-                &&(sent.get(Calendar.DAY_OF_YEAR) == current.get(Calendar.DAY_OF_YEAR));
+        boolean today = dateEquals(sent,current);
 
         if(today) {
-            returnDate = formatDateToday(dateSent);
+            returnDate = formatTime(dateSent) + " Uhr";
         } else {
-            returnDate = formatDate(dateSent);
+            returnDate = formatDate(sent, current, dateSent) + " Uhr";
         }
         return returnDate;
     }
 
-    public String formatDateToday(Date date) {
+    public String formatTime(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+2"));
         String formattedDate = formatter.format(date);
-        return formattedDate + " Uhr";
+        return formattedDate;
     }
 
-    public String formatDate(Date date) {
-        Calendar calendarDate = new GregorianCalendar();
-        calendarDate.setTimeInMillis(date.getTime());
-
-
-        int dayNumber = calendarDate.get(Calendar.DAY_OF_WEEK);
-        String day;
-        switch(dayNumber) {
-            case 2:
-                day = "Montag";
-                break;
-            case 3:
-                day = "Dienstag";
-                break;
-            case 4:
-                day = "Mittwoch";
-                break;
-            case 5:
-                day = "Donnerstag";
-                break;
-            case 6:
-                day = "Freitag";
-                break;
-            case 7:
-                day = "Samstag";
-                break;
-            case 1:
-                day = "Sonntag";
-                break;
-            default:
-                day = "";
-                break;
+    public String formatDate(Calendar calendar, Calendar current, Date date) {
+        Calendar tmp = new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        tmp.add(Calendar.DATE,1);
+        if (dateEquals(tmp,current)) {
+            return context.getResources().getString(R.string.yesterday) + ", " + formatTime(date);
+        }
+        tmp.add(Calendar.DATE,6);
+        if (tmp.compareTo(current) > 0) {
+            int dayNumber = calendar.get(Calendar.DAY_OF_WEEK);
+            String day;
+            switch(dayNumber) {
+                case 1:
+                    day = context.getResources().getString(R.string.sunday);
+                    break;
+                case 2:
+                    day = context.getResources().getString(R.string.monday);
+                    break;
+                case 3:
+                    day = context.getResources().getString(R.string.tuesday);
+                    break;
+                case 4:
+                    day = context.getResources().getString(R.string.wednesday);
+                    break;
+                case 5:
+                    day = context.getResources().getString(R.string.thursday);
+                    break;
+                case 6:
+                    day = context.getResources().getString(R.string.friday);
+                    break;
+                case 7:
+                    day = context.getResources().getString(R.string.saturday);
+                    break;
+                default:
+                    day = "";
+                    break;
+            }
+            return day + ", " + formatTime(date);
         }
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+2"));
         String formattedDate = formatter.format(date);
-        if(day.isEmpty()) {
-            return formattedDate + " Uhr";
-        }
-        day = day + ", ";
-        return day + formattedDate + " Uhr";
+        return formattedDate;
+    }
+
+
+    public boolean dateEquals(Calendar first, Calendar second) {
+        return (first.get(Calendar.YEAR) == second.get(Calendar.YEAR)) && (first.get(Calendar.DAY_OF_YEAR) == second.get(Calendar.DAY_OF_YEAR));
     }
 }
