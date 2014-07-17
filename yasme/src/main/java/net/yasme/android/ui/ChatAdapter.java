@@ -132,7 +132,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
     }
 
     public String formatDateToday(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+2"));
         String formattedDate = formatter.format(date);
         return formattedDate + " Uhr";
