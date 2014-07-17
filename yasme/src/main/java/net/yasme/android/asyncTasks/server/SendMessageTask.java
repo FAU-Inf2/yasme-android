@@ -46,20 +46,14 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
      * @return true on success and false on error
      */
     protected Boolean doInBackground(String... msgs) {
-        Log.e(this.getClass().getSimpleName(), "Init Encryption ...");
-        messageEncryption = new MessageEncryption(chat, sender);
-        Log.e(this.getClass().getSimpleName(), "... done");
-
         for (String msgText : msgs) {
             if (null == msgText) {
                 Log.e(this.getClass().getSimpleName(), "Received message is null!");
             }
-            String encrypted = messageEncryption.encrypt(msgText);
-            //String encrypted = msgText;
-            Message msg = new Message(sender, encrypted, chat.getId(), messageEncryption.getKeyId());
+            Message msg = new Message(sender, msgText, chat, 0);
             this.messages.add(msg);
             try {
-                Message ret = messageTask.sendMessage(msg);
+                Message ret = messageTask.sendMessage(msg, chat, sender);
                 //if (null == DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(ret)) {
                 //    return false;
                 //} //Nachricht wird hier ohne Datum abgespeichert -> NullPointerException

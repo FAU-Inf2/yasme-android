@@ -54,8 +54,13 @@ public class MessageTask extends ConnectionTask {
      * @return given message with generated id
      * @throws RestServiceException
      */
-	public Message sendMessage(Message message) throws RestServiceException {
+	public Message sendMessage(Message message, Chat chat, User user) throws RestServiceException {
 		try {
+            // Encrypt
+            MessageEncryption messageEncryption = new MessageEncryption(chat,user);
+            message = messageEncryption.encrypt(message);
+
+            // Send
             HttpResponse response = executeRequest(Request.POST, "", message);
             String json = (new BufferedReader(
                     new InputStreamReader(response.getEntity().getContent(), "UTF-8")
@@ -139,20 +144,16 @@ public class MessageTask extends ConnectionTask {
 					Log.d(this.getClass().getSimpleName(), "[???] Es wurde kein Key in der Message gefunden");
 				}
 
-
-
-                MessageEncryption messageEncryption = new MessageEncryption(chat,sender);
-                String msgText = messageEncryption.decrypt(messageObj.getString("message"), keyId);
-                //String msgText = messageObj.getString("message");
-
 				Message msg = new Message(
                     Long.valueOf(messageObj.getString("id")),
                     new Date(messageObj.getLong("dateSent")),
                     sender,
-                    msgText,
+                    messageObj.getString("message"),
                     chat,
                     keyId
 				);
+                MessageEncryption messageEncryption = new MessageEncryption(chat,sender);
+                msg = messageEncryption.decrypt(msg);
 				messages.add(msg);
 				Log.d(this.getClass().getSimpleName(), "Message added: " + msg.getMessage());
 			} // end of for-loop

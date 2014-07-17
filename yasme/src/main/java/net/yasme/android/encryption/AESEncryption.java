@@ -14,6 +14,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import android.util.Base64;
 
+import net.yasme.android.entities.MessageKey;
+
 public class AESEncryption {
 
     private static final int KEYSIZE = 16; //in Byte --> 128 Bit
@@ -28,6 +30,7 @@ public class AESEncryption {
 		iv = generateIV();
 	}
 
+
 	public AESEncryption(String password) {
 		// generate AES-Key from given password
 		key = generateKey(password);
@@ -38,6 +41,18 @@ public class AESEncryption {
 		this.key = new SecretKeySpec(key, "AES");
 		this.iv = new IvParameterSpec(iv);
 	}
+
+    public AESEncryption(MessageKey messageKey) {
+        String keyBase64 = messageKey.getMessageKey();
+        String ivBase64 = messageKey.getInitVector();
+
+        byte[] keyBytes = Base64.decode(keyBase64.getBytes(), Base64.DEFAULT);
+        byte[] ivBytes = Base64.decode(ivBase64.getBytes(), Base64.DEFAULT);
+
+        // convert key needed for decryption
+        key = new SecretKeySpec(keyBytes, "AES");
+        iv = new IvParameterSpec(ivBytes);
+    }
 
 	// generate Initial-Vector
 	public IvParameterSpec generateIV() {
@@ -142,7 +157,7 @@ public class AESEncryption {
 	}
 
 	// decrypt
-	public String decrypt(String encrypted, SecretKey key, IvParameterSpec iv) {
+	public String decrypt(String encrypted) {
 		byte[] decrypted = null;
 
 		try{

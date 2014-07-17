@@ -55,8 +55,8 @@ public class Chat implements Serializable {
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
     private Collection<Message> messages;
 
-    @JsonIgnore
-    private MessageEncryption aes;
+    //@JsonIgnore
+    //private MessageEncryption aes;
 
 
     /**
@@ -69,7 +69,7 @@ public class Chat implements Serializable {
         // setup Encryption for this chat
         // TODO: DEVICE-ID statt USERID uebergeben
         //long creatorDevice = user.getId();
-        aes = new MessageEncryption(this, user);
+        //aes = new MessageEncryption(this, user);
 
         //new Chat(id, participants, "", "", null, new ArrayList<Message>(), aes);
     }
@@ -82,12 +82,12 @@ public class Chat implements Serializable {
      * @param name
      */
     public Chat(User owner, String status, String name) {
-        new Chat(0, new ArrayList<User>(), status, name, owner, new ArrayList<Message>(), null);
+        new Chat(0, new ArrayList<User>(), status, name, owner, new ArrayList<Message>());
     }
 
     public Chat(long id, List<User> participants, String status, String name,
                 User owner) {
-        new Chat(id, participants, status, name, owner, new ArrayList<Message>(), null);
+        new Chat(id, participants, status, name, owner, new ArrayList<Message>());
     }
 
     public Chat() {
@@ -95,19 +95,13 @@ public class Chat implements Serializable {
     }
 
     public Chat(long id, List<User> participants, String status, String name, User owner,
-                Collection<Message> messages, MessageEncryption aes) {
+                Collection<Message> messages) {
         this.id = id;
         this.participants = participants;
         this.status = status;
         this.name = name;
         this.owner = owner;
         this.messages = messages;
-
-        if (aes != null) {
-            this.aes = aes;
-        } else {
-            //TODO aes = new MessageEncryption();
-        }
     }
 
     /**
@@ -186,12 +180,6 @@ public class Chat implements Serializable {
         return new ArrayList<Message>(messages);
     }
 
-    public MessageEncryption sgetEncryption() {
-        if (aes == null)
-            Log.d(this.getClass().getSimpleName(),"Chat wurde erstellt ohne gueltiges Encryption-Object --> Class: Chat.getEncryption())");
-        return aes;
-    }
-
     /**
      * Setters *
      */
@@ -218,10 +206,6 @@ public class Chat implements Serializable {
 
     public void setOwner(User owner) {
         this.owner = owner;
-    }
-
-    public void setEncryption(MessageEncryption aes) {
-        this.aes = aes;
     }
 
     public void setLastModified(Timestamp lastModified) {

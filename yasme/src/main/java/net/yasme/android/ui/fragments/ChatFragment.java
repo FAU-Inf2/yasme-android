@@ -51,7 +51,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     private Chat chat;
 
-    MessageEncryption aes;
+    //MessageEncryption aes;
 
     public ChatFragment() {
 
@@ -89,8 +89,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         }
 
         //DEBUG, TODO: encryption speichern und auslesen
-        aes = new MessageEncryption(chat, activity.getSelfUser());
-        chat.setEncryption(aes);
+        //aes = new MessageEncryption(chat, activity.getSelfUser());
+        //chat.setEncryption(aes);
     }
 
     @Override
