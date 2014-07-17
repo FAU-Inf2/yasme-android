@@ -148,33 +148,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         tmp.add(Calendar.DATE,6);
         if (tmp.compareTo(current) > 0) {
             int dayNumber = calendar.get(Calendar.DAY_OF_WEEK);
-            String day;
-            switch(dayNumber) {
-                case 1:
-                    day = context.getResources().getString(R.string.sunday);
-                    break;
-                case 2:
-                    day = context.getResources().getString(R.string.monday);
-                    break;
-                case 3:
-                    day = context.getResources().getString(R.string.tuesday);
-                    break;
-                case 4:
-                    day = context.getResources().getString(R.string.wednesday);
-                    break;
-                case 5:
-                    day = context.getResources().getString(R.string.thursday);
-                    break;
-                case 6:
-                    day = context.getResources().getString(R.string.friday);
-                    break;
-                case 7:
-                    day = context.getResources().getString(R.string.saturday);
-                    break;
-                default:
-                    day = "";
-                    break;
-            }
+            String day = context.getResources().getStringArray(R.array.daysofweek)[dayNumber];
             return day + ", " + formatTime(date);
         }
 

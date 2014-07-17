@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="monday">Montag</string>
-    <string name="tuesday">Dienstag</string>
-    <string name="wednesday">Mittwoch</string>
-    <string name="thursday">Donnerstag</string>
-    <string name="friday">Freitag</string>
-    <string name="saturday">Samstag</string>
-    <string name="sunday">Sonntag</string>
+    <!--Do NOT change order!-->
+    <string-array name="daysofweek">
+        <item>Sonntag</item>
+        <item>Montag</item>
+        <item>Dienstag</item>
+        <item>Mittwoch</item>
+        <item>Donnerstag</item>
+        <item>Freitag</item>
+        <item>Samstag</item>
+    </string-array>
 
     <string name="yesterday">Gestern</string>
 </resources>
