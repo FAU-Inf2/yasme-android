@@ -128,7 +128,7 @@ public class MessageTask extends ConnectionTask {
 
 					//keyStorage.saveKey(obj.getLong("messageKeyId"), messageKey, iv, timestamp);
 					// TODO: storeKeyToDatabase
-                    MessageKey messageKey = new MessageKey(key.getLong("messageKeyId"),chat,messageKeyString,iv);
+                    MessageKey messageKey = new MessageKey(key.getLong("id"),chat,messageKeyString,iv);
                     keyDAO.addIfNotExists(messageKey);
 					Log.d(this.getClass().getSimpleName(), "[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
 
