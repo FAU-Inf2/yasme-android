@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.ChatDAOImpl;
-import net.yasme.android.storage.dao.CurrentKeyDAO;
-import net.yasme.android.storage.dao.CurrentKeyDAOImpl;
+//import net.yasme.android.storage.dao.CurrentKeyDAO;
+//import net.yasme.android.storage.dao.CurrentKeyDAOImpl;
 import net.yasme.android.storage.dao.MessageDAO;
 import net.yasme.android.storage.dao.MessageDAOImpl;
 import net.yasme.android.storage.dao.MessageKeyDAO;
@@ -30,7 +30,7 @@ public enum DatabaseManager {
     private ChatDAO chatDAO;
     private MessageDAO messageDAO;
     private MessageKeyDAO messageKeyDAO;
-    private CurrentKeyDAO currentKeyDAO;
+    //private CurrentKeyDAO currentKeyDAO;
 
     public void init(Context context, SharedPreferences sharedPreferences, long userId) {
         mContext = context;
@@ -71,8 +71,8 @@ public enum DatabaseManager {
         MessageKeyDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
         messageKeyDAO = MessageKeyDAOImpl.INSTANCE;
 
-        CurrentKeyDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
-        currentKeyDAO = CurrentKeyDAOImpl.INSTANCE;
+        //CurrentKeyDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
+        //currentKeyDAO = CurrentKeyDAOImpl.INSTANCE;
     }
 
     public UserDAO getUserDAO() {
@@ -89,7 +89,7 @@ public enum DatabaseManager {
         return messageKeyDAO;
     }
 
-    public CurrentKeyDAO getCurrentKeyDAO() {
-        return currentKeyDAO;
-    }
+    //public CurrentKeyDAO getCurrentKeyDAO() {
+    //    return currentKeyDAO;
+    //}
 }
