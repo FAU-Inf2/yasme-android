@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.yasme.android.R;
@@ -22,10 +19,8 @@ import net.yasme.android.asyncTasks.server.SendMessageTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
-import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
-import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.ChatAdapter;
@@ -46,8 +41,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     //UI references
     private EditText editMessage;
     private TextView status;
-    private LinearLayout layout;
     private ListView list;
+    Fragment spinner;
 
     private Chat chat;
 
@@ -74,6 +69,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         obs.register(this);
 
+        spinner = new SpinnerFragment();
 
         //trying to get chat with chatId from local DB
         try {
@@ -101,7 +97,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         status = (TextView) rootView.findViewById(R.id.text_status);
         status.setText("Eingeloggt: " +
                 storage.getString(AbstractYasmeActivity.USER_NAME, "anonym"));
-        layout = (LinearLayout) rootView.findViewById(R.id.scrollLayout);
         list = (ListView) rootView.findViewById(R.id.chat_messageList);
 
         Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
@@ -119,16 +114,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             }
         });
 
-        boolean old = false;
-        if(old) {
-            updateViews(chat.getMessages());
-        } else {
-            //Get adapter and set old messages
-            mAdapter = new ChatAdapter(activity, R.layout.chat_item,
-                    activity.getUserId(), chat.getMessages());
-            list.setAdapter(mAdapter);
-            mAdapter.setNotifyOnChange(true);
-        }
+        mAdapter = new ChatAdapter(activity, R.layout.chat_item,
+                activity.getUserId(), chat.getMessages());
+        list.setAdapter(mAdapter);
+        mAdapter.setNotifyOnChange(true);
 
         return rootView;
     }
@@ -140,9 +129,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
         FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
-
         obs.register(this);
 
+        getFragmentManager().beginTransaction()
+                .add(R.id.singleFragmentContainer, spinner).commit();
     }
 
     @Override
@@ -151,12 +141,15 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "Remove from observer");
         obs.remove(this);
+        getFragmentManager().beginTransaction().
+                remove(spinner).commit();
     }
 
     @Override
     public void notifyFragment(List<Message> messages) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         updateViews(messages);
+        spinner.onStop();
         status.setText("Received " + messages.size() + " messages");
     }
 
@@ -178,6 +171,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         // Send message and get new messages afterwards
         new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask())
                 .execute(msgText);
+        spinner.onStart();
         status.setText("Send message in bg");
         editMessage.setText("");
     }
@@ -185,6 +179,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     public void asyncUpdate() {
         status.setText("GET messages");
         new GetMessageTask().execute();
+        spinner.onStart();
         status.setText("GET messages in bg");
     }
 
@@ -200,57 +195,15 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         //TODO: evtl aendern
         List<Message> tmp = new ArrayList<>();
-        for(Message msg : messages) {
-            if(msg.getChatId() == this.chat.getId()) {
+        for (Message msg : messages) {
+            if (msg.getChatId() == this.chat.getId()) {
                 tmp.add(msg);
             }
         }
         messages = tmp;
 
-        boolean old = false;
-        if(!old) {
-            mAdapter.addAll(messages);
-            editMessage.requestFocus();
-        } else {
-            for (Message msg : messages) {
-                //msg.setMessage(new String(aes.decrypt(msg.getMessage(), msg.getMessageKeyId())));
-                TextView textView = new TextView(activity.getApplicationContext());
-
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-
-                RelativeLayout row = new RelativeLayout(activity.getApplicationContext());
-                row.setLayoutParams(new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT));
-
-                String name;
-                try {
-                    name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
-                } catch (NullPointerException e) {
-                    Log.d(this.getClass().getSimpleName(), "User nicht in DB gefunden");
-                    name = "anonym";
-                }
-                textView.setText(name + ": " + msg.getMessage());
-
-                if (msg.getSender().getId() == activity.getSelfUser().getId()) {
-                    textView.setGravity(Gravity.RIGHT);
-                    row.setGravity(Gravity.RIGHT);
-                    textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_self));
-                    textView.setTextColor(getResources().getColor(R.color.chat_text_color_self));
-                } else {
-                    textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_text_bg_other));
-                    textView.setTextColor(getResources().getColor(R.color.chat_text_color_other));
-                }
-
-                row.addView(textView);
-                layout.addView(row, layoutParams);
-
-                row.setFocusableInTouchMode(true);
-                row.requestFocus();
-                editMessage.requestFocus();
-            }
-        }
+        mAdapter.addAll(messages);
+        editMessage.requestFocus();
+        spinner.onStop();
     }
 }

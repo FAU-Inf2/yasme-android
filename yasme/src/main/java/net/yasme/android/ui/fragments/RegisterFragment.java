@@ -23,8 +23,6 @@ import net.yasme.android.ui.AbstractYasmeActivity;
  * Created by robert on 06.07.14.
  */
 public class RegisterFragment extends Fragment implements NotifiableFragment<RegisterFragment.RegParam> {
-
-
     AbstractYasmeActivity activity;
     private UserRegistrationTask regTask = null;
 

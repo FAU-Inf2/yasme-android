@@ -111,8 +111,6 @@ public class ChatAdapter extends ArrayAdapter<Message> {
     private String getDateOfMessage(Message message) {
         String returnDate = "";
 
-
-
         Date dateSent = message.getDateSent();
         Date currentDate =  new Date(System.currentTimeMillis());
 
