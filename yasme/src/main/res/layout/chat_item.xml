@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:padding="6dip" >
 
-    <!--android:layout_height="?android:attr/listPreferredItemHeight"-->
     <ImageView
         android:id="@+id/chat_item_picture_other"
         android:layout_width="180dip"

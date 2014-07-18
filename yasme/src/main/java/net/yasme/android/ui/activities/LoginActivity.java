@@ -1,8 +1,6 @@
 package net.yasme.android.ui.activities;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 
 import net.yasme.android.R;
@@ -26,7 +24,6 @@ public class LoginActivity extends AbstractYasmeActivity {
             getFragmentManager().beginTransaction()
                     .add(R.id.singleFragmentContainer, new LoginFragment()).commit();
         }
-
         //TODO: temporäre Lösung: - moved to onCreate in ChatListActivity
         //HttpClient.context = this.getApplicationContext();
 

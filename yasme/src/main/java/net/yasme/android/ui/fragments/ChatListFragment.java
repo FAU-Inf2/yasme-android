@@ -69,7 +69,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         new GetAllTask(chatDAO, ChatListFragment.class).execute();
     }
 
-
     @Override
     public void onStart() {
         super.onStart();

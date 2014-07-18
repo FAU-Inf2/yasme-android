@@ -1,14 +1,17 @@
 package net.yasme.android.ui.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import net.yasme.android.R;
+import net.yasme.android.connection.AuthorizationTask;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.connection.ssl.HttpClient;
+import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.ChatListFragment;
 
@@ -64,8 +67,37 @@ public class ChatListActivity extends AbstractYasmeActivity {
             startActivity(intent);
 			return true;
 		}
+        if (id == R.id.sign_out) {
+            new LogoutTask().execute();
+        }
 		return super.onOptionsItemSelected(item);
 	}
 
+    private class LogoutTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try {
+                AuthorizationTask.getInstance().logoutUser();
+            } catch (RestServiceException e) {
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
+                Log.i(this.getClass().getSimpleName(), "SignOut nicht erfolgreich");
+                return false;
+            }
+            return true;
+        }
+
+        protected void onPostExecute(Boolean success) {
+            if(!success) {
+                return;
+            }
+            startLoginActivity();
+        }
+    }
+
+    protected void startLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
 }
 

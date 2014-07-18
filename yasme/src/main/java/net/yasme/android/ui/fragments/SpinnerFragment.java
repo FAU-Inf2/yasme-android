@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import net.yasme.android.R;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
 /**
@@ -20,14 +19,13 @@ public class SpinnerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (AbstractYasmeActivity) getActivity();
-        onStart();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        progressBar = (ProgressBar) activity.findViewById(R.id.progress_bar);
-        showProgress(true);
+        //progressBar = (ProgressBar) activity.findViewById(R.id.progress_bar);
+        //showProgress(true);
     }
 
     /**
@@ -63,6 +61,6 @@ public class SpinnerFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        showProgress(false);
+        //showProgress(false);
     }
 }

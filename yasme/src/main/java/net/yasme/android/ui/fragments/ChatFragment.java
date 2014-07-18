@@ -100,21 +100,14 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         list = (ListView) rootView.findViewById(R.id.chat_messageList);
 
         Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
-        Button buttonUpdate = (Button) rootView.findViewById(R.id.button_update);
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 send(v);
             }
         });
-        buttonUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                update(v);
-            }
-        });
 
-        mAdapter = new ChatAdapter(activity, R.layout.chat_item,
+        mAdapter = new ChatAdapter(activity, R.layout.chat_item_other,
                 activity.getUserId(), chat.getMessages());
         list.setAdapter(mAdapter);
         mAdapter.setNotifyOnChange(true);
@@ -153,10 +146,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         status.setText("Received " + messages.size() + " messages");
     }
 
-    public TextView getStatus() {
-        return status;
-    }
-
     public void send(View view) {
         String msgText = editMessage.getText().toString();
         if (msgText.isEmpty()) {
@@ -174,17 +163,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         spinner.onStart();
         status.setText("Send message in bg");
         editMessage.setText("");
-    }
-
-    public void asyncUpdate() {
-        status.setText("GET messages");
-        new GetMessageTask().execute();
-        spinner.onStart();
-        status.setText("GET messages in bg");
-    }
-
-    public void update(View view) {
-        asyncUpdate();
     }
 
     public void updateViews(List<Message> messages) {

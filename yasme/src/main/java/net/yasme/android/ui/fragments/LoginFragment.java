@@ -1,7 +1,5 @@
 package net.yasme.android.ui.fragments;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,6 +38,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     private View loginFormView;
     private View loginStatusView;
     private TextView loginStatusMessageView;
+    private Fragment spinner;
 
     // values for devices yasme server
     private String deviceProduct;
@@ -62,6 +61,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         // Restore preferences
         emailTmp = activity.getStorage().getString(AbstractYasmeActivity.USER_MAIL, "@yasme.net");
         accessToken = activity.getAccessToken();
+
+        spinner = new SpinnerFragment();
     }
 
     @Override
@@ -187,49 +188,15 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
-            showProgress(true);
+
+            this.getView().setVisibility(View.GONE);
+            getFragmentManager().beginTransaction()
+                    .add(R.id.singleFragmentContainer, spinner).commit();
+            //spinner.getView().setVisibility(View.VISIBLE);
+            //spinner.onStart();
+
             authTask.execute(emailTmp, passwordTmp);
             authTask = null;
-        }
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    public void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(
-                    android.R.integer.config_shortAnimTime);
-
-            loginStatusView.setVisibility(View.VISIBLE);
-            loginStatusView.animate().setDuration(shortAnimTime)
-                    .alpha(show ? 1 : 0)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            loginStatusView.setVisibility(show ? View.VISIBLE
-                                    : View.GONE);
-                        }
-                    });
-
-            loginFormView.setVisibility(View.VISIBLE);
-            loginFormView.animate().setDuration(shortAnimTime)
-                    .alpha(show ? 0 : 1)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            loginFormView.setVisibility(show ? View.GONE
-                                    : View.VISIBLE);
-                        }
-                    });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -241,7 +208,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
         activity.getSelfUser().setId(userId);
         SharedPreferences.Editor editor = activity.getStorage().edit();
-        showProgress(false);
+        //showProgress(false);
         activity.setSignedInFlag(success);
         editor.putBoolean(AbstractYasmeActivity.SIGN_IN, activity.getSignedInFlag());
 
@@ -269,14 +236,12 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 // Initialize the session a second time because the deviceId was missing
                 ConnectionTask.initSession(userId, deviceId, accessToken);
 
-                //Intent intent = new Intent(activity.getApplicationContext(), ChatListFragment.class);
                 Intent intent = new Intent(activity, ChatListActivity.class);
                 startActivity(intent);
             } else {
                 // TODO register device
                 Log.d(this.getClass().getSimpleName(), "Device does not exist in Database");
                 Log.d(this.getClass().getSimpleName(), "Starting task to register device at yasme server");
-                //DeviceRegistrationTask yasmeDevRegTask =
 
                 new DeviceRegistrationTask(activity.getStorage(), activity)
                         .execute(Long.toString(userId), this.deviceProduct);
