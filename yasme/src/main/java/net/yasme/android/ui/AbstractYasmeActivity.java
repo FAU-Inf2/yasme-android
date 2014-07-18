@@ -5,10 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.ConnectionTask;
+import net.yasme.android.controller.FragmentObservable;
+import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.Toastable;
+import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.activities.ChatListActivity;
@@ -18,7 +25,7 @@ import net.yasme.android.ui.activities.ContactActivity;
 /**
  * Created by robert on 15.06.14.
  */
-public abstract class AbstractYasmeActivity  extends Activity {
+public abstract class AbstractYasmeActivity  extends Activity implements Toastable {
     public final static String USER_ID = "net.yasme.android.USER_ID";
     public final static String USER_NAME = "net.yasme.android.USER_NAME";
     public final static String USER_MAIL = "net.yasme.android.USER_MAIL";
@@ -82,6 +89,18 @@ public abstract class AbstractYasmeActivity  extends Activity {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Toaster.getInstance().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Toaster.getInstance().remove(this);
+    }
+
     public boolean getSignedInFlag() {
         return mSignedIn;
     }
@@ -119,7 +138,6 @@ public abstract class AbstractYasmeActivity  extends Activity {
         }
     }
 
-
     public User getSelfUser() {
         return selfUser;
     }
@@ -140,4 +158,17 @@ public abstract class AbstractYasmeActivity  extends Activity {
         return storage;
     }
 
+    public void toast(final int messageId, final int duration) {
+        runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                String text = getApplicationContext().getResources().getString(messageId);
+                Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+                toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0,0);
+                Log.d(getClass().getSimpleName(), "Toast: " + text);
+                toast.show();
+            }
+        });
+    }
 }

@@ -2,8 +2,11 @@ package net.yasme.android.encryption;
 
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
+import net.yasme.android.R;
 import net.yasme.android.connection.MessageKeyTask;
+import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
@@ -46,6 +49,7 @@ public class MessageEncryption {
 
     public MessageKey generateKey() {
         Log.d(this.getClass().getSimpleName(),"[???] Generate Key");
+        Toaster.getInstance().toast(R.string.generate_key, Toast.LENGTH_LONG);
 
         // Generate key
         AESEncryption aes = new AESEncryption();
@@ -85,7 +89,7 @@ public class MessageEncryption {
     public Message decrypt(Message message) {
         MessageKey messageKey = getKey(message.getMessageKeyId());
         if (messageKey == null) {
-            message.setMessage("Key " + message.getId() + " not found");
+            message.setMessage("Key " + message.getMessageKeyId() + " not found");
             return message;
         }
         AESEncryption aes = new AESEncryption(messageKey);

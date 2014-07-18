@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_error">Connection failed.</string>
+    <string name="generate_key">A new encryption key has to be generated. This could take a while.</string>
+</resources>
