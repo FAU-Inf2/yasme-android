@@ -20,6 +20,8 @@ public enum Error implements ErrorCode {
 
     NOT_ACCEPTABLE(406),
 
+    OUTDATED(409),
+
     STORE_USER_FAILED(500),
 
     CONNECTION_ERROR(500),

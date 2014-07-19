@@ -93,12 +93,12 @@ public class MessageTask extends ConnectionTask {
 
         } catch (RestServiceException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
-            if (forceKeyGeneration) {
-                Log.e(this.getClass().getSimpleName(), "No more ideas");
-                return null;
-            } else {
+            if (e.getStatusCode() == Error.OUTDATED.getNumber() && !forceKeyGeneration) {
                 Log.e(this.getClass().getSimpleName(), "Try again with generated key.");
                 return sendMessage(unencrypted,chat,user,true);
+            } else {
+                Log.e(this.getClass().getSimpleName(), "No more ideas");
+                return null;
             }
         } catch (IOException | JSONException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
