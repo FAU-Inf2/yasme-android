@@ -1,6 +1,7 @@
 package net.yasme.android.storage;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -14,6 +15,7 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 import java.sql.SQLException;
 
@@ -23,7 +25,7 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // when anything changes in your database objects, we have to increase the database version
-    private static final int DATABASE_VERSION = 49;
+    private static final int DATABASE_VERSION = 50;
 
     // name of the database file
     private static final String DATABASE = "net.yasme.android.DATABASE";
@@ -60,6 +62,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
+        SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
+        editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0);
+        editor.commit();
         try {
             TableUtils.dropTable(connectionSource, Chat.class, true);
             TableUtils.dropTable(connectionSource, Message.class, true);
