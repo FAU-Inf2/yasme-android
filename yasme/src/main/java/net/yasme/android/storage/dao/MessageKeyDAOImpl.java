@@ -85,6 +85,7 @@ public enum MessageKeyDAOImpl implements MessageKeyDAO {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;
         }
+        Log.d(getClass().getSimpleName(), "Found " + matching.size() + " messageKeys for chat " + chatId);
         return matching;
     }
 
@@ -96,12 +97,18 @@ public enum MessageKeyDAOImpl implements MessageKeyDAO {
                 if (result == null) {
                     result = key;
                 }
+                if (result.getCreated() == null || key.getCreated() == null) {
+                    Log.d(getClass().getSimpleName(), "Date was not set");
+                    continue;
+                }
                 if (result.getCreated().compareTo(key.getCreated()) < 0) {
                     result = key;
                 }
             }
             return result;
         } catch (Exception e) {
+            Log.d(getClass().getSimpleName(), "Exception:");
+            e.printStackTrace();
             return null;
         }
     }

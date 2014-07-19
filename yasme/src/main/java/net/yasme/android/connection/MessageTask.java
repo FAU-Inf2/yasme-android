@@ -55,10 +55,24 @@ public class MessageTask extends ConnectionTask {
      * @throws RestServiceException
      */
 	public Message sendMessage(Message message, Chat chat, User user) throws RestServiceException {
-		try {
+		return sendMessage(message,chat,user,false);
+	}
+
+    public Message sendMessage(Message message, Chat chat, User user, boolean forceKeyGeneration) throws RestServiceException {
+        Message unencrypted = null;
+        try {
+            if (message == null) {
+                return null;
+            }
+            unencrypted = new Message(message.getSender(),message.getMessage(),message.getChat(),message.getMessageKeyId());
+
             // Encrypt
             MessageEncryption messageEncryption = new MessageEncryption(chat,user);
-            message = messageEncryption.encrypt(message);
+            if (forceKeyGeneration) {
+                message = messageEncryption.encryptGenerated(message);
+            } else {
+                message = messageEncryption.encrypt(message);
+            }
 
             // Send
             HttpResponse response = executeRequest(Request.POST, "", message);
@@ -77,12 +91,20 @@ public class MessageTask extends ConnectionTask {
             message.setSender(sender);
             return message;
 
+        } catch (RestServiceException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            if (forceKeyGeneration) {
+                Log.e(this.getClass().getSimpleName(), "No more ideas");
+                return null;
+            } else {
+                Log.e(this.getClass().getSimpleName(), "Try again with generated key.");
+                return sendMessage(unencrypted,chat,user,true);
+            }
         } catch (IOException | JSONException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return null;
         }
-
-		return null;
-	}
+    }
 
 	public List<Message> getMessage(long lastMessageId) throws RestServiceException {
 		List<Message> messages = new ArrayList<Message>();
@@ -128,12 +150,14 @@ public class MessageTask extends ConnectionTask {
 						String messageKey = rsa.decrypt(messageKeyEncrypted);
 					*/
 
-					//long timestamp = key.getLong("timestamp");
+					Date created = new Date(key.getLong("created"));
+                    Log.d(getClass().getSimpleName(), "Key created: " + created.toString());
 					//MessageEncryption keyStorage = new MessageEncryption(context, chatId);
 
 					//keyStorage.saveKey(obj.getLong("messageKeyId"), messageKey, iv, timestamp);
 					// TODO: storeKeyToDatabase
                     MessageKey messageKey = new MessageKey(key.getLong("id"),chat,messageKeyString,iv);
+                    messageKey.setCreated(created);
                     keyDAO.addIfNotExists(messageKey);
 					Log.d(this.getClass().getSimpleName(), "[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
 

@@ -33,15 +33,19 @@ public class MessageEncryption {
 
     public MessageKey getCurrentKey() {
         try {
+            Log.d(this.getClass().getSimpleName(),"[???] Try to use a local Key");
             MessageKey key = db.getMessageKeyDAO().getCurrentKeyByChat(chat.getId());
             if (key != null) {
+                Log.d(this.getClass().getSimpleName(),"[???] ... success");
                 return key;
                 //return generateKey();
             } else {
+                Log.d(this.getClass().getSimpleName(),"[???] ... failed");
                 return generateKey();
             }
         }
         catch (Exception e){
+            Log.d(this.getClass().getSimpleName(),"[???] ... failed with exception");
             e.printStackTrace();
             return null;
         }
@@ -74,7 +78,14 @@ public class MessageEncryption {
 
     // encrypt
     public Message encrypt(Message message) {
-        MessageKey messageKey = getCurrentKey();
+        return encrypt(message,getCurrentKey());
+    }
+
+    public Message encryptGenerated(Message message) {
+        return encrypt(message,generateKey());
+    }
+
+    private Message encrypt (Message message, MessageKey messageKey) {
         if (messageKey == null) {
             message.setMessage("Key could not be generated");
             return message;

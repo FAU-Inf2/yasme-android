@@ -88,12 +88,13 @@ public class MessageKeyTask extends ConnectionTask {
             JSONObject obj = new JSONObject(json);
 
             long keyId = obj.getLong("id");
-            //Date created = obj.get("created");
+            Date created = new Date(obj.getLong("created"));
+            Log.d(getClass().getSimpleName(), "Key created: " + created.toString());
 
             //return keyId and timestamp from serverresponse
             //TODO: Dummy_IV
             MessageKey result = new MessageKey(keyId, new Device(Long.parseLong(deviceId)), new Device(0), chat, key, iv, encType, sign);
-            //result.setTimestamp(timestamp);
+            result.setCreated(created);
 
             return result;
 

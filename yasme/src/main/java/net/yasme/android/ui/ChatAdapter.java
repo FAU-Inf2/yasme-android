@@ -124,7 +124,8 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         }
         tmp.add(Calendar.DATE,6);
         if (tmp.compareTo(current) > 0) {
-            int dayNumber = calendar.get(Calendar.DAY_OF_WEEK);
+            int dayNumber = calendar.get(Calendar.DAY_OF_WEEK) % 7;
+
             String day = context.getResources().getStringArray(R.array.daysofweek)[dayNumber];
             return day + ", " + formatTime(date);
         }
