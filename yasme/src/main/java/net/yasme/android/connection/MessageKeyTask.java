@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MessageKeyTask extends ConnectionTask {
 
@@ -69,10 +70,11 @@ public class MessageKeyTask extends ConnectionTask {
                     messageKeys.add(new MessageKey(0, new Device(Long.parseLong(deviceId)),
                             new Device(recipientDevice.getId()), chat, key, iv, encType, sign));
 
-                    Log.d(this.getClass().getSimpleName(),"[???] Key gesendet für Device " + recipientDevice.getId());
+                    Log.d(this.getClass().getSimpleName(),"[???] Key für Device generiert: " + recipientDevice.getId());
                 }
             }
 
+            Log.d(this.getClass().getSimpleName(),"[???] Keys werden gesendet");
             HttpResponse httpResponse = executeRequest(Request.POST, "", messageKeys);
 
             Log.d(this.getClass().getSimpleName(),"[???] Antwort auswerten");
@@ -86,12 +88,12 @@ public class MessageKeyTask extends ConnectionTask {
             JSONObject obj = new JSONObject(json);
 
             long keyId = obj.getLong("id");
-            long timestamp = obj.getLong("timestamp");
+            //Date created = obj.get("created");
 
             //return keyId and timestamp from serverresponse
             //TODO: Dummy_IV
             MessageKey result = new MessageKey(keyId, new Device(Long.parseLong(deviceId)), new Device(0), chat, key, iv, encType, sign);
-            result.setTimestamp(timestamp);
+            //result.setTimestamp(timestamp);
 
             return result;
 

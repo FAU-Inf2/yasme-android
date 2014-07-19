@@ -8,6 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import net.yasme.android.storage.DatabaseConstants;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @DatabaseTable(tableName = DatabaseConstants.MESSAGE_KEY_TABLE)
 public class MessageKey implements Serializable {
@@ -24,8 +25,8 @@ public class MessageKey implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.KEY)
     private String messageKey = "";
 
-    @DatabaseField(columnName = DatabaseConstants.TIMESTAMP)
-    private long timestamp = -1;
+    @DatabaseField(columnName = DatabaseConstants.CHAT_CREATED)
+    private Date created;
 
     public static MessageKey last;
 
@@ -39,7 +40,7 @@ public class MessageKey implements Serializable {
 	/** Constructors **/
 	public MessageKey(long id, Device creatorDevice, Device recipientDevice,
 			Chat chat, String key, String initVector, byte encType, long encInfoId,
-			String encInfo, String sign, long timestamp) {
+			String encInfo, String sign, Date created) {
 		this.id = id;
 		this.creatorDevice = creatorDevice;
 		this.recipientDevice = recipientDevice;
@@ -50,7 +51,7 @@ public class MessageKey implements Serializable {
 		this.encInfoId = encInfoId;
 		this.encInfo = encInfo;
 		this.sign = sign;
-        this.timestamp = timestamp;
+        this.created = created;
 	}
 
 	public MessageKey(long id, Device creatorDevice, Device recipientDevice,
@@ -116,7 +117,7 @@ public class MessageKey implements Serializable {
 
     public String getInitVector(){ return initVector; }
 
-    public long getTimestamp() { return timestamp; }
+    public Date getCreated() { return created; }
 
 	/** Setters **/
 	public void setId(long id) {
@@ -157,7 +158,7 @@ public class MessageKey implements Serializable {
 		this.sign = sign;
 	}
 
-    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+    public void setCreated(Date created) { this.created = created; }
 
 	public Boolean isValid() {
 		if (id < 0) {

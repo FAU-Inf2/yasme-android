@@ -95,7 +95,7 @@ public enum MessageKeyDAOImpl implements MessageKeyDAO {
             if (result == null) {
                 result = key;
             }
-            if (key.getTimestamp() > result.getTimestamp()) {
+            if (result.getCreated().compareTo(key.getCreated()) < 0) {
                 result = key;
             }
         }

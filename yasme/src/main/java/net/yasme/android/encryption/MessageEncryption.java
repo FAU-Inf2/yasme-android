@@ -35,8 +35,8 @@ public class MessageEncryption {
         try {
             MessageKey key = db.getMessageKeyDAO().getCurrentKeyByChat(chat.getId());
             if (key != null) {
-                //return key;
-                return generateKey();
+                return key;
+                //return generateKey();
             } else {
                 return generateKey();
             }
