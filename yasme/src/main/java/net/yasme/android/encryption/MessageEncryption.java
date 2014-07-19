@@ -42,7 +42,7 @@ public class MessageEncryption {
             }
         }
         catch (Exception e){
-            Log.d(this.getClass().getSimpleName(),e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }

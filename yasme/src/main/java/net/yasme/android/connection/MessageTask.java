@@ -128,7 +128,7 @@ public class MessageTask extends ConnectionTask {
 						String messageKey = rsa.decrypt(messageKeyEncrypted);
 					*/
 
-					long timestamp = key.getLong("timestamp");
+					//long timestamp = key.getLong("timestamp");
 					//MessageEncryption keyStorage = new MessageEncryption(context, chatId);
 
 					//keyStorage.saveKey(obj.getLong("messageKeyId"), messageKey, iv, timestamp);
