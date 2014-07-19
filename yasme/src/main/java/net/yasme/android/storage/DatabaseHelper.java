@@ -14,7 +14,6 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
-import net.yasme.android.ui.AbstractYasmeActivity;
 
 import java.sql.SQLException;
 
@@ -24,7 +23,7 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // when anything changes in your database objects, we have to increase the database version
-    private static final int DATABASE_VERSION = 47;
+    private static final int DATABASE_VERSION = 49;
 
     // name of the database file
     private static final String DATABASE = "net.yasme.android.DATABASE";
@@ -36,7 +35,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<User, Long> userDao = null;
     private Dao<Message, Long> messageDao = null;
     private Dao<ChatUser, Long> chatUserDao = null;
-    //private Dao<CurrentKey, Long> currentKeyDao = null;
+    private Dao<RSAKey, Long> rsaKeyDAO = null;
     private Dao<MessageKey, Long> messageKeyDao = null;
 
 
@@ -52,7 +51,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, User.class);
             TableUtils.createTable(connectionSource, ChatUser.class);
             TableUtils.createTable(connectionSource, MessageKey.class);
-            //TableUtils.createTable(connectionSource, CurrentKey.class);
+            TableUtils.createTable(connectionSource, RSAKey.class);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), "Can't create database");
             Log.e(this.getClass().getSimpleName(), e.getMessage());
@@ -67,7 +66,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, User.class, true);
             TableUtils.dropTable(connectionSource, ChatUser.class, true);
             TableUtils.dropTable(connectionSource, MessageKey.class, true);
-            //TableUtils.dropTable(connectionSource, CurrentKey.class, true);
+            TableUtils.dropTable(connectionSource, RSAKey.class, true);
             onCreate(db, connectionSource);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), "Can't drop databases");
@@ -126,19 +125,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return chatUserDao;
     }
 
-    /*
-    public Dao<CurrentKey, Long> getCurrentKeyDao() {
-        if(null == currentKeyDao) {
-            try {
-                currentKeyDao = DaoManager.createDao(connectionSource, CurrentKey.class);
-            } catch (SQLException e) {
-                Log.e(this.getClass().getSimpleName(), e.getMessage());
-            }
-        }
-        return currentKeyDao;
-    }
-    */
-
     public Dao<MessageKey, Long> getMessageKeyDao() {
         if(null == messageKeyDao) {
             try {
@@ -150,9 +136,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return messageKeyDao;
     }
 
+    public Dao<RSAKey, Long> getRSAKeyDao() {
+        if(null == rsaKeyDAO) {
+            try {
+                rsaKeyDAO = DaoManager.createDao(connectionSource, RSAKey.class);
+            } catch (SQLException e) {
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
+            }
+        }
+        return rsaKeyDAO;
+    }
+
     @Override
     public void close() {
         super.close();
         chatDao = null;
+        messageKeyDao = null;
+        chatUserDao = null;
+        messageDao = null;
+
     }
 }

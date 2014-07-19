@@ -5,14 +5,17 @@ import android.content.SharedPreferences;
 
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.ChatDAOImpl;
-//import net.yasme.android.storage.dao.CurrentKeyDAO;
-//import net.yasme.android.storage.dao.CurrentKeyDAOImpl;
 import net.yasme.android.storage.dao.MessageDAO;
 import net.yasme.android.storage.dao.MessageDAOImpl;
 import net.yasme.android.storage.dao.MessageKeyDAO;
 import net.yasme.android.storage.dao.MessageKeyDAOImpl;
+import net.yasme.android.storage.dao.RSAKeyDAO;
+import net.yasme.android.storage.dao.RSAKeyDAOImpl;
 import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.storage.dao.UserDAOImpl;
+
+//import net.yasme.android.storage.dao.CurrentKeyDAO;
+//import net.yasme.android.storage.dao.CurrentKeyDAOImpl;
 
 /**
  * Created by robert on 13.06.14.
@@ -30,7 +33,7 @@ public enum DatabaseManager {
     private ChatDAO chatDAO;
     private MessageDAO messageDAO;
     private MessageKeyDAO messageKeyDAO;
-    //private CurrentKeyDAO currentKeyDAO;
+    private RSAKeyDAO rsaKeyDAO;
 
     public void init(Context context, SharedPreferences sharedPreferences, long userId) {
         mContext = context;
@@ -71,8 +74,8 @@ public enum DatabaseManager {
         MessageKeyDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
         messageKeyDAO = MessageKeyDAOImpl.INSTANCE;
 
-        //CurrentKeyDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
-        //currentKeyDAO = CurrentKeyDAOImpl.INSTANCE;
+        RSAKeyDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
+        rsaKeyDAO = RSAKeyDAOImpl.INSTANCE;
     }
 
     public UserDAO getUserDAO() {
@@ -89,7 +92,7 @@ public enum DatabaseManager {
         return messageKeyDAO;
     }
 
-    //public CurrentKeyDAO getCurrentKeyDAO() {
-    //    return currentKeyDAO;
-    //}
+    public RSAKeyDAO getRsaKeyDAO() {
+        return rsaKeyDAO;
+    }
 }

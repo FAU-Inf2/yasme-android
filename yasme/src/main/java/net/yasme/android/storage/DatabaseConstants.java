@@ -52,4 +52,12 @@ public class DatabaseConstants {
     public static final String CURRENT_KEY = "currentKey";
     public static final String CURRENT_KEY_ID = "currentKeyId";
 
+    //RSAKey
+    public static final String RSA_KEY_TABLE = "rsaKeys";
+    public static final String RSA_KEY_USER = "rsaKeyUser";
+    public static final String RSA_KEY_PUBLIC_KEY = "rsaKeyPublicKey";
+    public static final String RSA_KEY_ID = "rsaKeyId";
+    public static final String RSA_KEY_DEVICE_ID = "rsaKeyDeviceId";
+
+
 }
