@@ -42,7 +42,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     private EditText editMessage;
     private TextView status;
     private ListView list;
-    Fragment spinner;
+    //Fragment spinner;
 
     private Chat chat;
 
@@ -69,7 +69,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         obs.register(this);
 
-        spinner = new SpinnerFragment();
+        //spinner = new SpinnerFragment();
 
         //trying to get chat with chatId from local DB
         try {
@@ -124,8 +124,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
 
-        getFragmentManager().beginTransaction()
-                .add(R.id.singleFragmentContainer, spinner).commit();
+        //getFragmentManager().beginTransaction().add(R.id.singleFragmentContainer, spinner).commit();
     }
 
     @Override
@@ -134,15 +133,14 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "Remove from observer");
         obs.remove(this);
-        getFragmentManager().beginTransaction().
-                remove(spinner).commit();
+        //getFragmentManager().beginTransaction().remove(spinner).commit();
     }
 
     @Override
     public void notifyFragment(List<Message> messages) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         updateViews(messages);
-        spinner.onStop();
+        //spinner.onStop();
         status.setText("Received " + messages.size() + " messages");
     }
 
@@ -160,7 +158,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         // Send message and get new messages afterwards
         new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask())
                 .execute(msgText);
-        spinner.onStart();
+        //spinner.onStart();
         status.setText("Send message in bg");
         editMessage.setText("");
     }
@@ -182,6 +180,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         mAdapter.addAll(messages);
         editMessage.requestFocus();
-        spinner.onStop();
+        //spinner.onStop();
     }
 }
