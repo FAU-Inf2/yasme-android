@@ -40,9 +40,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     //UI references
     private EditText editMessage;
-    private TextView status;
+    private TextView statusMessage;
     private ListView list;
-    //Fragment spinner;
+    private View status;
 
     private Chat chat;
 
@@ -69,8 +69,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         obs.register(this);
 
-        //spinner = new SpinnerFragment();
-
         //trying to get chat with chatId from local DB
         try {
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
@@ -92,10 +90,13 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+
         editMessage = (EditText) rootView.findViewById(R.id.text_message);
-        status = (TextView) rootView.findViewById(R.id.text_status);
-        status.setText("Eingeloggt: " +
+        status = rootView.findViewById(R.id.chat_status);
+        statusMessage = (TextView) status.findViewById(R.id.text_status);
+        statusMessage.setText("Eingeloggt: " +
                 storage.getString(AbstractYasmeActivity.USER_NAME, "anonym"));
         list = (ListView) rootView.findViewById(R.id.chat_messageList);
 
@@ -123,8 +124,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
-
-        //getFragmentManager().beginTransaction().add(R.id.singleFragmentContainer, spinner).commit();
     }
 
     @Override
@@ -133,23 +132,23 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "Remove from observer");
         obs.remove(this);
-        //getFragmentManager().beginTransaction().remove(spinner).commit();
     }
 
     @Override
     public void notifyFragment(List<Message> messages) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         updateViews(messages);
-        //spinner.onStop();
-        status.setText("Received " + messages.size() + " messages");
+        status.setVisibility(View.GONE);
+        statusMessage.setText("Received " + messages.size() + " messages");
     }
 
     public void send(View view) {
         String msgText = editMessage.getText().toString();
         if (msgText.isEmpty()) {
-            status.setText("Nichts eingegeben");
+            statusMessage.setText("Nichts eingegeben");
             return;
         }
+        status.setVisibility(View.VISIBLE);
         //String msgEncrypted = aes.encrypt(editMessage.getText().toString());
         //String msgEncrypted = msg;
         //User user = new User(activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), activity.getSelfUser().getId());
@@ -158,8 +157,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         // Send message and get new messages afterwards
         new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask())
                 .execute(msgText);
-        //spinner.onStart();
-        status.setText("Send message in bg");
+
+        statusMessage.setText("Send message in bg");
         editMessage.setText("");
     }
 
@@ -180,6 +179,5 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         mAdapter.addAll(messages);
         editMessage.requestFocus();
-        //spinner.onStop();
     }
 }
