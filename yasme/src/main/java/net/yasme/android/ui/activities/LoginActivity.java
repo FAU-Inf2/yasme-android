@@ -49,10 +49,6 @@ public class LoginActivity extends AbstractYasmeActivity {
         return true;
     }
 
-
-
-
-
 //    @Override
 //    protected void onResume() {
 //        super.onResume();

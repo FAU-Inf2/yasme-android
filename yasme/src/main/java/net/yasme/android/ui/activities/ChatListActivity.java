@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.AuthorizationTask;
@@ -20,6 +21,10 @@ public class ChatListActivity extends AbstractYasmeActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+        //progress bar
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
 		setContentView(R.layout.activity_with_single_fragment);
 
         if(HttpClient.context == null) {

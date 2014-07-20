@@ -38,7 +38,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     private View loginFormView;
     private View loginStatusView;
     private TextView loginStatusMessageView;
-    private Fragment spinner;
 
     // values for devices yasme server
     private String deviceProduct;
@@ -61,8 +60,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         // Restore preferences
         emailTmp = activity.getStorage().getString(AbstractYasmeActivity.USER_MAIL, "@yasme.net");
         accessToken = activity.getAccessToken();
-
-        spinner = new SpinnerFragment();
     }
 
     @Override
@@ -189,12 +186,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             // perform the user login attempt.
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
 
-            this.getView().setVisibility(View.GONE);
-            getFragmentManager().beginTransaction()
-                    .add(R.id.singleFragmentContainer, spinner).commit();
-            //spinner.getView().setVisibility(View.VISIBLE);
-            //spinner.onStart();
-
             authTask.execute(emailTmp, passwordTmp);
             authTask = null;
         }
@@ -316,10 +307,11 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     @Override
     public void notifyFragment(LoginParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        if (param instanceof LoginProcessParam)
+        if (param instanceof LoginProcessParam) {
             notifyFragment((LoginProcessParam) param);
-        else if (param instanceof DeviceRegistrationParam)
+        } else if (param instanceof DeviceRegistrationParam) {
             notifyFragment((DeviceRegistrationParam) param);
+        }
     }
 
     public void notifyFragment(LoginProcessParam loginParam) {

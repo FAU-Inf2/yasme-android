@@ -43,7 +43,7 @@ public class DatabaseConstants {
     public static final String VECTOR = "initialVector";
     public static final String KEY_ID = "keyId";
     public static final String KEY = "key";
-    public static final String TIMESTAMP = "time";
+    public static final String KEY_CREATED = "created";
     public static final String KEY_CHAT = "messageKeyChat";
 
     //RSAKey

@@ -33,6 +33,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     private AbstractYasmeActivity activity;
     private List<Chat> chatRooms = new ArrayList<Chat>();
     private ChatListAdapter adapter;
+    private int counter;
 
     public ChatListFragment() {
 
@@ -41,6 +42,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         activity = (AbstractYasmeActivity) getActivity();
         adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
         setListAdapter(adapter);
@@ -52,8 +54,14 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         obs.register(this);
 
+        counter = 0;
+
+        //progress bar on
+        getActivity().setProgressBarIndeterminateVisibility(true);
+
         // At first, retrieve the chats from the database
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+        counter++;
         new GetAllTask(chatDAO, ChatListFragment.class).execute();
         //adapter.updateChats(chatRooms);
         //adapter.notifyDataSetChanged();
@@ -63,10 +71,13 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
         // Aktualisiert die Datenbank auf den aktuellen Stand des Servers
+        counter++;
         new GetMyChatsTask().execute();
 
         new GetMessageTask().execute();
-        new GetAllTask(chatDAO, ChatListFragment.class).execute();
+
+        //wird schon in GetMyChatsTask erledigt
+        //new GetAllTask(chatDAO, ChatListFragment.class).execute();
     }
 
     @Override
@@ -79,7 +90,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         obs.register(this);
     }
-
 
     @Override
     public void onStop() {
@@ -107,11 +117,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         startActivity(intent);
     }
 
-    // @Override
-    // public void notifyFragment(ChatListParam value) {
-    //    //Log.d(this.getClass().getSimpleName(),"I have been notified. Yeeha!");
-    //}
-
     @Override
     public void notifyFragment(List<Chat> chatRooms) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
@@ -119,5 +124,11 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         this.chatRooms = chatRooms;
         adapter.updateChats(chatRooms);
         adapter.notifyDataSetChanged();
+
+        counter--;
+        if(counter == 0) {
+            //progress bar off
+            getActivity().setProgressBarIndeterminateVisibility(false);
+        }
     }
 }

@@ -25,7 +25,7 @@ public class MessageKey implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.KEY)
     private String messageKey = "";
 
-    @DatabaseField(columnName = DatabaseConstants.CHAT_CREATED)
+    @DatabaseField(columnName = DatabaseConstants.KEY_CREATED)
     private Date created;
 
     public static MessageKey last;
