@@ -60,7 +60,7 @@ public class MessageKeyTask extends ConnectionTask {
                 //for (Device recipientDevice : user.getDevices()) {
                 for (Device recipientDevice : DeviceTask.getInstance().getAllDevices(user.getId())) {
                     Log.d(this.getClass().getSimpleName(),"[???] Send Key for Device" + recipientDevice.getId());
-                    //encrypt the key with RSA
+
                     /*
                     MessageSignatur rsa = new MessageSignatur(context, creatorDevice);
                     PublicKey pubKey = rsa.getPubKeyFromUser(recipient);
@@ -74,6 +74,8 @@ public class MessageKeyTask extends ConnectionTask {
 
                     MessageKey messageKey = new MessageKey(0, new Device(Long.parseLong(deviceId)),
                             new Device(recipientDevice.getId()), chat, key, iv, encType, sign)
+
+                    // Encrypt messageKey here!!!
 
                     messageKeys.add(messageKey);
 
