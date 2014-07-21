@@ -72,8 +72,10 @@ public class MessageKeyTask extends ConnectionTask {
                        continue;
                     }
 
-                    messageKeys.add(new MessageKey(0, new Device(Long.parseLong(deviceId)),
-                            new Device(recipientDevice.getId()), chat, key, iv, encType, sign));
+                    MessageKey messageKey = new MessageKey(0, new Device(Long.parseLong(deviceId)),
+                            new Device(recipientDevice.getId()), chat, key, iv, encType, sign)
+
+                    messageKeys.add(messageKey);
 
                     Log.d(this.getClass().getSimpleName(),"[???] Key von " + deviceId + " für Device generiert: " + recipientDevice.getId());
                 }
