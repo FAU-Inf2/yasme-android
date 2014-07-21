@@ -1,6 +1,7 @@
 package net.yasme.android.encryption;
 
 import java.security.KeyFactory;
+import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -34,58 +35,50 @@ import net.yasme.android.storage.RSAKey;
 public class MessageSignature {
 
     private final String PRIVATEKEYS = "rsaKeyStorage"; //Storage for Private and Public Keys from user
-    //private final String PUBLICKEYS = "publicKeys"; //Storage for all Public Keys of user's friends
-
-    //Context context;
-    private RSAEncryption rsa; // = new RSAEncryption();
+    private RSAEncryption rsa;
     private DatabaseManager db = DatabaseManager.INSTANCE;
-    private User user;
-
+    private User user = null;
     long selfDeviceId;
 
     //TODO: user wird nicht wirklich benoetigt
     public MessageSignature(long selfDeviceId, User user) {
-        this.selfDeviceId = selfDeviceId;
         this.rsa = new RSAEncryption();
         this.user = user;
     }
 
+    //TODO: selfDeviceId wird nur benoetigt, um eigene Schluessel zu extrahieren
+    //diese ID kann auch den Methoden selbst uebergeben werden
     public MessageSignature(long selfDeviceId) {
-        this.selfDeviceId = selfDeviceId;
         this.rsa = new RSAEncryption();
-        generateRSAKeys();
-
     }
 
+    //Constructor for generating the keys
     public MessageSignature() {
         this.rsa = new RSAEncryption();
-        generateRSAKeys();
     }
 
     // TODO: Generating keys in YasmeDeviceRegistration
-
     public void generateRSAKeys(){
         rsa.generateKeyPair();
-        saveRSAKeys();
     }
 
     //save own RSAKeys
-    public boolean saveRSAKeys(){
+    public boolean saveRSAKeys(long deviceId){
 
        try {
 
             //save Public Key in Database
-            savePublicKey(selfDeviceId, rsa.getPubKeyinBase64(), user);
+            savePublicKeyFromUser(deviceId, rsa.getPubKeyinBase64(), user);
 
             //save Private Key in SharedPreferences
             Context context = DatabaseManager.INSTANCE.getContext();
             SharedPreferences privKeyStorage = context.getSharedPreferences(PRIVATEKEYS, Context.MODE_PRIVATE);
             SharedPreferences.Editor keyeditor = privKeyStorage.edit();
 
-            if (privKeyStorage.getString(Long.toString(selfDeviceId), "") != ""){
-                keyeditor.remove(Long.toString(selfDeviceId));
+            if (privKeyStorage.getString(Long.toString(deviceId), "") != ""){
+                keyeditor.remove(Long.toString(deviceId));
             }
-            keyeditor.putString(Long.toString(selfDeviceId), rsa.getPrivKeyinBase64());
+            keyeditor.putString(Long.toString(deviceId), rsa.getPrivKeyinBase64());
             keyeditor.commit();
 
             Log.d(this.getClass().getSimpleName(), "[???] RSA Keys generated and saved");
@@ -97,6 +90,10 @@ public class MessageSignature {
             Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
             return false;
         }
+    }
+
+    public String getGeneratedPubKeyInBase64(){
+        return rsa.getPubKeyinBase64();
     }
 
     //verify
@@ -135,26 +132,43 @@ public class MessageSignature {
 
     //decrypt
     public String decrypt(String text){
-        PrivateKey privKey = getPrivateRSAKey();
+
+        //TODO: static Public Key entfernen
+        /*START*/
+
+        String privKey_base64 = "MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDFNN3xTiloIEB3rjQ7E1D0OuPvxSVTIpCfPnsRm6IstcPk56oaR8mh7raPEyHzjPfQkt1AX2bwng1q9doKHTBWMv3U2rNE/LX9J46Ry4h6EnJSW4/Tksz6YpT6dTIVYa96XJHVm7phLgRoPcqTpsvL4g+u1vAJtkz8ZFDqw6aVHdM6GTdung1d+BnCN7ywIl2Y3IGH3eQ7iEb0/Vg+Ou2rvyrjvpw0O3yc5bP2BQ9iStSU3T5UZYob/mdBXzvmwit6TwJ6cKTfRyEWagsHjSAheWY0DHobcsfM2OtZfpSuzAW0kn671wBOgb0wueAK8lWQFzFZsiLQpn5cLt+qRhQVAgMBAAECggEBAJBd8HBboPJqUeeLbw8kR+pTRlRcBcQDlM4PJncwcRu8AOmNMrjEfvZ908WP4xXxx+U37qLWdHyHqBj6XCF1VtJzx+DQLda+DdiC4dsXnhSHdouWHgdr+4T9METeEMkYVycDp3sx4tKLpoxNWASZYa4jEwoSrWzeuSM3qQkEK+oSv3eU9rukkLB1q2KDhqMzg3Bd6N11HRs8ZQ5ys49AuRx6ZBCTLq+mc05IW1vYckvDI1CTskYStiquJWxe9KJ3szeBajJEIg45EqLEliGzBb2eTSBFCKZ+1eCynDtjOQ9EKdZvJQG3/Gr9ws9200aTejO5wv8rNhB7RNCRvJy1s80CgYEA4pXyXj3nCwichHM2g5EIKL/xjw/37Kv26/aXHn7X7YtJRAL/0HLMJpWSN+o5DNmDFJGo0AvIcj/H1xtoOnHtg2zEbe1XzDrwz19x5WknNv8LUq+AlhrCr5JPoT1Q/req++G+dvvEItovqpIJg3Gfdsi7a9M0rf8yZZER7ko79u8CgYEA3s6R3QNMrdbn6aLTpgMwhIi+gNavZ5CKpYwyUWg9TOzZYZ0+tjnnDsIw1y06MJ/l+5g2/ils6gc1RBJelKOpeYtPauKImBYhM3+Y/LpxVR0NGmdBw871ykCglL5A2JIWYyt6k7o4YuT57iMfT/Cm9wz1xFCBeRap3tCCkbt2hTsCgYEAij/5UL0uYpIPhdUSVvY/5zUuOx8AI5zNHS4pCIdWUm7g9ilqUpIotAYg4BL+WjPBAeTZ/o6h7+uwkDP9xWNMCxtrQrNFFayEz9KpmNMvBSRakUnaCDwtu5hnE7do2vHP1r3nS4vUIXvFB6rxOQ0zwfM6P9DvXJbP9h6stRsAOWsCgYEAr/nTdw5OF9dvIDb8l1hZj7Q5UqU9sLyW5R4P+AAuun0vTEvX5jFhb2StEqakGReRm9+jP6cUYNsElRk1Ho0NI/SF61O0svp3iqcy/Bl9vc3ONZZseO0TcIUOz6xcpzDrAbSrgdZJBsL3K8EN0COwm9vemQlE2ZCu5k8lcVjwyVUCgYEAi7/M3Q5Vv9BdEa+ytDGoRSDJB9FYVyhbBn1c+fSlnH4tKoWetfIj78UsKksiIOjiAFiSsJxbMD9fzS32Sj60J+a8Z1YFCxRbvXYGx556vuE+z/7+ZV0tKPWXTK9kTX48zxTftwId+RhP7nt4UukVfGey6gnq5VWIJ5rTwIfjfro=";
+        KeyFactory kf = null;
+        PrivateKey privKey = null;
+        try {
+            kf = KeyFactory.getInstance("RSA");
+            byte[] privKeyBytes = Base64.decode(privKey_base64, Base64.DEFAULT);
+            privKey = kf.generatePrivate(new PKCS8EncodedKeySpec(privKeyBytes));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /*END*/
+
+        //PrivateKey privKey = getPrivateRSAKeyFromStorage();
         return rsa.decrypt(text, privKey);
     }
 
     //sign
     public String sign(String text){
-        PrivateKey privKey = getPrivateRSAKey();
+        PrivateKey privKey = getPrivateRSAKeyFromStorage();
         return rsa.sign(text, privKey);
     }
 
 
     //save a public Key from a friend
-    public boolean savePublicKey(long deviceId, String publicKeyinBase64, User friend){
+    public boolean savePublicKeyFromUser(long deviceId, String publicKeyinBase64, User friend){
         RSAKey pubKey = new RSAKey(deviceId, publicKeyinBase64, friend);
         db.getRsaKeyDAO().addOrUpdate(pubKey);
         return true;
     }
 
     //get own PrivateKey from LocalStorage
-    public PrivateKey getPrivateRSAKey(){
+    public PrivateKey getPrivateRSAKeyFromStorage(){
         Context context = DatabaseManager.INSTANCE.getContext();
         SharedPreferences privKeyStorage = context.getSharedPreferences(PRIVATEKEYS, Context.MODE_PRIVATE);
 
@@ -186,13 +200,13 @@ public class MessageSignature {
 
 
     //get own PublicKey from LocalStorage
-    public PublicKey getPublicRSAKey(){
+    public PublicKey getPublicRSAKeyFromStorage(){
         return getPubKeyFromUser(selfDeviceId);
     }
 
 
     //get own PublicKey in Base64
-    public String getPublicRSAKeyInBase64(){
+    public String getPublicRSAKeyInBase64FromStorage(){
         RSAKey rsaKey = db.getRsaKeyDAO().get(selfDeviceId);
         String pubKeyInBase64 = rsaKey.getPublicKey();
         return pubKeyInBase64;

@@ -20,7 +20,7 @@ public class RSAKey {
     @DatabaseField(columnName = DatabaseConstants.RSA_KEY_PUBLIC_KEY, canBeNull = false)
     private String publicKey;
 
-    @DatabaseField(columnName = DatabaseConstants.RSA_KEY_USER, foreign = true,
+    @DatabaseField(columnName = DatabaseConstants.RSA_KEY_USER, foreign = true,canBeNull = true,
             foreignAutoCreate=true, foreignAutoRefresh=true)
     private User user;
 

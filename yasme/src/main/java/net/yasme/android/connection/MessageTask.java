@@ -147,7 +147,7 @@ public class MessageTask extends ConnectionTask {
                     long creatorDevice = key.getLong("creatorDevice");
 
 					//decrypt the key with RSA
-					MessageSignature messageSignature = new MessageSignature(creatorDevice);
+					MessageSignature messageSignature = new MessageSignature(Long.parseLong(deviceId));
 					String messageKeyString = messageSignature.decrypt(messageKeyEncrypted);
 
                     Log.d(this.getClass().getSimpleName(), "[???] MessageKey was decrypted: "+ messageKeyString);

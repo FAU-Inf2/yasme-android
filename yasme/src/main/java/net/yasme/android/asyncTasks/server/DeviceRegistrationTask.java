@@ -7,6 +7,7 @@ import android.util.Log;
 
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.encryption.MessageSignature;
 import net.yasme.android.gcm.CloudMessaging;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
@@ -95,12 +96,19 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
 
         Log.d(this.getClass().getSimpleName(),"product name: " + product);
 
-        Device deviceToBeRegistered = new Device(user, Device.Platform.ANDROID, type, number, product, regId);
+        MessageSignature rsa = new MessageSignature();
+        //generate private and public Key
+        rsa.generateRSAKeys();
+        String pubKeyinBase64 = rsa.getGeneratedPubKeyInBase64();
+
+        Device deviceToBeRegistered = new Device(user, Device.Platform.ANDROID, pubKeyinBase64, type, number, product, regId);
 
         // make the REST-Call
         try{
             deviceIdFromServer = DeviceTask.getInstance().registerDevice(deviceToBeRegistered);
             deviceId = deviceIdFromServer;
+            //save private and public Key to storage
+            rsa.saveRSAKeys(deviceId);
         }catch(RestServiceException e){
             // if error occurs return false
             Log.d(this.getClass().getSimpleName(),"RestServiceException");

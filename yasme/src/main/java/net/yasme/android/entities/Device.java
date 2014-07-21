@@ -27,13 +27,14 @@ public class Device {
 
     private Date lastModified;
 
-    public Device(User user, Platform platform, String type, String number, String product, String googleRegId) {
+    public Device(User user, Platform platform, String publicKey, String type, String number, String product, String googleRegId) {
         this.user = user;
         this.platform = platform;
         this.type = type;
         this.number = number;
         this.product = product;
         this.googleRegId = googleRegId;
+        this.publicKey = publicKey;
     }
 
     public Device() {

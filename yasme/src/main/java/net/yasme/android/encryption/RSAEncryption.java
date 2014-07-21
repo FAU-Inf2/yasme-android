@@ -29,7 +29,7 @@ public class RSAEncryption {
     }
 
     //generate RSAKeys
-    public void generateKeyPair(){
+    public KeyPair generateKeyPair(){
 
         try{
  /*
@@ -38,6 +38,7 @@ public class RSAEncryption {
             keyGen.initialize(KEYSIZE, sr);
 
             keys = keyGen.generateKeyPair();
+            return keys;
 */
             //TODO: remove generating static Key
             /* START */
@@ -53,11 +54,13 @@ public class RSAEncryption {
             PublicKey pubKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
 
             setKeyPair(privKey, pubKey);
+            return keys;
 
             /* END */
         }catch(Exception e){
             Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
             Log.d(this.getClass().getSimpleName(),"[???] RSA Keys could not be generated.");
+            return null;
         }
 
     }
