@@ -41,19 +41,24 @@ public class MessageSignature {
     private User user;
 
     long selfDeviceId;
-    //TODO: entscheiden, ob fuie eigene KEYS fuer userID oder deviceID gespeichert werden
 
+    //TODO: user wird nicht wirklich benoetigt
     public MessageSignature(long selfDeviceId, User user) {
-        //this.context = context;
         this.selfDeviceId = selfDeviceId;
         this.rsa = new RSAEncryption();
         this.user = user;
-        //addIfNotExists UserId to the storagename, because there are more than one user on device who need a private key
-        //RSAKEYSTORAGE += "_" + Long.toString(creatorDevice);
+    }
+
+    public MessageSignature(long selfDeviceId) {
+        this.selfDeviceId = selfDeviceId;
+        this.rsa = new RSAEncryption();
+        generateRSAKeys();
+
     }
 
     public MessageSignature() {
-
+        this.rsa = new RSAEncryption();
+        generateRSAKeys();
     }
 
     // TODO: Generating keys in YasmeDeviceRegistration
@@ -66,7 +71,12 @@ public class MessageSignature {
     //save own RSAKeys
     public boolean saveRSAKeys(){
 
+        Log.d(this.getClass().getSimpleName(),"[???] PublicKey: "+rsa.getPubKeyinBase64());
+        Log.d(this.getClass().getSimpleName(),"[???] PrivateKey: "+rsa.getPrivKeyinBase64());
+
+
         try {
+
             //save Public Key in Database
             savePublicKey(selfDeviceId, rsa.getPubKeyinBase64(), user);
 
@@ -80,6 +90,9 @@ public class MessageSignature {
             }
             keyeditor.putString(Long.toString(selfDeviceId), rsa.getPrivKeyinBase64());
             keyeditor.commit();
+
+            Log.d(this.getClass().getSimpleName(), "[???] RSA Keys generated and saved");
+
 
             return true;
         } catch (Exception e){
@@ -98,7 +111,8 @@ public class MessageSignature {
     //encrypt
     public String encrypt(String text, long deviceIdFromRecipient){
         PublicKey pubKey = getPubKeyFromUser(deviceIdFromRecipient);
-        return rsa.encrypt(text, pubKey);
+        // return rsa.encrypt(text, pubKey);
+        return text;
     }
 
     //decrypt
@@ -169,20 +183,26 @@ public class MessageSignature {
 
     //get a Public Key for specific user from LocalStorage
     public PublicKey getPubKeyFromUser(long deviceId){
+
         //TODO: sucht get wirklich nach devideId?
         RSAKey rsaKey = db.getRsaKeyDAO().get(deviceId);
-        String pubKeyInBase64 = rsaKey.getPublicKey();
 
         //if Key is available
-        if (pubKeyInBase64 != null) {
+        if (rsaKey != null) {
 
             try{
+
+                String pubKeyInBase64 = rsaKey.getPublicKey();
+
                 //convert to byte
                 byte[] publicKeyBytes = Base64.decode(pubKeyInBase64, Base64.DEFAULT);
 
                 //convert to PublicKey
                 KeyFactory kf = KeyFactory.getInstance("RSA");
                 PublicKey pubKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
+
+                Log.d(this.getClass().getSimpleName(),"[???] Public Key for Device "+deviceId + "could be found.");
+
 
                 return pubKey;
 
@@ -192,6 +212,9 @@ public class MessageSignature {
                 return null;
             }
         }
+
+        Log.d(this.getClass().getSimpleName(),"[???] Public Key for Device "+deviceId + "could not be found.");
+
 
         return null;
 

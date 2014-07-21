@@ -4,6 +4,7 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import net.yasme.android.encryption.MessageEncryption;
+import net.yasme.android.encryption.MessageSignature;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.Message;
@@ -141,16 +142,18 @@ public class MessageTask extends ConnectionTask {
 				} catch (Exception e) { key = null; }
 
 				if (key != null) {
-					String messageKeyString = key.getString("messageKey");
+					String messageKeyEncrypted = key.getString("messageKey");
 					String iv = key.getString("initVector");
-					//decrypt the key with RSA
-					//TODO: statt userId deviceId uebergeben
-					/*
-						MessageSignatur rsa = new MessageSignatur(context, userId);
-						String messageKey = rsa.decrypt(messageKeyEncrypted);
-					*/
+                    long creatorDevice = key.getLong("creatorDevice");
 
-					Date created = new Date(key.getLong("created"));
+					//decrypt the key with RSA
+					MessageSignature messageSignature = new MessageSignature(creatorDevice);
+					String messageKeyString = messageSignature.decrypt(messageKeyEncrypted);
+
+                    Log.d(this.getClass().getSimpleName(), "[???] MessageKey was decrypted: "+ messageKeyString);
+
+
+                    Date created = new Date(key.getLong("created"));
                     Log.d(getClass().getSimpleName(), "Key created: " + created.toString());
 					//MessageEncryption keyStorage = new MessageEncryption(context, chatId);
 
