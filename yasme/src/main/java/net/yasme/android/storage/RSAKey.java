@@ -24,8 +24,7 @@ public class RSAKey {
             foreignAutoCreate=true, foreignAutoRefresh=true)
     private User user;
 
-    public RSAKey(long id, long deviceId, String publicKey, User user) {
-        this.id = id;
+    public RSAKey(long deviceId, String publicKey, User user) {
         this.deviceId = deviceId;
         this.publicKey = publicKey;
         this.user = user;

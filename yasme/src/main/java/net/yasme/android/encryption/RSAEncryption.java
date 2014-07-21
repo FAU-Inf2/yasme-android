@@ -22,8 +22,8 @@ public class RSAEncryption {
 
     private KeyPair keys = null;
 
-    public RSAEncryption(PrivateKey privKey, PublicKey pubKey) {
-        setKeyPair(privKey, pubKey);
+    public RSAEncryption() {
+
     }
 
     //generate RSAKeys

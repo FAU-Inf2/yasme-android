@@ -9,6 +9,11 @@ import java.security.spec.X509EncodedKeySpec;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
+import android.util.Log;
+
+import net.yasme.android.entities.User;
+import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.RSAKey;
 
 
 /*
@@ -27,73 +32,109 @@ import android.util.Base64;
 
 public class MessageSignature {
 
-    //private String RSAKEYSTORAGE = "rsaKeyStorage"; //Storage for Private and Public Keys from user
+    private final String PRIVATEKEYS = "rsaKeyStorage"; //Storage for Private and Public Keys from user
     //private final String PUBLICKEYS = "publicKeys"; //Storage for all Public Keys of user's friends
 
     //Context context;
     private RSAEncryption rsa; // = new RSAEncryption();
+    private DatabaseManager db = DatabaseManager.INSTANCE;
+    private User user;
+
     long selfDeviceId;
     //TODO: entscheiden, ob fuie eigene KEYS fuer userID oder deviceID gespeichert werden
 
-    public MessageSignature(PrivateKey privKey, PublicKey pubKey, long selfDeviceId) {
+    public MessageSignature(long selfDeviceId, User user) {
         //this.context = context;
         this.selfDeviceId = selfDeviceId;
-        this.rsa = new RSAEncryption(privKey,pubKey);
+        this.rsa = new RSAEncryption();
+        this.user = user;
         //addIfNotExists UserId to the storagename, because there are more than one user on device who need a private key
         //RSAKEYSTORAGE += "_" + Long.toString(creatorDevice);
     }
 
+    public MessageSignature() {
+
+    }
+
     // TODO: Generating keys in YasmeDeviceRegistration
-    /*
+
     public void generateRSAKeys(){
         rsa.generateKeyPair();
         saveRSAKeys();
     }
-    */
 
     //save own RSAKeys
-    /*
     public boolean saveRSAKeys(){
-        // rsa.getPrivKeyinBase64()
-        // rsa.getPubKeyinBase64()
+
         try {
-            SharedPreferences rsakeys = context.getSharedPreferences(RSAKEYSTORAGE, Context.MODE_PRIVATE);
-            SharedPreferences.Editor keyeditor = rsakeys.edit();
+            //save Public Key in Database
+            savePublicKey(selfDeviceId, rsa.getPubKeyinBase64(), user);
 
-            keyeditor.putString("privateKey", rsa.getPrivKeyinBase64());
-            keyeditor.putString("publicKey", rsa.getPubKeyinBase64());
+            //save Private Key in SharedPreferences
+            Context context = DatabaseManager.INSTANCE.getContext();
+            SharedPreferences privKeyStorage = context.getSharedPreferences(PRIVATEKEYS, Context.MODE_PRIVATE);
+            SharedPreferences.Editor keyeditor = privKeyStorage.edit();
 
+            if (privKeyStorage.getString(Long.toString(selfDeviceId), "") != ""){
+                keyeditor.remove(Long.toString(selfDeviceId));
+            }
+            keyeditor.putString(Long.toString(selfDeviceId), rsa.getPrivKeyinBase64());
             keyeditor.commit();
 
             return true;
         } catch (Exception e){
-            Log.d(this.getClass().getSimpleName(),"[???] saving rsa keys failed");
+            Log.d(this.getClass().getSimpleName(), "[???] saving rsa keys failed");
             Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
             return false;
         }
     }
-    */
+
+    //verify
+    public boolean verify(String signature_base64, String text_base64, long deviceIdFromSender){
+        PublicKey pubKey = getPubKeyFromUser(deviceIdFromSender);
+        return rsa.verify(signature_base64, text_base64, pubKey);
+    }
+
+    //encrypt
+    public String encrypt(String text, long deviceIdFromRecipient){
+        PublicKey pubKey = getPubKeyFromUser(deviceIdFromRecipient);
+        return rsa.encrypt(text, pubKey);
+    }
+
+    //decrypt
+    public String decrypt(String text){
+        PrivateKey privKey = getPrivateRSAKey();
+        return rsa.decrypt(text, privKey);
+    }
+
+    //sign
+    public String sign(String text){
+        PrivateKey privKey = getPrivateRSAKey();
+        return rsa.sign(text, privKey);
+    }
+
 
     //save a public Key from a friend
-    public boolean savePublicKey(long deviceId, String publicKeyinBase64){
-        //TODO: Save friends key to database
+    public boolean savePublicKey(long deviceId, String publicKeyinBase64, User friend){
+        RSAKey pubKey = new RSAKey(deviceId, publicKeyinBase64, friend);
+        db.getRsaKeyDAO().addOrUpdate(pubKey);
         return true;
     }
 
     //get own PrivateKey from LocalStorage
-    //public PrivateKey getPrivateRSAKey(){
-        //return rsa.getPrivKey();
-        /*
-        SharedPreferences rsakeys = context.getSharedPreferences(RSAKEYSTORAGE, Context.MODE_PRIVATE);
-        String privKey_base64 = rsakeys.getString("privateKey", "");
-        Log.d(this.getClass().getSimpleName(),"[???] Private Key Base64:"+privKey_base64);
+    public PrivateKey getPrivateRSAKey(){
+        Context context = DatabaseManager.INSTANCE.getContext();
+        SharedPreferences privKeyStorage = context.getSharedPreferences(PRIVATEKEYS, Context.MODE_PRIVATE);
+
+        String privKeyInBase64 = privKeyStorage.getString(Long.toString(selfDeviceId), "");
+        Log.d(this.getClass().getSimpleName(),"[???] Private Key for Device "+selfDeviceId+"was successfully loaded from storage");
 
         //if Key is available
-        if (privKey_base64 != "") {
+        if (privKeyInBase64 != "") {
 
             try{
                 //convert to byte
-                byte[] privKeyBytes = Base64.decode(privKey_base64, Base64.DEFAULT);
+                byte[] privKeyBytes = Base64.decode(privKeyInBase64, Base64.DEFAULT);
 
                 //convert to PrivateKey
                 KeyFactory kf = KeyFactory.getInstance("RSA");
@@ -109,25 +150,35 @@ public class MessageSignature {
         }
 
         return null;
-        */
-
-
-    //}
+    }
 
 
     //get own PublicKey from LocalStorage
-    //public PublicKey getPublicRSAKey(){
-        //return rsa.getPubKey();
-        /*
-        SharedPreferences rsakeys = context.getSharedPreferences(RSAKEYSTORAGE, Context.MODE_PRIVATE);
-        String pubKey_base64 = rsakeys.getString("publicKey", "");
+    public PublicKey getPublicRSAKey(){
+        return getPubKeyFromUser(selfDeviceId);
+    }
+
+
+    //get own PublicKey in Base64
+    public String getPublicRSAKeyInBase64(){
+        RSAKey rsaKey = db.getRsaKeyDAO().get(selfDeviceId);
+        String pubKeyInBase64 = rsaKey.getPublicKey();
+        return pubKeyInBase64;
+    }
+
+
+    //get a Public Key for specific user from LocalStorage
+    public PublicKey getPubKeyFromUser(long deviceId){
+        //TODO: sucht get wirklich nach devideId?
+        RSAKey rsaKey = db.getRsaKeyDAO().get(deviceId);
+        String pubKeyInBase64 = rsaKey.getPublicKey();
 
         //if Key is available
-        if (pubKey_base64 != "") {
+        if (pubKeyInBase64 != null) {
 
             try{
                 //convert to byte
-                byte[] publicKeyBytes = Base64.decode(pubKey_base64, Base64.DEFAULT);
+                byte[] publicKeyBytes = Base64.decode(pubKeyInBase64, Base64.DEFAULT);
 
                 //convert to PublicKey
                 KeyFactory kf = KeyFactory.getInstance("RSA");
@@ -143,60 +194,15 @@ public class MessageSignature {
         }
 
         return null;
-        */
-    //}
 
-    /*
-    //get own PublicKey in Base64
-    public String getPublicRSAKeyInBase64(){
-        SharedPreferences rsakeys = context.getSharedPreferences(RSAKEYSTORAGE, Context.MODE_PRIVATE);
-        String pubKey_base64 = rsakeys.getString("publicKey", "");
-
-        //if Key is available
-        if (pubKey_base64 != "") {
-            return pubKey_base64;
-        }
-
-        return null;
-    }
-    */
-
-    //sign
-    public String sign(String text){
-        //PrivateKey privKey = getPrivateRSAKey();
-        return rsa.sign(text, rsa.getPrivKey());
-    }
-
-    //verify
-    public boolean verify(String signature_base64, String text_base64, PublicKey pubKey){
-        return rsa.verify(signature_base64, text_base64, pubKey);
-    }
-
-    //encrypt
-    public String encrypt(String text, PublicKey pubKey){
-        return rsa.encrypt(text, pubKey);
-    }
-
-    //decrypt
-    public String decrypt(String text){
-        //PrivateKey privKey = getPrivateRSAKey();
-        return rsa.decrypt(text, rsa.getPrivKey());
     }
 
 
     //get a Public Key for a specific user from server
     public String[] getPubKeyfromServer(){
-       //TODO
+        //TODO
         //gibt Array an Base64-Public-Keys zurueck
         return null;
     }
-
-    //get a Public Key for specific user from LocalStorage
-    public PublicKey getPubKeyFromUser(long deviceId){
-        //TODO: Get publicKey from Database
-        //get public key for the specific deviceId
-        return rsa.getPubKey(); //TODO: ersetzen
-    }
-
 
 }
