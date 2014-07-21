@@ -1,6 +1,7 @@
 package net.yasme.android.encryption;
 
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -71,11 +72,7 @@ public class MessageSignature {
     //save own RSAKeys
     public boolean saveRSAKeys(){
 
-        Log.d(this.getClass().getSimpleName(),"[???] PublicKey: "+rsa.getPubKeyinBase64());
-        Log.d(this.getClass().getSimpleName(),"[???] PrivateKey: "+rsa.getPrivKeyinBase64());
-
-
-        try {
+       try {
 
             //save Public Key in Database
             savePublicKey(selfDeviceId, rsa.getPubKeyinBase64(), user);
@@ -110,9 +107,30 @@ public class MessageSignature {
 
     //encrypt
     public String encrypt(String text, long deviceIdFromRecipient){
-        PublicKey pubKey = getPubKeyFromUser(deviceIdFromRecipient);
-        // return rsa.encrypt(text, pubKey);
-        return text;
+       //TODO: static Public Key entfernen
+        /*START*/
+
+        String pubKey_base64 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTTd8U4paCBAd640OxNQ9Drj78UlUyKQnz57EZuiLLXD5OeqGkfJoe62jxMh84z30JLdQF9m8J4NavXaCh0wVjL91NqzRPy1/SeOkcuIehJyUluP05LM+mKU+nUyFWGvelyR1Zu6YS4EaD3Kk6bLy+IPrtbwCbZM/GRQ6sOmlR3TOhk3bp4NXfgZwje8sCJdmNyBh93kO4hG9P1YPjrtq78q476cNDt8nOWz9gUPYkrUlN0+VGWKG/5nQV875sIrek8CenCk30chFmoLB40gIXlmNAx6G3LHzNjrWX6UrswFtJJ+u9cAToG9MLngCvJVkBcxWbIi0KZ+XC7fqkYUFQIDAQAB";
+        KeyFactory kf = null;
+        PublicKey pubKey = null;
+        try {
+            kf = KeyFactory.getInstance("RSA");
+            byte[] publicKeyBytes = Base64.decode(pubKey_base64, Base64.DEFAULT);
+            pubKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /*END*/
+
+        //PublicKey pubKey = getPubKeyFromUser(deviceIdFromRecipient);
+
+        if (pubKey != null){
+            return rsa.encrypt(text, pubKey);
+        } else {
+            return text;
+            //TODO: Diesen else-Zweig wieder entfernen
+        }
     }
 
     //decrypt
