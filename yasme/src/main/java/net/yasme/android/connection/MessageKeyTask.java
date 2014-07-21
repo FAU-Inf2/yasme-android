@@ -66,11 +66,16 @@ public class MessageKeyTask extends ConnectionTask {
                     PublicKey pubKey = rsa.getPubKeyFromUser(recipient);
                     String keyEncrypted = rsa.encrypt(key, pubKey);
                     */
-                    //TODO: Dummy_IV
+
+                    // Do not store the key on the server for the creating device
+                    if (recipientDevice.getId() == Long.parseLong(deviceId)) {
+                       continue;
+                    }
+
                     messageKeys.add(new MessageKey(0, new Device(Long.parseLong(deviceId)),
                             new Device(recipientDevice.getId()), chat, key, iv, encType, sign));
 
-                    Log.d(this.getClass().getSimpleName(),"[???] Key für Device generiert: " + recipientDevice.getId());
+                    Log.d(this.getClass().getSimpleName(),"[???] Key von " + deviceId + " für Device generiert: " + recipientDevice.getId());
                 }
             }
 
