@@ -73,7 +73,7 @@ public class MessageKeyTask extends ConnectionTask {
                     }
 
                     MessageKey messageKey = new MessageKey(0, new Device(Long.parseLong(deviceId)),
-                            new Device(recipientDevice.getId()), chat, key, iv, encType, sign)
+                            new Device(recipientDevice.getId()), chat, key, iv, encType, sign);
 
                     // Encrypt messageKey here!!!
 
