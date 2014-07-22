@@ -60,6 +60,7 @@ public class MessageKeyTask extends ConnectionTask {
                 //Log.d(this.getClass().getSimpleName(),"[???] Get Devices for User " + user.getId());
                 //for (Device recipientDevice : DeviceTask.getInstance().getAllDevices(user.getId())) {
             for (Device recipientDevice : ChatTask.getInstance().getAllDevicesForChat(chat.getId())) {
+
                 // Do not store the key on the server for the creating device
                 if (recipientDevice.getId() == Long.parseLong(deviceId)) {
                     continue;
@@ -69,9 +70,9 @@ public class MessageKeyTask extends ConnectionTask {
 
                 Log.d(this.getClass().getSimpleName(), "[???] MessageKey must be encrypted: "+ key);
 
-                //encrypt the key with RSA
-                MessageSignature rsa = new MessageSignature();
-                String keyEncrypted = rsa.encrypt(key, recipientDevice.getId());
+                //MessageSignature rsa = new MessageSignature();
+                //String keyEncrypted = rsa.encrypt(key, recipientDevice.getId());
+                String keyEncrypted = key;
 
                 Log.d(this.getClass().getSimpleName(), "[???] MessageKey was encrypted: "+ keyEncrypted);
 
