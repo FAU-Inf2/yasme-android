@@ -146,7 +146,7 @@ public class MessageTask extends ConnectionTask {
                     
 					JSONObject creatorDevice = key.getJSONObject("creatorDevice");
                     JSONObject recipientDevice = key.getJSONObject("recipientDevice");
-                    
+
                     MessageKey messageKeyEncrypted = new MessageKey(
                             key.getLong("id"),
                             new Device(creatorDevice.getLong("id")),
