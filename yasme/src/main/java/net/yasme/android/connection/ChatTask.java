@@ -3,6 +3,7 @@ package net.yasme.android.connection;
 import android.util.Log;
 
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Device;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
 
@@ -68,6 +69,28 @@ public class ChatTask extends ConnectionTask {
         }
 
         return chats;
+    }
+
+    public List<Device> getAllDevicesForChat(Long chatId) throws RestServiceException {
+        String path = chatId + "/devices";
+        List<Device> devices = new ArrayList<Device>();
+        try {
+            HttpResponse httpResponse = executeRequest(Request.GET, path);
+            JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
+                    httpResponse.getEntity().getContent())).readLine());
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                Device device = new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
+                        toString(), Device.class);
+                devices.add(device);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        }
+
+        return devices;
     }
 
     public void deleteChat(long chatId) throws RestServiceException {
