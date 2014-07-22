@@ -72,9 +72,9 @@ public class MessageKeyTask extends ConnectionTask {
                 Log.d(this.getClass().getSimpleName(), "[???] MessageKey must be encrypted: "+ key);
 
                 //encrypt the key with RSA
-                //MessageSignature rsa = new MessageSignature();
-                //String keyEncrypted = rsa.encrypt(key, recipientDevice.getId());
-                String keyEncrypted = key;
+                MessageSignature rsa = new MessageSignature();
+                String keyEncrypted = rsa.encrypt(key, recipientDevice.getId());
+                //String keyEncrypted = key;
 
                 Log.d(this.getClass().getSimpleName(), "[???] MessageKey was encrypted: "+ keyEncrypted);
 
