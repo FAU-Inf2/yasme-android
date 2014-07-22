@@ -146,6 +146,7 @@ public class MessageTask extends ConnectionTask {
 					String iv = key.getString("initVector");
                     long creatorDevice = key.getLong("creatorDevice");
 
+
 					//decrypt the key with RSA
 					MessageSignature messageSignature = new MessageSignature(Long.parseLong(deviceId));
 					String messageKeyString = messageSignature.decrypt(messageKeyEncrypted);

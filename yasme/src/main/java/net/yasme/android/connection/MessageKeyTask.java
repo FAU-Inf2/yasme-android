@@ -2,6 +2,7 @@ package net.yasme.android.connection;
 
 import android.util.Log;
 
+import net.yasme.android.encryption.MessageSignature;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.MessageKey;
@@ -59,25 +60,26 @@ public class MessageKeyTask extends ConnectionTask {
                 //Log.d(this.getClass().getSimpleName(),"[???] Get Devices for User " + user.getId());
                 //for (Device recipientDevice : DeviceTask.getInstance().getAllDevices(user.getId())) {
             for (Device recipientDevice : ChatTask.getInstance().getAllDevicesForChat(chat.getId())) {
-                    Log.d(this.getClass().getSimpleName(),"[???] Send Key for Device" + recipientDevice.getId());
+                // Do not store the key on the server for the creating device
+                if (recipientDevice.getId() == Long.parseLong(deviceId)) {
+                    continue;
+                }
 
-                    /*
-                    MessageSignatur rsa = new MessageSignatur(context, creatorDevice);
-                    PublicKey pubKey = rsa.getPubKeyFromUser(recipient);
-                    String keyEncrypted = rsa.encrypt(key, pubKey);
-                    */
+                Log.d(this.getClass().getSimpleName(),"[????] Send Key for Device" + recipientDevice.getId());
 
-                    // Do not store the key on the server for the creating device
-                    if (recipientDevice.getId() == Long.parseLong(deviceId)) {
-                       continue;
-                    }
+                Log.d(this.getClass().getSimpleName(), "[???] MessageKey must be encrypted: "+ key);
 
-                    MessageKey messageKey = new MessageKey(0, new Device(Long.parseLong(deviceId)),
-                            new Device(recipientDevice.getId()), chat, key, iv, encType, sign);
+                //encrypt the key with RSA
+                MessageSignature rsa = new MessageSignature();
+                String keyEncrypted = rsa.encrypt(key, recipientDevice.getId());
 
-                    // Encrypt messageKey here!!!
+                Log.d(this.getClass().getSimpleName(), "[???] MessageKey was encrypted: "+ keyEncrypted);
 
-                    messageKeys.add(messageKey);
+
+                MessageKey messageKey = new MessageKey(0, new Device(Long.parseLong(deviceId)),
+                        new Device(recipientDevice.getId()), chat, keyEncrypted, iv, encType, sign);
+
+                messageKeys.add(messageKey);
 
                     Log.d(this.getClass().getSimpleName(),"[???] Key von " + deviceId + " für Device generiert: " + recipientDevice.getId());
                 //}
