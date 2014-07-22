@@ -144,7 +144,12 @@ public class MessageTask extends ConnectionTask {
 				if (key != null) {
 					String messageKeyEncrypted = key.getString("messageKey");
 					String iv = key.getString("initVector");
-                    long creatorDevice = key.getLong("creatorDevice");
+                    JSONObject creatorDevice;
+                    try {
+                        creatorDevice = key.getJSONObject("creatorDevice");
+                    } catch (Exception e) { creatorDevice = null; }
+
+                    long creatorDeviceId = creatorDevice.getLong("id");
 
 
 					//decrypt the key with RSA
