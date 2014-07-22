@@ -144,16 +144,13 @@ public class MessageTask extends ConnectionTask {
 
 				if (key != null) {
                     
-					JSONObject creatorDevice;
-                    try {
-                        creatorDevice = key.getJSONObject("creatorDevice");
-                    } catch (Exception e) { creatorDevice = null; }
-
-                    long creatorDeviceId = creatorDevice.getLong("id");
+					JSONObject creatorDevice = key.getJSONObject("creatorDevice");
+                    JSONObject recipientDevice = key.getJSONObject("recipientDevice");
+                    
                     MessageKey messageKeyEncrypted = new MessageKey(
                             key.getLong("id"),
-                            new Device(key.getLong("creatorDevice")),
-                            new Device(key.getLong("recipientDevice")),
+                            new Device(creatorDevice.getLong("id")),
+                            new Device(recipientDevice.getLong("id")),
                             chat,
                             key.getString("messageKey"),
                             key.getString("initVector"),
