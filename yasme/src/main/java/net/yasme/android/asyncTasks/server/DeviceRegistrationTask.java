@@ -7,7 +7,7 @@ import android.util.Log;
 
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.ObservableRegistry;
-import net.yasme.android.encryption.MessageSignature;
+import net.yasme.android.encryption.KeyEncryption;
 import net.yasme.android.gcm.CloudMessaging;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
@@ -96,7 +96,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
 
         Log.d(this.getClass().getSimpleName(),"product name: " + product);
 
-        MessageSignature rsa = new MessageSignature();
+        KeyEncryption rsa = new KeyEncryption();
         //generate private and public Key
         rsa.generateRSAKeys();
         String pubKeyinBase64 = rsa.getGeneratedPubKeyInBase64();

@@ -1,63 +1,46 @@
 package net.yasme.android.encryption;
 
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+/**
+ * Created by Marco Eberl on 22.07.2014.
+ */
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 import android.util.Log;
 
+import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.RSAKey;
 
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
-/*
-# KeyVerteilung:
-# Bei Regisirierung holt User sich von allen Kontakten die öffentliche Keys
-# Bei Registrierung schickt User RSA-Key an Server, sein Device benachrichtigt alle bekannten Kontake
-# bei Hinzufuegen eines neuen Kontakts wird dieser ebenfalls benachrichtigt
-# --> Kontakt holt Key vom Server bzw. App muss selber RSA-Key des Kontakts holen
-#
-# ansonsten beim Nachrichten senden/empfangen, AsyncTask, falls Key nicht vorhanden sein sollte
-
-# Methode1: Abholen RSA-Key von einem bestimmten Usern (Array) holen
-# Methode2: Senden des RSA-Keys an Server (mit Liste der notwendigen Empfänger --> Kontakte)
-# Methode3: Informiere Kontakt, dass er meinen RSA-Key abholen soll
- */
-
-public class MessageSignature {
+public class KeyEncryption {
 
     private final String PRIVATEKEYS = "rsaKeyStorage"; //Storage for Private and Public Keys from user
     private RSAEncryption rsa;
     private DatabaseManager db = DatabaseManager.INSTANCE;
     private User user = null;
-    long selfDeviceId;
+    //long selfDeviceId;
 
+    /*
     //TODO: user wird nicht wirklich benoetigt
-    public MessageSignature(long selfDeviceId, User user) {
+    public KeyEncryption(long selfDeviceId, User user) {
         this.rsa = new RSAEncryption();
         this.user = user;
     }
-
-    //TODO: selfDeviceId wird nur benoetigt, um eigene Schluessel zu extrahieren
-    //diese ID kann auch den Methoden selbst uebergeben werden
-    public MessageSignature(long selfDeviceId) {
-        this.rsa = new RSAEncryption();
-    }
+    */
 
     //Constructor for generating the keys
-    public MessageSignature() {
+    public KeyEncryption() {
         this.rsa = new RSAEncryption();
     }
 
-    // TODO: Generating keys in YasmeDeviceRegistration
     public void generateRSAKeys(){
         rsa.generateKeyPair();
     }
@@ -65,7 +48,7 @@ public class MessageSignature {
     //save own RSAKeys
     public boolean saveRSAKeys(long deviceId){
 
-       try {
+        try {
 
             //save Public Key in Database
             savePublicKeyFromUser(deviceId, rsa.getPubKeyinBase64(), user);
@@ -96,15 +79,9 @@ public class MessageSignature {
         return rsa.getPubKeyinBase64();
     }
 
-    //verify
-    public boolean verify(String signature_base64, String text_base64, long deviceIdFromSender){
-        PublicKey pubKey = getPubKeyFromUser(deviceIdFromSender);
-        return rsa.verify(signature_base64, text_base64, pubKey);
-    }
-
     //encrypt
-    public String encrypt(String text, long deviceIdFromRecipient){
-       //TODO: static Public Key entfernen
+    public MessageKey encrypt(MessageKey messageKey){
+        //TODO: static Public Key entfernen
         /*START*/
 
         String pubKey_base64 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTTd8U4paCBAd640OxNQ9Drj78UlUyKQnz57EZuiLLXD5OeqGkfJoe62jxMh84z30JLdQF9m8J4NavXaCh0wVjL91NqzRPy1/SeOkcuIehJyUluP05LM+mKU+nUyFWGvelyR1Zu6YS4EaD3Kk6bLy+IPrtbwCbZM/GRQ6sOmlR3TOhk3bp4NXfgZwje8sCJdmNyBh93kO4hG9P1YPjrtq78q476cNDt8nOWz9gUPYkrUlN0+VGWKG/5nQV875sIrek8CenCk30chFmoLB40gIXlmNAx6G3LHzNjrWX6UrswFtJJ+u9cAToG9MLngCvJVkBcxWbIi0KZ+XC7fqkYUFQIDAQAB";
@@ -120,18 +97,20 @@ public class MessageSignature {
 
         /*END*/
 
-        //PublicKey pubKey = getPubKeyFromUser(deviceIdFromRecipient);
+        //long recipientDevice = messageKey.getRecipientDevice().getId();
+        //PublicKey pubKey = getPubKeyFromUser(recipientDevice);
 
         if (pubKey != null){
-            return rsa.encrypt(text, pubKey);
-        } else {
-            return text;
-            //TODO: Diesen else-Zweig wieder entfernen
+            String keyEncrypted = rsa.encrypt(messageKey.getMessageKey(), pubKey);
+            messageKey.setKey(keyEncrypted);
+            return messageKey;
         }
+
+        return null;
     }
 
     //decrypt
-    public String decrypt(String text){
+    public MessageKey decrypt(MessageKey messageKey){
 
         //TODO: static Public Key entfernen
         /*START*/
@@ -150,16 +129,30 @@ public class MessageSignature {
         /*END*/
 
         //PrivateKey privKey = getPrivateRSAKeyFromStorage();
-        return rsa.decrypt(text, privKey);
+        String key = rsa.decrypt(messageKey.getMessageKey(), privKey);
+        messageKey.setKey(key);
+        return messageKey;
     }
 
     //sign
-    public String sign(String text){
-        PrivateKey privKey = getPrivateRSAKeyFromStorage();
-        return rsa.sign(text, privKey);
+    public MessageKey sign(MessageKey messageKey){
+        long selfDeviceId = messageKey.getCreatorDevice().getId();
+        PrivateKey privKey = getPrivateRSAKeyFromStorage(selfDeviceId);
+
+        String keySigned= rsa.sign(messageKey.getMessageKey(), privKey);
+        messageKey.setSign(keySigned);
+
+        return messageKey;
     }
 
+    //verify
+    public boolean verify(MessageKey messageKey){
+        long creatorId = messageKey.getCreatorDevice().getId();
+        PublicKey pubKey = getPubKeyFromUser(creatorId);
+        return rsa.verify(messageKey.getSign(), messageKey.getMessageKey(), pubKey);
+    }
 
+    //TODO: USer wieder entfernnen?
     //save a public Key from a friend
     public boolean savePublicKeyFromUser(long deviceId, String publicKeyinBase64, User friend){
         RSAKey pubKey = new RSAKey(deviceId, publicKeyinBase64, friend);
@@ -168,7 +161,7 @@ public class MessageSignature {
     }
 
     //get own PrivateKey from LocalStorage
-    public PrivateKey getPrivateRSAKeyFromStorage(){
+    public PrivateKey getPrivateRSAKeyFromStorage(long selfDeviceId){
         Context context = DatabaseManager.INSTANCE.getContext();
         SharedPreferences privKeyStorage = context.getSharedPreferences(PRIVATEKEYS, Context.MODE_PRIVATE);
 
@@ -200,13 +193,13 @@ public class MessageSignature {
 
 
     //get own PublicKey from LocalStorage
-    public PublicKey getPublicRSAKeyFromStorage(){
+    public PublicKey getPublicRSAKeyFromStorage(long selfDeviceId){
         return getPubKeyFromUser(selfDeviceId);
     }
 
 
     //get own PublicKey in Base64
-    public String getPublicRSAKeyInBase64FromStorage(){
+    public String getPublicRSAKeyInBase64FromStorage(long selfDeviceId){
         RSAKey rsaKey = db.getRsaKeyDAO().get(selfDeviceId);
         String pubKeyInBase64 = rsaKey.getPublicKey();
         return pubKeyInBase64;

@@ -3,8 +3,8 @@ package net.yasme.android.connection;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import net.yasme.android.encryption.KeyEncryption;
 import net.yasme.android.encryption.MessageEncryption;
-import net.yasme.android.encryption.MessageSignature;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.Message;
@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -142,31 +143,35 @@ public class MessageTask extends ConnectionTask {
 				} catch (Exception e) { key = null; }
 
 				if (key != null) {
-					String messageKeyEncrypted = key.getString("messageKey");
-					String iv = key.getString("initVector");
-                    JSONObject creatorDevice;
+                    
+					JSONObject creatorDevice;
                     try {
                         creatorDevice = key.getJSONObject("creatorDevice");
                     } catch (Exception e) { creatorDevice = null; }
 
                     long creatorDeviceId = creatorDevice.getLong("id");
+                    MessageKey messageKeyEncrypted = new MessageKey(
+                            key.getLong("id"),
+                            new Device(key.getLong("creatorDevice")),
+                            new Device(key.getLong("recipientDevice")),
+                            chat,
+                            key.getString("messageKey"),
+                            key.getString("initVector"),
+                            (byte)key.getInt("encType"),
+                            key.getString("Sign"));
 
 
 					//decrypt the key with RSA
-					MessageSignature messageSignature = new MessageSignature(Long.parseLong(deviceId));
-					String messageKeyString = messageSignature.decrypt(messageKeyEncrypted);
+					KeyEncryption keyEncryption = new KeyEncryption();
+					MessageKey messageKey = keyEncryption.decrypt(messageKeyEncrypted);
 
-                    Log.d(this.getClass().getSimpleName(), "[???] MessageKey was decrypted: "+ messageKeyString);
-
+                    Log.d(this.getClass().getSimpleName(), "[???] MessageKey was decrypted: "+ messageKey.getMessageKey());
 
                     Date created = new Date(key.getLong("created"));
                     Log.d(getClass().getSimpleName(), "Key created: " + created.toString());
-					//MessageEncryption keyStorage = new MessageEncryption(context, chatId);
-
-					//keyStorage.saveKey(obj.getLong("messageKeyId"), messageKey, iv, timestamp);
-					// TODO: storeKeyToDatabase
-                    MessageKey messageKey = new MessageKey(key.getLong("id"),chat,messageKeyString,iv);
                     messageKey.setCreated(created);
+
+                    // TODO: storeKeyToDatabase
                     keyDAO.addIfNotExists(messageKey);
 					Log.d(this.getClass().getSimpleName(), "[???] Key " + keyId + " aus den Nachrichten extrahiert und gespeichert");
 
