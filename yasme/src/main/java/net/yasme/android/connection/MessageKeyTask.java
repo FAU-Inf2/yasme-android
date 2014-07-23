@@ -74,9 +74,7 @@ public class MessageKeyTask extends ConnectionTask {
                         new Device(recipientDevice.getId()), chat, key, iv, encType, sign);
                 KeyEncryption keyEncryption = new KeyEncryption();
                 MessageKey messageKeyEncrypted = keyEncryption.encrypt(messageKey);
-                //MessageKey messageKeySigned = keyEncryption.sign(messageKeyEncrypted);
-
-                MessageKey messageKeySigned = messageKeyEncrypted;
+                MessageKey messageKeySigned = keyEncryption.sign(messageKeyEncrypted);
 
                 Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been encrypted: "+ messageKeySigned.getMessageKey());
                 Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been signed: "+ messageKeySigned.getSign());
