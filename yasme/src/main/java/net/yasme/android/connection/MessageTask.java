@@ -2,7 +2,10 @@ package net.yasme.android.connection;
 
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.widget.Toast;
 
+import net.yasme.android.R;
+import net.yasme.android.controller.Toaster;
 import net.yasme.android.encryption.KeyEncryption;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
@@ -162,8 +165,10 @@ public class MessageTask extends ConnectionTask {
                     //verify the signature of the key
                     if(keyEncryption.verify(messageKeyEncrypted)){
                         Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been verified");
+                        Toaster.getInstance().toast(R.string.authentication_successful, Toast.LENGTH_LONG);
                     }else{
                         Log.d(this.getClass().getSimpleName(), "[???] MessageKey could not be verified");
+                        Toaster.getInstance().toast(R.string.authentication_failed, Toast.LENGTH_LONG);
                     }
 
 					//decrypt the key with RSA

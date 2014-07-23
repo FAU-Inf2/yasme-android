@@ -44,5 +44,7 @@
 
     <!-- Settings -->
     <string name="action_settings">Einstellungen</string>
+    <string name="authentication_successful">Chatpartner erfolgreich authentifiziert!</string>
+    <string name="authentication_failed">Chatpartner konnte nicht authenthifiziert werden</string>
 
 </resources>
