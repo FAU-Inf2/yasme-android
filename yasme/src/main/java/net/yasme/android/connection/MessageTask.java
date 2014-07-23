@@ -157,9 +157,16 @@ public class MessageTask extends ConnectionTask {
                             (byte)key.getInt("encType"),
                             key.getString("Sign"));
 
+                    KeyEncryption keyEncryption = new KeyEncryption();
+
+                    //verify the signature of the key
+                    if(keyEncryption.verify(messageKeyEncrypted)){
+                        Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been verified");
+                    }else{
+                        Log.d(this.getClass().getSimpleName(), "[???] MessageKey could not be verified");
+                    }
 
 					//decrypt the key with RSA
-					KeyEncryption keyEncryption = new KeyEncryption();
 					MessageKey messageKey = keyEncryption.decrypt(messageKeyEncrypted);
 
                     Log.d(this.getClass().getSimpleName(), "[???] MessageKey was decrypted: "+ messageKey.getMessageKey());

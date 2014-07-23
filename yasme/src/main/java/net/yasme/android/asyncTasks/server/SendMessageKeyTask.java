@@ -14,6 +14,8 @@ import java.util.ArrayList;
 /**
  * Created by martin on 06.07.2014.
  */
+
+
 // Async-Task for sending Key to Server
 public class SendMessageKeyTask extends AsyncTask<String, Void, MessageKey> {
 
