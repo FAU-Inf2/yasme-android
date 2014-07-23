@@ -159,7 +159,7 @@ public class KeyEncryption {
 
         //TODO: test ersetzen durch keysigned
         String keySigned= rsa.sign(messageKey.getMessageKey(), privKey);
-        messageKey.setSign("test");
+        messageKey.setSign(keySigned);
 
         return messageKey;
     }
