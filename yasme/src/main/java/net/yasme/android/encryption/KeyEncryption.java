@@ -157,8 +157,9 @@ public class KeyEncryption {
         //long selfDeviceId = messageKey.getCreatorDevice().getId();
         //PrivateKey privKey = getPrivateRSAKeyFromStorage(selfDeviceId);
 
+        //TODO: test ersetzen durch keysigned
         String keySigned= rsa.sign(messageKey.getMessageKey(), privKey);
-        messageKey.setSign(keySigned);
+        messageKey.setSign("test");
 
         return messageKey;
     }

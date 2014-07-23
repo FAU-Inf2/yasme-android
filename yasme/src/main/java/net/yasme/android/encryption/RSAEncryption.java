@@ -103,7 +103,7 @@ public class RSAEncryption {
         try {
             Signature sig = Signature.getInstance(SIGNATURE_MODE);
             sig.initSign(privKey);
-            sig.update(text.getBytes("UTF-8"));
+            sig.update(text.getBytes());
 
             signatured = sig.sign();
 
@@ -121,8 +121,8 @@ public class RSAEncryption {
     public boolean verify(String signature_base64, String text_base64, PublicKey pubKey) {
 
         try {
-            byte[] signature = Base64.decode(signature_base64.getBytes("UTF-8"), Base64.DEFAULT);
-            byte[] encrypted = Base64.decode(text_base64.getBytes("UTF-8"), Base64.DEFAULT);
+            byte[] signature = Base64.decode(signature_base64.getBytes(), Base64.DEFAULT);
+            byte[] encrypted = Base64.decode(text_base64.getBytes(), Base64.DEFAULT);
 
             Signature sig = Signature.getInstance(SIGNATURE_MODE);
             sig.initVerify(pubKey);
