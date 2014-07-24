@@ -76,8 +76,8 @@ public class MessageKeyTask extends ConnectionTask {
                 MessageKey messageKeyEncrypted = keyEncryption.encrypt(messageKey);
                 MessageKey messageKeySigned = keyEncryption.sign(messageKeyEncrypted);
 
-                Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been encrypted: "+ messageKeySigned.getMessageKey());
-                Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been signed: "+ messageKeySigned.getSign());
+                Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been encrypted.");
+                Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been signed.");
 
                 messageKeys.add(messageKeySigned);
 

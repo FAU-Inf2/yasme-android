@@ -28,6 +28,9 @@ public class MessageKey implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.KEY_CREATED)
     private Date created;
 
+    @DatabaseField(columnName = DatabaseConstants.AUTHENTICATED)
+    private byte authenticated = 0;
+
     public static MessageKey last;
 
 	private Device creatorDevice = null;   // fuer Auswahl des oeffentlichen Schluessels
@@ -119,6 +122,11 @@ public class MessageKey implements Serializable {
 
     public Date getCreated() { return created; }
 
+    public boolean getAuthenticity(){
+        if (authenticated == 1) return true;
+        else return false;
+    }
+
 	/** Setters **/
 	public void setId(long id) {
 		this.id = id;
@@ -159,6 +167,17 @@ public class MessageKey implements Serializable {
 	}
 
     public void setCreated(Date created) { this.created = created; }
+
+    public boolean setAuthenticity(boolean bool){
+        if (bool){
+            authenticated = 1;
+            return true;
+        }
+        else {
+            authenticated = 0;
+            return false;
+        }
+    }
 
 	public Boolean isValid() {
 		if (id < 0) {

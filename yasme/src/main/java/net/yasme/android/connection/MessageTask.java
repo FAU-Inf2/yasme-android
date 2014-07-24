@@ -162,8 +162,8 @@ public class MessageTask extends ConnectionTask {
 
                     KeyEncryption keyEncryption = new KeyEncryption();
 
-                    //verify the signature of the key
-                    if(keyEncryption.verify(messageKeyEncrypted)){
+                    //verify the signature of the key and save authenticity-status in messageKeyEncrypted
+                    if(messageKeyEncrypted.setAuthenticity(keyEncryption.verify(messageKeyEncrypted))){
                         Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been verified");
                         Toaster.getInstance().toast(R.string.authentication_successful, Toast.LENGTH_LONG);
                     }else{

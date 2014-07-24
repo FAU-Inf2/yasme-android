@@ -38,6 +38,9 @@ public class Message implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.MESSAGE_MESSAGEKEY_ID)
     private long messageKeyId;
 
+    @DatabaseField(columnName = DatabaseConstants.AUTHENTICATED)
+    private byte authenticated = 0;
+
     private MessageKey messageKey;
 
     /**
@@ -119,6 +122,11 @@ public class Message implements Serializable {
         return messageKeyId;
     }
 
+    public boolean getAuthenticity(){
+        if (authenticated == 1) return true;
+        else return false;
+    }
+
     /**
      * Setters
      */
@@ -155,6 +163,17 @@ public class Message implements Serializable {
 
     public void setMessageKeyId(long messageKeyId) {
         this.messageKeyId = messageKeyId;
+    }
+
+    public boolean setAuthenticity(boolean bool){
+        if (bool){
+            authenticated = 1;
+            return true;
+        }
+        else {
+            authenticated = 0;
+            return false;
+        }
     }
 }
 
