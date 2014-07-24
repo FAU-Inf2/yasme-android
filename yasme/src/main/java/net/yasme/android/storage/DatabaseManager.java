@@ -9,8 +9,8 @@ import net.yasme.android.storage.dao.MessageDAO;
 import net.yasme.android.storage.dao.MessageDAOImpl;
 import net.yasme.android.storage.dao.MessageKeyDAO;
 import net.yasme.android.storage.dao.MessageKeyDAOImpl;
-import net.yasme.android.storage.dao.RSAKeyDAO;
-import net.yasme.android.storage.dao.RSAKeyDAOImpl;
+import net.yasme.android.storage.dao.DeviceDAO;
+import net.yasme.android.storage.dao.DeviceDAOImpl;
 import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.storage.dao.UserDAOImpl;
 
@@ -33,7 +33,7 @@ public enum DatabaseManager {
     private ChatDAO chatDAO;
     private MessageDAO messageDAO;
     private MessageKeyDAO messageKeyDAO;
-    private RSAKeyDAO rsaKeyDAO;
+    private DeviceDAO rsaKeyDAO;
 
     public void init(Context context, SharedPreferences sharedPreferences, long userId) {
         mContext = context;
@@ -74,8 +74,8 @@ public enum DatabaseManager {
         MessageKeyDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
         messageKeyDAO = MessageKeyDAOImpl.INSTANCE;
 
-        RSAKeyDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
-        rsaKeyDAO = RSAKeyDAOImpl.INSTANCE;
+        DeviceDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
+        rsaKeyDAO = DeviceDAOImpl.INSTANCE;
     }
 
     public UserDAO getUserDAO() {
@@ -92,7 +92,7 @@ public enum DatabaseManager {
         return messageKeyDAO;
     }
 
-    public RSAKeyDAO getRsaKeyDAO() {
+    public DeviceDAO getRsaKeyDAO() {
         return rsaKeyDAO;
     }
 }

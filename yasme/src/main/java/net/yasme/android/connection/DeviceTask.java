@@ -3,6 +3,7 @@ package net.yasme.android.connection;
 import android.util.Log;
 
 import net.yasme.android.entities.Device;
+import net.yasme.android.entities.OwnDevice;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.Error;
 import org.apache.http.HttpResponse;
@@ -37,7 +38,7 @@ public class DeviceTask extends ConnectionTask {
         }
     }
 
-    public Long registerDevice(Device device) throws RestServiceException {
+    public Long registerDevice(OwnDevice device) throws RestServiceException {
 
         try {
             HttpResponse httpResponse = executeRequest(Request.POST, "", device);
@@ -57,10 +58,10 @@ public class DeviceTask extends ConnectionTask {
         return null;
     }
 
-    public Device getDevice() throws RestServiceException {
+    public Device getDevice(long devId) throws RestServiceException {
 
         try {
-            HttpResponse httpResponse = executeRequest(Request.GET, deviceId);
+            HttpResponse httpResponse = executeRequest(Request.GET, String.valueOf(devId));
             return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
                     .getContent())).readLine(), Device.class);
 

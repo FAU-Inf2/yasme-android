@@ -5,17 +5,15 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.KeyEncryption;
 import net.yasme.android.gcm.CloudMessaging;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
 import net.yasme.android.connection.DeviceTask;
-import net.yasme.android.entities.Device;
+import net.yasme.android.entities.OwnDevice;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.LoginFragment;
 
 /**
@@ -101,7 +99,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         rsa.generateRSAKeys();
         String pubKeyinBase64 = rsa.getGeneratedPubKeyInBase64();
 
-        Device deviceToBeRegistered = new Device(user, Device.Platform.ANDROID, pubKeyinBase64, type, number, product, regId);
+        OwnDevice deviceToBeRegistered = new OwnDevice(user, OwnDevice.Platform.ANDROID, pubKeyinBase64, type, number, product, regId);
 
         // make the REST-Call
         try{

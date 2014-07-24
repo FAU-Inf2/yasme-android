@@ -9,10 +9,10 @@ import android.content.SharedPreferences;
 import android.util.Base64;
 import android.util.Log;
 
+import net.yasme.android.entities.Device;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.storage.RSAKey;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -51,7 +51,7 @@ public class KeyEncryption {
         try {
 
             //save Public Key in Database
-            savePublicKeyFromUser(deviceId, rsa.getPubKeyinBase64(), user);
+            //savePublicKeyFromUser(deviceId, rsa.getPubKeyinBase64(), user);
 
             //save Private Key in SharedPreferences
             Context context = DatabaseManager.INSTANCE.getContext();
@@ -84,6 +84,8 @@ public class KeyEncryption {
     public MessageKey encrypt(MessageKey messageKey){
         //TODO: static Public Key entfernen
         /*START*/
+
+       //pubKey_base64 = messageKey.getRecipientDevice().getPublicKey();
 
         String pubKey_base64 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTTd8U4paCBAd640OxNQ9Drj78UlUyKQnz57EZuiLLXD5OeqGkfJoe62jxMh84z30JLdQF9m8J4NavXaCh0wVjL91NqzRPy1/SeOkcuIehJyUluP05LM+mKU+nUyFWGvelyR1Zu6YS4EaD3Kk6bLy+IPrtbwCbZM/GRQ6sOmlR3TOhk3bp4NXfgZwje8sCJdmNyBh93kO4hG9P1YPjrtq78q476cNDt8nOWz9gUPYkrUlN0+VGWKG/5nQV875sIrek8CenCk30chFmoLB40gIXlmNAx6G3LHzNjrWX6UrswFtJJ+u9cAToG9MLngCvJVkBcxWbIi0KZ+XC7fqkYUFQIDAQAB";
         KeyFactory kf = null;
@@ -169,6 +171,9 @@ public class KeyEncryption {
 
         //TODO: static Public Key entfernen
         /*START*/
+        //pubKey_base64 = messageKey.getCreatorDevice().getPublicKey();
+
+
 
         String pubKey_base64 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTTd8U4paCBAd640OxNQ9Drj78UlUyKQnz57EZuiLLXD5OeqGkfJoe62jxMh84z30JLdQF9m8J4NavXaCh0wVjL91NqzRPy1/SeOkcuIehJyUluP05LM+mKU+nUyFWGvelyR1Zu6YS4EaD3Kk6bLy+IPrtbwCbZM/GRQ6sOmlR3TOhk3bp4NXfgZwje8sCJdmNyBh93kO4hG9P1YPjrtq78q476cNDt8nOWz9gUPYkrUlN0+VGWKG/5nQV875sIrek8CenCk30chFmoLB40gIXlmNAx6G3LHzNjrWX6UrswFtJJ+u9cAToG9MLngCvJVkBcxWbIi0KZ+XC7fqkYUFQIDAQAB";
         KeyFactory kf = null;
@@ -190,10 +195,11 @@ public class KeyEncryption {
     }
 
     //TODO: USer wieder entfernnen?
-    //save a public Key from a friend
-    public boolean savePublicKeyFromUser(long deviceId, String publicKeyinBase64, User friend){
-        RSAKey pubKey = new RSAKey(deviceId, publicKeyinBase64, friend);
-        db.getRsaKeyDAO().addOrUpdate(pubKey);
+    //save own public
+    public boolean savePublicKeyFromUser(long deviceId, String publicKeyinBase64, User selfUser){
+        // TODO: save to sharedPref
+        //RSAKey pubKey = new RSAKey(deviceId, publicKeyinBase64, selfUser);
+        //db.getRsaKeyDAO().addOrUpdate(pubKey);
         return true;
     }
 
@@ -228,21 +234,26 @@ public class KeyEncryption {
         return null;
     }
 
-
+/*
+MS: Method is never used.
     //get own PublicKey from LocalStorage
     public PublicKey getPublicRSAKeyFromStorage(long selfDeviceId){
         return getPubKeyFromUser(selfDeviceId);
     }
+ */
 
 
     //get own PublicKey in Base64
     public String getPublicRSAKeyInBase64FromStorage(long selfDeviceId){
-        RSAKey rsaKey = db.getRsaKeyDAO().get(selfDeviceId);
-        String pubKeyInBase64 = rsaKey.getPublicKey();
+        // TODO: Get Key from sharedPrefs
+        //RSAKey rsaKey = db.getRsaKeyDAO().get(selfDeviceId);
+        //String pubKeyInBase64 = rsaKey.getPublicKey();
+        String pubKeyInBase64 = "";
         return pubKeyInBase64;
     }
 
-
+/*
+MS: Method is not needed, because KeyEncryption will be initialized with an up-to-date Device-Object, which has the publicKey (inBase64)
     //get a Public Key for specific user from LocalStorage
     public PublicKey getPubKeyFromUser(long deviceId){
 
@@ -282,12 +293,15 @@ public class KeyEncryption {
 
     }
 
+    */
 
+/*
+MS: Method is not needed, because KeyEncryption will be initialized with an up-to-date Device-Object, which has the publicKey (inBase64)
     //get a Public Key for a specific user from server
     public String[] getPubKeyfromServer(){
         //TODO
         //gibt Array an Base64-Public-Keys zurueck
         return null;
     }
-
+*/
 }

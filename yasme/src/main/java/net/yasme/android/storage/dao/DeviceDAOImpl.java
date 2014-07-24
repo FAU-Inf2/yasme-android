@@ -2,9 +2,9 @@ package net.yasme.android.storage.dao;
 
 import android.util.Log;
 
+import net.yasme.android.entities.Device;
 import net.yasme.android.storage.DatabaseConstants;
 import net.yasme.android.storage.DatabaseHelper;
-import net.yasme.android.storage.RSAKey;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by robert on 19.07.14.
  */
-public enum RSAKeyDAOImpl implements RSAKeyDAO{
+public enum DeviceDAOImpl implements DeviceDAO {
     INSTANCE;
 
     private DatabaseHelper databaseHelper;
@@ -21,24 +21,24 @@ public enum RSAKeyDAOImpl implements RSAKeyDAO{
         this.databaseHelper = databaseHelper;
     }
 
-    public RSAKey addIfNotExists(RSAKey rsaKey){
-        RSAKey returnRSAKey;
+    public Device addIfNotExists(Device device){
+        Device returnDevice;
         try {
-            returnRSAKey = databaseHelper.getRSAKeyDao().createIfNotExists(rsaKey);
+            returnDevice = databaseHelper.getDeviceDao().createIfNotExists(device);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;
         }
-        return returnRSAKey;
+        return returnDevice;
     }
 
-    public RSAKey addOrUpdate(RSAKey rsaKey){
+    public Device addOrUpdate(Device device){
         try {
-            RSAKey fromDb = databaseHelper.getRSAKeyDao().queryForId(rsaKey.getId());
+            Device fromDb = databaseHelper.getDeviceDao().queryForId(device.getId());
             if (null == fromDb) {
-                return addIfNotExists(rsaKey);
+                return addIfNotExists(device);
             } else {
-                return update(rsaKey);
+                return update(device);
             }
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
@@ -46,44 +46,32 @@ public enum RSAKeyDAOImpl implements RSAKeyDAO{
         }
     }
 
-    public RSAKey get(long id){
-        RSAKey rsaKey;
+    public Device get(long id){
+        Device device;
         try {
-            rsaKey = databaseHelper.getRSAKeyDao().queryForId(id);
+            device = databaseHelper.getDeviceDao().queryForId(id);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;
         }
-        return rsaKey;
+        return device;
     }
 
-    public List<RSAKey> getAll(){
-        List<RSAKey> rsaKeyList;
+    public List<Device> getAll(){
+        List<Device> devicesList;
         try {
-            rsaKeyList = databaseHelper.getRSAKeyDao().queryForAll();
+            devicesList = databaseHelper.getDeviceDao().queryForAll();
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;
         }
-        return rsaKeyList;
+        return devicesList;
     }
 
-    public List<RSAKey> getMessageKeysByDevice(long deviceId){
-        List<RSAKey> matching;
+    public Device update(Device device){
         try {
-            matching = databaseHelper.getRSAKeyDao().
-                    queryForEq(DatabaseConstants.RSA_KEY_DEVICE_ID, deviceId);
-        } catch (SQLException e) {
-            Log.e(this.getClass().getSimpleName(), e.getMessage());
-            return null;
-        }
-        return matching;
-    }
-
-    public RSAKey update(RSAKey rsaKey){
-        try {
-            if(1 == databaseHelper.getRSAKeyDao().update(rsaKey)) {
-                return rsaKey;
+            if(1 == databaseHelper.getDeviceDao().update(device)) {
+                return device;
             }
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
@@ -92,9 +80,9 @@ public enum RSAKeyDAOImpl implements RSAKeyDAO{
         return null;
     }
 
-    public boolean delete(RSAKey rsaKey){
+    public boolean delete(Device device){
         try {
-            return (1 == databaseHelper.getRSAKeyDao().delete(rsaKey));
+            return (1 == databaseHelper.getDeviceDao().delete(device));
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;

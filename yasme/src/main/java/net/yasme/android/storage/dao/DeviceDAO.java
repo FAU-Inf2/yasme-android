@@ -1,67 +1,62 @@
 package net.yasme.android.storage.dao;
 
-import net.yasme.android.storage.RSAKey;
+import net.yasme.android.entities.Device;
 
 import java.util.List;
 
 /**
  * Created by robert on 19.07.14.
  */
-public interface RSAKeyDAO {
+public interface DeviceDAO {
 
     /**
-     * Creates a rsaKey item but only if the ID does not already exist in the table. This
+     * Creates a device item but only if the ID does not already exist in the table. This
      * extracts the id from the parameter, queries for it's id, returning the data if it
      * exists. If it does not exist create will be called with the parameter.
-     * @param rsaKey to be added
-     * @return given rsaKey or null if an error occurs
+     * @param device to be added
+     * @return given device or null if an error occurs
      */
-    public RSAKey addIfNotExists(RSAKey rsaKey);
+    public Device addIfNotExists(Device device);
 
 
     /**
      * This method is a combination of addIfNotExists and update for the sake of convenience.
-     * Queries for a rsaKey item with the specified id. If there is none, addIfNotExists is called,
+     * Queries for a device item with the specified id. If there is none, addIfNotExists is called,
      * otherwise update.
-     * @param rsaKey to be added or updated
+     * @param device to be added or updated
      * @return given chat after insertion / update
      */
-    public RSAKey addOrUpdate(RSAKey rsaKey);
+    public Device addOrUpdate(Device device);
 
     /**
      * Retrieves an object associated with a specific ID.
      * @param id Identifier that matches a specific row in the database to find and return.
      * @return The object that has the ID field which equals id or null if no matches.
      */
-    public RSAKey get(long id);
+    public Device get(long id);
 
     /**
      * Query for all of the items in the object table
-     * @return list of all rsaKeys or null on error
+     * @return list of all devices or null on error
      */
-    public List<RSAKey> getAll();
+    public List<Device> getAll();
 
-    /**
-     * Query for all of the items of one chat in the object table
-     * @return list of all rsaKeys of one chat or null on error
-     */
-    public List<RSAKey> getMessageKeysByDevice(long chatId);
 
 
     /**
      * Store the fields from an object to the database row corresponding to the id from the
      * data parameter. If you have made changes to an object, this is how you persist those
      * changes to the database. You cannot use this method to update the id field
-     * @param rsaKey to be updated
-     * @return given rsaKey or null on error
+     * @param device to be updated
+     * @return given device or null on error
      */
-    public RSAKey update(RSAKey rsaKey);
+    public Device update(Device device);
 
 
     /**
      * Delete the database row corresponding to the id from the data parameter.
-     * @param rsaKey to be deleted
+     * @param device to be deleted
      * @return true on success, false otherwise
      */
-    public boolean delete(RSAKey rsaKey);
+    public boolean delete(Device device);
 }

@@ -12,6 +12,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Device;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
@@ -37,7 +38,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<User, Long> userDao = null;
     private Dao<Message, Long> messageDao = null;
     private Dao<ChatUser, Long> chatUserDao = null;
-    private Dao<RSAKey, Long> rsaKeyDAO = null;
+    private Dao<Device, Long> deviceDAO = null;
     private Dao<MessageKey, Long> messageKeyDao = null;
 
 
@@ -53,7 +54,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, User.class);
             TableUtils.createTable(connectionSource, ChatUser.class);
             TableUtils.createTable(connectionSource, MessageKey.class);
-            TableUtils.createTable(connectionSource, RSAKey.class);
+            TableUtils.createTable(connectionSource, Device.class);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), "Can't create database");
             Log.e(this.getClass().getSimpleName(), e.getMessage());
@@ -71,7 +72,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, User.class, true);
             TableUtils.dropTable(connectionSource, ChatUser.class, true);
             TableUtils.dropTable(connectionSource, MessageKey.class, true);
-            TableUtils.dropTable(connectionSource, RSAKey.class, true);
+            TableUtils.dropTable(connectionSource, Device.class, true);
             onCreate(db, connectionSource);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), "Can't drop databases");
@@ -141,15 +142,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return messageKeyDao;
     }
 
-    public Dao<RSAKey, Long> getRSAKeyDao() {
-        if(null == rsaKeyDAO) {
+    public Dao<Device, Long> getDeviceDao() {
+        if(null == deviceDAO) {
             try {
-                rsaKeyDAO = DaoManager.createDao(connectionSource, RSAKey.class);
+                deviceDAO = DaoManager.createDao(connectionSource, Device.class);
             } catch (SQLException e) {
                 Log.e(this.getClass().getSimpleName(), e.getMessage());
             }
         }
-        return rsaKeyDAO;
+        return deviceDAO;
     }
 
     @Override
@@ -159,6 +160,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         messageKeyDao = null;
         chatUserDao = null;
         messageDao = null;
+        deviceDAO = null;
 
     }
 }

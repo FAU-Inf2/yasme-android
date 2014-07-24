@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by Stefan on 15.05.14.
  */
 
-public class Device {
+public class OwnDevice {
 
     public enum Platform {
         ANDROID,
@@ -27,7 +27,7 @@ public class Device {
 
     private Date lastModified;
 
-    public Device(User user, Platform platform, String publicKey, String type, String number, String product, String googleRegId) {
+    public OwnDevice(User user, Platform platform, String publicKey, String type, String number, String product, String googleRegId) {
         this.user = user;
         this.platform = platform;
         this.type = type;
@@ -37,10 +37,10 @@ public class Device {
         this.publicKey = publicKey;
     }
 
-    public Device() {
+    public OwnDevice() {
     }
 
-    public Device(long id) {
+    public OwnDevice(long id) {
         this.id = id;
     }
 

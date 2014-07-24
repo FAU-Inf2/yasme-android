@@ -10,6 +10,7 @@ import java.io.Serializable;
 
 /**
  * Created by robert on 23.06.14.
+ * Chat-User-Mapping
  */
 @DatabaseTable(tableName = DatabaseConstants.CHAT_USER_TABLE)
 public class ChatUser implements Serializable{

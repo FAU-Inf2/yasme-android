@@ -18,7 +18,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -71,7 +70,7 @@ public class MessageKeyTask extends ConnectionTask {
                 Log.d(this.getClass().getSimpleName(),"[????] Send Key for Device" + recipientDevice.getId());
 
                 MessageKey messageKey = new MessageKey(0, new Device(Long.parseLong(deviceId)),
-                        new Device(recipientDevice.getId()), chat, key, iv, encType, sign);
+                        recipientDevice, chat, key, iv, encType, sign);
                 KeyEncryption keyEncryption = new KeyEncryption();
                 MessageKey messageKeyEncrypted = keyEncryption.encrypt(messageKey);
                 MessageKey messageKeySigned = keyEncryption.sign(messageKeyEncrypted);

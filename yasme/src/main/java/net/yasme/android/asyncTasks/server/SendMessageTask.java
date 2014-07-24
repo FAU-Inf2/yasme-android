@@ -7,7 +7,6 @@ import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.Device;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
