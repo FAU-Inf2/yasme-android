@@ -73,10 +73,17 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             name = "anonym";
         }
 
-        if (self) {
-            textView.setText( msg.getMessage());
+        String text;
+        if (msg.getErrorId() != 0) {
+            text = context.getResources().getString(msg.getErrorId()) + msg.getMessage();
         } else {
-            textView.setText(name + ": " + msg.getMessage());
+            text = msg.getMessage();
+        }
+
+        if (self) {
+            textView.setText(text);
+        } else {
+            textView.setText(name + ": " + text);
         }
 
         dateView.setText(time);

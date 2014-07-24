@@ -100,7 +100,8 @@ public class MessageEncryption {
     public Message decrypt(Message message) {
         MessageKey messageKey = getKey(message.getMessageKeyId());
         if (messageKey == null) {
-            message.setMessage("Key " + message.getMessageKeyId() + " not found");
+            message.setMessage("");
+            message.setErrorId(R.string.decryption_failed);
             return message;
         }
         AESEncryption aes = new AESEncryption(messageKey);
@@ -108,6 +109,9 @@ public class MessageEncryption {
 
         //is the message successfully authenticated?
         message.setAuthenticity(messageKey.getAuthenticity());
+        if (message.getErrorId() == 0 && !messageKey.getAuthenticity()) {
+            message.setErrorId(R.string.authentication_failed);
+        }
 
         return message;
     }

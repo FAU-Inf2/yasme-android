@@ -24,6 +24,7 @@ public class DatabaseConstants {
     public static final String MESSAGE = "message";
     public static final String MESSAGE_MESSAGEKEY_ID = "messageKeyId";
     public static final String AUTHENTICATED= "authenticated";
+    public static final String ERROR_ID = "errorId";
 
     //User
     public static final String USER_TABLE = "users";

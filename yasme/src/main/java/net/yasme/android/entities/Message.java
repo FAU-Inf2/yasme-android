@@ -41,6 +41,9 @@ public class Message implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.AUTHENTICATED)
     private byte authenticated = 0;
 
+    @DatabaseField(columnName = DatabaseConstants.ERROR_ID)
+    private int errorId = 0;
+
     private MessageKey messageKey;
 
     /**
@@ -128,6 +131,11 @@ public class Message implements Serializable {
         else return false;
     }
 
+    @JsonIgnore
+    public int getErrorId() {
+        return errorId;
+    }
+
     /**
      * Setters
      */
@@ -176,6 +184,11 @@ public class Message implements Serializable {
             authenticated = 0;
             return false;
         }
+    }
+
+    @JsonIgnore
+    public void setErrorId(int id) {
+        this.errorId = id;
     }
 }
 

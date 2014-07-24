@@ -2,4 +2,7 @@
 <resources>
     <string name="connection_error">Connection failed.</string>
     <string name="generate_key">A new encryption key has to be generated. This could take a while.</string>
+    <string name="authentication_successful">Chat Partner authenticated successfully</string>
+    <string name="authentication_failed">Warning: Chat partner could not be authenticated! Content of message:</string>
+    <string name="decryption_failed">Message couldn\'t be decrypted. Key not found. If you have registered this device lately, you are not able to decrypt older messages.</string>
 </resources>
