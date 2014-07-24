@@ -212,4 +212,5 @@ public class MessageTask extends ConnectionTask {
 		Log.d(this.getClass().getSimpleName(), "Number new Messages: " + messages.size());
 		return messages;
 	} // end of getMessage
+
 }

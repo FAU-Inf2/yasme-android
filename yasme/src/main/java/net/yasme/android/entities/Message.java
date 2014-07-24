@@ -122,6 +122,7 @@ public class Message implements Serializable {
         return messageKeyId;
     }
 
+    @JsonIgnore
     public boolean getAuthenticity(){
         if (authenticated == 1) return true;
         else return false;
@@ -165,6 +166,7 @@ public class Message implements Serializable {
         this.messageKeyId = messageKeyId;
     }
 
+    @JsonIgnore
     public boolean setAuthenticity(boolean bool){
         if (bool){
             authenticated = 1;

@@ -7,6 +7,8 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import net.yasme.android.storage.DatabaseConstants;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -122,6 +124,7 @@ public class MessageKey implements Serializable {
 
     public Date getCreated() { return created; }
 
+    @JsonIgnore
     public boolean getAuthenticity(){
         if (authenticated == 1) return true;
         else return false;
@@ -168,6 +171,7 @@ public class MessageKey implements Serializable {
 
     public void setCreated(Date created) { this.created = created; }
 
+    @JsonIgnore
     public boolean setAuthenticity(boolean bool){
         if (bool){
             authenticated = 1;

@@ -70,6 +70,9 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             }
             lastMessageId = Math.max(lastMessageId, msg.getId());
 
+            //TODO: Ergänzung von Marco:
+            //TODO: Key wird bereits abgespeichert, wenn Key von der Message extrahiert wird
+            //TODO: wird er hier nicht doppelt abgespeichert?
             if (null != msg.getMessageKey()) {
                 if (null == DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(msg.getMessageKey())) {
                     Log.e(this.getClass().getSimpleName(), "Storing a message key in database failed");
