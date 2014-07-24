@@ -105,6 +105,10 @@ public class MessageEncryption {
         }
         AESEncryption aes = new AESEncryption(messageKey);
         message.setMessage(aes.decrypt(message.getMessage()));
+
+        //is the message successfully authenticated?
+        message.setAuthenticity(messageKey.getAuthenticity());
+
         return message;
     }
 
