@@ -89,8 +89,10 @@ public class MessageTask extends ConnectionTask {
 
         try {
             HttpResponse httpResponse = executeRequest(Request.GET, Long.toString(lastMessageId));
-            JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
-                    httpResponse.getEntity().getContent())).readLine());
+            String json = new BufferedReader(new InputStreamReader(
+                    httpResponse.getEntity().getContent())).readLine();
+            Log.d(getClass().getSimpleName(), "JSON: " + json);
+            JSONArray jsonArray = new JSONArray(json);
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 Message message = new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
