@@ -119,14 +119,13 @@ public class MessageEncryption {
     }
 
     public MessageKey sendKey(String key, String iv) {
-        ArrayList<User> recipients = chat.getParticipants();
-
         //TODO: If sendkey nicht erfolgreich, dann Devices pro User updaten und nochmal versuchen!!!
         try {
             long deviceId = DatabaseManager.INSTANCE.getDeviceId();
             Device sender = new Device(deviceId);
             ArrayList<MessageKey> messageKeys = new ArrayList<MessageKey>();
 
+            //TODO: Try with local data first
             for (Device recipientDevice : ChatTask.getInstance().getAllDevicesForChat(chat.getId())) {
                 Log.d(this.getClass().getSimpleName(),"[???] Send Key for Device" + recipientDevice.getId());
 
@@ -135,13 +134,14 @@ public class MessageEncryption {
                     continue;
                 }
 
-                Log.d(this.getClass().getSimpleName(),"[????] Send Key for Device" + recipientDevice.getId());
+                Log.d(this.getClass().getSimpleName(),"[????] Generate Key for Device" + recipientDevice.getId());
 
-                   Byte encType = 0;
                 MessageKey messageKey = new MessageKey(0, sender, recipientDevice, chat, key, iv);
                 KeyEncryption keyEncryption = new KeyEncryption();
                 MessageKey messageKeyEncrypted = keyEncryption.encrypt(messageKey);
+                Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been encrypted.");
                 MessageKey messageKeySigned = keyEncryption.sign(messageKeyEncrypted);
+                Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been signed.");
 
                 /* TEST */
                 if (keyEncryption.verify(messageKeySigned)){
@@ -151,11 +151,7 @@ public class MessageEncryption {
                 }
                 /* TEST */
 
-                Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been encrypted.");
-                Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been signed.");
-
                 messageKeys.add(messageKeySigned);
-
                 Log.d(this.getClass().getSimpleName(),"[???] Key von " + deviceId + " für Device " + recipientDevice.getId() + " generiert");
             }
 
