@@ -25,6 +25,8 @@ public class KeyEncryption {
     private String RSAKEY_STORAGE = "rsaKeyStorage"; //Storage for Private and Public Keys from user
     private final String PRIVATEKEY = "privateKey";
     private final String PUBLICKEY = "publicKey";
+    private final byte CREATOR = 0;
+    private final byte RECIPIENT = 1;
     private RSAEncryption rsa;
     private DatabaseManager db = DatabaseManager.INSTANCE;
 
@@ -95,8 +97,7 @@ public class KeyEncryption {
 
         /*END*/
 
-        //long recipientDevice = messageKey.getRecipientDevice().getId();
-        //PublicKey pubKey = getPubKeyFromUser(recipientDevice, messageKey);
+        //PublicKey pubKey = getPubKeyFromUser(messageKey, RECIPIENT);
 
         if (pubKey != null){
             String keyEncrypted = rsa.encrypt(messageKey.getMessageKey(), pubKey);
@@ -189,8 +190,7 @@ public class KeyEncryption {
 
         /*END*/
 
-        //long creatorId = messageKey.getCreatorDevice().getId();
-        //PublicKey pubKey = getPubKeyFromUser(creatorId, messageKey);
+        //PublicKey pubKey = getPubKeyFromUser(messageKey, CREATOR);
 
 
         if (pubKey != null) {
@@ -230,20 +230,29 @@ public class KeyEncryption {
     }
 
     //get a Public Key for specific user from LocalStorage
-    public PublicKey getPubKeyFromUser(long deviceId, MessageKey messageKey) {
+    public PublicKey getPubKeyFromUser(MessageKey messageKey, byte type) {
 
+        long deviceId = 0;
         String pubKeyInBase64 = null;
 
         //try to extract Public Key from MessageKey
-        if (deviceId == messageKey.getRecipientDevice().getId()) {
-            if (messageKey.getRecipientDevice().getPublicKey() != null) {
-                pubKeyInBase64 = messageKey.getRecipientDevice().getPublicKey();
-            }
-        } else if (deviceId == messageKey.getCreatorDevice().getId()) {
+        if (type == CREATOR){
             if (messageKey.getCreatorDevice().getPublicKey() != null) {
                 pubKeyInBase64 = messageKey.getCreatorDevice().getPublicKey();
+                deviceId = messageKey.getCreatorDevice().getId();
             }
         }
+        else if (type == RECIPIENT){
+            if (messageKey.getRecipientDevice().getPublicKey() != null) {
+                pubKeyInBase64 = messageKey.getRecipientDevice().getPublicKey();
+                deviceId = messageKey.getRecipientDevice().getId();
+            }
+        }
+        else{
+            Log.d(this.getClass().getSimpleName(), "[???] Wrong use of function: getPubKeyFromUser()");
+            return null;
+        }
+
 
         //extract Public Key from Database
         if (pubKeyInBase64 == null) {
