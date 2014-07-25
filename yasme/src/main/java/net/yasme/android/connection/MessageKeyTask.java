@@ -5,6 +5,7 @@ import android.util.Log;
 import net.yasme.android.encryption.KeyEncryption;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Device;
+import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
@@ -12,6 +13,7 @@ import net.yasme.android.exception.Error;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -42,6 +44,23 @@ public class MessageKeyTask extends ConnectionTask {
         }
     }
 
+    public MessageKey saveKeys(ArrayList<MessageKey> messageKeys) throws RestServiceException {
+        try {
+            Log.d(this.getClass().getSimpleName(),"[???] Keys werden gesendet");
+            HttpResponse httpResponse = executeRequest(Request.POST, "", messageKeys);
+
+            Log.d(this.getClass().getSimpleName(),"[???] Antwort auswerten");
+            MessageKey messageKey = new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
+                    httpResponse.getEntity().getContent())).readLine(), MessageKey.class);
+
+            return messageKey;
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        } catch (RestServiceException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public MessageKey saveKey(ArrayList<User> recipients, Chat chat,
                               String key, String iv, byte encType, String sign) throws RestServiceException {

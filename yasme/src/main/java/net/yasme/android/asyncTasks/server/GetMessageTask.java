@@ -10,11 +10,18 @@ import android.os.AsyncTask;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.Toaster;
+import net.yasme.android.encryption.KeyEncryption;
+import net.yasme.android.encryption.MessageEncryption;
+import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.MessageKey;
+import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
@@ -45,7 +52,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
         try {
-            messages = MessageTask.getInstance().getMessage(lastMessageId);
+            messages = MessageTask.getInstance().getMessages(lastMessageId);
         } catch (RestServiceException e) {
             Log.w(this.getClass().getSimpleName(), e.getMessage());
         }
@@ -61,26 +68,19 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
         //add new messages to DB
         Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
-        for(Message msg : messages) {
-            Log.d(this.getClass().getSimpleName(), msg.getMessage() + " " + msg.getId());
+        for(Message message : messages) {
+            Log.d(this.getClass().getSimpleName(), message.getMessage() + " " + message.getId());
 
-            if (null == DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(msg)) {//changed from addOrUpdate
+            // Store MessageKey if message cotains one
+            storeMessageKey(message);
+            // Decrypt message
+            message = decrypt(message);
+
+            if (null == DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(message)) {//changed from addOrUpdate
                 Log.e(this.getClass().getSimpleName(), "Storing a message in database failed");
                 return false;
             }
-            lastMessageId = Math.max(lastMessageId, msg.getId());
-
-            //TODO: Ergänzung von Marco:
-            //TODO: Key wird bereits abgespeichert, wenn Key von der Message extrahiert wird
-            //TODO: wird er hier nicht doppelt abgespeichert?
-            if (null != msg.getMessageKey()) {
-                if (null == DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(msg.getMessageKey())) {
-                    Log.e(this.getClass().getSimpleName(), "Storing a message key in database failed");
-                    return false;
-                }
-            }
-
-
+            lastMessageId = Math.max(lastMessageId, message.getId());
         }
         return true;
     }
@@ -131,4 +131,44 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
         //Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
+
+    private Message decrypt(Message message) {
+        Chat chat = DatabaseManager.INSTANCE.getChatDAO().get(message.getChat().getId());
+        User sender = DatabaseManager.INSTANCE.getUserDAO().get(message.getSender().getId());
+        message.setChat(chat);
+        message.setSender(sender);
+
+        // Store MessageKey if exists
+        storeMessageKey(message);
+
+        // Decrypt
+        MessageEncryption messageEncryption = new MessageEncryption(chat,sender);
+        message = messageEncryption.decrypt(message);
+        return message;
+
+    }
+
+    private void storeMessageKey(Message message) {
+        MessageKey messageKeyEncrypted = message.getMessageKey();
+        if (messageKeyEncrypted == null) {
+            return;
+        }
+        KeyEncryption keyEncryption = new KeyEncryption();
+
+        //verify the signature of the key and save authenticity-status in messageKeyEncrypted
+        if(messageKeyEncrypted.setAuthenticity(keyEncryption.verify(messageKeyEncrypted))){
+            Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been verified");
+            Toaster.getInstance().toast(R.string.authentication_successful, Toast.LENGTH_LONG);
+        }else{
+            Log.d(this.getClass().getSimpleName(), "[???] MessageKey could not be verified");
+            Toaster.getInstance().toast(R.string.authentication_failed, Toast.LENGTH_LONG);
+        }
+
+        //decrypt the key with RSA
+        MessageKey messageKey = keyEncryption.decrypt(messageKeyEncrypted);
+        // TODO: storeKeyToDatabase
+        DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(messageKey);
+        Log.d(this.getClass().getSimpleName(), "[???] Key " + messageKey.getId() + " aus den Nachrichten extrahiert und gespeichert");
+    }
+
 }
