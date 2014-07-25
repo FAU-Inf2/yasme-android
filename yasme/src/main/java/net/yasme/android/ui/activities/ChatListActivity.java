@@ -1,6 +1,7 @@
 package net.yasme.android.ui.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import net.yasme.android.connection.AuthorizationTask;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.ChatListFragment;
 
@@ -32,20 +34,25 @@ public class ChatListActivity extends AbstractYasmeActivity {
             HttpClient.context = this.getApplicationContext();
         }
 
+        SharedPreferences devicePrefs = getSharedPreferences(DEVICE_PREFS,MODE_PRIVATE);
+        long deviceId = devicePrefs.getLong(AbstractYasmeActivity.DEVICE_ID, -1);
+
         if(!getSignedInFlag()) {
             Log.i(this.getClass().getSimpleName(), "Not logged in, starting login activity");
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             return;
         }
-        Log.i(this.getClass().getSimpleName(), "User is authorized");
+
+
+        DatabaseManager.INSTANCE.setDeviceId(deviceId);
 
         if(!ConnectionTask.isInitializedSession()) {
             long userId = storage.getLong(AbstractYasmeActivity.USER_ID, 0);
             String accessToken = storage.getString(AbstractYasmeActivity.ACCESSTOKEN, "");
             //initConnection Session
             //TODO: second Param should be deviceId
-            ConnectionTask.initSession(userId, userId, accessToken);
+            ConnectionTask.initSession(userId, deviceId, accessToken);
         }
 
         if (savedInstanceState == null) {

@@ -287,7 +287,7 @@ public class ConnectionTask {
     }
 
     private HttpResponse executeRequest(HttpRequestBase requestBase) throws RestServiceException {
-
+        Log.d(getClass().getSimpleName(), "DeviceId is: " + deviceId);
         try {
             HttpResponse httpResponse = HttpClient.createSSLClient().execute(requestBase);
             int statusCode = httpResponse.getStatusLine().getStatusCode();
