@@ -136,6 +136,28 @@ public class MessageTask extends ConnectionTask {
         }
     }
 
+    public List<Message> getMessages(long lastMessageId) throws RestServiceException {
+        List<Message> messages = new ArrayList<Message>();
+
+        try {
+            HttpResponse httpResponse = executeRequest(Request.GET, Long.toString(lastMessageId));
+            JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
+                    httpResponse.getEntity().getContent())).readLine());
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                Message message = new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
+                        toString(), Message.class);
+                messages.add(message);
+            }
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        } catch (JSONException e) { e.printStackTrace(); }
+
+        Log.d(this.getClass().getSimpleName(), "Number new Messages: " + messages.size());
+        return messages;
+    } 
+
+    /*
 	public List<Message> getUnencryptedMessages(long lastMessageId) throws RestServiceException {
 		List<Message> messages = new ArrayList<Message>();
 
@@ -164,7 +186,7 @@ public class MessageTask extends ConnectionTask {
                 Chat chat = chatDAO.get(chatId);
                 User sender = userDAO.get(senderId);
 
-				/* extracting Keys and save it */
+				//
 				JSONObject key;
 				try {
 					key = messageObj.getJSONObject("messageKey");
@@ -237,26 +259,5 @@ public class MessageTask extends ConnectionTask {
 		Log.d(this.getClass().getSimpleName(), "Number new Messages: " + messages.size());
 		return messages;
 	} // end of getMessage
-
-    public List<Message> getMessages(long lastMessageId) throws RestServiceException {
-        List<Message> messages = new ArrayList<Message>();
-
-        try {
-            HttpResponse httpResponse = executeRequest(Request.GET, Long.toString(lastMessageId));
-            JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
-                    httpResponse.getEntity().getContent())).readLine());
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                Message message = new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
-                        toString(), Message.class);
-                messages.add(message);
-            }
-        } catch (IOException e) {
-            throw new RestServiceException(Error.CONNECTION_ERROR);
-        } catch (JSONException e) { e.printStackTrace(); }
-
-        Log.d(this.getClass().getSimpleName(), "Number new Messages: " + messages.size());
-        return messages;
-    } // end of getMessage
-
+*/
 }
