@@ -84,57 +84,6 @@ public class MessageTask extends ConnectionTask {
      * @return given message with generated id
      * @throws RestServiceException
      */
-	public Message sendMessage(Message message, Chat chat, User user) throws RestServiceException {
-		return sendMessage(message,chat,user,false);
-	}
-
-    public Message sendMessage(Message message, Chat chat, User user, boolean forceKeyGeneration) throws RestServiceException {
-        Message unencrypted = null;
-        try {
-            if (message == null) {
-                return null;
-            }
-            unencrypted = new Message(message.getSender(),message.getMessage(),message.getChat(),message.getMessageKeyId());
-
-            // Encrypt
-            MessageEncryption messageEncryption = new MessageEncryption(chat,user);
-            if (forceKeyGeneration) {
-                message = messageEncryption.encryptGenerated(message);
-            } else {
-                message = messageEncryption.encrypt(message);
-            }
-
-            // Send
-            HttpResponse response = executeRequest(Request.POST, "", message);
-            String json = (new BufferedReader(
-                    new InputStreamReader(response.getEntity().getContent(), "UTF-8")
-            )).readLine();
-
-            Log.e(this.getClass().getSimpleName(), "JsonOut: " + json);
-
-            JSONObject messageObj = new JSONObject(json);
-            JSONObject senderObj = messageObj.getJSONObject("sender");
-            message.setId(messageObj.getLong("id"));
-
-            User sender = new User();
-            sender.setId(senderObj.getLong("id"));
-            message.setSender(sender);
-            return message;
-
-        } catch (RestServiceException e) {
-            Log.e(this.getClass().getSimpleName(), e.getMessage());
-            if (e.getStatusCode() == Error.OUTDATED.getNumber() && !forceKeyGeneration) {
-                Log.e(this.getClass().getSimpleName(), "Try again with generated key.");
-                return sendMessage(unencrypted,chat,user,true);
-            } else {
-                Log.e(this.getClass().getSimpleName(), "No more ideas");
-                return null;
-            }
-        } catch (IOException | JSONException e) {
-            Log.e(this.getClass().getSimpleName(), e.getMessage());
-            return null;
-        }
-    }
 
     public List<Message> getMessages(long lastMessageId) throws RestServiceException {
         List<Message> messages = new ArrayList<Message>();
@@ -259,5 +208,58 @@ public class MessageTask extends ConnectionTask {
 		Log.d(this.getClass().getSimpleName(), "Number new Messages: " + messages.size());
 		return messages;
 	} // end of getMessage
+
+	public Message sendMessage(Message message, Chat chat, User user) throws RestServiceException {
+		return sendMessage(message,chat,user,false);
+	}
+
+    public Message sendMessage(Message message, Chat chat, User user, boolean forceKeyGeneration) throws RestServiceException {
+        Message unencrypted = null;
+        try {
+            if (message == null) {
+                return null;
+            }
+            unencrypted = new Message(message.getSender(),message.getMessage(),message.getChat(),message.getMessageKeyId());
+
+            // Encrypt
+            MessageEncryption messageEncryption = new MessageEncryption(chat,user);
+            if (forceKeyGeneration) {
+                message = messageEncryption.encryptGenerated(message);
+            } else {
+                message = messageEncryption.encrypt(message);
+            }
+
+            // Send
+            HttpResponse response = executeRequest(Request.POST, "", message);
+            String json = (new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent(), "UTF-8")
+            )).readLine();
+
+            Log.e(this.getClass().getSimpleName(), "JsonOut: " + json);
+
+            JSONObject messageObj = new JSONObject(json);
+            JSONObject senderObj = messageObj.getJSONObject("sender");
+            message.setId(messageObj.getLong("id"));
+
+            User sender = new User();
+            sender.setId(senderObj.getLong("id"));
+            message.setSender(sender);
+            return message;
+
+        } catch (RestServiceException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            if (e.getStatusCode() == Error.OUTDATED.getNumber() && !forceKeyGeneration) {
+                Log.e(this.getClass().getSimpleName(), "Try again with generated key.");
+                return sendMessage(unencrypted,chat,user,true);
+            } else {
+                Log.e(this.getClass().getSimpleName(), "No more ideas");
+                return null;
+            }
+        } catch (IOException | JSONException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return null;
+        }
+    }
+
 */
 }
