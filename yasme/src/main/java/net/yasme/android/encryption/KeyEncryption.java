@@ -136,7 +136,7 @@ public class KeyEncryption {
             return messageKey;
         }
 
-        return null
+        return null;
     }
 
     //sign
