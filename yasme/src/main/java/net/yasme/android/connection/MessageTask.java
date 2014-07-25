@@ -156,7 +156,7 @@ public class MessageTask extends ConnectionTask {
                             key.getString("messageKey"),
                             key.getString("initVector"),
                             (byte)key.getInt("encType"),
-                            key.getString("Sign"));
+                            key.getString("sign"));
 
                     KeyEncryption keyEncryption = new KeyEncryption();
 

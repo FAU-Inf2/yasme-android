@@ -194,9 +194,10 @@ public class KeyEncryption {
 
 
         if (pubKey != null) {
+            Log.d(getClass().getSimpleName(), "Verify key");
             return rsa.verify(messageKey.getSign(), messageKey.getMessageKey(), pubKey);
         }
-
+        Log.d(getClass().getSimpleName(), "PubKey is null");
         return false;
     }
 

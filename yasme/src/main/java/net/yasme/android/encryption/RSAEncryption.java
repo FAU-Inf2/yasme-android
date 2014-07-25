@@ -128,8 +128,9 @@ public class RSAEncryption {
             sig.initVerify(pubKey);
             //TODO: Laut Tutorial muss hier das Ergebnis nach der Entschluesselung stehen
             sig.update(encrypted);
-
-            return sig.verify(signature);
+            Boolean res = sig.verify(signature);
+            Log.d(getClass().getSimpleName(), "Verification result: " + res);
+            return res;
 
         } catch (Exception e){
             Log.d(this.getClass().getSimpleName(),"[???] verify failed");

@@ -135,6 +135,8 @@ public class MessageEncryption {
 
             if (messageKey != null) {
                 Log.d(this.getClass().getSimpleName(),"[???] Key wurde an Server gesendet, ID: "+ messageKey.getId());
+                // If you can trust yourself
+                messageKey.setAuthenticity(true);
                 db.getMessageKeyDAO().addIfNotExists(messageKey);
                 Log.d(this.getClass().getSimpleName(),"[???] Key wurde lokal gespeichert, ID: "+ messageKey.getId());
                 currentKeys.put(messageKey.getId(),messageKey);
