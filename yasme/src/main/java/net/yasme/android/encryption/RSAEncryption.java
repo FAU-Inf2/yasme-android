@@ -122,14 +122,14 @@ public class RSAEncryption {
 
         try {
             byte[] signature = Base64.decode(signature_base64.getBytes(), Base64.DEFAULT);
-            byte[] encrypted = Base64.decode(text_base64.getBytes(), Base64.DEFAULT);
+            //byte[] encrypted = Base64.decode(text_base64.getBytes(), Base64.DEFAULT);
 
             Signature sig = Signature.getInstance(SIGNATURE_MODE);
             sig.initVerify(pubKey);
             //TODO: Laut Tutorial muss hier das Ergebnis nach der Entschluesselung stehen
-            sig.update(encrypted);
+            sig.update(text_base64.getBytes());
             Boolean res = sig.verify(signature);
-            Log.d(getClass().getSimpleName(), "Verification result: " + res);
+            Log.d(getClass().getSimpleName(), "[????] Verification result: " + res);
             return res;
 
         } catch (Exception e){

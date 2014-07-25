@@ -36,7 +36,7 @@ public class SendMessageKeyTask extends AsyncTask<String, Void, MessageKey> {
             Log.d(this.getClass().getSimpleName(),"Try to send MessageKey");
             String keyBase64 = aes.getKeyinBase64();
             String iv = aes.getIVinBase64();
-            String sign = "test";
+            String sign = "";
             //TODO: encType je nach Verschluesselung anpassen
             byte encType = 0;
 
