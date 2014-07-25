@@ -3,15 +3,23 @@ package net.yasme.android.asyncTasks.server;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
-import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.exception.*;
 import net.yasme.android.ui.fragments.ChatFragment;
 
+import org.apache.http.HttpResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +31,8 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
     private MessageEncryption messageEncryption;
     private MessageTask messageTask = MessageTask.getInstance();
     private AsyncTask onPostExecute;
-    private List<Message> messages = new ArrayList<>();
     private Chat chat;
     private User sender;
-
 
 
     //public SendMessageTask(MessageEncryption aes) {
@@ -48,17 +54,10 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         for (String msgText : msgs) {
             if (null == msgText) {
                 Log.e(this.getClass().getSimpleName(), "Received message is null!");
+                continue;
             }
-            Message msg = new Message(sender, msgText, chat, 0);
-            this.messages.add(msg);
-            try {
-                Message ret = messageTask.sendMessage(msg, chat, sender);
-                //if (null == DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(ret)) {
-                //    return false;
-                //} //Nachricht wird hier ohne Datum abgespeichert -> NullPointerException
-            } catch (RestServiceException rse) {
-                rse.printStackTrace();
-                Log.w(this.getClass().getSimpleName(), rse.getMessage());
+
+            if (sendMessage(msgText) == null) {
                 return false;
             }
         }
@@ -67,15 +66,42 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            Log.i(this.getClass().getSimpleName(), "Sent " + messages.size() + " messages");
             if (null != this.onPostExecute) {
                 onPostExecute.execute(); // onPostExecute is a GetMessageTask
                 // onPostExecute async task will call notify the registered fragments
-            } else {
-                ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
             }
         } else {
             Log.w(this.getClass().getSimpleName(), "Senden fehlgeschlagen");
         }
+    }
+
+    private Message sendMessage(String text) {
+        try {
+            // At first, try with an old key
+            return sendMessage(text, false);
+        } catch (KeyOutdatedException koe) {
+            try {
+                // If key is outdated, retry with a generated key
+                return sendMessage(text, true);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+    }
+
+    private Message sendMessage(String text, Boolean forceKeyGeneration) throws KeyOutdatedException {
+        // Create message
+        Message message = new Message(sender, text, chat, 0);
+
+        // Encrypt
+        MessageEncryption messageEncryption = new MessageEncryption(chat, sender);
+        if (forceKeyGeneration) {
+            message = messageEncryption.encryptGenerated(message);
+        } else {
+            message = messageEncryption.encrypt(message);
+        }
+
+        // Send
+        return  MessageTask.getInstance().sendMessage(message);
     }
 }

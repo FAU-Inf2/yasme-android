@@ -155,7 +155,7 @@ public class MessageTask extends ConnectionTask {
 
         Log.d(this.getClass().getSimpleName(), "Number new Messages: " + messages.size());
         return messages;
-    } 
+    }
 
     /*
 	public List<Message> getUnencryptedMessages(long lastMessageId) throws RestServiceException {
