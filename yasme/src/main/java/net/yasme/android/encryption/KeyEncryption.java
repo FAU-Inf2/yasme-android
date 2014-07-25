@@ -28,7 +28,6 @@ public class KeyEncryption {
     private RSAEncryption rsa;
     private DatabaseManager db = DatabaseManager.INSTANCE;
 
-    //Constructor
     public KeyEncryption() {
         this.rsa = new RSAEncryption();
     }
@@ -97,7 +96,7 @@ public class KeyEncryption {
         /*END*/
 
         //long recipientDevice = messageKey.getRecipientDevice().getId();
-        //PublicKey pubKey = getPubKeyFromUser(recipientDevice);
+        //PublicKey pubKey = getPubKeyFromUser(recipientDevice, messageKey);
 
         if (pubKey != null){
             String keyEncrypted = rsa.encrypt(messageKey.getMessageKey(), pubKey);
@@ -176,9 +175,6 @@ public class KeyEncryption {
 
         //TODO: static Public Key entfernen
         /*START*/
-        //pubKey_base64 = messageKey.getCreatorDevice().getPublicKey();
-
-
 
         String pubKey_base64 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTTd8U4paCBAd640OxNQ9Drj78UlUyKQnz57EZuiLLXD5OeqGkfJoe62jxMh84z30JLdQF9m8J4NavXaCh0wVjL91NqzRPy1/SeOkcuIehJyUluP05LM+mKU+nUyFWGvelyR1Zu6YS4EaD3Kk6bLy+IPrtbwCbZM/GRQ6sOmlR3TOhk3bp4NXfgZwje8sCJdmNyBh93kO4hG9P1YPjrtq78q476cNDt8nOWz9gUPYkrUlN0+VGWKG/5nQV875sIrek8CenCk30chFmoLB40gIXlmNAx6G3LHzNjrWX6UrswFtJJ+u9cAToG9MLngCvJVkBcxWbIi0KZ+XC7fqkYUFQIDAQAB";
         KeyFactory kf = null;
@@ -194,7 +190,8 @@ public class KeyEncryption {
         /*END*/
 
         //long creatorId = messageKey.getCreatorDevice().getId();
-        //PublicKey pubKey = getPubKeyFromUser(creatorId);
+        //PublicKey pubKey = getPubKeyFromUser(creatorId, messageKey);
+
 
         if (pubKey != null) {
             return rsa.verify(messageKey.getSign(), messageKey.getMessageKey(), pubKey);
@@ -202,16 +199,6 @@ public class KeyEncryption {
 
         return false;
     }
-
-/*
-    //save public key from a user
-    public boolean savePublicKeyFromUser(long deviceId, String publicKeyinBase64){
-        // TODO: save to DeviceDB
-        //RSAKey pubKey = new RSAKey(deviceId, publicKeyinBase64, selfUser);
-        //db.getRsaKeyDAO().addOrUpdate(pubKey);
-        return true;
-    }
-    */
 
     //get own PrivateKey from LocalStorage
     public PrivateKey getPrivateRSAKeyFromStorage(long selfDeviceId){
@@ -222,29 +209,65 @@ public class KeyEncryption {
         SharedPreferences privKeyStorage = context.getSharedPreferences(RSAKEY_STORAGE, Context.MODE_PRIVATE);
         String privKeyInBase64 = privKeyStorage.getString(PRIVATEKEY, "");
 
-        Log.d(this.getClass().getSimpleName(),"[???] Private Key for Device "+selfDeviceId+"was successfully loaded from storage");
 
         //if Key is available
         if (privKeyInBase64 != "") {
 
-            try{
-                //convert to byte
-                byte[] privKeyBytes = Base64.decode(privKeyInBase64, Base64.DEFAULT);
-                //convert to PrivateKey
-                KeyFactory kf = KeyFactory.getInstance("RSA");
-                PrivateKey privKey = kf.generatePrivate(new PKCS8EncodedKeySpec(privKeyBytes));
+            PrivateKey privKey = rsa.convertBase64toPrivKey(privKeyInBase64);
 
+            if (privKey != null){
+                Log.d(this.getClass().getSimpleName(),"[???] Private Key was successfully loaded from storage");
                 return privKey;
+            }
 
-            } catch (Exception e){
-                Log.d(this.getClass().getSimpleName(),"[???] getting private key from storage failed");
-                Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(), "[???] getting public key from storage failed");
+            return null;
+        }
+
+            Log.d(this.getClass().getSimpleName(), "[???] Private Key could not be found.");
+            return null;
+
+    }
+
+    //get a Public Key for specific user from LocalStorage
+    public PublicKey getPubKeyFromUser(long deviceId, MessageKey messageKey) {
+
+        String pubKeyInBase64 = null;
+
+        //try to extract Public Key from MessageKey
+        if (deviceId == messageKey.getRecipientDevice().getId()) {
+            if (messageKey.getRecipientDevice().getPublicKey() != null) {
+                pubKeyInBase64 = messageKey.getRecipientDevice().getPublicKey();
+            }
+        } else if (deviceId == messageKey.getCreatorDevice().getId()) {
+            if (messageKey.getCreatorDevice().getPublicKey() != null) {
+                pubKeyInBase64 = messageKey.getCreatorDevice().getPublicKey();
+            }
+        }
+
+        //extract Public Key from Database
+        if (pubKeyInBase64 == null) {
+            Device device = db.getRsaKeyDAO().get(deviceId);
+
+            if (device != null) {
+                pubKeyInBase64 = device.getPublicKey();
+            } else {
+                Log.d(this.getClass().getSimpleName(), "[???] Public Key for Device " + deviceId + "could not be found.");
                 return null;
             }
         }
 
-        return null;
+        PublicKey pubKey = rsa.convertBase64toPubKey(pubKeyInBase64);
+
+        if (pubKey != null) {
+            return pubKey;
+        } else {
+            Log.d(this.getClass().getSimpleName(), "[???] getting public key from storage failed");
+            return null;
+        }
+
     }
+
 
     //get own PublicKey in Base64
     public String getPublicRSAKeyInBase64FromStorage(long selfDeviceId){
@@ -258,54 +281,15 @@ public class KeyEncryption {
         return pubKeyInBase64;
     }
 
-
-    //get a Public Key for specific user from LocalStorage
-    public PublicKey getPubKeyFromUser(long deviceId, MessageKey messageKey){
-
-        String pubKeyInBase64;
-
-        if (messageKey.getCreatorDevice().getPublicKey() != null){
-            pubKeyInBase64 = messageKey.getCreatorDevice().getPublicKey();
-        } else {
-            //TODO: Key aus Device-DB axtrahieren
-            pubKeyInBase64 = "";
-
-        }
-        /*
-        RSAKey rsaKey = db.getRsaKeyDAO().get(deviceId);
-
-        //if Key is available
-        if (rsaKey != null) {
-                String pubKeyInBase64 = rsaKey.getPublicKey();
-            */
-            try{
-
-                //convert to byte
-                byte[] publicKeyBytes = Base64.decode(pubKeyInBase64, Base64.DEFAULT);
-
-                //convert to PublicKey
-                KeyFactory kf = KeyFactory.getInstance("RSA");
-                PublicKey pubKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
-
-                Log.d(this.getClass().getSimpleName(),"[???] Public Key for Device "+deviceId + "could be found.");
-
-
-                return pubKey;
-
-            } catch (Exception e){
-                Log.d(this.getClass().getSimpleName(),"[???] getting public key from storage failed");
-                Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
-                return null;
-            }
-        }
-/*
-        Log.d(this.getClass().getSimpleName(),"[???] Public Key for Device "+deviceId + "could not be found.");
-
-
-        return null;
-
+    //TODO: wird die Methode hier benoetigt?
+    /*
+    //save public key from a user
+    public boolean savePublicKeyFromUser(long deviceId, String publicKeyinBase64){
+        // TODO: save to DeviceDB
+        //RSAKey pubKey = new RSAKey(deviceId, publicKeyinBase64, selfUser);
+        //db.getRsaKeyDAO().addOrUpdate(pubKey);
+        return true;
     }
-*/
-
+    */
 
 }

@@ -182,5 +182,39 @@ public class RSAEncryption {
 
     }
 
+    public PublicKey convertBase64toPubKey(String base64){
+        try{
+            //convert to byte
+            byte[] publicKeyBytes = Base64.decode(base64, Base64.DEFAULT);
+            //convert to PublicKey
+            KeyFactory kf = KeyFactory.getInstance("RSA");
+            PublicKey pubKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
+            return pubKey;
+
+        } catch (Exception e){
+            Log.d(this.getClass().getSimpleName(),"[???] Converting Base64 to PublicKey failed");
+            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
+            return null;
+        }
+
+    }
+
+    public PrivateKey convertBase64toPrivKey(String base64){
+        try{
+            //convert to byte
+            byte[] privKeyBytes = Base64.decode(base64, Base64.DEFAULT);
+            //convert to PrivateKey
+            KeyFactory kf = KeyFactory.getInstance("RSA");
+            PrivateKey privKey = kf.generatePrivate(new PKCS8EncodedKeySpec(privKeyBytes));
+
+            return privKey;
+
+        } catch (Exception e){
+            Log.d(this.getClass().getSimpleName(),"[???] Converting Base64 to PrivateKey failed");
+            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
+            return null;
+        }
+    }
+
 }
 
