@@ -232,49 +232,28 @@ public class KeyEncryption {
     //get a Public Key for specific user from LocalStorage
     public PublicKey getPubKeyFromUser(MessageKey messageKey, byte type) {
 
-        long deviceId = 0;
         String pubKeyInBase64 = null;
 
         //try to extract Public Key from MessageKey
         if (type == CREATOR){
-            if (messageKey.getCreatorDevice().getPublicKey() != null) {
                 pubKeyInBase64 = messageKey.getCreatorDevice().getPublicKey();
-                deviceId = messageKey.getCreatorDevice().getId();
-            }
         }
         else if (type == RECIPIENT){
-            if (messageKey.getRecipientDevice().getPublicKey() != null) {
                 pubKeyInBase64 = messageKey.getRecipientDevice().getPublicKey();
-                deviceId = messageKey.getRecipientDevice().getId();
-            }
         }
         else{
             Log.d(this.getClass().getSimpleName(), "[???] Wrong use of function: getPubKeyFromUser()");
             return null;
         }
 
-
-        //extract Public Key from Database
-        if (pubKeyInBase64 == null) {
-            Device device = db.getRsaKeyDAO().get(deviceId);
-
-            if (device != null) {
-                pubKeyInBase64 = device.getPublicKey();
-            } else {
-                Log.d(this.getClass().getSimpleName(), "[???] Public Key for Device " + deviceId + "could not be found.");
-                return null;
-            }
+        //convert Base64toPublicKey
+        if (pubKeyInBase64 != null) {
+            PublicKey pubKey = rsa.convertBase64toPubKey(pubKeyInBase64);
+            if (pubKey != null) return pubKey;
         }
 
-        PublicKey pubKey = rsa.convertBase64toPubKey(pubKeyInBase64);
-
-        if (pubKey != null) {
-            return pubKey;
-        } else {
-            Log.d(this.getClass().getSimpleName(), "[???] getting public key from storage failed");
-            return null;
-        }
-
+        Log.d(this.getClass().getSimpleName(), "[???] getting public key from storage failed");
+        return null;
     }
 
 
