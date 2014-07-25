@@ -27,6 +27,7 @@ public enum DatabaseManager {
     private DatabaseHelper mHelper;
     private Context mContext;
     private long mUserId;
+    private long mDeviceId;
     private SharedPreferences mSharedPreferences;
 
     private UserDAO userDAO;
@@ -94,5 +95,21 @@ public enum DatabaseManager {
 
     public DeviceDAO getRsaKeyDAO() {
         return rsaKeyDAO;
+    }
+
+    public long getUserId() {
+        return mUserId;
+    }
+
+    public void setUserId(long mUserId) {
+        this.mUserId = mUserId;
+    }
+
+    public long getDeviceId() {
+        return mDeviceId;
+    }
+
+    public void setDeviceId(long mDeviceId) {
+        this.mDeviceId = mDeviceId;
     }
 }

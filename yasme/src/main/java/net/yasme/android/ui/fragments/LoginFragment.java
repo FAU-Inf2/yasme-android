@@ -22,6 +22,7 @@ import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.storage.DatabaseHelper;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.activities.ChatListActivity;
@@ -226,6 +227,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
                 // Initialize the session a second time because the deviceId was missing
                 ConnectionTask.initSession(userId, deviceId, accessToken);
+                DatabaseManager.INSTANCE.setDeviceId(deviceId);
 
                 Intent intent = new Intent(activity, ChatListActivity.class);
                 startActivity(intent);
@@ -260,6 +262,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 return;
             }
             ConnectionTask.initSession(userId, deviceId, accessToken);
+            DatabaseManager.INSTANCE.setDeviceId(deviceId);
 
             Log.d(this.getClass().getSimpleName(), "Login after device registration at yasme server");
             Intent intent = new Intent(activity, ChatListActivity.class);

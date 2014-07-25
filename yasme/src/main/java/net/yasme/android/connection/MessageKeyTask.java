@@ -62,6 +62,12 @@ public class MessageKeyTask extends ConnectionTask {
         return null;
     }
 
+    public boolean deleteKey(long keyId) throws RestServiceException {
+        executeRequest(Request.DELETE, String.valueOf(keyId));
+        return true;
+    }
+
+/*
     public MessageKey saveKey(ArrayList<User> recipients, Chat chat,
                               String key, String iv, byte encType, String sign) throws RestServiceException {
 
@@ -75,11 +81,11 @@ public class MessageKeyTask extends ConnectionTask {
             ArrayList<MessageKey> messageKeys = new ArrayList<MessageKey>();
 
             //for (User user : recipients) {
-                //TODO: Change
-                //Log.d(this.getClass().getSimpleName(),"[???] Get Devices for User " + user.getId());
-                //for (Device recipientDevice : DeviceTask.getInstance().getAllDevices(user.getId())) {
+            //TODO: Change
+            //Log.d(this.getClass().getSimpleName(),"[???] Get Devices for User " + user.getId());
+            //for (Device recipientDevice : DeviceTask.getInstance().getAllDevices(user.getId())) {
             for (Device recipientDevice : ChatTask.getInstance().getAllDevicesForChat(chat.getId())) {
-                    Log.d(this.getClass().getSimpleName(),"[???] Send Key for Device" + recipientDevice.getId());
+                Log.d(this.getClass().getSimpleName(),"[???] Send Key for Device" + recipientDevice.getId());
 
                 // Do not store the key on the server for the creating device
                 if (recipientDevice.getId() == Long.parseLong(deviceId)) {
@@ -94,13 +100,13 @@ public class MessageKeyTask extends ConnectionTask {
                 MessageKey messageKeyEncrypted = keyEncryption.encrypt(messageKey);
                 MessageKey messageKeySigned = keyEncryption.sign(messageKeyEncrypted);
 
-                /* TEST */
+               // TEST
                 if (keyEncryption.verify(messageKeySigned)){
                     Log.d(this.getClass().getSimpleName(), "[????] Verification successful.");
                 }else{
                     Log.d(this.getClass().getSimpleName(), "[????] Verification failed.");
                 }
-                /* TEST */
+                // TEST
 
                 Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been encrypted.");
                 Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been signed.");
@@ -117,9 +123,9 @@ public class MessageKeyTask extends ConnectionTask {
             Log.d(this.getClass().getSimpleName(),"[???] Antwort auswerten");
 
             String json = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent())).readLine();
-            /**DEBUG**/
+
             //Log.d(this.getClass().getSimpleName(),"getKeyRequest successful: " + json);
-            /**DEBUG**/
+
             Log.d(this.getClass().getSimpleName(),"[???] Antwort: " + json);
 
             JSONObject obj = new JSONObject(json);
@@ -142,10 +148,6 @@ public class MessageKeyTask extends ConnectionTask {
         }
         return null;
     }
-
-    public boolean deleteKey(long keyId) throws RestServiceException {
-        executeRequest(Request.DELETE, String.valueOf(keyId));
-        return true;
-    }
+    */
 }
 

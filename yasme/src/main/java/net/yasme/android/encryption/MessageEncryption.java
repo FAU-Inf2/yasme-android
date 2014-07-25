@@ -5,22 +5,32 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.yasme.android.R;
+import net.yasme.android.connection.ChatTask;
+import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Device;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
+import net.yasme.android.exception.*;
 import net.yasme.android.storage.DatabaseManager;
 
 
+import org.apache.http.HttpResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MessageEncryption {
-    private Map<Long,MessageKey> currentKeys = new HashMap<Long,MessageKey>();
     Chat chat;
     User creator;
     private DatabaseManager db = DatabaseManager.INSTANCE;
@@ -60,18 +70,10 @@ public class MessageEncryption {
         String key = aes.getKeyinBase64();
         String iv = aes.getIVinBase64();
 
-        return sendKey(key,iv);
+        return sendKey(key, iv);
     }
 
     public MessageKey getKey(long keyId) {
-        if (currentKeys.containsKey(keyId)) {
-            return currentKeys.get(keyId);
-        } else {
-            return getKeyFromLocalStorage(keyId);
-        }
-    }
-
-    public MessageKey getKeyFromLocalStorage(long keyId) {
         Log.d(getClass().getSimpleName(), "Get key from DB: " + keyId);
         return db.getMessageKeyDAO().get(keyId);
     }
@@ -121,30 +123,58 @@ public class MessageEncryption {
 
         //TODO: If sendkey nicht erfolgreich, dann Devices pro User updaten und nochmal versuchen!!!
         try {
-            Log.d(this.getClass().getSimpleName(),"Try to send MessageKey");
-            String sign = "test";
-            //TODO: encType je nach Verschluesselung anpassen
-            byte encType = 0;
+            long deviceId = DatabaseManager.INSTANCE.getDeviceId();
+            Device sender = new Device(deviceId);
+            ArrayList<MessageKey> messageKeys = new ArrayList<MessageKey>();
 
-            // send Key to all Recipients
-            Log.d(this.getClass().getSimpleName(),"Send key");
-            MessageKeyTask messageKeyTask = MessageKeyTask.getInstance();
-            MessageKey messageKey = messageKeyTask.saveKey(recipients, chat,
-                    key, iv, encType, sign);
-            Log.d(this.getClass().getSimpleName(),"Key sent");
+            for (Device recipientDevice : ChatTask.getInstance().getAllDevicesForChat(chat.getId())) {
+                Log.d(this.getClass().getSimpleName(),"[???] Send Key for Device" + recipientDevice.getId());
 
-            if (messageKey != null) {
-                Log.d(this.getClass().getSimpleName(),"[???] Key wurde an Server gesendet, ID: "+ messageKey.getId());
-                // If you can trust yourself
-                messageKey.setAuthenticity(true);
-                db.getMessageKeyDAO().addIfNotExists(messageKey);
-                Log.d(this.getClass().getSimpleName(),"[???] Key wurde lokal gespeichert, ID: "+ messageKey.getId());
-                currentKeys.put(messageKey.getId(),messageKey);
-                return messageKey;
-            }else {
+                // Do not store the key on the server for the creating device
+                if (recipientDevice.getId() == deviceId) {
+                    continue;
+                }
+
+                Log.d(this.getClass().getSimpleName(),"[????] Send Key for Device" + recipientDevice.getId());
+
+                   Byte encType = 0;
+                MessageKey messageKey = new MessageKey(0, sender, recipientDevice, chat, key, iv);
+                KeyEncryption keyEncryption = new KeyEncryption();
+                MessageKey messageKeyEncrypted = keyEncryption.encrypt(messageKey);
+                MessageKey messageKeySigned = keyEncryption.sign(messageKeyEncrypted);
+
+                /* TEST */
+                if (keyEncryption.verify(messageKeySigned)){
+                    Log.d(this.getClass().getSimpleName(), "[????] Verification successful.");
+                }else{
+                    Log.d(this.getClass().getSimpleName(), "[????] Verification failed.");
+                }
+                /* TEST */
+
+                Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been encrypted.");
+                Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been signed.");
+
+                messageKeys.add(messageKeySigned);
+
+                Log.d(this.getClass().getSimpleName(),"[???] Key von " + deviceId + " für Device " + recipientDevice.getId() + " generiert");
+            }
+
+            MessageKey result = MessageKeyTask.getInstance().saveKeys(messageKeys);
+
+            if (result == null) {
                 Log.d(this.getClass().getSimpleName(),"[???] Fehler beim Senden des Keys an den Server");
                 return null;
             }
+
+            MessageKey messageKey = new MessageKey(result.getId(),sender,sender,chat,key,iv);
+            messageKey.setCreated(result.getCreated());
+
+            Log.d(this.getClass().getSimpleName(),"[???] Key wurde an Server gesendet, ID: "+ messageKey.getId());
+            // If you can trust yourself
+            messageKey.setAuthenticity(true);
+            db.getMessageKeyDAO().addIfNotExists(messageKey);
+            return messageKey;
+
         } catch (Exception e) {
             Log.d(this.getClass().getSimpleName(),"Fail to send key: "+e.getMessage());
             return null;

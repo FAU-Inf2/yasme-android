@@ -37,7 +37,7 @@ public class MessageKey implements Serializable {
 
 	private Device creatorDevice = null;   // fuer Auswahl des oeffentlichen Schluessels
 	private Device recipientDevice = null; // fuer Auswahl des DH-Anteils
-	private byte encType = -1;
+	private byte encType = 0;
 	private long encInfoId = -1;
 	private String encInfo = "";
 	private String sign = "";
@@ -60,7 +60,7 @@ public class MessageKey implements Serializable {
 	}
 
 	public MessageKey(long id, Device creatorDevice, Device recipientDevice,
-			Chat chat, String key, String initVector, byte encType, String sign) {
+			Chat chat, String key, String initVector) {
 		this.id = id;
 		this.creatorDevice = creatorDevice;
 		this.recipientDevice = recipientDevice;
