@@ -13,12 +13,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import net.yasme.android.R;
+import net.yasme.android.connection.DeviceTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.controller.Toaster;
 import net.yasme.android.encryption.KeyEncryption;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.Device;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
@@ -138,9 +140,6 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         message.setChat(chat);
         message.setSender(sender);
 
-        // Store MessageKey if exists
-        storeMessageKey(message);
-
         // Decrypt
         MessageEncryption messageEncryption = new MessageEncryption(chat,sender);
         message = messageEncryption.decrypt(message);
@@ -153,6 +152,18 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         if (messageKeyEncrypted == null) {
             return;
         }
+        Device creator;
+        try {
+            creator = DeviceTask.getInstance().getDevice(messageKeyEncrypted.getCreatorDevice().getId());
+        } catch (Exception e) {
+            Log.d(getClass().getSimpleName(), "CreatorDevice is null");
+            creator = null;
+        }
+        messageKeyEncrypted.setCreatorDevice(creator);
+        if (creator != null) {
+            Log.d(getClass().getSimpleName(), "Creator publicKey: " + messageKeyEncrypted.getCreatorDevice().getPublicKey());
+        }
+
         KeyEncryption keyEncryption = new KeyEncryption();
 
         //verify the signature of the key and save authenticity-status in messageKeyEncrypted
