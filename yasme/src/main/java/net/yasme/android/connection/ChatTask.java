@@ -12,6 +12,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -104,12 +105,17 @@ public class ChatTask extends ConnectionTask {
 
         try {
             HttpResponse httpResponse = executeRequest(Request.POST, "", chat);
-            return Long.parseLong((new BufferedReader(
+
+            JSONObject json = new JSONObject((new BufferedReader(
                     new InputStreamReader(httpResponse.getEntity()
                             .getContent(), "UTF-8")
             )).readLine());
+            return Long.parseLong(json.getString("message"));
+
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
+        } catch (JSONException e) {
+            throw new RestServiceException(Error.ERROR);
         }
     }
 

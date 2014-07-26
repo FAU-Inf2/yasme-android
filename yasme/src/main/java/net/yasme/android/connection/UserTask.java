@@ -15,6 +15,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -48,10 +50,16 @@ public class UserTask extends ConnectionTask {
 
         try {
             HttpResponse httpResponse = executeRequest(Request.POST, "", user);
-            return Long.parseLong(new BufferedReader(new InputStreamReader(httpResponse
-                    .getEntity().getContent(), "UTF-8")).readLine());
+            JSONObject json = new JSONObject((new BufferedReader(
+                    new InputStreamReader(httpResponse.getEntity()
+                            .getContent(), "UTF-8")
+            )).readLine());
+
+            return Long.parseLong(json.getString("message"));
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
+        } catch (JSONException e) {
+            throw new RestServiceException(Error.ERROR);
         }
     }
 
