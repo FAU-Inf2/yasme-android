@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import net.yasme.android.R;
+import net.yasme.android.asyncTasks.database.GetAllTask;
 import net.yasme.android.asyncTasks.server.GetMessageTask;
 import net.yasme.android.asyncTasks.server.SendMessageTask;
 import net.yasme.android.controller.FragmentObservable;
@@ -22,6 +23,7 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.dao.MessageDAO;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.ChatAdapter;
 
@@ -37,6 +39,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     private SharedPreferences storage;
     private ChatAdapter mAdapter;
+
+    private MessageDAO messageDAO;
 
     //UI references
     private EditText editMessage;
@@ -81,6 +85,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         if (chat == null) {
             chat = new Chat(chatId, activity.getSelfUser());
         }
+
+        messageDAO = DatabaseManager.INSTANCE.getMessageDAO();
 
         //DEBUG, TODO: encryption speichern und auslesen
         //aes = new MessageEncryption(chat, activity.getSelfUser());
@@ -137,7 +143,13 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     @Override
     public void notifyFragment(List<Message> messages) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        updateViews(messages);
+        if(messages == null) {
+            //Notified from GetMessageTask, new Messages are stored in the DB
+            new GetAllTask(messageDAO, ChatListFragment.class).execute();
+        } else {
+            //Notified from GetAllTask
+            updateViews(messages);
+        }
         status.setVisibility(View.GONE);
         statusMessage.setText("Received " + messages.size() + " messages");
     }
