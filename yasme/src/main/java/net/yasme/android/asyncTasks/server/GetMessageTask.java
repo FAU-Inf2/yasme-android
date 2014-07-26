@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import net.yasme.android.R;
 import net.yasme.android.connection.DeviceTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.ObservableRegistry;
@@ -172,5 +173,4 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(messageKey);
         Log.d(this.getClass().getSimpleName(), "[???] Key " + messageKey.getId() + " aus den Nachrichten extrahiert und gespeichert");
     }
-
 }
