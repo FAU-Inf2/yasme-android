@@ -48,7 +48,6 @@ public class MessageEncryption {
             if (key != null) {
                 Log.d(this.getClass().getSimpleName(),"[???] ... success");
                 return key;
-                //return generateKey();
             } else {
                 Log.d(this.getClass().getSimpleName(),"[???] ... failed");
                 return generateKey();
@@ -144,13 +143,13 @@ public class MessageEncryption {
                 MessageKey messageKeySigned = keyEncryption.sign(messageKeyEncrypted);
                 Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been signed.");
 
-                /* TEST */
+                /* TEST
                 if (keyEncryption.verify(messageKeySigned)){
                     Log.d(this.getClass().getSimpleName(), "[????] Verification successful.");
                 }else{
                     Log.d(this.getClass().getSimpleName(), "[????] Verification failed.");
                 }
-                /* TEST */
+                TEST */
 
                 messageKeys.add(messageKeySigned);
                 Log.d(this.getClass().getSimpleName(),"[???] Key von " + deviceId + " für Device " + recipientDevice.getId() + " generiert");

@@ -158,10 +158,10 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         //verify the signature of the key and save authenticity-status in messageKeyEncrypted
         if(messageKeyEncrypted.setAuthenticity(keyEncryption.verify(messageKeyEncrypted))){
             Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been verified");
-            //Toaster.getInstance().toast(R.string.authentication_successful, Toast.LENGTH_LONG);
+            Toaster.getInstance().toast(R.string.authentication_successful, Toast.LENGTH_LONG);
         }else{
             Log.d(this.getClass().getSimpleName(), "[???] MessageKey could not be verified");
-            //Toaster.getInstance().toast(R.string.authentication_failed, Toast.LENGTH_LONG);
+            Toaster.getInstance().toast(R.string.authentication_failed, Toast.LENGTH_LONG);
         }
 
         //decrypt the key with RSA
