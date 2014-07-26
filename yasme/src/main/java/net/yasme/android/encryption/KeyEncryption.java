@@ -57,7 +57,6 @@ public class KeyEncryption {
                 keyeditor.remove(PUBLICKEY);
             }
 
-
             keyeditor.putString(PRIVATEKEY, rsa.getPrivKeyinBase64());
             keyeditor.putString(PUBLICKEY, rsa.getPubKeyinBase64());
 
@@ -79,23 +78,7 @@ public class KeyEncryption {
     }
 
     //encrypt
-    //recipientDevice in MessageKey is needed
     public MessageKey encrypt(MessageKey messageKey){
-        //TODO: static Public Key entfernen
-        /*START
-
-        String pubKey_base64 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTTd8U4paCBAd640OxNQ9Drj78UlUyKQnz57EZuiLLXD5OeqGkfJoe62jxMh84z30JLdQF9m8J4NavXaCh0wVjL91NqzRPy1/SeOkcuIehJyUluP05LM+mKU+nUyFWGvelyR1Zu6YS4EaD3Kk6bLy+IPrtbwCbZM/GRQ6sOmlR3TOhk3bp4NXfgZwje8sCJdmNyBh93kO4hG9P1YPjrtq78q476cNDt8nOWz9gUPYkrUlN0+VGWKG/5nQV875sIrek8CenCk30chFmoLB40gIXlmNAx6G3LHzNjrWX6UrswFtJJ+u9cAToG9MLngCvJVkBcxWbIi0KZ+XC7fqkYUFQIDAQAB";
-        KeyFactory kf = null;
-        PublicKey pubKey = null;
-        try {
-            kf = KeyFactory.getInstance("RSA");
-            byte[] publicKeyBytes = Base64.decode(pubKey_base64, Base64.DEFAULT);
-            pubKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        END*/
 
         PublicKey pubKey = getPubKeyFromUser(messageKey, RECIPIENT);
 
@@ -111,22 +94,6 @@ public class KeyEncryption {
     //decrypt
     public MessageKey decrypt(MessageKey messageKey){
 
-        //TODO: static Public Key entfernen
-        /*START
-
-        String privKey_base64 = "MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDFNN3xTiloIEB3rjQ7E1D0OuPvxSVTIpCfPnsRm6IstcPk56oaR8mh7raPEyHzjPfQkt1AX2bwng1q9doKHTBWMv3U2rNE/LX9J46Ry4h6EnJSW4/Tksz6YpT6dTIVYa96XJHVm7phLgRoPcqTpsvL4g+u1vAJtkz8ZFDqw6aVHdM6GTdung1d+BnCN7ywIl2Y3IGH3eQ7iEb0/Vg+Ou2rvyrjvpw0O3yc5bP2BQ9iStSU3T5UZYob/mdBXzvmwit6TwJ6cKTfRyEWagsHjSAheWY0DHobcsfM2OtZfpSuzAW0kn671wBOgb0wueAK8lWQFzFZsiLQpn5cLt+qRhQVAgMBAAECggEBAJBd8HBboPJqUeeLbw8kR+pTRlRcBcQDlM4PJncwcRu8AOmNMrjEfvZ908WP4xXxx+U37qLWdHyHqBj6XCF1VtJzx+DQLda+DdiC4dsXnhSHdouWHgdr+4T9METeEMkYVycDp3sx4tKLpoxNWASZYa4jEwoSrWzeuSM3qQkEK+oSv3eU9rukkLB1q2KDhqMzg3Bd6N11HRs8ZQ5ys49AuRx6ZBCTLq+mc05IW1vYckvDI1CTskYStiquJWxe9KJ3szeBajJEIg45EqLEliGzBb2eTSBFCKZ+1eCynDtjOQ9EKdZvJQG3/Gr9ws9200aTejO5wv8rNhB7RNCRvJy1s80CgYEA4pXyXj3nCwichHM2g5EIKL/xjw/37Kv26/aXHn7X7YtJRAL/0HLMJpWSN+o5DNmDFJGo0AvIcj/H1xtoOnHtg2zEbe1XzDrwz19x5WknNv8LUq+AlhrCr5JPoT1Q/req++G+dvvEItovqpIJg3Gfdsi7a9M0rf8yZZER7ko79u8CgYEA3s6R3QNMrdbn6aLTpgMwhIi+gNavZ5CKpYwyUWg9TOzZYZ0+tjnnDsIw1y06MJ/l+5g2/ils6gc1RBJelKOpeYtPauKImBYhM3+Y/LpxVR0NGmdBw871ykCglL5A2JIWYyt6k7o4YuT57iMfT/Cm9wz1xFCBeRap3tCCkbt2hTsCgYEAij/5UL0uYpIPhdUSVvY/5zUuOx8AI5zNHS4pCIdWUm7g9ilqUpIotAYg4BL+WjPBAeTZ/o6h7+uwkDP9xWNMCxtrQrNFFayEz9KpmNMvBSRakUnaCDwtu5hnE7do2vHP1r3nS4vUIXvFB6rxOQ0zwfM6P9DvXJbP9h6stRsAOWsCgYEAr/nTdw5OF9dvIDb8l1hZj7Q5UqU9sLyW5R4P+AAuun0vTEvX5jFhb2StEqakGReRm9+jP6cUYNsElRk1Ho0NI/SF61O0svp3iqcy/Bl9vc3ONZZseO0TcIUOz6xcpzDrAbSrgdZJBsL3K8EN0COwm9vemQlE2ZCu5k8lcVjwyVUCgYEAi7/M3Q5Vv9BdEa+ytDGoRSDJB9FYVyhbBn1c+fSlnH4tKoWetfIj78UsKksiIOjiAFiSsJxbMD9fzS32Sj60J+a8Z1YFCxRbvXYGx556vuE+z/7+ZV0tKPWXTK9kTX48zxTftwId+RhP7nt4UukVfGey6gnq5VWIJ5rTwIfjfro=";
-        KeyFactory kf = null;
-        PrivateKey privKey = null;
-        try {
-            kf = KeyFactory.getInstance("RSA");
-            byte[] privKeyBytes = Base64.decode(privKey_base64, Base64.DEFAULT);
-            privKey = kf.generatePrivate(new PKCS8EncodedKeySpec(privKeyBytes));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        END*/
-
         long selfDeviceId = messageKey.getRecipientDevice().getId();
         PrivateKey privKey = getPrivateRSAKeyFromStorage(selfDeviceId);
 
@@ -140,23 +107,7 @@ public class KeyEncryption {
     }
 
     //sign
-    //creatorDevice in MessageKey is needed
     public MessageKey sign(MessageKey messageKey){
-        //TODO: static Private Key entfernen
-        /*START
-
-        String privKey_base64 = "MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDFNN3xTiloIEB3rjQ7E1D0OuPvxSVTIpCfPnsRm6IstcPk56oaR8mh7raPEyHzjPfQkt1AX2bwng1q9doKHTBWMv3U2rNE/LX9J46Ry4h6EnJSW4/Tksz6YpT6dTIVYa96XJHVm7phLgRoPcqTpsvL4g+u1vAJtkz8ZFDqw6aVHdM6GTdung1d+BnCN7ywIl2Y3IGH3eQ7iEb0/Vg+Ou2rvyrjvpw0O3yc5bP2BQ9iStSU3T5UZYob/mdBXzvmwit6TwJ6cKTfRyEWagsHjSAheWY0DHobcsfM2OtZfpSuzAW0kn671wBOgb0wueAK8lWQFzFZsiLQpn5cLt+qRhQVAgMBAAECggEBAJBd8HBboPJqUeeLbw8kR+pTRlRcBcQDlM4PJncwcRu8AOmNMrjEfvZ908WP4xXxx+U37qLWdHyHqBj6XCF1VtJzx+DQLda+DdiC4dsXnhSHdouWHgdr+4T9METeEMkYVycDp3sx4tKLpoxNWASZYa4jEwoSrWzeuSM3qQkEK+oSv3eU9rukkLB1q2KDhqMzg3Bd6N11HRs8ZQ5ys49AuRx6ZBCTLq+mc05IW1vYckvDI1CTskYStiquJWxe9KJ3szeBajJEIg45EqLEliGzBb2eTSBFCKZ+1eCynDtjOQ9EKdZvJQG3/Gr9ws9200aTejO5wv8rNhB7RNCRvJy1s80CgYEA4pXyXj3nCwichHM2g5EIKL/xjw/37Kv26/aXHn7X7YtJRAL/0HLMJpWSN+o5DNmDFJGo0AvIcj/H1xtoOnHtg2zEbe1XzDrwz19x5WknNv8LUq+AlhrCr5JPoT1Q/req++G+dvvEItovqpIJg3Gfdsi7a9M0rf8yZZER7ko79u8CgYEA3s6R3QNMrdbn6aLTpgMwhIi+gNavZ5CKpYwyUWg9TOzZYZ0+tjnnDsIw1y06MJ/l+5g2/ils6gc1RBJelKOpeYtPauKImBYhM3+Y/LpxVR0NGmdBw871ykCglL5A2JIWYyt6k7o4YuT57iMfT/Cm9wz1xFCBeRap3tCCkbt2hTsCgYEAij/5UL0uYpIPhdUSVvY/5zUuOx8AI5zNHS4pCIdWUm7g9ilqUpIotAYg4BL+WjPBAeTZ/o6h7+uwkDP9xWNMCxtrQrNFFayEz9KpmNMvBSRakUnaCDwtu5hnE7do2vHP1r3nS4vUIXvFB6rxOQ0zwfM6P9DvXJbP9h6stRsAOWsCgYEAr/nTdw5OF9dvIDb8l1hZj7Q5UqU9sLyW5R4P+AAuun0vTEvX5jFhb2StEqakGReRm9+jP6cUYNsElRk1Ho0NI/SF61O0svp3iqcy/Bl9vc3ONZZseO0TcIUOz6xcpzDrAbSrgdZJBsL3K8EN0COwm9vemQlE2ZCu5k8lcVjwyVUCgYEAi7/M3Q5Vv9BdEa+ytDGoRSDJB9FYVyhbBn1c+fSlnH4tKoWetfIj78UsKksiIOjiAFiSsJxbMD9fzS32Sj60J+a8Z1YFCxRbvXYGx556vuE+z/7+ZV0tKPWXTK9kTX48zxTftwId+RhP7nt4UukVfGey6gnq5VWIJ5rTwIfjfro=";
-        KeyFactory kf = null;
-        PrivateKey privKey = null;
-        try {
-            kf = KeyFactory.getInstance("RSA");
-            byte[] privKeyBytes = Base64.decode(privKey_base64, Base64.DEFAULT);
-            privKey = kf.generatePrivate(new PKCS8EncodedKeySpec(privKeyBytes));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        END*/
 
         long selfDeviceId = messageKey.getCreatorDevice().getId();
         PrivateKey privKey = getPrivateRSAKeyFromStorage(selfDeviceId);
@@ -171,27 +122,9 @@ public class KeyEncryption {
     }
 
     //verify
-    //creatorDevice in MessageKey is needed
     public boolean verify(MessageKey messageKey){
 
-        //TODO: static Public Key entfernen
-        /*START
-
-        String pubKey_base64 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxTTd8U4paCBAd640OxNQ9Drj78UlUyKQnz57EZuiLLXD5OeqGkfJoe62jxMh84z30JLdQF9m8J4NavXaCh0wVjL91NqzRPy1/SeOkcuIehJyUluP05LM+mKU+nUyFWGvelyR1Zu6YS4EaD3Kk6bLy+IPrtbwCbZM/GRQ6sOmlR3TOhk3bp4NXfgZwje8sCJdmNyBh93kO4hG9P1YPjrtq78q476cNDt8nOWz9gUPYkrUlN0+VGWKG/5nQV875sIrek8CenCk30chFmoLB40gIXlmNAx6G3LHzNjrWX6UrswFtJJ+u9cAToG9MLngCvJVkBcxWbIi0KZ+XC7fqkYUFQIDAQAB";
-        KeyFactory kf = null;
-        PublicKey pubKey = null;
-        try {
-            kf = KeyFactory.getInstance("RSA");
-            byte[] publicKeyBytes = Base64.decode(pubKey_base64, Base64.DEFAULT);
-            pubKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        END*/
-
         PublicKey pubKey = getPubKeyFromUser(messageKey, CREATOR);
-
 
         if (pubKey != null) {
             Log.d(getClass().getSimpleName(), "Verify key");
@@ -257,7 +190,6 @@ public class KeyEncryption {
         return null;
     }
 
-
     //get own PublicKey in Base64
     public String getPublicRSAKeyInBase64FromStorage(long selfDeviceId){
 
@@ -269,16 +201,5 @@ public class KeyEncryption {
 
         return pubKeyInBase64;
     }
-
-    //TODO: wird die Methode hier benoetigt?
-    /*
-    //save public key from a user
-    public boolean savePublicKeyFromUser(long deviceId, String publicKeyinBase64){
-        // TODO: save to DeviceDB
-        //RSAKey pubKey = new RSAKey(deviceId, publicKeyinBase64, selfUser);
-        //db.getRsaKeyDAO().addOrUpdate(pubKey);
-        return true;
-    }
-    */
 
 }
