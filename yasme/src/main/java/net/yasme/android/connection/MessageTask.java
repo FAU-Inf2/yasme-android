@@ -75,7 +75,7 @@ public class MessageTask extends ConnectionTask {
 
         } catch (RestServiceException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
-            if (e.getStatusCode() == Error.OUTDATED.getNumber()) {
+            if (e.getCode() == Error.OUTDATED.getNumber()) {
                 throw new KeyOutdatedException();
             }
         } catch (IOException e) {

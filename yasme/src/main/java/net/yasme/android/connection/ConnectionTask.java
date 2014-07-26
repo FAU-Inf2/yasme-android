@@ -17,6 +17,8 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import net.yasme.android.exception.Error;
 
@@ -294,11 +296,15 @@ public class ConnectionTask {
             Log.d(this.getClass().getSimpleName(),"StatusCode: " + statusCode);
             if (statusCode == 200 || statusCode == 201 || statusCode == 204)
                 return httpResponse;
-            else
-                throw new RestServiceException((new BufferedReader(new InputStreamReader(
-                        httpResponse.getEntity().getContent(), "UTF-8"))).readLine(), statusCode);
+            else{
+                JSONObject json = new JSONObject(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
+                        .getContent())).readLine());
+                throw new RestServiceException((String)json.get("message"),Integer.parseInt(json.getString("code")));
+            }
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
+        } catch (JSONException e) {
+            throw new RestServiceException(Error.ERROR);
         }
     }
 }

@@ -3,7 +3,7 @@ package net.yasme.android.exception;
 public class RestServiceException extends Exception {
 
 	private static final long serialVersionUID = 1L;
-	private int statusCode;
+	private int code;
 
 	public RestServiceException(ErrorCode error) {
 
@@ -11,15 +11,15 @@ public class RestServiceException extends Exception {
 
 	}
 
-	public RestServiceException(String error, int statusCode) {
-		super(error);
-		this.statusCode = statusCode;
+	public RestServiceException(String message, int code) {
+		super(message);
+		this.code = code;
 
-		System.err.println("Code: " + this.statusCode + "  " + "Message: "
+		System.err.println("Code: " + this.code + "  " + "Message: "
 				+ this.getMessage());
 	}
 
-    public int getStatusCode() {
-        return statusCode;
+    public int getCode() {
+        return code;
     }
 }
