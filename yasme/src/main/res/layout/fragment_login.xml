@@ -87,7 +87,9 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/linearLayout"
         android:orientation="horizontal"
-        android:measureWithLargestChild="false">
+        android:measureWithLargestChild="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true">
 
         <Button
             android:id="@+id/register_button"
