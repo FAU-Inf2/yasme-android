@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.database.GetAllTask;
 import net.yasme.android.asyncTasks.server.GetMessageTask;
 import net.yasme.android.asyncTasks.server.SendMessageTask;
 import net.yasme.android.controller.FragmentObservable;
@@ -143,13 +142,13 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     @Override
     public void notifyFragment(List<Message> messages) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        if(messages == null) {
+        //if(messages == null) {
             //Notified from GetMessageTask, new Messages are stored in the DB
-            new GetAllTask(messageDAO, ChatListFragment.class).execute();
-        } else {
+        //    new GetAllTask(messageDAO, ChatListFragment.class).execute();
+        //} else {
             //Notified from GetAllTask
             updateViews(messages);
-        }
+        //}
         status.setVisibility(View.GONE);
         statusMessage.setText("Received " + messages.size() + " messages");
     }

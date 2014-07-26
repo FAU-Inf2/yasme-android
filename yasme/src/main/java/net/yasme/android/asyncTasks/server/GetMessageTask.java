@@ -96,7 +96,8 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             editor.commit();
         }
 
-        ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
+        //ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
+        ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
 
         // Vibrate
 //        if (messages.size() > 0) {
