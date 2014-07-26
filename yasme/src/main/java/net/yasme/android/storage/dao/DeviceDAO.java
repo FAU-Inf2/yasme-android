@@ -1,6 +1,7 @@
 package net.yasme.android.storage.dao;
 
 import net.yasme.android.entities.Device;
+import net.yasme.android.entities.User;
 
 import java.util.List;
 
@@ -41,6 +42,8 @@ public interface DeviceDAO {
      */
     public List<Device> getAll();
 
+    public List<Device> getAll(User user);
+
 
 
     /**
@@ -59,4 +62,7 @@ public interface DeviceDAO {
      * @return true on success, false otherwise
      */
     public boolean delete(Device device);
+
+    public boolean deleteAll(User user);
+
 }

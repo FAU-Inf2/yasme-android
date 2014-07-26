@@ -34,7 +34,7 @@ public enum DatabaseManager {
     private ChatDAO chatDAO;
     private MessageDAO messageDAO;
     private MessageKeyDAO messageKeyDAO;
-    private DeviceDAO rsaKeyDAO;
+    private DeviceDAO deviceDAO;
 
     public void init(Context context, SharedPreferences sharedPreferences, long userId) {
         mContext = context;
@@ -76,7 +76,7 @@ public enum DatabaseManager {
         messageKeyDAO = MessageKeyDAOImpl.INSTANCE;
 
         DeviceDAOImpl.INSTANCE.setDatabaseHelper(mHelper);
-        rsaKeyDAO = DeviceDAOImpl.INSTANCE;
+        deviceDAO = DeviceDAOImpl.INSTANCE;
     }
 
     public UserDAO getUserDAO() {
@@ -93,8 +93,8 @@ public enum DatabaseManager {
         return messageKeyDAO;
     }
 
-    public DeviceDAO getRsaKeyDAO() {
-        return rsaKeyDAO;
+    public DeviceDAO getDeviceDAO() {
+        return deviceDAO;
     }
 
     public long getUserId() {

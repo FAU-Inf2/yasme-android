@@ -3,10 +3,12 @@ package net.yasme.android.storage.dao;
 import android.util.Log;
 
 import net.yasme.android.entities.Device;
+import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseConstants;
 import net.yasme.android.storage.DatabaseHelper;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,5 +89,40 @@ public enum DeviceDAOImpl implements DeviceDAO {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
+    }
+
+    public boolean deleteAll(User user) {
+        /*
+        List<Device> result = new ArrayList<Device>();
+        List<Device> all = getAll();
+        if (all == null || user == null) {
+            return false;
+        }
+        for (Device device: all) {
+            if (device.getUser().getId() == user.getId()) {
+                if (!delete(device)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+        */
+        try {
+            return (1 == databaseHelper.getDeviceDao().delete(getAll(user)));
+        } catch (SQLException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return false;
+        }
+    }
+
+    public List<Device> getAll(User user) {
+        List<Device> devicesList;
+        try {
+            devicesList = databaseHelper.getDeviceDao().queryForEq("user",user);
+        } catch (SQLException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return null;
+        }
+        return devicesList;
     }
 }

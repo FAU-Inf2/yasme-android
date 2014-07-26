@@ -126,6 +126,8 @@ public class MessageEncryption {
 
             //TODO: Try with local data first
             for (Device recipientDevice : ChatTask.getInstance().getAllDevicesForChat(chat.getId())) {
+                Log.d(this.getClass().getSimpleName(),"[???] Store device" + recipientDevice.getId() + " to DB");
+                DatabaseManager.INSTANCE.getDeviceDAO().addOrUpdate(recipientDevice);
                 Log.d(this.getClass().getSimpleName(),"[???] Send Key for Device" + recipientDevice.getId() + " with pubKey: " + recipientDevice.getPublicKey());
 
 
