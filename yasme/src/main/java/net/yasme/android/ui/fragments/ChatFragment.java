@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.GetMessageTask;
@@ -43,9 +42,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     //UI references
     private EditText editMessage;
-    private TextView statusMessage;
     private ListView list;
-    private View status;
 
     private Chat chat;
 
@@ -86,10 +83,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         }
 
         messageDAO = DatabaseManager.INSTANCE.getMessageDAO();
-
-        //DEBUG, TODO: encryption speichern und auslesen
-        //aes = new MessageEncryption(chat, activity.getSelfUser());
-        //chat.setEncryption(aes);
     }
 
     @Override
@@ -99,10 +92,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
 
         editMessage = (EditText) rootView.findViewById(R.id.text_message);
-        status = rootView.findViewById(R.id.chat_status);
-        statusMessage = (TextView) status.findViewById(R.id.text_status);
-        statusMessage.setText("Eingeloggt: " +
-                storage.getString(AbstractYasmeActivity.USER_NAME, "anonym"));
         list = (ListView) rootView.findViewById(R.id.chat_messageList);
 
         Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
@@ -149,32 +138,26 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             //Notified from GetAllTask
             updateViews(messages);
         //}
-        //status.setVisibility(View.GONE);
-        statusMessage.setText("Received " + messages.size() + " messages");
-        //progress bar on
-        getActivity().setProgressBarIndeterminateVisibility(true);
+        Log.d(this.getClass().getSimpleName(), "Received " + messages.size() + " messages");
+
+        //progress bar off
+        getActivity().setProgressBarIndeterminateVisibility(false);
     }
 
     public void send(View view) {
         String msgText = editMessage.getText().toString();
         if (msgText.isEmpty()) {
-            statusMessage.setText("Nichts eingegeben");
+            Log.d(this.getClass().getSimpleName(), "Nichts eingegeben");
             return;
         }
-        status.setVisibility(View.VISIBLE);
         //progress bar on
         getActivity().setProgressBarIndeterminateVisibility(true);
-
-        //String msgEncrypted = aes.encrypt(editMessage.getText().toString());
-        //String msgEncrypted = msg;
-        //User user = new User(activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), activity.getSelfUser().getId());
-        //long aesId = aes.getKeyId();
 
         // Send message and get new messages afterwards
         new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask())
                 .execute(msgText);
 
-        statusMessage.setText("Send message in bg");
+        Log.d(this.getClass().getSimpleName(), "Send message in bg");
         editMessage.setText("");
     }
 
