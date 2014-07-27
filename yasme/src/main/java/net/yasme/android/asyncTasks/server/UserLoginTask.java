@@ -48,7 +48,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
                     + password);
 
             PasswordEncryption pwEnc = new PasswordEncryption();
-            password = pwEnc.securePassword(password);
+            //password = pwEnc.securePassword(password);
 
             String loginReturn[] = AuthorizationTask.getInstance().loginUser(new User(email,
                     password));
