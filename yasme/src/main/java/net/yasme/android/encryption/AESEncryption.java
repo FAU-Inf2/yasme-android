@@ -16,7 +16,7 @@ import android.util.Base64;
 
 import net.yasme.android.entities.MessageKey;
 
-public class AESEncryption {
+public class AESEncryption extends net.yasme.android.encryption.Base64 {
 
     private static final int KEYSIZE = 16; //in Byte --> 128 Bit
     private static final String HASH_ALG = "SHA-256";
@@ -46,8 +46,8 @@ public class AESEncryption {
         String keyBase64 = messageKey.getMessageKey();
         String ivBase64 = messageKey.getInitVector();
 
-        byte[] keyBytes = Base64.decode(keyBase64.getBytes(), Base64.DEFAULT);
-        byte[] ivBytes = Base64.decode(ivBase64.getBytes(), Base64.DEFAULT);
+        byte[] keyBytes = base64Decode(keyBase64);
+        byte[] ivBytes = base64Decode(ivBase64);
 
         // convert key needed for decryption
         key = new SecretKeySpec(keyBytes, "AES");
@@ -108,11 +108,11 @@ public class AESEncryption {
     }
 
     public String getIVinBase64() {
-        return Base64.encodeToString(iv.getIV(), Base64.DEFAULT);
+        return base64Encode(iv.getIV());
     }
 
     public String getKeyinBase64() {
-        return Base64.encodeToString(key.getEncoded(), Base64.DEFAULT);
+        return base64Encode(key.getEncoded());
     }
 
     public byte[] getIVinByte() {
@@ -125,13 +125,13 @@ public class AESEncryption {
 	
 	//convert Base64-String to Type SecretKey
 	public SecretKey base64toKey(String base64){
-		byte[] keyBytes = Base64.decode(base64.getBytes(), Base64.DEFAULT);
+		byte[] keyBytes = base64Decode(base64);
 		return new SecretKeySpec(keyBytes, "AES");
 	}
 	
 	//convert Base64-String to Type IV
 	public IvParameterSpec base64toIV(String base64){
-		byte[] IvBytes = Base64.decode(base64.getBytes(), Base64.DEFAULT);
+		byte[] IvBytes = base64Decode(base64);
 		return new IvParameterSpec(IvBytes);
 	}
 	
@@ -147,8 +147,8 @@ public class AESEncryption {
 			cipher.init(Cipher.ENCRYPT_MODE, key, iv);		
 			encrypted = cipher.doFinal(text.getBytes("UTF-8"));
 				
-			return Base64.encodeToString(encrypted, Base64.DEFAULT);
-			
+			return base64Encode(encrypted);
+
 		} catch (Exception e) {
 			Log.d(this.getClass().getSimpleName(),e.getMessage());
 			return "Couldn't be encrypted: " + text;
@@ -161,8 +161,8 @@ public class AESEncryption {
 		byte[] decrypted = null;
 
 		try{
-			byte[] encrypted_decode = Base64.decode(encrypted.getBytes("UTF-8"), Base64.DEFAULT);
-			
+			byte[] encrypted_decode = base64Decode(encrypted, "UTF-8");
+
 			Cipher cipher;
 			cipher = Cipher.getInstance(MODE);
             Log.d(getClass().getSimpleName(),"Decrypt with key: " + Arrays.toString(key.getEncoded()));

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import net.yasme.android.connection.AuthorizationTask;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.encryption.PasswordEncryption;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.ui.AbstractYasmeActivity;
@@ -45,6 +46,9 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             // DEBUG:
             Log.d(this.getClass().getSimpleName(),"e-Mail: " + email + " " + "Passwort: "
                     + password);
+
+            PasswordEncryption pwEnc = new PasswordEncryption();
+            //password = pwEnc.securePassword(password);
 
             String loginReturn[] = AuthorizationTask.getInstance().loginUser(new User(email,
                     password));
