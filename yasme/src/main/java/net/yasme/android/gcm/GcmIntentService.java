@@ -21,52 +21,38 @@ import net.yasme.android.ui.AbstractYasmeActivity;
  */
 public class GcmIntentService extends IntentService {
 
-    public static final int NOTIFICATION_ID = 1;
-    private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
+	public static final int NOTIFICATION_ID = 1;
+	private NotificationManager mNotificationManager;
+	NotificationCompat.Builder builder;
 
-    public GcmIntentService() {
-        super("GcmIntentService");
-    }
+	public GcmIntentService() { super("GcmIntentService"); }
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
+	@Override
+	protected void onHandleIntent(Intent intent) {
 
-        Log.d(this.getClass().getSimpleName(),"GcmIntentService");
-        Bundle extras = intent.getExtras();
-        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
-        // The getMessageType() intent parameter must be the intent you received
-        // in your BroadcastReceiver.
-        String messageType = gcm.getMessageType(intent);
+		Log.d(this.getClass().getSimpleName(),"GcmIntentService");
+		Bundle extras = intent.getExtras();
+		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
+		// The getMessageType() intent parameter must be the intent you received
+		// in your BroadcastReceiver.
+		String messageType = gcm.getMessageType(intent);
 
-        if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
-            /*
-             * Filter messages based on message type. Since it is likely that GCM
-             * will be extended in the future with new message types, just ignore
-             * any message types you're not interested in, or that you don't
-             * recognize.
-             */
-            if (GoogleCloudMessaging.
-                    MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                Log.d(this.getClass().getSimpleName(),"Send error: " + extras.toString());
-            } else if (GoogleCloudMessaging.
-                    MESSAGE_TYPE_DELETED.equals(messageType)) {
-                Log.d(this.getClass().getSimpleName(),"Deleted messages on server: " +
-                       extras.toString());
-                // If it's a regular GCM message, do some work.
-            } else if (GoogleCloudMessaging.
-                    MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-
-                Log.d(this.getClass().getSimpleName(), "Received message with type message from GCM");
-                if (extras.containsKey("type")) {
-                    if (extras.get("type").equals("msg")) {
-                        new GetMessageTask().execute();
-                    }
-                }
-            }
-        }
-        // Release the wake lock provided by the WakefulBroadcastReceiver.
-        GcmBroadcastReceiver.completeWakefulIntent(intent);
-    }
+		if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
+			// Filter messages based on message type. Since it is likely that GCM
+			if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
+				Log.d(this.getClass().getSimpleName(),"Send error: " + extras.toString());
+			} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
+					Log.d(this.getClass().getSimpleName(),"Deleted messages on server: " + extras.toString());
+			} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+				// If it's a regular GCM message, do some work.
+				Log.d(this.getClass().getSimpleName(), "Received message with type message from GCM");
+				if (extras.containsKey("type") && extras.get("type").equals("msg")) {
+					new GetMessageTask().execute();
+				}
+			}
+		}
+		// Release the wake lock provided by the WakefulBroadcastReceiver.
+		GcmBroadcastReceiver.completeWakefulIntent(intent);
+	}
 
 }
