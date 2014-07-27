@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import net.yasme.android.connection.UserTask;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.encryption.PasswordEncryption;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.ui.AbstractYasmeActivity;
@@ -45,6 +46,10 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
         try {
+
+            PasswordEncryption pwEnc = new PasswordEncryption();
+            password = pwEnc.securePassword(password);
+
             long userId = UserTask.getInstance().registerUser(new User(password, name,
                     email));
         } catch (RestServiceException e) {

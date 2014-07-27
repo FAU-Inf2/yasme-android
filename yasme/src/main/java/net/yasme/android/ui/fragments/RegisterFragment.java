@@ -80,7 +80,6 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                         String inputPasswordCheck = password_check.getText()
                                 .toString();
 
-                        //TODO: RSA-Keys erstellen und oeffentlichen Schluessel senden
                         regTask.execute(inputName, inputMail, inputPassword, inputPasswordCheck);
                     }
                 }

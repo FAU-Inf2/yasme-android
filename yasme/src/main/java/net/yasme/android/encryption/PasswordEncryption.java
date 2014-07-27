@@ -12,13 +12,15 @@ import java.security.MessageDigest;
 public class PasswordEncryption extends Base64{
 
     private static final String HASH_ALG = "SHA-512";
+    private static final String SALT = "Y45M3";
 
-    //protect against Bruto-Force-Attacks
+    //delay Brute-Force-Attacks
+    //protect against "using same password for several services"
     public String securePassword(String password){
-        return SHA512(password);
+        return SHA512(salt(password));
     }
 
-    public String SHA512(String password){
+    private String SHA512(String password){
        try {
            MessageDigest md;
            md = MessageDigest.getInstance("SHA-512");
@@ -32,6 +34,11 @@ public class PasswordEncryption extends Base64{
            Log.d(this.getClass().getSimpleName(), "[???] Error: " + e.getMessage());
        }
        return null;
+    }
+
+    private String salt(String password){
+        String passwordSalted = password+SALT;
+        return passwordSalted;
     }
 
 
