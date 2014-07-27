@@ -16,7 +16,7 @@ import javax.crypto.Cipher;
 import android.util.Base64;
 import android.util.Log;
 
-public class RSAEncryption {
+public class RSAEncryption extends net.yasme.android.encryption.Base64 {
 
     private static final int KEYSIZE = 2048;
     private static final String SIGNATURE_MODE = "SHA256withRSA";
@@ -55,10 +55,10 @@ public class RSAEncryption {
 
             KeyFactory kf = KeyFactory.getInstance("RSA");
 
-            byte[] privKeyBytes = Base64.decode(privKey_base64, Base64.DEFAULT);
+            byte[] privKeyBytes = base64Decode(privKey_base64);
             PrivateKey privKey = kf.generatePrivate(new PKCS8EncodedKeySpec(privKeyBytes));
 
-            byte[] publicKeyBytes = Base64.decode(pubKey_base64, Base64.DEFAULT);
+            byte[] publicKeyBytes = base64Decode(pubKey_base64);
             PublicKey pubKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
 
             setKeyPair(privKey, pubKey);
@@ -73,12 +73,12 @@ public class RSAEncryption {
 
     public String getPubKeyinBase64(){
         Key pubKey = keys.getPublic();
-        return Base64.encodeToString(pubKey.getEncoded(), Base64.DEFAULT);
+        return base64Encode(pubKey.getEncoded());
     }
 
     public String getPrivKeyinBase64(){
         Key privKey = keys.getPrivate();
-        return Base64.encodeToString(privKey.getEncoded(), Base64.DEFAULT);
+        return base64Encode(privKey.getEncoded());
     }
 
     public void setKeyPair(PrivateKey privKey, PublicKey pubKey){
@@ -96,7 +96,7 @@ public class RSAEncryption {
 
             signatured = sig.sign();
 
-            return Base64.encodeToString(signatured, Base64.DEFAULT);
+            return base64Encode(signatured);
         } catch (Exception e){
             Log.d(this.getClass().getSimpleName(),"[???] sign failed");
             Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
@@ -110,7 +110,7 @@ public class RSAEncryption {
     public boolean verify(String signature_base64, String text_base64, PublicKey pubKey) {
 
         try {
-            byte[] signature = Base64.decode(signature_base64.getBytes(), Base64.DEFAULT);
+            byte[] signature = base64Decode(signature_base64);
 
             Signature sig = Signature.getInstance(SIGNATURE_MODE);
             sig.initVerify(pubKey);
@@ -137,7 +137,7 @@ public class RSAEncryption {
 
             Log.d(this.getClass().getSimpleName(),"[???] RSA Encryption successful.");
 
-            return Base64.encodeToString(encrypted, Base64.DEFAULT);
+            return base64Encode(encrypted);
         } catch (Exception e){
             Log.d(this.getClass().getSimpleName(),"[???] encrypt failed");
             Log.d(this.getClass().getSimpleName(),"[???]" + e.getMessage());
@@ -151,7 +151,7 @@ public class RSAEncryption {
         byte[] decrypted = null;
 
         try{
-            byte[] encrypted_decode = Base64.decode(encrypted.getBytes(), Base64.DEFAULT);
+            byte[] encrypted_decode = base64Decode(encrypted);
             Cipher cipher = Cipher.getInstance(MODE);
             cipher.init(Cipher.DECRYPT_MODE, privKey);
             decrypted = cipher.doFinal(encrypted_decode);
@@ -171,7 +171,7 @@ public class RSAEncryption {
     public PublicKey convertBase64toPubKey(String base64){
         try{
             //convert to byte
-            byte[] publicKeyBytes = Base64.decode(base64, Base64.DEFAULT);
+            byte[] publicKeyBytes = base64Decode(base64);
             //convert to PublicKey
             KeyFactory kf = KeyFactory.getInstance("RSA");
             PublicKey pubKey = kf.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
@@ -188,7 +188,7 @@ public class RSAEncryption {
     public PrivateKey convertBase64toPrivKey(String base64){
         try{
             //convert to byte
-            byte[] privKeyBytes = Base64.decode(base64, Base64.DEFAULT);
+            byte[] privKeyBytes = base64Decode(base64);
             //convert to PrivateKey
             KeyFactory kf = KeyFactory.getInstance("RSA");
             PrivateKey privKey = kf.generatePrivate(new PKCS8EncodedKeySpec(privKeyBytes));
