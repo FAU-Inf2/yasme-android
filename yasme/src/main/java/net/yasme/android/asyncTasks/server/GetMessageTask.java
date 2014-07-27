@@ -1,14 +1,7 @@
 package net.yasme.android.asyncTasks.server;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Vibrator;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,7 +20,6 @@ import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
-import net.yasme.android.ui.activities.ChatActivity;
 import net.yasme.android.ui.fragments.ChatFragment;
 
 import java.util.List;
@@ -104,6 +96,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             editor.commit();
         }
 
+        //ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
 
         // Vibrate
@@ -181,5 +174,4 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(messageKey);
         Log.d(this.getClass().getSimpleName(), "[???] Key " + messageKey.getId() + " aus den Nachrichten extrahiert und gespeichert");
     }
-
 }
