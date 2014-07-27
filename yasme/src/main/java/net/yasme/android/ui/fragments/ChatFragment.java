@@ -2,7 +2,6 @@ package net.yasme.android.ui.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +34,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     private AbstractYasmeActivity activity;
 
-    private SharedPreferences storage;
     private ChatAdapter mAdapter;
 
     private MessageDAO messageDAO;
@@ -45,8 +43,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     private ListView list;
 
     private Chat chat;
-
-    //MessageEncryption aes;
 
     public ChatFragment() {
 
@@ -59,8 +55,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         Intent intent = activity.getIntent();
         long chatId = intent.getLongExtra(activity.CHAT_ID, 1);
-
-        storage = activity.getStorage();
 
         //Register at observer
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
@@ -113,11 +107,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     @Override
     public void onStart() {
         super.onStart();
-        //Register at observer
-        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
-        FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
-        Log.d(this.getClass().getSimpleName(), "... successful");
-        obs.register(this);
     }
 
     @Override
