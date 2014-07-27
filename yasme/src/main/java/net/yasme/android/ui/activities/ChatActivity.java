@@ -3,6 +3,7 @@ package net.yasme.android.ui.activities;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
 import net.yasme.android.R;
 import net.yasme.android.ui.AbstractYasmeActivity;
@@ -13,6 +14,10 @@ public class ChatActivity extends AbstractYasmeActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+        //progress bar in actionbar
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
 		setContentView(R.layout.activity_with_single_fragment);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);

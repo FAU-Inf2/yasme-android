@@ -149,8 +149,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             //Notified from GetAllTask
             updateViews(messages);
         //}
-        status.setVisibility(View.GONE);
+        //status.setVisibility(View.GONE);
         statusMessage.setText("Received " + messages.size() + " messages");
+        //progress bar on
+        getActivity().setProgressBarIndeterminateVisibility(true);
     }
 
     public void send(View view) {
@@ -160,6 +162,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             return;
         }
         status.setVisibility(View.VISIBLE);
+        //progress bar on
+        getActivity().setProgressBarIndeterminateVisibility(true);
+
         //String msgEncrypted = aes.encrypt(editMessage.getText().toString());
         //String msgEncrypted = msg;
         //User user = new User(activity.getSelfUser().getName(), activity.getSelfUser().getEmail(), activity.getSelfUser().getId());
