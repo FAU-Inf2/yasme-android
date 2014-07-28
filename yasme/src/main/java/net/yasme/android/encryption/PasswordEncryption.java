@@ -14,33 +14,28 @@ import java.security.MessageDigest;
 public class PasswordEncryption{
 
     private static final String SALT = "Y45M3";
-
     private User user;
 
+    //delay Brute-Force-Attacks
+    //protect against "using same password for several services"
     public PasswordEncryption(User user) {
         this.user = user;
     }
 
-    //delay Brute-Force-Attacks
-    //protect against "using same password for several services"
-    public String getHashedPassword(){
-        return SHA512(salt(SALT,user.getPw()));
-    }
-
-    public String getHashedPasswordEmailSalted(){
-        return SHA512(salt(user.getEmail(),user.getPw()));
-    }
-
-    public String storeHashedPassword(){
-        String secure = getHashedPassword();
+    public User securePassword(){
+        String secure = getSecurePassword(SALT);
         user.setPw(secure);
-        return secure;
+        return user;
     }
 
-    public String storeHashedPasswordEmailSalted(){
-        String secure = getHashedPasswordEmailSalted();
+    public User securePasswordEmailSalted(){
+        String secure = getSecurePassword(user.getPw());
         user.setPw(secure);
-        return secure;
+        return user;
+    }
+
+    public String getSecurePassword(String saltString){
+        return SHA512(salt(saltString,user.getPw()));
     }
 
     private String SHA512(String password){
