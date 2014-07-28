@@ -58,7 +58,7 @@ public class InviteToChatFragment
 
         activity = (AbstractYasmeActivity) getActivity();
         findViewsById();
-        new GetAllUsersTask().execute();
+        new GetAllUsersTask(this.getClass()).execute();
     }
 
     @Override
@@ -152,9 +152,9 @@ public class InviteToChatFragment
         if (inviteToChatParam instanceof ChatRegisteredParam) {
             ChatRegisteredParam param = (ChatRegisteredParam) inviteToChatParam;
             startChat(param.getChatId());
-        } else if (inviteToChatParam instanceof ContactsFetchedParam) {
-            ContactsFetchedParam contactsFetchedParam = (ContactsFetchedParam) inviteToChatParam;
-            updateChatPartnersList(contactsFetchedParam.getContacts());
+        } else if (inviteToChatParam instanceof AllUsersFetchedParam) {
+            AllUsersFetchedParam contactsFetchedParam = (AllUsersFetchedParam) inviteToChatParam;
+            updateChatPartnersList(contactsFetchedParam.getAllUsers());
         }
     }
 
@@ -204,16 +204,16 @@ public class InviteToChatFragment
         }
     }
 
-    public static class ContactsFetchedParam extends InviteToChatParam {
-        private List<User> contacts;
+    public static class AllUsersFetchedParam extends InviteToChatParam {
+        private List<User> allUsers;
 
-        public ContactsFetchedParam(Boolean success, List<User> contacts) {
+        public AllUsersFetchedParam(Boolean success, List<User> allUsers) {
             this.success = success;
-            this.contacts = contacts;
+            this.allUsers = allUsers;
         }
 
-        public List<User> getContacts() {
-            return contacts;
+        public List<User> getAllUsers() {
+            return allUsers;
         }
     }
 }

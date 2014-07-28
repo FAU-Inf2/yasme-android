@@ -35,6 +35,8 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     private TextView searchText;
     private SimpleAdapter mAdapter;
 
+    private int counter = 0;
+
     ContactListContent contactListContent;
 
     private OnSearchFragmentInteractionListener mListener;
@@ -42,8 +44,9 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FragmentObservable<SearchContactFragment, ArrayList<User>> obs = ObservableRegistry.getObservable(SearchContactFragment.class);
-        obs.register(this);
+        // TODO register in onStart method
+        //FragmentObservable<SearchContactFragment, ArrayList<User>> obs = ObservableRegistry.getObservable(SearchContactFragment.class);
+        //obs.register(this);
     }
 
     @Override
@@ -164,47 +167,4 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
             contactListContent.addItem(new ContactListContent.ContactListItem("null", "Sorry, No Contact Found", ""));
         }
     }
-
-    /*
-    private class SearchUserTask extends AsyncTask<String,Void,List<User>> {
-
-        @Override
-        protected List<User> doInBackground(String... params) {
-
-            SearchTask searchTask = SearchTask.getInstance();
-            List<User> uList = new ArrayList<User>();
-
-            try {
-                switch (searchSpinner.getSelectedItemPosition()) {
-                    case 0:
-                        uList = searchTask.userByLike(String.valueOf(searchText.getText()));
-                        return uList;
-                    case 1:
-                        uList.addIfNotExists(searchTask.userByMail(String.valueOf(searchText.getText())));
-                        return uList;
-                    case 2:
-                        uList.addIfNotExists(searchTask.userByNumber(String.valueOf(searchText.getText())));
-                        return uList;
-                }
-            }catch(RestServiceException rse){
-                rse.getMessage();
-            }
-
-           return null;
-        }
-
-
-        protected void onPostExecute(List<User> userList) {
-
-            if (userList != null && userList.size()!=0) {
-                for (User u : userList) {
-                    contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
-                }
-                mAdapter.notifyDataSetChanged();
-            }else{
-                    contactListContent.addItem(new ContactListContent.ContactListItem("null","Sorry, No Contact Found",""));
-            }
-        }
-    }
-    */
 }
