@@ -11,7 +11,7 @@ import java.security.MessageDigest;
 /**
  * Created by Marco Eberl on 27.07.2014.
  */
-public class PasswordEncryption extends Base64{
+public class PasswordEncryption{
 
     private static final String SALT = "Y45M3";
 
@@ -50,7 +50,8 @@ public class PasswordEncryption extends Base64{
            byte[] hash = new byte[40];
            md.update(password.getBytes("UTF-8"));
            hash = md.digest();
-           return base64Encode(hash);
+           return hash.toString();
+           //return base64Encode(hash);
        }
        catch (Exception e){
            Log.d(this.getClass().getSimpleName(), "[???] Hashing Password failed");
