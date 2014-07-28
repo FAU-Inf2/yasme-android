@@ -40,7 +40,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
      * @return
      */
     protected Boolean doInBackground(String... params) {
-        String email = params[0];
+        String email = params[0].toLowerCase();
         String password = params[1];
         try {
             // DEBUG:
@@ -48,7 +48,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
                     + password);
 
             PasswordEncryption pwEnc = new PasswordEncryption(new User(email,password));
-            //password = pwEnc.getHashedPassword();
+            password = pwEnc.getSecurePassword();
 
             String loginReturn[] = AuthorizationTask.getInstance().loginUser(new User(email,
                     password));

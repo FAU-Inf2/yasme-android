@@ -124,6 +124,7 @@ public class MessageEncryption {
             List<Device> devices = new ArrayList<>();
             for (User user : chat.getParticipants()) {
                 for (Device device : DatabaseManager.INSTANCE.getDeviceDAO().getAll(user)) {
+                    Log.d(this.getClass().getSimpleName(),"[???] Local-device: " + device.getId());
                     devices.add(device);
                 }
             }

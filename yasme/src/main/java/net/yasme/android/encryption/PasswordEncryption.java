@@ -7,6 +7,7 @@ import net.yasme.android.entities.User;
 import org.codehaus.jackson.map.deser.ValueInstantiators;
 
 import java.security.MessageDigest;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * Created by Marco Eberl on 27.07.2014.
@@ -23,30 +24,23 @@ public class PasswordEncryption{
     }
 
     public User securePassword(){
-        String secure = getSecurePassword(SALT);
+        String secure = getSecurePassword();
         user.setPw(secure);
         return user;
     }
 
-    public User securePasswordEmailSalted(){
-        String secure = getSecurePassword(user.getPw());
-        user.setPw(secure);
-        return user;
-    }
-
-    public String getSecurePassword(String saltString){
-        return SHA512(salt(saltString,user.getPw()));
+    public String getSecurePassword(){
+        return SHA512(salt(SALT,user.getPw()));
     }
 
     private String SHA512(String password){
        try {
-           MessageDigest md;
-           md = MessageDigest.getInstance("SHA-512");
-           byte[] hash = new byte[40];
+           MessageDigest md = MessageDigest.getInstance("SHA-512");
            md.update(password.getBytes("UTF-8"));
-           hash = md.digest();
-           return hash.toString();
-           //return base64Encode(hash);
+           byte[] hash = md.digest();
+           Base64 base64 = new Base64();
+           //return base64.base64Encode(hash);
+           return new String(Base64.encodeBase64(hash));
        }
        catch (Exception e){
            Log.d(this.getClass().getSimpleName(), "[???] Hashing Password failed");

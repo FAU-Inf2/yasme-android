@@ -38,7 +38,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
     protected Boolean doInBackground(String... params) {
         // TODO: ueberpruefen, ob user schon existiert
         name = params[0];
-        email = params[1];
+        email = params[1].toLowerCase();
         password = params[2];
         String password_check = params[3];
 
@@ -48,7 +48,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
         try {
 
             PasswordEncryption pwEnc = new PasswordEncryption(new User(email,password));
-            //password = pwEnc.getHashedPassword();
+            password = pwEnc.getSecurePassword();
 
             long userId = UserTask.getInstance().registerUser(new User(password, name,
                     email));
