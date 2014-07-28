@@ -57,6 +57,7 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     public void onStop() {
         FragmentObservable<SearchContactFragment, ArrayList<User>> obs = ObservableRegistry.getObservable(SearchContactFragment.class);
         obs.remove(this);
+        super.onStop();
     }
 
     @Override
