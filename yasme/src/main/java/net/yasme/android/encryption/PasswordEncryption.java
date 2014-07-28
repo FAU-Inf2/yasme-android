@@ -4,10 +4,8 @@ import android.util.Log;
 
 import net.yasme.android.entities.User;
 
-import org.codehaus.jackson.map.deser.ValueInstantiators;
-
 import java.security.MessageDigest;
-import org.apache.commons.codec.binary.Base64;
+
 
 /**
  * Created by Marco Eberl on 27.07.2014.
@@ -39,8 +37,7 @@ public class PasswordEncryption{
            md.update(password.getBytes("UTF-8"));
            byte[] hash = md.digest();
            Base64 base64 = new Base64();
-           //return base64.base64Encode(hash);
-           return new String(Base64.encodeBase64(hash));
+           return new String(base64.base64Encode(hash));
        }
        catch (Exception e){
            Log.d(this.getClass().getSimpleName(), "[???] Hashing Password failed");
