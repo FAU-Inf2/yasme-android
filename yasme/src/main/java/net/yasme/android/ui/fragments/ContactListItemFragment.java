@@ -15,6 +15,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import net.yasme.android.R;
+import net.yasme.android.asyncTasks.database.GetAllTask;
+import net.yasme.android.asyncTasks.server.GetAllUsersTask;
 import net.yasme.android.connection.SearchTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.controller.NotifiableFragment;
@@ -27,43 +29,21 @@ import net.yasme.android.ui.activities.ContactActivity;
 import java.util.List;
 
 
-public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<ContactListItemFragment.ContactListItemParam> {
+public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<InviteToChatFragment.AllUsersFetchedParam> {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
-    private Long userId;
-    private String accessToken;
-
     private ContactListContent contactListContent;
 
-    /**
-     * The fragment's ListView/GridView.
-     */
+    //The fragment's ListView/GridView.
     private AbsListView mListView;
 
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
-    //private ListAdapter mAdapter;
+    //The Adapter which will be used to populate the ListView/GridView with Views.
     private SimpleAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
-    public static ContactListItemFragment newInstance(String param1, String param2) {
+    public static ContactListItemFragment newInstance() {
         ContactListItemFragment fragment = new ContactListItemFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -78,14 +58,6 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-        Bundle b = this.getArguments();
-        userId = b.getLong("userId");
-        accessToken = b.getString("accessToken");
 
          //mAdapter = new ArrayAdapter<ContactListContent.ContactListItem>(getActivity(),
          //       android.R.layout.simple_list_item_1, android.R.id.text1,ContactListContent.ITEMS);
@@ -94,18 +66,10 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
         //User temp = new User("Stefan","stefan@yasme.net",4);
         //ContactListContent.ContactListItem item = new ContactListContent.ContactListItem(String.valueOf(temp.getId()),temp.getName(),temp.getEmail(),temp);
-
         //contactListContent.addItem(item);
 
-
-        mAdapter = new SimpleAdapter((ContactActivity)getActivity() ,
-                contactListContent.getMap(), android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
-
-        DownloadAllUsers task = new DownloadAllUsers();
-        task.execute();
-
-        //this.getContacts();
-
+        mAdapter = new SimpleAdapter(getActivity(), contactListContent.getMap(), android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
+        new GetAllUsersTask(this.getClass()).execute();
     }
 
     @Override
@@ -119,7 +83,6 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
-
 
         return view;
     }
@@ -194,28 +157,22 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
     }
 
-    public void notifyFragment(ContactListItemParam param) {
+    public void notifyFragment(InviteToChatFragment.AllUsersFetchedParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+
+        // TODO Update list
+        for(User u : param.getAllUsers()){
+            contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
 
     public static class ContactListItemParam {
         private Boolean success;
-        private Long userId;
-        private String accessToken;
 
-        public ContactListItemParam(Boolean success, Long userId, String accessToken) {
+        public ContactListItemParam(Boolean success) {
             this.success = success;
-            this.userId = userId;
-            this.accessToken = accessToken;
-        }
-
-        public Long getUserId() {
-            return userId;
-        }
-
-        public String getAccessToken() {
-            return accessToken;
         }
 
         public Boolean getSuccess() {
@@ -224,32 +181,32 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     }
 
 
-    private class DownloadAllUsers extends AsyncTask<String,Void,List<User>>{
-
-        @Override
-        protected List<User> doInBackground(String... params) {
-
-            SearchTask search = SearchTask.getInstance();
-            List<User> userList = null;
-
-            try {
-                userList = search.getAllUsers();
-            }catch (RestServiceException rse){
-                rse.getMessage();
-                rse.printStackTrace();
-            }
-
-            return userList;
-        }
-
-
-        protected void onPostExecute(List<User> userList){
-            for(User u: userList){
-               contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail(),u));
-            }
-
-            mAdapter.notifyDataSetChanged();
-        }
-
-    }
+//    private class DownloadAllUsers extends AsyncTask<String,Void,List<User>>{
+//
+//        @Override
+//        protected List<User> doInBackground(String... params) {
+//
+//            SearchTask search = SearchTask.getInstance();
+//            List<User> userList = null;
+//
+//            try {
+//                userList = search.getAllUsers();
+//            }catch (RestServiceException rse){
+//                rse.getMessage();
+//                rse.printStackTrace();
+//            }
+//
+//            return userList;
+//        }
+//
+//
+//        protected void onPostExecute(List<User> userList){
+//            for(User u: userList){
+//               contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail(),u));
+//            }
+//
+//            mAdapter.notifyDataSetChanged();
+//        }
+//
+//    }
 }

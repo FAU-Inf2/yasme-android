@@ -18,9 +18,10 @@ public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
 
     protected SearchTask searchTask = SearchTask.getInstance();
     private List<User> allUsers;
+    private Class classToNotify;
 
-    public GetAllUsersTask() {
-
+    public GetAllUsersTask(Class classToNotify) {
+        this.classToNotify = classToNotify;
     }
 
     /**
@@ -45,7 +46,8 @@ public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
      */
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            ObservableRegistry.getObservable(InviteToChatFragment.class).notifyFragments(new InviteToChatFragment.ContactsFetchedParam(true, allUsers));
+            // InviteToChatFragment.ContactsFetchedParam is also used by ContactListContentFragment
+            ObservableRegistry.getObservable(classToNotify).notifyFragments(new InviteToChatFragment.AllUsersFetchedParam(true, allUsers));
         }
     }
 }
