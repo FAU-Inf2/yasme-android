@@ -65,6 +65,15 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         for(Message message : messages) {
             Log.d(this.getClass().getSimpleName(), message.getMessage() + " " + message.getId());
 
+            // Refresh Sender-User-Data
+            User sender = message.getSender();
+            User dbUser = DatabaseManager.INSTANCE.getUserDAO().get(sender.getId());
+            if (dbUser == null || dbUser.getLastModified() == null || sender.getLastModified().compareTo(dbUser.getLastModified()) > 0) {
+                Log.d(getClass().getSimpleName(), "Sender has to be refreshed");
+                RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER,sender.getId(),true);
+                refreshTask.execute();
+            }
+
             // Store MessageKey if message cotains one
             storeMessageKey(message);
             // Decrypt message
