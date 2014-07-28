@@ -3,25 +3,12 @@ package net.yasme.android.asyncTasks.server;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.connection.MessageTask;
-import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
-import net.yasme.android.exception.*;
-import net.yasme.android.ui.fragments.ChatFragment;
-
-import org.apache.http.HttpResponse;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import net.yasme.android.exception.KeyOutdatedException;
 
 /**
  * Created by robert on 19.06.14.
@@ -67,7 +54,7 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         if (success) {
             if (null != this.onPostExecute) {
-                onPostExecute.execute(); // onPostExecute is a GetMessageTask
+                //onPostExecute.execute(); // onPostExecute is a GetMessageTask
                 // onPostExecute async task will call notify the registered fragments
             }
         } else {
