@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import net.yasme.android.R;
+import net.yasme.android.asyncTasks.database.GetNewMessagesForChatTask;
 import net.yasme.android.asyncTasks.server.GetMessageTask;
 import net.yasme.android.asyncTasks.server.SendMessageTask;
 import net.yasme.android.controller.FragmentObservable;
@@ -20,7 +21,6 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.storage.dao.MessageDAO;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.ChatAdapter;
 
@@ -36,13 +36,12 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     private ChatAdapter mAdapter;
 
-    private MessageDAO messageDAO;
-
     //UI references
     private EditText editMessage;
     private ListView list;
 
     private Chat chat;
+    private int numberOfMessages;
 
     public ChatFragment() {
 
@@ -66,6 +65,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         //trying to get chat with chatId from local DB
         try {
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
+            numberOfMessages = chat.getMessages().size();
             Log.d(this.getClass().getSimpleName(), "number of messages from DB: " + chat.getMessages().size());
         } catch (NullPointerException e) {
             // Occurs when new chat has been generated, but id hasn't been returned by the server yet
@@ -75,8 +75,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         if (chat == null) {
             chat = new Chat(chatId, activity.getSelfUser());
         }
-
-        messageDAO = DatabaseManager.INSTANCE.getMessageDAO();
     }
 
     @Override
@@ -112,7 +110,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     @Override
     public void onStop() {
         super.onStop();
-        FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
+        FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.
+                getObservable(ChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "Remove from observer");
         obs.remove(this);
     }
@@ -120,13 +119,13 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     @Override
     public void notifyFragment(List<Message> messages) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        //if(messages == null) {
+        if(messages == null) {
             //Notified from GetMessageTask, new Messages are stored in the DB
-        //    new GetAllTask(messageDAO, ChatListFragment.class).execute();
-        //} else {
+            new GetNewMessagesForChatTask(numberOfMessages, chat.getId()).execute();
+        } else {
             //Notified from GetAllTask
             updateViews(messages);
-        //}
+        }
         Log.d(this.getClass().getSimpleName(), "Received " + messages.size() + " messages");
 
         //progress bar off
@@ -143,8 +142,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         getActivity().setProgressBarIndeterminateVisibility(true);
 
         // Send message and get new messages afterwards
-        new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask())
-                .execute(msgText);
+        new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask()).execute(msgText);
 
         Log.d(this.getClass().getSimpleName(), "Send message in bg");
         editMessage.setText("");

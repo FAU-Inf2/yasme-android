@@ -73,7 +73,7 @@ public enum MessageDAOImpl implements MessageDAO{
     }
 
     @Override
-    public List<Message> getMessagesByChat(long chatId) {
+    public List<Message> getMessagesByChatAndNumberOfMessages(long chatId, int numberOfMessages) {
         Chat chat = new Chat();
         chat.setId(chatId);
         List<Message> matching;
@@ -83,7 +83,12 @@ public enum MessageDAOImpl implements MessageDAO{
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;
         }
-        return matching;
+        //if(matching.size()-numberOfMessages<=0) {
+        //    Log.d(this.getClass().getSimpleName(), "falsche Zahlen");
+        //    return null;
+        //}
+        return matching.subList(numberOfMessages, matching.size());
+        //return matching;
     }
 
     @Override

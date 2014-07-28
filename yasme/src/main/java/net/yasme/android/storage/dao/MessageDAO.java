@@ -1,8 +1,6 @@
 package net.yasme.android.storage.dao;
 
-import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
-import net.yasme.android.entities.User;
 
 import java.util.List;
 
@@ -30,7 +28,7 @@ public interface MessageDAO extends DAO<Message> {
      * Query for all of the message items of one chat in the object table
      * @return list of all messages of one chat or null on error
      */
-    public List<Message> getMessagesByChat(long chatId);
+    public List<Message> getMessagesByChatAndNumberOfMessages(long chatId, int NumberOfMessages);
 
     /**
      * Store the fields from an object to the database row corresponding to the id from the data
