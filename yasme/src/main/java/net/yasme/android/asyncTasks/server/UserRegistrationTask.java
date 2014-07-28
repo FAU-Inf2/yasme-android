@@ -47,8 +47,8 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
         }
         try {
 
-            PasswordEncryption pwEnc = new PasswordEncryption();
-            //password = pwEnc.securePassword(password);
+            PasswordEncryption pwEnc = new PasswordEncryption(new User(email,password));
+            //password = pwEnc.getHashedPassword();
 
             long userId = UserTask.getInstance().registerUser(new User(password, name,
                     email));
