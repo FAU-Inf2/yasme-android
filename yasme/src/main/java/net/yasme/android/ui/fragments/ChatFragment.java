@@ -143,8 +143,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         getActivity().setProgressBarIndeterminateVisibility(true);
 
         // Send message and get new messages afterwards
-        new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask())
-                .execute(msgText);
+        new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask()).execute(msgText);
 
         Log.d(this.getClass().getSimpleName(), "Send message in bg");
         editMessage.setText("");
