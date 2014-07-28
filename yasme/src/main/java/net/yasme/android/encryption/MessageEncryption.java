@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MessageEncryption {
@@ -69,7 +70,7 @@ public class MessageEncryption {
         String key = aes.getKeyinBase64();
         String iv = aes.getIVinBase64();
 
-        return sendKey(key, iv);
+        return sendKey(key, iv, true);
     }
 
     public MessageKey getKey(long keyId) {
@@ -117,7 +118,28 @@ public class MessageEncryption {
         return message;
     }
 
-    public MessageKey sendKey(String key, String iv) {
+    private List<Device> getRecipientDevices(boolean local) {
+        if (local) {
+            Log.d(this.getClass().getSimpleName(),"[???] Get local stored devices");
+            List<Device> devices = new ArrayList<>();
+            for (User user : chat.getParticipants()) {
+                for (Device device : DatabaseManager.INSTANCE.getDeviceDAO().getAll(user)) {
+                    devices.add(device);
+                }
+            }
+            return devices;
+        } else {
+            try {
+                Log.d(this.getClass().getSimpleName(),"[???] Get devices from Server");
+                return ChatTask.getInstance().getAllDevicesForChat(chat.getId());
+            } catch (Exception e) {
+                return new ArrayList<>();
+            }
+
+        }
+    }
+
+    public MessageKey sendKey(String key, String iv, boolean local) {
         //TODO: If sendkey nicht erfolgreich, dann Devices pro User updaten und nochmal versuchen!!!
         try {
             long deviceId = DatabaseManager.INSTANCE.getDeviceId();
@@ -125,9 +147,7 @@ public class MessageEncryption {
             ArrayList<MessageKey> messageKeys = new ArrayList<MessageKey>();
 
             //TODO: Try with local data first
-            for (Device recipientDevice : ChatTask.getInstance().getAllDevicesForChat(chat.getId())) {
-                Log.d(this.getClass().getSimpleName(),"[???] Store device" + recipientDevice.getId() + " to DB");
-                DatabaseManager.INSTANCE.getDeviceDAO().addOrUpdate(recipientDevice);
+            for (Device recipientDevice : getRecipientDevices(local)) {
                 Log.d(this.getClass().getSimpleName(),"[???] Send Key for Device" + recipientDevice.getId() + " with pubKey: " + recipientDevice.getPublicKey());
 
 
@@ -173,6 +193,13 @@ public class MessageEncryption {
             db.getMessageKeyDAO().addIfNotExists(messageKey);
             return messageKey;
 
+        } catch (IncompleteKeyException e) {
+            if (local) {
+                return sendKey(key,iv,false);
+            } else {
+                Log.e(this.getClass().getSimpleName(),"[???] Key wurde nicht an den Server gesendet");
+                return null;
+            }
         } catch (Exception e) {
             Log.d(this.getClass().getSimpleName(),"Fail to send key: "+e.getMessage());
             return null;

@@ -8,6 +8,7 @@ import net.yasme.android.entities.Device;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
+import net.yasme.android.exception.IncompleteKeyException;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.Error;
 
@@ -44,7 +45,7 @@ public class MessageKeyTask extends ConnectionTask {
         }
     }
 
-    public MessageKey saveKeys(ArrayList<MessageKey> messageKeys) throws RestServiceException {
+    public MessageKey saveKeys(ArrayList<MessageKey> messageKeys) throws IncompleteKeyException {
         try {
             Log.d(this.getClass().getSimpleName(),"[???] Keys werden gesendet");
             HttpResponse httpResponse = executeRequest(Request.POST, "", messageKeys);
@@ -54,10 +55,13 @@ public class MessageKeyTask extends ConnectionTask {
                     httpResponse.getEntity().getContent())).readLine(), MessageKey.class);
 
             return messageKey;
-        } catch (IOException e) {
-            throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (RestServiceException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            if (e.getCode() == Error.OUTDATED.getNumber()) {
+                throw new IncompleteKeyException();
+            }
+        } catch (IOException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
         }
         return null;
     }
