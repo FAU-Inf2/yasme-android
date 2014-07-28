@@ -54,7 +54,7 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         if (success) {
             if (null != this.onPostExecute) {
-                //onPostExecute.execute(); // onPostExecute is a GetMessageTask
+                onPostExecute.execute(); // onPostExecute is a GetMessageTask
                 // onPostExecute async task will call notify the registered fragments
             }
         } else {
