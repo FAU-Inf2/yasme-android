@@ -57,7 +57,7 @@ public class MessageKeyTask extends ConnectionTask {
             return messageKey;
         } catch (RestServiceException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
-            if (e.getCode() == Error.OUTDATED.getNumber()) {
+            if (e.getCode() == Error.INCOMPLETE_REQUEST.getNumber()) {
                 throw new IncompleteKeyException();
             }
         } catch (IOException e) {

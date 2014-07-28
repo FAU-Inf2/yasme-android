@@ -195,6 +195,7 @@ public class MessageEncryption {
 
         } catch (IncompleteKeyException e) {
             if (local) {
+                Log.e(this.getClass().getSimpleName(),"[???] Keyerzeugu");
                 return sendKey(key,iv,false);
             } else {
                 Log.e(this.getClass().getSimpleName(),"[???] Key wurde nicht an den Server gesendet");

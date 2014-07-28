@@ -22,6 +22,8 @@ public enum Error implements ErrorCode {
 
     OUTDATED(409),
 
+    INCOMPLETE_REQUEST(420),
+
     STORE_USER_FAILED(500),
 
     CONNECTION_ERROR(500),
