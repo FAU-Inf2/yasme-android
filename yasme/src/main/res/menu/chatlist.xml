@@ -16,23 +16,25 @@
         android:title="@string/action_contacts"
         android:icon="@drawable/ic_action_cc_bcc"/>
 
+    <!--
     <item
         android:id="@+id/action_chats"
         android:orderInCategory="300"
         android:showAsAction="always"
         android:title="@string/action_chats"
         android:icon="@drawable/ic_action_storage"/>
+    -->
 
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="400"
+        android:orderInCategory="300"
         android:showAsAction="never"
         android:title="@string/action_settings"
         android:icon="@drawable/ic_action_settings"/>
 
     <item
         android:id="@+id/sign_out"
-        android:orderInCategory="500"
+        android:orderInCategory="400"
         android:showAsAction="never"
         android:title="Sign out"
         android:icon="@drawable/ic_action_chat"/>
