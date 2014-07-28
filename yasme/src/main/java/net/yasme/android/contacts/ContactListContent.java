@@ -21,7 +21,7 @@ public class ContactListContent {
     private List<Map<String,String>> listMap;
 
     public ContactListContent(){
-        listMap = new ArrayList<Map<String,String>>();
+        listMap = new ArrayList<>();
     }
 
    /* private static void addItem(ContactListItem item) {

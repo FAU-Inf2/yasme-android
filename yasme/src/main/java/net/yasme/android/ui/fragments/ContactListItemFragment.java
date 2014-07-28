@@ -19,17 +19,21 @@ import net.yasme.android.asyncTasks.database.GetAllTask;
 import net.yasme.android.asyncTasks.server.GetAllUsersTask;
 import net.yasme.android.connection.SearchTask;
 import net.yasme.android.contacts.ContactListContent;
+import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.ui.activities.ContactActivity;
+import net.yasme.android.ui.fragments.InviteToChatFragment.AllUsersFetchedParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<InviteToChatFragment.AllUsersFetchedParam> {
+public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<AllUsersFetchedParam> {
 
 
     private OnFragmentInteractionListener mListener;
@@ -41,18 +45,17 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     //The Adapter which will be used to populate the ListView/GridView with Views.
     private SimpleAdapter mAdapter;
 
-    // TODO: Rename and change types of parameters
-    public static ContactListItemFragment newInstance() {
-        ContactListItemFragment fragment = new ContactListItemFragment();
-        return fragment;
-    }
+//    // TODO: Rename and change types of parameters
+//    public static ContactListItemFragment newInstance() {
+//        ContactListItemFragment fragment = new ContactListItemFragment();
+//        return fragment;
+//    }
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ContactListItemFragment() {
-    }
+    public ContactListItemFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,22 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
         new GetAllUsersTask(this.getClass()).execute();
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FragmentObservable<ContactListItemFragment, AllUsersFetchedParam> obs = ObservableRegistry.getObservable(ContactListItemFragment.class);
+        obs.register(this);
+    }
+
+
+    @Override
+    public void onStop() {
+        FragmentObservable<ContactListItemFragment, AllUsersFetchedParam> obs = ObservableRegistry.getObservable(ContactListItemFragment.class);
+        obs.remove(this);
+        super.onStop();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,7 +98,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
@@ -120,13 +139,13 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
      * the list is empty. If you would like to change the text, call this method
      * to supply the text it should use.
      */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
-
-        if (emptyText instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
-    }
+//    public void setEmptyText(CharSequence emptyText) {
+//        View emptyView = mListView.getEmptyView();
+//
+//        if (emptyText instanceof TextView) {
+//            ((TextView) emptyView).setText(emptyText);
+//        }
+//    }
 
     /**
     * This interface must be implemented by activities that contain this
@@ -143,19 +162,19 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     }
 
 
-    private void getContacts(){
-
-        UserDAO userDAO = DatabaseManager.INSTANCE.getUserDAO();
-
-        List<User> userList = userDAO.getContacts();
-        if (userList != null){
-            for(User u:userList){
-                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail(),u));
-            }
-            mAdapter.notifyDataSetChanged();
-        }
-
-    }
+//    private void getContacts(){
+//
+//        UserDAO userDAO = DatabaseManager.INSTANCE.getUserDAO();
+//
+//        List<User> userList = userDAO.getContacts();
+//        if (userList != null){
+//            for(User u:userList){
+//                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail(),u));
+//            }
+//            mAdapter.notifyDataSetChanged();
+//        }
+//
+//    }
 
     public void notifyFragment(InviteToChatFragment.AllUsersFetchedParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
@@ -168,17 +187,17 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     }
 
 
-    public static class ContactListItemParam {
-        private Boolean success;
-
-        public ContactListItemParam(Boolean success) {
-            this.success = success;
-        }
-
-        public Boolean getSuccess() {
-            return success;
-        }
-    }
+//    public static class ContactListItemParam {
+//        private Boolean success;
+//
+//        public ContactListItemParam(Boolean success) {
+//            this.success = success;
+//        }
+//
+//        public Boolean getSuccess() {
+//            return success;
+//        }
+//    }
 
 
 //    private class DownloadAllUsers extends AsyncTask<String,Void,List<User>>{
