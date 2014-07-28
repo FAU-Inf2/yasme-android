@@ -2,7 +2,6 @@ package net.yasme.android.ui.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,27 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.database.GetAllTask;
 import net.yasme.android.asyncTasks.server.GetAllUsersTask;
-import net.yasme.android.connection.SearchTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
-import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.storage.dao.UserDAO;
-import net.yasme.android.ui.activities.ContactActivity;
 import net.yasme.android.ui.fragments.InviteToChatFragment.AllUsersFetchedParam;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<AllUsersFetchedParam> {
@@ -45,11 +35,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     //The Adapter which will be used to populate the ListView/GridView with Views.
     private SimpleAdapter mAdapter;
 
-//    // TODO: Rename and change types of parameters
-//    public static ContactListItemFragment newInstance() {
-//        ContactListItemFragment fragment = new ContactListItemFragment();
-//        return fragment;
-//    }
+    private AtomicInteger bgTasksRunning = new AtomicInteger(0);
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -61,7 +47,6 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
          //mAdapter = new ArrayAdapter<ContactListContent.ContactListItem>(getActivity(),
          //       android.R.layout.simple_list_item_1, android.R.id.text1,ContactListContent.ITEMS);
 
@@ -72,6 +57,10 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
         //contactListContent.addItem(item);
 
         mAdapter = new SimpleAdapter(getActivity(), contactListContent.getMap(), android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
+
+        // progress bar on
+        getActivity().setProgressBarIndeterminateVisibility(true);
+        bgTasksRunning.getAndIncrement();
         new GetAllUsersTask(this.getClass()).execute();
     }
 
@@ -90,6 +79,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
         obs.remove(this);
         super.onStop();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -179,11 +169,19 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     public void notifyFragment(InviteToChatFragment.AllUsersFetchedParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
 
-        // TODO Update list
-        for(User u : param.getAllUsers()){
-            contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
+
+        if (param.getSuccess()) {
+            for (User u : param.getAllUsers()) {
+                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
+            }
+            mAdapter.notifyDataSetChanged();
         }
-        mAdapter.notifyDataSetChanged();
+
+        // Stop spinner if this was the only background task
+        if (0 == bgTasksRunning.decrementAndGet()) {
+            getActivity().setProgressBarIndeterminateVisibility(false);
+        }
+
     }
 
 
