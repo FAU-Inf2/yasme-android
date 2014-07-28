@@ -1,0 +1,8 @@
+<resources>
+    <!--engl-->
+    <string name="title_chat_settings">Chat settings</string>
+
+    <string name="change_user">Add or remove User</string>
+    <string name="change_name">Change name of Chat</string>
+    <string name="change_status">Change status of Chat</string>
+</resources>

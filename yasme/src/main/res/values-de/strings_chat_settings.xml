@@ -1,0 +1,8 @@
+<resources>
+    <!--ger-->
+    <string name="title_chat_settings">Chat Einstellungen</string>
+
+    <string name="change_user">Benutzer löschen oder hinzufügen</string>
+    <string name="change_name">Chatnamen ändern</string>
+    <string name="change_status">Chatstatus ändern</string>
+</resources>
