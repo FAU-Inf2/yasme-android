@@ -42,6 +42,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     private Chat chat;
     private int numberOfMessages;
+    private List<Message> localMessages;
 
     public ChatFragment() {
 
@@ -65,7 +66,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         //trying to get chat with chatId from local DB
         try {
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
-            numberOfMessages = chat.getMessages().size();
+            localMessages = chat.getMessages();
+            numberOfMessages = localMessages.size();
             Log.d(this.getClass().getSimpleName(), "number of messages from DB: " + chat.getMessages().size());
         } catch (NullPointerException e) {
             // Occurs when new chat has been generated, but id hasn't been returned by the server yet
@@ -158,10 +160,15 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         List<Message> tmp = new ArrayList<>();
         for (Message msg : messages) {
             if (msg.getChatId() == this.chat.getId()) {
-                tmp.add(msg);
+                if (!localMessages.contains(msg)) {
+                    tmp.add(msg);
+                    localMessages.add(msg);
+                }
             }
         }
+
         messages = tmp;
+        numberOfMessages = numberOfMessages + tmp.size();
 
         mAdapter.addAll(messages);
         editMessage.requestFocus();
