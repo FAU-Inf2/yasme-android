@@ -123,7 +123,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             //Notified from GetMessageTask, new Messages are stored in the DB
             new GetNewMessagesForChatTask(numberOfMessages, chat.getId()).execute();
         } else {
-            //Notified from GetAllTask
+            //Notified from GetNewMessageForChatTask
             updateViews(messages);
         }
         Log.d(this.getClass().getSimpleName(), "Received " + messages.size() + " messages");

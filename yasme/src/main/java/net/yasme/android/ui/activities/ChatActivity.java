@@ -1,5 +1,6 @@
 package net.yasme.android.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +43,16 @@ public class ChatActivity extends AbstractYasmeActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int itemId = item.getItemId();
+        /*if (itemId == R.id.action_chat_settings) {
+            Intent intent = new Intent(this, InviteToChatActivity.class);
+            startActivity(intent);
+            return true;
+        }*/
+        if (itemId == R.id.action_chats) {
+            Intent intent = new Intent(this, ChatListActivity.class);
+            startActivity(intent);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
 	}
 }

@@ -9,6 +9,7 @@
     <string name="action_add_chat">Neuer Chat</string>
     <string name="action_search_contact">Kontakt suchen</string>
     <string name="action_contacts">Kontakte</string>
+    <string name="action_chat_settings">Chat Einstellungen</string>
 
     <!-- Home -->
     <string name="title_activity_home">Yasme</string>
