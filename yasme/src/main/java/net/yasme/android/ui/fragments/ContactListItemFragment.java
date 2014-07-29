@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.SimpleAdapter;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.server.GetAllUsersTask;
+import net.yasme.android.asyncTasks.database.GetContactsTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
@@ -61,7 +61,8 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
         // progress bar on
         getActivity().setProgressBarIndeterminateVisibility(true);
         bgTasksRunning.getAndIncrement();
-        new GetAllUsersTask(this.getClass()).execute();
+        new GetContactsTask().execute();
+        //new GetAllUsersTask(this.getClass()).execute(); //TODO: delete GetAllUsersTask, if not needed anymore
     }
 
 
