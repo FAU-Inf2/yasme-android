@@ -43,7 +43,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     private Chat chat;
     private AtomicLong latestMessageOnDisplay;
-    private List<Message> localMessages;
+    //private List<Message> localMessages = new ArrayList<>();
 
     public ChatFragment() {
 
@@ -67,9 +67,12 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         //trying to get chat with chatId from local DB
         try {
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
-            localMessages = chat.getMessages();
             // Assuming that the messages are sorted by id
-            latestMessageOnDisplay = new AtomicLong(localMessages.get(localMessages.size()-1).getId());
+            latestMessageOnDisplay = new AtomicLong(0);
+            // First load messages from database
+            new GetNewMessagesForChatTask(latestMessageOnDisplay.get(), chat.getId());
+            // And then ask server for new messages
+            new GetMessageTask().execute();
             Log.d(this.getClass().getSimpleName(), "number of messages from DB: " + chat.getMessages().size());
         } catch (NullPointerException e) {
             // Occurs when new chat has been generated, but id hasn't been returned by the server yet
@@ -171,7 +174,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             for (Message msg : messages) {
                 if (msg.getId() > latestMessageOnDisplay.get()) {
                     newMessages.add(msg);
-                    localMessages.add(msg);
+                    //localMessages.add(msg);
                     newLatestMessageOnDisplay = Math.max(newLatestMessageOnDisplay, msg.getId());
                 }
             }

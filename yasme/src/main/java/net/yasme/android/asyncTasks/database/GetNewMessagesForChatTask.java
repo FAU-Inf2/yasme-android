@@ -43,7 +43,7 @@ public class GetNewMessagesForChatTask extends AsyncTask<Void, Void, Boolean> {
             ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
         }
         else {
-            Log.w(this.getClass().getSimpleName(), "Get new Messages not successful");
+            Log.w(this.getClass().getSimpleName(), "Getting new messages failed");
         }
     }
 }
