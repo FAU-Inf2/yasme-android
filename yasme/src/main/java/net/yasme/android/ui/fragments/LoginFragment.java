@@ -1,5 +1,8 @@
 package net.yasme.android.ui.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,7 +25,6 @@ import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
-import net.yasme.android.storage.DatabaseHelper;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.activities.ChatListActivity;
@@ -36,9 +38,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     // UI references.
     private EditText emailView;
     private EditText passwordView;
-    private View loginFormView;
-    private View loginStatusView;
     private TextView loginStatusMessageView;
+    private View mProgressView;
+    private View mLoginFormView;
 
     // values for devices yasme server
     private String deviceProduct;
@@ -72,6 +74,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         Log.d(this.getClass().getSimpleName(), "... successful");
 
         obs.register(this);
+        mProgressView = activity.findViewById(R.id.login_status);
+        mLoginFormView = activity.findViewById(R.id.login);
     }
 
     @Override
@@ -107,8 +111,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                     }
                 });
 
-        loginFormView = rootView.findViewById(R.id.login_form);
-        loginStatusView = rootView.findViewById(R.id.login_status);
         loginStatusMessageView = (TextView) rootView.findViewById(R.id.login_status_message);
 
         rootView.findViewById(R.id.sign_in_button).setOnClickListener(
@@ -186,6 +188,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
+            showProgress(true);
 
             authTask.execute(emailTmp, passwordTmp);
             authTask = null;
@@ -222,6 +225,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 if (deviceId < 0) {
                     // Error ocurred
                     Log.e(this.getClass().getSimpleName(), "Could not load registered device's id from shared prefs");
+                    showProgress(false);
                     return;
                 }
 
@@ -229,6 +233,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 ConnectionTask.initSession(userId, deviceId, accessToken);
                 DatabaseManager.INSTANCE.setDeviceId(deviceId);
 
+                showProgress(false);
                 Intent intent = new Intent(activity, ChatListActivity.class);
                 startActivity(intent);
             } else {
@@ -245,6 +250,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             passwordView.setError(getString(R.string.error_incorrect_user_or_password));
             passwordView.requestFocus();
             editor.commit();
+            showProgress(false);
         }
     }
 
@@ -265,6 +271,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             DatabaseManager.INSTANCE.setDeviceId(deviceId);
 
             Log.d(this.getClass().getSimpleName(), "Login after device registration at yasme server");
+            showProgress(false);
             Intent intent = new Intent(activity, ChatListActivity.class);
             startActivity(intent);
         }
@@ -305,6 +312,42 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
         Log.d(this.getClass().getSimpleName(), "deviceId is " + deviceId);
         return true;
+    }
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    public void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 
     @Override
