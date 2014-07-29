@@ -57,13 +57,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Intent intent = activity.getIntent();
         long chatId = intent.getLongExtra(activity.CHAT_ID, 1);
 
-        //Register at observer
-        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
-        FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
-        Log.d(this.getClass().getSimpleName(), "... successful");
-
-        obs.register(this);
-
         //trying to get chat with chatId from local DB
         try {
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
@@ -114,6 +107,12 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     @Override
     public void onStart() {
         super.onStart();
+        //Register at observer
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
+        FragmentObservable<ChatFragment, List<Message>> obs = ObservableRegistry.getObservable(ChatFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+
+        obs.register(this);
     }
 
     @Override
@@ -130,6 +129,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         if(messages == null) {
             //Notified from GetMessageTask, new Messages are stored in the DB
+            // Note that retrieved messages will be ordered ascending by id
             new GetNewMessagesForChatTask(latestMessageOnDisplay.get(), chat.getId()).execute();
         } else {
             //Notified from GetNewMessageForChatTask
