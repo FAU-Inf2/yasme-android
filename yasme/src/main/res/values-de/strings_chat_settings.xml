@@ -5,4 +5,7 @@
     <string name="change_user">Benutzer löschen oder hinzufügen</string>
     <string name="change_name">Chatnamen ändern</string>
     <string name="change_status">Chatstatus ändern</string>
+
+    <string name="change_name_hint">Neuer Chatname</string>
+    <string name="change_status_hint">Neuer Chatstatus</string>
 </resources>
