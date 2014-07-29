@@ -1,7 +1,10 @@
 package net.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
+import android.widget.Toast;
 
+import net.yasme.android.R;
+import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.Chat;
 
 /**
@@ -34,6 +37,10 @@ public class ChangeChatNameTask extends AsyncTask<String, Void, Boolean> {
      * Invokes the fragment's method to show the chat activity
      */
     protected void onPostExecute(final Boolean success) {
-
+        if(success) {
+            Toaster.getInstance().toast(R.string.change_name_successful, Toast.LENGTH_LONG);
+        } else {
+            Toaster.getInstance().toast(R.string.change_name_not_successful, Toast.LENGTH_LONG);
+        }
     }
 }
