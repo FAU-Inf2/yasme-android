@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * Created by bene on 20.06.14.
  */
+@Deprecated
 public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
 
     protected SearchTask searchTask = SearchTask.getInstance();

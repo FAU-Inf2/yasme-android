@@ -14,8 +14,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import net.yasme.android.R;
+import net.yasme.android.asyncTasks.database.GetContactsTask;
 import net.yasme.android.asyncTasks.server.CreateChatTask;
-import net.yasme.android.asyncTasks.server.GetAllUsersTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
@@ -42,6 +42,7 @@ public class InviteToChatFragment
     private ArrayAdapter<String> adapter;
 
     public InviteToChatFragment() {
+
     }
 
     @Override
@@ -58,7 +59,12 @@ public class InviteToChatFragment
 
         activity = (AbstractYasmeActivity) getActivity();
         findViewsById();
-        new GetAllUsersTask(this.getClass()).execute();
+
+        //progress bar on
+        getActivity().setProgressBarIndeterminateVisibility(true);
+
+        //new GetAllUsersTask(this.getClass()).execute(); //TODO: delete GetAllUsersTask, if not needed anymore
+        new GetContactsTask().execute();
     }
 
     @Override
@@ -149,6 +155,8 @@ public class InviteToChatFragment
     @Override
     public void notifyFragment(InviteToChatParam inviteToChatParam) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        getActivity().setProgressBarIndeterminateVisibility(false); //progress bar off
+
         if (inviteToChatParam instanceof ChatRegisteredParam) {
             ChatRegisteredParam param = (ChatRegisteredParam) inviteToChatParam;
             startChat(param.getChatId());
