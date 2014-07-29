@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 
 import net.yasme.android.R;
 import net.yasme.android.entities.User;
@@ -46,6 +47,10 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //progress bar in actionbar
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
         setContentView(R.layout.activity_contact);
 
         // Set up the action bar.

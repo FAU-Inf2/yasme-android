@@ -60,6 +60,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
 
         // progress bar on
         getActivity().setProgressBarIndeterminateVisibility(true);
+
         bgTasksRunning.getAndIncrement();
         new GetContactsTask().execute();
         //new GetAllUsersTask(this.getClass()).execute(); //TODO: delete GetAllUsersTask, if not needed anymore
@@ -176,6 +177,8 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
                 contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
             }
             mAdapter.notifyDataSetChanged();
+        } else {
+            Log.e(this.getClass().getSimpleName(), "Failed to fetch all users");
         }
 
         // Stop spinner if this was the only background task
