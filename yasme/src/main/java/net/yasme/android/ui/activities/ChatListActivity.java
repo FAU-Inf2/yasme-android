@@ -51,7 +51,6 @@ public class ChatListActivity extends AbstractYasmeActivity {
             long userId = storage.getLong(AbstractYasmeActivity.USER_ID, 0);
             String accessToken = storage.getString(AbstractYasmeActivity.ACCESSTOKEN, "");
             //initConnection Session
-            //TODO: second Param should be deviceId
             ConnectionTask.initSession(userId, deviceId, accessToken);
         }
 

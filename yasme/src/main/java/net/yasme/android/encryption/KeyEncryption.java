@@ -143,7 +143,7 @@ public class KeyEncryption {
         SharedPreferences privKeyStorage = context.getSharedPreferences(RSAKEY_STORAGE, Context.MODE_PRIVATE);
         String privKeyInBase64 = privKeyStorage.getString(PRIVATEKEY, "");
 
-
+        Log.d(this.getClass().getSimpleName(),"[???] Load private Key from storage: " + RSAKEY_STORAGE);
         //if Key is available
         if (privKeyInBase64 != "") {
 
@@ -154,7 +154,7 @@ public class KeyEncryption {
                 return privKey;
             }
 
-            Log.d(this.getClass().getSimpleName(), "[???] getting public key from storage failed");
+            Log.d(this.getClass().getSimpleName(), "[???] getting private key from storage failed");
             return null;
         }
 

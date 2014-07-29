@@ -94,6 +94,7 @@ public class ConnectionTask {
         }
         ConnectionTask.userId = Long.toString(userId);
         ConnectionTask.accessToken = accessToken;
+        ConnectionTask.deviceId = "-1";
         Log.i(ConnectionTask.class.getSimpleName(), "Bear in mind that deviceId has not been set yet.");
         initializedSession = true;
     }
