@@ -25,10 +25,10 @@ public interface MessageDAO extends DAO<Message> {
     public Message get(long id);
 
     /**
-     * Query for all of the message items of one chat in the object table
+     * Query for all of the message items of a given chat. The returned messages are ordered ascending by their id
      * @return list of all messages of one chat or null on error
      */
-    public List<Message> getMessagesByChatAndNumberOfMessages(long chatId, int NumberOfMessages);
+    public List<Message> getNewMessagesByChat(long chatId, long latestMessageId);
 
     /**
      * Store the fields from an object to the database row corresponding to the id from the data

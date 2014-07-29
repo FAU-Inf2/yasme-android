@@ -18,18 +18,18 @@ public class GetNewMessagesForChatTask extends AsyncTask<Void, Void, Boolean> {
     private List<Message> messages;
     private MessageDAO messageDao;
     private long chatId;
-    private int numberOfMessages;
+    private long latestMessageId;
 
-    public GetNewMessagesForChatTask(int numberOfMessages, long chatId) {
+    public GetNewMessagesForChatTask(long latestMessageId, long chatId) {
         messageDao = DatabaseManager.INSTANCE.getMessageDAO();
         this.chatId = chatId;
-        this.numberOfMessages = numberOfMessages;
+        this.latestMessageId = latestMessageId;
     }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
 
-        messages = messageDao.getMessagesByChatAndNumberOfMessages(chatId, numberOfMessages);
+        messages = messageDao.getNewMessagesByChat(chatId, latestMessageId);
         if(messages == null) {
             return false;
         }

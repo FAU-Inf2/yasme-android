@@ -2,6 +2,10 @@ package net.yasme.android.storage.dao;
 
 import android.util.Log;
 
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
+
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseConstants;
@@ -73,22 +77,24 @@ public enum MessageDAOImpl implements MessageDAO{
     }
 
     @Override
-    public List<Message> getMessagesByChatAndNumberOfMessages(long chatId, int numberOfMessages) {
+    public List<Message> getNewMessagesByChat(long chatId, long latestMessageId) {
         Chat chat = new Chat();
         chat.setId(chatId);
-        List<Message> matching;
+
+        QueryBuilder<Message, Long> queryBuilder = databaseHelper.getMessageDao().queryBuilder();
+        Where where = queryBuilder.where();
+
         try {
-            matching = databaseHelper.getMessageDao().queryForEq(DatabaseConstants.CHAT, chat);
+            where.eq(DatabaseConstants.CHAT, chatId);
+            where.and();
+            where.gt(DatabaseConstants.MESSAGE_ID, latestMessageId);
+            queryBuilder.orderBy(DatabaseConstants.MESSAGE_ID, true);
+            return queryBuilder.query();
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
-            return null;
         }
-        //if(matching.size()-numberOfMessages<=0) {
-        //    Log.d(this.getClass().getSimpleName(), "falsche Zahlen");
-        //    return null;
-        //}
-        return matching.subList(numberOfMessages, matching.size());
-        //return matching;
+
+        return null;
     }
 
     @Override

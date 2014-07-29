@@ -26,6 +26,7 @@ import net.yasme.android.ui.ChatAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by martin on 21.06.2014.
@@ -41,7 +42,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     private ListView list;
 
     private Chat chat;
-    private int numberOfMessages;
+    private AtomicLong latestMessageOnDisplay;
     private List<Message> localMessages;
 
     public ChatFragment() {
@@ -67,10 +68,13 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         try {
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
             localMessages = chat.getMessages();
-            numberOfMessages = localMessages.size();
+            // Assuming that the messages are sorted by id
+            latestMessageOnDisplay = new AtomicLong(localMessages.get(localMessages.size()-1).getId());
             Log.d(this.getClass().getSimpleName(), "number of messages from DB: " + chat.getMessages().size());
         } catch (NullPointerException e) {
             // Occurs when new chat has been generated, but id hasn't been returned by the server yet
+
+            // TODO Where do you get the chatId from? The chat object won't ever be updated after the server assigned an id to the chat, will it?
             chat = null;
             Log.w(this.getClass().getSimpleName(), "get chat from DB failed");
         }
@@ -123,7 +127,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         if(messages == null) {
             //Notified from GetMessageTask, new Messages are stored in the DB
-            new GetNewMessagesForChatTask(numberOfMessages, chat.getId()).execute();
+            new GetNewMessagesForChatTask(latestMessageOnDisplay.get(), chat.getId()).execute();
         } else {
             //Notified from GetNewMessageForChatTask
             updateViews(messages);
@@ -140,6 +144,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             Log.d(this.getClass().getSimpleName(), "Nichts eingegeben");
             return;
         }
+
         //progress bar on
         getActivity().setProgressBarIndeterminateVisibility(true);
 
@@ -147,6 +152,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask()).execute(msgText);
 
         Log.d(this.getClass().getSimpleName(), "Send message in bg");
+        // Empty the input field after send button was pressed
         editMessage.setText("");
     }
 
@@ -156,21 +162,23 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             return;
         }
 
-        //TODO: evtl aendern
-        List<Message> tmp = new ArrayList<>();
-        for (Message msg : messages) {
-            if (msg.getChatId() == this.chat.getId()) {
-                if (!localMessages.contains(msg)) {
-                    tmp.add(msg);
+        List<Message> newMessages = new ArrayList<>();
+
+        // Even if this fragment will be notified with same messages several times, it should not display them more than once
+        // Synchronize the write access on latestMessageOnDisplay in case the fragment can be notified by more than one thread
+        synchronized (this.getClass()){
+            long newLatestMessageOnDisplay = latestMessageOnDisplay.get();
+            for (Message msg : messages) {
+                if (msg.getId() > latestMessageOnDisplay.get()) {
+                    newMessages.add(msg);
                     localMessages.add(msg);
+                    newLatestMessageOnDisplay = Math.max(newLatestMessageOnDisplay, msg.getId());
                 }
             }
+            latestMessageOnDisplay.set(newLatestMessageOnDisplay);
         }
 
-        messages = tmp;
-        numberOfMessages = numberOfMessages + tmp.size();
-
-        mAdapter.addAll(messages);
+        mAdapter.addAll(newMessages);
         editMessage.requestFocus();
     }
 }
