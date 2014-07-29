@@ -32,12 +32,10 @@
         <service android:name=".gcm.GcmIntentService" />
 
         <activity
-            android:screenOrientation="portrait"
             android:name=".ui.activities.ChatListActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -45,12 +43,10 @@
         <activity
             android:name=".ui.activities.LoginActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
 
         <activity
-            android:screenOrientation="portrait"
             android:name=".ui.activities.ContactActivity"
             android:parentActivityName=".ui.activities.ChatListActivity"
             android:label="@string/app_name" >
@@ -58,8 +54,7 @@
 
         <activity
             android:name=".ui.activities.ChatActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:label="@string/app_name" >
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.ChatListActivity"/>
         </activity>
@@ -76,7 +71,6 @@
         </activity>
 
         <activity
-            android:screenOrientation="portrait"
             android:name=".ui.activities.ChatSettingsActivity"
             android:label="@string/title_chat_settings"
             android:parentActivityName=".ui.activities.ChatActivity">

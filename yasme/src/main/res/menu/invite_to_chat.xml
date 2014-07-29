@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="net.yasme.android.ui.activities.InviteToChatActivity" >
     <item android:id="@+id/action_settings"
+        android:visible="false"
         android:title="@string/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never" />

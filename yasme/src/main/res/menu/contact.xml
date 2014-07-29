@@ -9,21 +9,16 @@
         android:title="@string/action_search_contact"
         android:icon="@drawable/ic_action_search"/>
 
-    <item
-        android:id="@+id/action_contacts"
-        android:orderInCategory="200"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_contacts"
-        android:icon="@drawable/ic_action_cc_bcc"/>
-
-    <item
+     <item
         android:id="@+id/action_chats"
         android:orderInCategory="300"
         android:showAsAction="always"
         android:title="@string/action_chats"
+
         android:icon="@drawable/ic_action_storage"/>
 
     <item
+        android:visible="false"
         android:id="@+id/action_settings"
         android:orderInCategory="400"
         android:showAsAction="never"

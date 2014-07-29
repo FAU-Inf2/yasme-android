@@ -7,17 +7,18 @@ import android.util.Log;
 import net.yasme.android.connection.UserTask;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
 /**
  * Created by robert on 19.06.14.
  */
 public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
-    SharedPreferences storage;
+    //SharedPreferences storage;
 
-    public GetProfileDataTask(SharedPreferences storage) {
-        this.storage = storage;
-    }
+    //public GetProfileDataTask(SharedPreferences storage) {
+    //    this.storage = storage;
+    //}
 
     User selfProfile;
     protected Boolean doInBackground(String... params) {
@@ -34,7 +35,8 @@ public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
         if(!success) {
             return;
         }
-        SharedPreferences.Editor editor = storage.edit();
+        //SharedPreferences.Editor editor = storage.edit();
+        SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
         editor.putLong(AbstractYasmeActivity.USER_ID, selfProfile.getId());
         editor.putString(AbstractYasmeActivity.USER_MAIL, selfProfile.getEmail());
         editor.putString(AbstractYasmeActivity.USER_NAME, selfProfile.getName());

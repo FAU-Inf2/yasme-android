@@ -67,7 +67,8 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         //adapter.notifyDataSetChanged();
 
         //holt vor allem den Namen des Users ab
-        new GetProfileDataTask(activity.getStorage()).execute();
+        //new GetProfileDataTask(activity.getStorage()).execute();
+        new GetProfileDataTask().execute();
 
         // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
         // Aktualisiert die Datenbank auf den aktuellen Stand des Servers
