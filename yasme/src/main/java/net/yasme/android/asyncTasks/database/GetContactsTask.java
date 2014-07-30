@@ -17,11 +17,8 @@ import java.util.List;
  */
 public class GetContactsTask extends AsyncTask<Void, Void, Boolean> {
     private List<User> contacts;
-    private UserDAO userDao;
+    private UserDAO userDao = DatabaseManager.INSTANCE.getUserDAO();
 
-    public GetContactsTask() {
-        userDao = DatabaseManager.INSTANCE.getUserDAO();
-    }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
