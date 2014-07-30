@@ -8,7 +8,7 @@ import net.yasme.android.exception.RestServiceException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
 import java.io.IOException;

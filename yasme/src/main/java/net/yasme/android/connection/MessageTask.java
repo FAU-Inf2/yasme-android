@@ -22,7 +22,7 @@ import net.yasme.android.storage.dao.UserDAO;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

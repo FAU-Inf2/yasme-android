@@ -6,7 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import net.yasme.android.storage.DatabaseConstants;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
 
@@ -21,6 +21,7 @@ public class Device {
     @DatabaseField(columnName = DatabaseConstants.DEVICE_ID, id = true)
     private long id;
 
+    @JsonIgnoreProperties({ "pw", "email", "name" })
     @DatabaseField(columnName = DatabaseConstants.DEVICE_USER, foreign = true)
     private User user;
 

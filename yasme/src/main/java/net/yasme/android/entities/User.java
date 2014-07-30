@@ -5,8 +5,8 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import net.yasme.android.storage.DatabaseConstants;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -38,6 +38,7 @@ public class User implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.USER_CREATED)
     private Date created;
 
+    @JsonIgnore
     private String profilePicture;
 
     //@JsonIgnore

@@ -1,5 +1,7 @@
 package net.yasme.android.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Date;
 
 /**
@@ -17,6 +19,7 @@ public class OwnDevice {
     private long id;
     private Platform platform; // android, ios or windowsmobile
     private String type;    // mobilephone, tablet or desktop
+    @JsonIgnoreProperties({ "pw", "email", "name" })
     private User user;
     private String number;  // optional
     private String publicKey;
