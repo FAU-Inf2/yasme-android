@@ -56,6 +56,12 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
         refresh(serverChats);
         Log.e(this.getClass().getSimpleName(), "Something to refresh finished!");
 
+        // Debug
+        if (serverChats.size() > 0) {
+            Log.d(getClass().getSimpleName(),"LastMod: " + serverChats.get(0).getOwner().getLastModified().toString());
+        }
+
+
         // Swap the complete database table with the new chats
         if (!chatDAO.refreshAll(serverChats)) {
             Log.e(this.getClass().getSimpleName(), "Refreshing all chats failed");
