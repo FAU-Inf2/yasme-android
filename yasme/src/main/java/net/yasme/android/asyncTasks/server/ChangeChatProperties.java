@@ -1,16 +1,22 @@
 package net.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
 
+import net.yasme.android.R;
+import net.yasme.android.connection.ChatTask;
+import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.exception.RestServiceException;
 
 /**
  * Created by robert on 29.07.14.
  */
-public class ChangeChatNameTask extends AsyncTask<String, Void, Boolean> {
+public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
     private Chat chat;
 
-    public ChangeChatNameTask(Chat chat) {
+    public ChangeChatProperties(Chat chat) {
         this.chat = chat;
     }
 
@@ -20,12 +26,12 @@ public class ChangeChatNameTask extends AsyncTask<String, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(String... params) {
-        /*try {
-            //ChatTask.getInstance().updateName(chat);
+        try {
+            ChatTask.getInstance().updateChat(chat);
         } catch (RestServiceException e) {
             Log.w(this.getClass().getSimpleName(), e.getMessage());
             return false;
-        }*/
+        }
         return true;
     }
 
@@ -34,6 +40,10 @@ public class ChangeChatNameTask extends AsyncTask<String, Void, Boolean> {
      * Invokes the fragment's method to show the chat activity
      */
     protected void onPostExecute(final Boolean success) {
-
+        if(success) {
+            Toaster.getInstance().toast(R.string.change_successful, Toast.LENGTH_LONG);
+        } else {
+            Toaster.getInstance().toast(R.string.change_not_successful, Toast.LENGTH_LONG);
+        }
     }
 }

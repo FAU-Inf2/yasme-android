@@ -44,38 +44,13 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         super.onCreate(savedInstanceState);
 
         activity = (AbstractYasmeActivity) getActivity();
+
         adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
+        adapter.setNotifyOnChange(true);
         setListAdapter(adapter);
 
-        //Register at observer
-        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
-        FragmentObservable<ChatListFragment, List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
-        Log.d(this.getClass().getSimpleName(), "... successful");
-
-        obs.register(this);
-
-        counter = 0;
-
-        //progress bar on
-        getActivity().setProgressBarIndeterminateVisibility(true);
-
-        // At first, retrieve the chats from the database
-        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        counter++;
-        new GetAllTask(chatDAO, ChatListFragment.class).execute();
-        //adapter.updateChats(chatRooms);
-        //adapter.notifyDataSetChanged();
-
         //holt vor allem den Namen des Users ab
-        //new GetProfileDataTask(activity.getStorage()).execute();
         new GetProfileDataTask().execute();
-
-        // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
-        // Aktualisiert die Datenbank auf den aktuellen Stand des Servers
-        counter++;
-        new GetMyChatsTask().execute();
-
-        new GetMessageTask().execute();
 
         //wird schon in GetMyChatsTask erledigt
         //new GetAllTask(chatDAO, ChatListFragment.class).execute();
@@ -90,6 +65,24 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         Log.d(this.getClass().getSimpleName(), "... successful");
 
         obs.register(this);
+
+        //ab hier ist alles aus der onCreateMethode
+        counter = 0;
+
+        //progress bar on
+        getActivity().setProgressBarIndeterminateVisibility(true);
+
+        // At first, retrieve the chats from the database
+        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+        counter++;
+        new GetAllTask(chatDAO, ChatListFragment.class).execute();
+
+        // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
+        // Aktualisiert die Datenbank auf den aktuellen Stand des Servers
+        counter++;
+        new GetMyChatsTask().execute();
+
+        new GetMessageTask().execute();
     }
 
     @Override

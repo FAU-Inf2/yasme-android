@@ -160,10 +160,10 @@ public class ChatTask extends ConnectionTask {
         Log.d(this.getClass().getSimpleName(),"I´m out of Chat No. " + chatId);
     }
 
-    public void updateStatus(Chat chat) throws RestServiceException {
+    public void updateChat(Chat chat) throws RestServiceException {
         String path = chat.getId() + "/properties";
         executeRequest(Request.PUT, path, chat);
-        Log.d(this.getClass().getSimpleName(),"Status of chat updated");
+        Log.d(this.getClass().getSimpleName(),"Chat updated");
     }
 
     //TODO: implement lastSeen Rest Call

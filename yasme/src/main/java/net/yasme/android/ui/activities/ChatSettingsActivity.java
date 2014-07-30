@@ -5,6 +5,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import net.yasme.android.R;
+import net.yasme.android.entities.Chat;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.ChatSettingsFragment;
 
@@ -12,15 +13,22 @@ import net.yasme.android.ui.fragments.ChatSettingsFragment;
  * Created by robert on 28.07.14.
  */
 public class ChatSettingsActivity extends AbstractYasmeActivity {
+    private Chat chat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_with_single_fragment);
+        chat = (Chat) getIntent().getSerializableExtra("chat");
 
         if (savedInstanceState == null) {
+            Bundle args = new Bundle();
+            args.putSerializable("chat", chat);
+            ChatSettingsFragment csf = new ChatSettingsFragment();
+            csf.setArguments(args);
             getFragmentManager().beginTransaction()
-                    .add(R.id.singleFragmentContainer, new ChatSettingsFragment()).commit();
+                    .add(R.id.singleFragmentContainer, csf).commit();
         }
     }
 

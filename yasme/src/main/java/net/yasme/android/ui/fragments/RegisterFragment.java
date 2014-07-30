@@ -89,6 +89,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         alert.setNegativeButton(R.string.registration_button_cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
                     }
                 }
         );

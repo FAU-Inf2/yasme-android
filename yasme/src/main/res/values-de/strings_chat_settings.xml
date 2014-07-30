@@ -2,10 +2,18 @@
     <!--ger-->
     <string name="title_chat_settings">Chat Einstellungen</string>
 
-    <string name="change_user">Benutzer löschen oder hinzufügen</string>
+    <string name="change_user">User hinzufügen</string>
     <string name="change_name">Chatnamen ändern</string>
     <string name="change_status">Chatstatus ändern</string>
 
     <string name="change_name_hint">Neuer Chatname</string>
     <string name="change_status_hint">Neuer Chatstatus</string>
+
+    <string name="change_successful">Die Änderung war erfolgreich</string>
+    <string name="change_not_successful">Die Änderung war nicht erfolgreich</string>
+
+
+    <string name="OK">OK</string>
+    <string name="cancel">Abbruch</string>
+
 </resources>

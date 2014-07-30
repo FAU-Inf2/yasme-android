@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.server.ChangeChatStatusTask;
+import net.yasme.android.asyncTasks.server.ChangeChatProperties;
 import net.yasme.android.entities.Chat;
 
 /**
@@ -35,6 +35,9 @@ public class ChatSettingsFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat_settings, container, false);
+        Bundle bundle = getArguments();
+        chat = (Chat) bundle.getSerializable("chat");
+
 
         rootView.findViewById(R.id.change_name).setOnClickListener(
                 new View.OnClickListener() {
@@ -77,23 +80,24 @@ public class ChatSettingsFragment extends Fragment{
 
         alert.setView(chatName);
 
-        // "OK" button to save the values
-        alert.setPositiveButton(R.string.registration_button_ok,
+        // "OK" button
+        alert.setPositiveButton(R.string.OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Grab the EditText's input
                         String inputName = chatName.getText().toString();
                         Chat newChat = chat;
                         newChat.setName(inputName);
-                        new ChangeChatStatusTask(newChat).execute();
+                        new ChangeChatProperties(newChat).execute();
                     }
                 }
         );
 
         // "Cancel" button
-        alert.setNegativeButton("OK",
+        alert.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
                     }
                 }
         );
@@ -102,7 +106,27 @@ public class ChatSettingsFragment extends Fragment{
 
 
     private void changeUser() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle(getString(R.string.change_status));
 
+        // "OK" button
+        alert.setPositiveButton(R.string.OK,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Grab the EditText's input
+                    }
+                }
+        );
+
+        // "Cancel" button
+        alert.setNegativeButton(R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                }
+        );
+        alert.show();
     }
 
 
@@ -116,23 +140,24 @@ public class ChatSettingsFragment extends Fragment{
 
         alert.setView(chatName);
 
-        // "OK" button to save the values
-        alert.setPositiveButton(R.string.registration_button_ok,
+        // "OK" button
+        alert.setPositiveButton(R.string.OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Grab the EditText's input
                         String inputStatus = chatName.getText().toString();
                         Chat newChat = chat;
                         newChat.setStatus(inputStatus);
-                        new ChangeChatStatusTask(newChat).execute();
+                        new ChangeChatProperties(newChat).execute();
                     }
                 }
         );
 
         // "Cancel" button
-        alert.setNegativeButton("OK",
+        alert.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
                     }
                 }
         );
