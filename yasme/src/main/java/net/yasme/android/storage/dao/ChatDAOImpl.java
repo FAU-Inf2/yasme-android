@@ -1,10 +1,8 @@
 package net.yasme.android.storage.dao;
 
-import android.database.Cursor;
 import android.util.Log;
 
 import com.j256.ormlite.dao.GenericRawResults;
-import com.j256.ormlite.stmt.PreparedQuery;
 
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
@@ -84,6 +82,10 @@ public enum ChatDAOImpl implements ChatDAO {
 
     private List<User> loadParticipants(Chat chat) throws SQLException {
         // If a chat object was found, fill it's participants list
+        if(chat == null) {
+            Log.e(this.getClass().getSimpleName(), "Chat is null");
+            return null;
+        }
         List<ChatUser> participantsByChat = databaseHelper.getChatUserDao().queryForEq(DatabaseConstants.CHAT_FIELD_NAME, chat.getId());
         if (null != participantsByChat && !participantsByChat.isEmpty()) {
             // Get only the users from the chatUser objects

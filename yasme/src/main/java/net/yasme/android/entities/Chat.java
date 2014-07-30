@@ -7,9 +7,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.storage.DatabaseConstants;
-import net.yasme.android.ui.AbstractYasmeActivity;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -55,10 +53,6 @@ public class Chat implements Serializable {
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
     private Collection<Message> messages;
 
-    //@JsonIgnore
-    //private MessageEncryption aes;
-
-
     /**
      * Constructors *
      */
@@ -70,8 +64,6 @@ public class Chat implements Serializable {
         // TODO: DEVICE-ID statt USERID uebergeben
         //long creatorDevice = user.getId();
         //aes = new MessageEncryption(this, user);
-
-        //new Chat(id, participants, "", "", null, new ArrayList<Message>(), aes);
     }
 
     /**

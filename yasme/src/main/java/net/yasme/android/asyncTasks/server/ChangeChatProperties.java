@@ -13,10 +13,10 @@ import net.yasme.android.exception.RestServiceException;
 /**
  * Created by robert on 29.07.14.
  */
-public class ChangeChatStatusTask extends AsyncTask<String, Void, Boolean> {
+public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
     private Chat chat;
 
-    public ChangeChatStatusTask(Chat chat) {
+    public ChangeChatProperties(Chat chat) {
         this.chat = chat;
     }
 
@@ -27,7 +27,7 @@ public class ChangeChatStatusTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected Boolean doInBackground(String... params) {
         try {
-            ChatTask.getInstance().updateStatus(chat);
+            ChatTask.getInstance().updateChat(chat);
         } catch (RestServiceException e) {
             Log.w(this.getClass().getSimpleName(), e.getMessage());
             return false;
@@ -41,9 +41,9 @@ public class ChangeChatStatusTask extends AsyncTask<String, Void, Boolean> {
      */
     protected void onPostExecute(final Boolean success) {
         if(success) {
-            Toaster.getInstance().toast(R.string.change_status_successful, Toast.LENGTH_LONG);
+            Toaster.getInstance().toast(R.string.change_successful, Toast.LENGTH_LONG);
         } else {
-            Toaster.getInstance().toast(R.string.change_status_not_successful, Toast.LENGTH_LONG);
+            Toaster.getInstance().toast(R.string.change_not_successful, Toast.LENGTH_LONG);
         }
     }
 }

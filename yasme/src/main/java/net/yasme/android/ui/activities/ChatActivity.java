@@ -49,6 +49,6 @@ public class ChatActivity extends AbstractYasmeActivity {
             startActivity(intent);
             return true;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 }

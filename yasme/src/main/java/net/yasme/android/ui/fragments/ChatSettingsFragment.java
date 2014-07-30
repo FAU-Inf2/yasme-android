@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import net.yasme.android.R;
-import net.yasme.android.asyncTasks.server.ChangeChatStatusTask;
+import net.yasme.android.asyncTasks.server.ChangeChatProperties;
 import net.yasme.android.entities.Chat;
 
 /**
@@ -88,7 +88,7 @@ public class ChatSettingsFragment extends Fragment{
                         String inputName = chatName.getText().toString();
                         Chat newChat = chat;
                         newChat.setName(inputName);
-                        new ChangeChatStatusTask(newChat).execute();
+                        new ChangeChatProperties(newChat).execute();
                     }
                 }
         );
@@ -97,6 +97,7 @@ public class ChatSettingsFragment extends Fragment{
         alert.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
                     }
                 }
         );
@@ -121,6 +122,7 @@ public class ChatSettingsFragment extends Fragment{
         alert.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
                     }
                 }
         );
@@ -146,7 +148,7 @@ public class ChatSettingsFragment extends Fragment{
                         String inputStatus = chatName.getText().toString();
                         Chat newChat = chat;
                         newChat.setStatus(inputStatus);
-                        new ChangeChatStatusTask(newChat).execute();
+                        new ChangeChatProperties(newChat).execute();
                     }
                 }
         );
@@ -155,6 +157,7 @@ public class ChatSettingsFragment extends Fragment{
         alert.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
                     }
                 }
         );

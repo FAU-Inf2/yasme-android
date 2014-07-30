@@ -9,10 +9,9 @@
     <string name="change_name_hint">Neuer Chatname</string>
     <string name="change_status_hint">Neuer Chatstatus</string>
 
-    <string name="change_status_successful">Chatstatus erfolgreich geändert</string>
-    <string name="change_status_not_successful">Chatstatus ändern gescheitert</string>
-    <string name="change_name_successful">Chatname erfolgreich geändert</string>
-    <string name="change_name_not_successful">Chatname ändern gescheitert</string>
+    <string name="change_successful">Die Änderung war erfolgreich</string>
+    <string name="change_not_successful">Die Änderung war nicht erfolgreich</string>
+
 
     <string name="OK">OK</string>
     <string name="cancel">Abbruch</string>

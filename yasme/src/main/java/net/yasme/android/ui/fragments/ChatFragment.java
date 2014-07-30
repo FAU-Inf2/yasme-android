@@ -59,6 +59,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Intent intent = activity.getIntent();
         long chatId = intent.getLongExtra(activity.CHAT_ID, 1);
 
+        //add the fragments own menu items
+        setHasOptionsMenu(true);
+
         //trying to get chat with chatId from local DB
         try {
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
