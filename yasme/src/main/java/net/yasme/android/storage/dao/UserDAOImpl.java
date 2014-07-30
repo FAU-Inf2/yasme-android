@@ -52,7 +52,7 @@ public enum UserDAOImpl implements UserDAO {
             if(fromDatabase == null) {
                 return databaseHelper.getUserDao().createIfNotExists(user);
             } else {
-                if (fromDatabase.isContact() == 1) {
+                if (fromDatabase.isContact()) {
                     user.addToContacts();   // Make sure the contact flag remains 1
                 }
                 databaseHelper.getUserDao().update(user);

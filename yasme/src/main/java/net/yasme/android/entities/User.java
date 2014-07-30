@@ -188,8 +188,8 @@ public class User implements Serializable {
     }
 
     @JsonIgnore
-    public int isContact() {
-        return contactFlag;
+    public boolean isContact() {
+        return contactFlag == 1;
     }
 
 

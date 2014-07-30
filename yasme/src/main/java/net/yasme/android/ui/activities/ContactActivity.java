@@ -151,27 +151,26 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         Log.d(this.getClass().getSimpleName(),"-------------------- In der Activity ---------------------");
     }
 
-    private void callContact(String number){
-        Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:"+number));
-        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(callIntent);
-    }
-
-    private void sendMail(String email){
-
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{email});
-        i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
-        i.putExtra(Intent.EXTRA_TEXT   , "Message powered by YASME");
-        try {
-            startActivity(Intent.createChooser(i, "Send mail..."));
-        } catch (android.content.ActivityNotFoundException ex) {
-           ex.printStackTrace();
-        }
-
-    }
+//    private void callContact(String number){
+//        Intent callIntent = new Intent(Intent.ACTION_CALL);
+//        callIntent.setData(Uri.parse("tel:"+number));
+//        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(callIntent);
+//    }
+//
+//    private void sendMail(String email){
+//
+//        Intent i = new Intent(Intent.ACTION_SEND);
+//        i.setType("message/rfc822");
+//        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{email});
+//        i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
+//        i.putExtra(Intent.EXTRA_TEXT   , "Message powered by YASME");
+//        try {
+//            startActivity(Intent.createChooser(i, "Send mail..."));
+//        } catch (android.content.ActivityNotFoundException ex) {
+//           ex.printStackTrace();
+//        }
+//    }
 
 
     private void displayDetailsFragment(User user, Boolean showAddContact){
@@ -188,8 +187,8 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         DialogFragment userDetailsFragment = UserDetailsFragment.newInstance(user, showAddContact);
         int style = userDetailsFragment.STYLE_NO_TITLE;
         int theme = android.R.style.Theme_Holo;
-        userDetailsFragment.setStyle(style,0);
-        userDetailsFragment.show(ft,"dialog");
+        userDetailsFragment.setStyle(style, theme);
+        userDetailsFragment.show(ft, "dialog");
 
     }
 

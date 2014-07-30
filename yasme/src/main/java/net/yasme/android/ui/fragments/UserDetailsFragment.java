@@ -3,6 +3,7 @@ package net.yasme.android.ui.fragments;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.yasme.android.R;
+import net.yasme.android.asyncTasks.database.GetContactsTask;
 import net.yasme.android.asyncTasks.server.CreateChatTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
@@ -63,7 +66,8 @@ public class UserDetailsFragment
     private Button addContact;
     private ImageButton mailButton;
     private ImageButton numberButton;
-    private UserDAO userDAO;
+    private UserDAO userDAO = DatabaseManager.INSTANCE.getUserDAO();
+    private Context context = DatabaseManager.INSTANCE.getContext();
 
     private OnDetailsFragmentInteractionListener mListener;
 
@@ -136,8 +140,6 @@ public class UserDetailsFragment
         activity = (AbstractYasmeActivity) getActivity();
         selfUser = activity.getSelfUser();
 
-        userDAO = DatabaseManager.INSTANCE.getUserDAO();
-
         if (!getArguments().getBoolean(ARG_CONTACTBUTTON)) {
             addContact.setVisibility(View.GONE);
         }
@@ -150,6 +152,28 @@ public class UserDetailsFragment
             mListener.onDetailsFragmentInteraction(contact, 0);
         }
     }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Register at observer
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
+        FragmentObservable<UserDetailsFragment, UserDetailsFragmentParam> obs =
+                ObservableRegistry.getObservable(UserDetailsFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+        obs.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        FragmentObservable<UserDetailsFragment, UserDetailsFragmentParam> obs =
+                ObservableRegistry.getObservable(UserDetailsFragment.class);
+        Log.d(this.getClass().getSimpleName(), "Remove from observer");
+        obs.remove(this);
+    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -173,6 +197,7 @@ public class UserDetailsFragment
 
         switch (v.getId()) {
             case R.id.contact_detail_newchat:
+                // TODO
                 Log.d(this.getClass().getSimpleName(), "------------------- Create New Chat ---------------------------");
                 Set<User> selectedUsers = new HashSet<User>();
                 selectedUsers.add(contact);
@@ -180,10 +205,19 @@ public class UserDetailsFragment
                 break;
 
             case R.id.contact_detail_addcontact:
+                if (contact.isContact()) {
+                    String toast = contact.getName() + " " + context.getText(R.string.contact_already_added) + ".";
+                    Toast.makeText(context, toast, Toast.LENGTH_LONG);
+                    return;
+                }
                 contact.addToContacts();
-                //db.createUserIfNotExists(user);
                 userDAO.addOrUpdate(contact);
                 Log.d(this.getClass().getSimpleName(), "------------------- Contact Added ---------------------------" + userDAO.getContacts());
+                String toast = contact.getName() + " " + context.getText(R.string.contact_added_success) + ".";
+                Toast.makeText(context, toast, Toast.LENGTH_LONG);
+
+                // TODO refresh contact list
+                new GetContactsTask().execute();
                 break;
 
             case R.id.mail_image_button:
@@ -210,6 +244,8 @@ public class UserDetailsFragment
     }
 
     public void startChat(long chatId) {
+        // TODO
+
         //Log.d(this.getClass().getSimpleName(), "Start chat: " + chatId);
         Intent intent = new Intent(activity, ChatActivity.class);
         intent.putExtra(activity.USER_MAIL, activity.getUserMail());
@@ -245,6 +281,8 @@ public class UserDetailsFragment
         Log.d(super.getClass().getSimpleName(), "I have been notified with userDetailsParam");
 
     }
+
+
 
     //superclass of notifyParameters
     public static class UserDetailsFragmentParam {
@@ -285,25 +323,5 @@ public class UserDetailsFragment
         public Boolean getSuccess() {
             return success;
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        //Register at observer
-        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
-        FragmentObservable<UserDetailsFragment, UserDetailsFragmentParam> obs =
-                ObservableRegistry.getObservable(UserDetailsFragment.class);
-        Log.d(this.getClass().getSimpleName(), "... successful");
-        obs.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        FragmentObservable<UserDetailsFragment, UserDetailsFragmentParam> obs =
-                ObservableRegistry.getObservable(UserDetailsFragment.class);
-        Log.d(this.getClass().getSimpleName(), "Remove from observer");
-        obs.remove(this);
     }
 }
