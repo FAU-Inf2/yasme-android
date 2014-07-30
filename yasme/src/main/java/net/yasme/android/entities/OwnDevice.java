@@ -21,19 +21,19 @@ public class OwnDevice {
     private String number;  // optional
     private String publicKey;
     private String product; // product name e.g. Google Nexux 5
-    private String googleRegId;
+    private String pushId;
 
     private Date created;
 
     private Date lastModified;
 
-    public OwnDevice(User user, Platform platform, String publicKey, String type, String number, String product, String googleRegId) {
+    public OwnDevice(User user, Platform platform, String publicKey, String type, String number, String product, String pushId) {
         this.user = user;
         this.platform = platform;
         this.type = type;
         this.number = number;
         this.product = product;
-        this.googleRegId = googleRegId;
+        this.pushId = pushId;
         this.publicKey = publicKey;
     }
 
@@ -48,7 +48,7 @@ public class OwnDevice {
         return this.user;
     }
 
-    public String getGoogleRegId(){return this.googleRegId;}
+    public String getPushId(){return this.pushId;}
 
     public String getProduct(){return this.product;}
 
@@ -90,7 +90,7 @@ public class OwnDevice {
         this.platform = platform;
     }
 
-    public void setGoogleRegId(String googleRegId){this.googleRegId = googleRegId;}
+    public void setPushId(String pushId){this.pushId = pushId;}
 
     public void setType(String type) {
         this.type = type;
