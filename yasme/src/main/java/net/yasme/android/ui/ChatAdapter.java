@@ -59,7 +59,6 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         } else {
             rowView = inflater.inflate(R.layout.chat_item_other, parent, false);
         }
-
         textView = (TextView) rowView.findViewById(R.id.chat_item_message);
         dateView = (TextView) rowView.findViewById(R.id.chat_item_date);
         imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture);
@@ -80,13 +79,16 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             text = msg.getMessage();
         }
 
+        textView.setText(text);
         if (self) {
-            textView.setText(text);
+            //textView.setText(text);
+            dateView.setText(time);
         } else {
-            textView.setText(name + ": " + text);
+            //textView.setText(/*name + ": " + */text);
+            dateView.setText(name + ", " + time);
         }
 
-        dateView.setText(time);
+        //dateView.setText(time);
         Log.d(this.getClass().getSimpleName(), name + ": " + msg.getMessage());
         imageView.setImageResource(R.drawable.chat_default_icon); //TODO
 
