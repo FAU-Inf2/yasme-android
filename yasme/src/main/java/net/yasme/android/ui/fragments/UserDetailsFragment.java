@@ -208,20 +208,25 @@ public class UserDetailsFragment
 
             case R.id.contact_detail_addcontact:
 
-                Log.d(this.getClass().getSimpleName(), "Add contact was pressed");
+                User userTapped = userDAO.get(contact.getId());
+                if (null != userTapped) {
+                    contact = userTapped;
+                }
 
+                // Contact flag will be zero if the tapped user was not found in the database
                 if (contact.isContact()) {
                     String toast = contact.getName() + " " + context.getText(R.string.contact_already_added) + ".";
                     Toaster.getInstance().toast(toast, Toast.LENGTH_LONG, Gravity.TOP);
                     return;
                 }
+
                 contact.addToContacts();
                 userDAO.addOrUpdate(contact);
                 Log.d(this.getClass().getSimpleName(), "------------------- Contact Added ---------------------------" + userDAO.getContacts());
                 String toast = contact.getName() + " " + context.getText(R.string.contact_added_success) + ".";
                 Toaster.getInstance().toast(toast, Toast.LENGTH_LONG, Gravity.TOP);
 
-                // TODO refresh contact list
+                // Refresh contact list in first tab
                 new GetContactsTask().execute();
                 break;
 
