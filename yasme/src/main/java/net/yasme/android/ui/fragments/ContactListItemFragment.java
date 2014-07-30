@@ -171,8 +171,8 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     public void notifyFragment(InviteToChatFragment.AllUsersFetchedParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
 
-
         if (param.getSuccess()) {
+            contactListContent.clearItems();
             for (User u : param.getAllUsers()) {
                 contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
             }

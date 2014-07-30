@@ -159,13 +159,22 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     }
 
     public void toast(final int messageId, final int duration) {
+        String text = getApplicationContext().getResources().getString(messageId);
+        toast(text, duration, -1);
+    }
+
+    public void toast(final String text, final int duration) {
+        toast(text, duration, -1);
+    }
+
+    public void toast(final String text, final int duration, int gravity) {
+        final int toastGravity = (-1 == gravity) ? Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL : gravity;
         runOnUiThread(new Runnable()
         {
             public void run()
             {
-                String text = getApplicationContext().getResources().getString(messageId);
                 Toast toast = Toast.makeText(getApplicationContext(), text, duration);
-                toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0,0);
+                toast.setGravity(toastGravity, 0, 0);
                 Log.d(getClass().getSimpleName(), "Toast: " + text);
                 toast.show();
             }

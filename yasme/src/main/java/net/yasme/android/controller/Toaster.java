@@ -45,6 +45,18 @@ public class Toaster {
             toast.toast(id,duration);
         }
     }
+
+    public void toast(String text, int duration) {
+        for (Toastable toast : toastables) {
+            toast.toast(text, duration);
+        }
+    }
+
+    public void toast(String text, int duration, int gravity) {
+        for (Toastable toast : toastables) {
+            toast.toast(text, duration, gravity);
+        }
+    }
 }
 
 

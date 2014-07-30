@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import net.yasme.android.asyncTasks.server.CreateChatTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.UserDAO;
@@ -205,16 +207,19 @@ public class UserDetailsFragment
                 break;
 
             case R.id.contact_detail_addcontact:
+
+                Log.d(this.getClass().getSimpleName(), "Add contact was pressed");
+
                 if (contact.isContact()) {
                     String toast = contact.getName() + " " + context.getText(R.string.contact_already_added) + ".";
-                    Toast.makeText(context, toast, Toast.LENGTH_LONG);
+                    Toaster.getInstance().toast(toast, Toast.LENGTH_LONG, Gravity.TOP);
                     return;
                 }
                 contact.addToContacts();
                 userDAO.addOrUpdate(contact);
                 Log.d(this.getClass().getSimpleName(), "------------------- Contact Added ---------------------------" + userDAO.getContacts());
                 String toast = contact.getName() + " " + context.getText(R.string.contact_added_success) + ".";
-                Toast.makeText(context, toast, Toast.LENGTH_LONG);
+                Toaster.getInstance().toast(toast, Toast.LENGTH_LONG, Gravity.TOP);
 
                 // TODO refresh contact list
                 new GetContactsTask().execute();

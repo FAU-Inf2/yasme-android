@@ -187,7 +187,7 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         DialogFragment userDetailsFragment = UserDetailsFragment.newInstance(user, showAddContact);
         int style = userDetailsFragment.STYLE_NO_TITLE;
         int theme = android.R.style.Theme_Holo;
-        userDetailsFragment.setStyle(style, theme);
+        userDetailsFragment.setStyle(style, 0);
         userDetailsFragment.show(ft, "dialog");
 
     }
