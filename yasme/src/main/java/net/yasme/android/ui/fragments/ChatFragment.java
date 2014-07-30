@@ -62,9 +62,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
             // Assuming that the messages are sorted by id
             latestMessageOnDisplay = new AtomicLong(0);
-            // First load messages from database
             new GetNewMessagesForChatTask(latestMessageOnDisplay.get(), chat.getId());
-            // And then ask server for new messages
+            // Ask server for new messages
             new GetMessageTask().execute();
             Log.d(this.getClass().getSimpleName(), "number of messages from DB: " + chat.getMessages().size());
         } catch (NullPointerException e) {
@@ -97,7 +96,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         });
 
         mAdapter = new ChatAdapter(activity, R.layout.chat_item_other,
-                activity.getUserId(), chat.getMessages());
+                activity.getUserId(), new ArrayList<Message>());
         list.setAdapter(mAdapter);
         mAdapter.setNotifyOnChange(true);
 
@@ -169,7 +168,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         // Even if this fragment will be notified with same messages several times, it should not display them more than once
         // Synchronize the write access on latestMessageOnDisplay in case the fragment can be notified by more than one thread
-        synchronized (this.getClass()){
+        synchronized(this) {
             long newLatestMessageOnDisplay = latestMessageOnDisplay.get();
             for (Message msg : messages) {
                 if (msg.getId() > latestMessageOnDisplay.get()) {
