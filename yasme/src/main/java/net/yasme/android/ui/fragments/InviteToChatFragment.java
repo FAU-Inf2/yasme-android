@@ -94,9 +94,7 @@ public class InviteToChatFragment
 
         // Exclude self
         User myself = null;
-        String[] userNames = new String[allUsers.size() - 1];
-
-        int i = 0;
+        List<String> userNames = new ArrayList<>();
         for (int cur = 0; cur < allUsers.size(); cur++) {
             User user = allUsers.get(cur);
 
@@ -106,12 +104,16 @@ public class InviteToChatFragment
                 continue;
             }
 
-            userNames[i++] = user.getName();
+            userNames.add(user.getName());
         }
-        allUsers.remove(myself);
+
+        String[] userNamesArr = userNames.toArray(new String[userNames.size()]);
+        if (myself != null) {
+            allUsers.remove(myself);
+        }
         this.users = allUsers;  // without myself
 
-        adapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_multiple_choice, userNames);
+        adapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_multiple_choice, userNamesArr);
         chatPartners.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         chatPartners.setAdapter(adapter);
 
