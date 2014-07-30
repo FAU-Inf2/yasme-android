@@ -79,29 +79,5 @@ public class DiffieHellmanPart {
     public void setDh_A(String dh_A) {
         this.dh_A = dh_A;
     }
-
-    public boolean isValid() {
-        if (device == null) {
-            Log.d(this.getClass().getSimpleName(),"dev is null");
-            return false;
-        }
-        if (device.getId() < 0) {
-            Log.d(this.getClass().getSimpleName(),"devId");
-            return false;
-        }
-        if (dhId < 0) {
-            return false;
-        }
-        if (dh_g.length() <= 0) {
-            return false;
-        }
-        if (dh_p.length() <= 0) {
-            return false;
-        }
-        if (dh_A.length() <= 0) {
-            return false;
-        }
-        return true;
-    }
 }
 

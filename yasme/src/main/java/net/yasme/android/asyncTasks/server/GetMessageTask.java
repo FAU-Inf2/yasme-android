@@ -69,7 +69,8 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             // Refresh Sender-User-Data
             User sender = message.getSender();
             User dbUser = DatabaseManager.INSTANCE.getUserDAO().get(sender.getId());
-            if (dbUser == null || dbUser.getLastModified() == null || sender.getLastModified().compareTo(dbUser.getLastModified()) > 0) {
+            Log.d(getClass().getSimpleName(), "Sender lastMod: " + sender.getLastModified());
+            if (dbUser == null || dbUser.getLastModified() == null || sender.getLastModified() == null || sender.getLastModified().compareTo(dbUser.getLastModified()) > 0) {
                 Log.d(getClass().getSimpleName(), "Sender has to be refreshed");
                 RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER,sender.getId(),true);
                 refreshTask.execute();

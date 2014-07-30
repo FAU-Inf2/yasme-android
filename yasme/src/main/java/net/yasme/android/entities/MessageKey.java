@@ -2,6 +2,7 @@ package net.yasme.android.entities;
 
 //creator --> de
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -88,14 +89,17 @@ public class MessageKey implements Serializable {
 		return id;
 	}
 
+    @JsonIgnoreProperties({ "user", "publicKey", "product", "lastModified" })
 	public Device getCreatorDevice() {
 		return creatorDevice;
 	}
 
+    @JsonIgnoreProperties({ "user", "publicKey", "product", "lastModified" })
 	public Device getRecipientDevice() {
 		return recipientDevice;
 	}
 
+    @JsonIgnoreProperties({ "participants", "status", "name", "owner", "lastModified", "created", "profilePicture", "messages" })
 	public Chat getChat() {
 		return chat;
 	}
@@ -183,6 +187,7 @@ public class MessageKey implements Serializable {
         }
     }
 
+    @JsonIgnore
 	public Boolean isValid() {
 		if (id < 0) {
 			return false;

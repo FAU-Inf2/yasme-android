@@ -19,7 +19,6 @@ public class OwnDevice {
     private long id;
     private Platform platform; // android, ios or windowsmobile
     private String type;    // mobilephone, tablet or desktop
-    @JsonIgnoreProperties({ "pw", "email", "name" })
     private User user;
     private String number;  // optional
     private String publicKey;
@@ -47,6 +46,7 @@ public class OwnDevice {
         this.id = id;
     }
 
+    @JsonIgnoreProperties({ "pw", "email", "name", "devices", "lastModified", "created" })
     public User getUser() {
         return this.user;
     }

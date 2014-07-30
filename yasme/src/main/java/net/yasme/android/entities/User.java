@@ -90,6 +90,7 @@ public class User implements Serializable {
     //    return new ArrayList<Chat>(chats);
     //}
 
+    @JsonIgnoreProperties({ "id", "user", "publicKey", "product", "lastModified" })
     public List<Device> getDevices() {
         return devices;
     }

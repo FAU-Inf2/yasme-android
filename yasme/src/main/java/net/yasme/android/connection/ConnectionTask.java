@@ -245,7 +245,7 @@ public class ConnectionTask {
         String result = null;
         try {
             result = objectWriter.writeValueAsString(object);
-            //Log.d(getClass().getSimpleName(),"Generated JSON: " + result);
+            Log.d(getClass().getSimpleName(),"Generated JSON: " + result);
         } catch (IOException e) {
             e.printStackTrace();
         }

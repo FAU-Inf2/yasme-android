@@ -21,7 +21,6 @@ public class Device {
     @DatabaseField(columnName = DatabaseConstants.DEVICE_ID, id = true)
     private long id;
 
-    @JsonIgnoreProperties({ "pw", "email", "name" })
     @DatabaseField(columnName = DatabaseConstants.DEVICE_USER, foreign = true)
     private User user;
 
@@ -47,6 +46,7 @@ public class Device {
         return id;
     }
 
+    @JsonIgnoreProperties({ "pw", "email", "name", "devices", "lastModified", "created" })
     public User getUser() {
         return user;
     }

@@ -102,6 +102,7 @@ public class Chat implements Serializable {
         return id;
     }
 
+    @JsonIgnoreProperties({ "pw", "email", "name", "devices", "lastModified", "created" })
     public ArrayList<User> getParticipants() {
         if (participants == null) {
             participants = new ArrayList<>();
@@ -152,6 +153,7 @@ public class Chat implements Serializable {
         return profilePicture;
     }
 
+    @JsonIgnoreProperties({ "pw", "email", "name", "devices", "lastModified", "created" })
     public User getOwner() {
         if (owner == null) {
             owner = new User("Dummy", 12);
@@ -159,6 +161,7 @@ public class Chat implements Serializable {
         return owner;
     }
 
+    @JsonIgnore
     public int getNumberOfParticipants() {
 
         if (participants != null)
@@ -167,6 +170,7 @@ public class Chat implements Serializable {
         return 0;
     }
 
+    @JsonIgnore
     public ArrayList<Message> getMessages() {
         if(messages == null) {
             return new ArrayList<Message>();
@@ -221,6 +225,7 @@ public class Chat implements Serializable {
     /**
      * Other Methods
      */
+    @JsonIgnore
     public boolean isOwner(long userId) {
         if (owner.getId() == userId) {
             return true;
@@ -228,6 +233,7 @@ public class Chat implements Serializable {
         return false;
     }
 
+    @JsonIgnore
     public void addMessage(Message msg) {
         if (messages == null) {
             messages = new ArrayList<Message>();

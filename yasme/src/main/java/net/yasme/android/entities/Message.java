@@ -93,6 +93,7 @@ public class Message implements Serializable {
     /**
      * Getters *
      */
+    @JsonIgnoreProperties({ "pw", "email", "name", "devices", "lastModified", "created" })
     public User getSender() {
         return sender;
     }
@@ -114,6 +115,7 @@ public class Message implements Serializable {
         return chat.getId();
     }
 
+    @JsonIgnoreProperties({ "participants", "status", "name", "owner", "lastModified", "created", "profilePicture", "messages" })
     public Chat getChat() {
         return chat;
     }
