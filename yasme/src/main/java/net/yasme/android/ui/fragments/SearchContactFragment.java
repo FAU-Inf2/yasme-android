@@ -1,11 +1,13 @@
 package net.yasme.android.ui.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -114,6 +116,14 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
             getActivity().setProgressBarIndeterminateVisibility(true);
             bgTasksRunning.incrementAndGet();
             new SearchUserTask(SearchUserTask.SearchBy.getSearchBy(searchSpinner.getSelectedItemPosition()),searchText.getText().toString()).execute();
+
+            // Hide keyboard
+            InputMethodManager inputManager =
+                    (InputMethodManager) DatabaseManager.INSTANCE.getContext().
+                            getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(
+                    getActivity().getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
