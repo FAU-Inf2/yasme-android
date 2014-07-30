@@ -199,35 +199,20 @@ public class UserDetailsFragment
 
         switch (v.getId()) {
             case R.id.contact_detail_newchat:
+
+                // Add to contacts, but don't show toasts
+                addToContacts(contact, false);
+
                 // TODO
                 Log.d(this.getClass().getSimpleName(), "------------------- Create New Chat ---------------------------");
-                Set<User> selectedUsers = new HashSet<User>();
+                Set<User> selectedUsers = new HashSet<>();
                 selectedUsers.add(contact);
                 new CreateChatTask(selfUser, selectedUsers).execute();
                 break;
 
             case R.id.contact_detail_addcontact:
 
-                User userTapped = userDAO.get(contact.getId());
-                if (null != userTapped) {
-                    contact = userTapped;
-                }
-
-                // Contact flag will be zero if the tapped user was not found in the database
-                if (contact.isContact()) {
-                    String toast = contact.getName() + " " + context.getText(R.string.contact_already_added) + ".";
-                    Toaster.getInstance().toast(toast, Toast.LENGTH_LONG, Gravity.TOP);
-                    return;
-                }
-
-                contact.addToContacts();
-                userDAO.addOrUpdate(contact);
-                Log.d(this.getClass().getSimpleName(), "------------------- Contact Added ---------------------------" + userDAO.getContacts());
-                String toast = contact.getName() + " " + context.getText(R.string.contact_added_success) + ".";
-                Toaster.getInstance().toast(toast, Toast.LENGTH_LONG, Gravity.TOP);
-
-                // Refresh contact list in first tab
-                new GetContactsTask().execute();
+                addToContacts(contact, true);
                 break;
 
             case R.id.mail_image_button:
@@ -238,6 +223,36 @@ public class UserDetailsFragment
         }
 
     }
+
+
+    private void addToContacts(User tappedUser, boolean showToast) {
+        User userFromDb = userDAO.get(tappedUser.getId());
+        if (null != userFromDb) {
+            contact = userFromDb;
+        }
+
+        // Contact flag will be zero if the tapped user was not found in the database
+        if (contact.isContact()) {
+            if (showToast) {
+                String toast = contact.getName() + " " + context.getText(R.string.contact_already_added) + ".";
+                Toaster.getInstance().toast(toast, Toast.LENGTH_LONG, Gravity.TOP);
+            }
+            return;
+        }
+
+        contact.addToContacts();
+        userDAO.addOrUpdate(contact);
+        Log.d(this.getClass().getSimpleName(), "contactAdded");
+
+        if (showToast) {
+            String toast = contact.getName() + " " + context.getText(R.string.contact_added_success) + ".";
+            Toaster.getInstance().toast(toast, Toast.LENGTH_LONG, Gravity.TOP);
+        }
+
+        // Refresh contact list in first tab
+        new GetContactsTask().execute();
+    }
+
 
     private void sendMail(String email) {
         Intent i = new Intent(Intent.ACTION_SEND);
