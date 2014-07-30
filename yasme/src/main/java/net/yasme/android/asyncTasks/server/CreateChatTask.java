@@ -43,6 +43,11 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected Boolean doInBackground(String... params) {
 
+        // Add self to selected users and names
+        if (!selectedUsers.contains(selfUser)) {
+            selectedUsers.add(selfUser);
+        }
+
         // Make sure that there is no such chat between the given participants yet
         List<Chat> matchingChats = databaseManager.getChatDAO().getByParticipantsExact(selectedUsers);
         if (null != matchingChats && matchingChats.size() > 0) {
@@ -59,12 +64,6 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
                 if (iterator.hasNext()) {
                     name += ", ";
                 }
-            }
-
-            // Add self to selected users and names
-            if (!selectedUsers.contains(selfUser)) {
-                name += ", " + selfUser.getName();
-                selectedUsers.add(selfUser);
             }
 
             newChat = new Chat(selfUser, "Created: " + new Date().toString(), name);
