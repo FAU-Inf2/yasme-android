@@ -2,10 +2,19 @@
     <!--engl-->
     <string name="title_chat_settings">Chat settings</string>
 
-    <string name="change_user">Add or remove User</string>
+    <string name="change_user">Add User</string>
     <string name="change_name">Change name of Chat</string>
     <string name="change_status">Change status of Chat</string>
 
     <string name="change_name_hint">New name for chat</string>
     <string name="change_status_hint">New status name for chat</string>
+
+    <string name="change_status_successful">Change status was successful</string>
+    <string name="change_status_not_successful">Change status not was successful</string>
+    <string name="change_name_successful">Change name was successful</string>
+    <string name="change_name_not_successful">Change name was not successful</string>
+
+    <string name="OK">OK</string>
+    <string name="cancel">Cancel</string>
+
 </resources>

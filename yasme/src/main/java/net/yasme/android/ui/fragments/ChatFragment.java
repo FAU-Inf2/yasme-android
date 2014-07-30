@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.ChatAdapter;
+import net.yasme.android.ui.activities.ChatSettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,6 +143,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         getActivity().setProgressBarIndeterminateVisibility(false);
     }
 
+    public Chat getChat() {
+        return chat;
+    }
+
     public void send(View view) {
         String msgText = editMessage.getText().toString();
         if (msgText.isEmpty()) {
@@ -183,5 +189,21 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         mAdapter.addAll(newMessages);
         editMessage.requestFocus();
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_chat_settings) {
+            Intent intent = new Intent(getActivity(), ChatSettingsActivity.class);
+            intent.putExtra("chat", chat);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
