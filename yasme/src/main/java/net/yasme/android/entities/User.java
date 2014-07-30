@@ -30,6 +30,7 @@ public class User implements Serializable {
 
     private String pw;
 
+    @JsonIgnore
     private List<Device> devices;   // Just for convenience
 
     @DatabaseField(columnName = DatabaseConstants.USER_LAST_MODIFIED)

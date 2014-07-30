@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--local testing-->
-<!--
+<!--local testing
     <string name="server_scheme" translatable="false">http</string>
-    <string name="server_host" translatable="false">localhost</string>
+    <string name="server_host" translatable="false">192.168.6.128</string>
     <string name="server_port" translatable="false">8080</string>
 -->
 <!--Original-->

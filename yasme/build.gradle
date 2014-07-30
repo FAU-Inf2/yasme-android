@@ -34,6 +34,14 @@ android {
         }
     }
 
+//    replaceConnection = {variant, fromString, toString ->
+//        def flavor = variant.productFlavors.get(0)
+//        def buildtype = variant.buildType
+//        def connectionFile = "$buildDir/${buildtype.name}/src/main/res/values/connection.xml"
+//        def updatedContent = new File(manifestFile).getText('UTF-8').replaceAll(fromString, toString)
+//        new File(connectionFile).write(updatedContent, 'UTF-8')
+//    }
+
     sourceSets {
 
         androidTest {
