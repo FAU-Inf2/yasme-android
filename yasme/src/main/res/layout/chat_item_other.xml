@@ -18,7 +18,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/chat_text_bg_other"
+        android:padding="6dip"
+        android:background="@drawable/border_other"
         android:textColor="@color/chat_text_color_other"
         android:orientation="vertical" >
 
