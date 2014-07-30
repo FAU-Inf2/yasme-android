@@ -2,15 +2,14 @@ package net.yasme.android.entities;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import net.yasme.android.storage.DatabaseConstants;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -115,6 +114,9 @@ public class Chat implements Serializable {
     }
 
     public String getStatus() {
+        if(status == null || status.isEmpty()) {
+            return (getNumberOfParticipants() + " Teilnehmer");
+        }
         return status;
     }
 

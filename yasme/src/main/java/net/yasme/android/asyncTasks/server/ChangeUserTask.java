@@ -11,12 +11,12 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.exception.RestServiceException;
 
 /**
- * Created by robert on 29.07.14.
+ * Created by robert on 30.07.14.
  */
-public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
+public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
     private Chat chat;
 
-    public ChangeChatProperties(Chat chat) {
+    public ChangeUserTask(Chat chat) {
         this.chat = chat;
     }
 
@@ -25,9 +25,9 @@ public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
      * @return Returns true if it was successful, otherwise false
      */
     @Override
-    protected Boolean doInBackground(String... params) {
+    protected Boolean doInBackground(Long... params) {
         try {
-            ChatTask.getInstance().updateChat(chat);
+            ChatTask.getInstance().removePartipantFromChat(params[0], chat.getId());
         } catch (RestServiceException e) {
             Log.w(this.getClass().getSimpleName(), e.getMessage());
             return false;

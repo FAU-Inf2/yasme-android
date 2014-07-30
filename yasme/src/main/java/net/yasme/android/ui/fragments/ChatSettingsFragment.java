@@ -10,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.ChangeChatProperties;
+import net.yasme.android.asyncTasks.server.ChangeUserTask;
 import net.yasme.android.entities.Chat;
 
 /**
@@ -106,14 +108,20 @@ public class ChatSettingsFragment extends Fragment{
 
 
     private void changeUser() {
+
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(getString(R.string.change_status));
+
+        TextView tv = new TextView(getActivity());
+        tv.setText("User 0 wird aus Chat entfernt");
+        alert.setView(tv);
 
         // "OK" button
         alert.setPositiveButton(R.string.OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Grab the EditText's input
+                        new ChangeUserTask(chat).execute(0L);
                     }
                 }
         );

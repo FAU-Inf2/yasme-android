@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/chat_info"
@@ -14,32 +15,98 @@
 
     <LinearLayout
         android:id="@+id/settings"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" >
+        android:layout_alignParentStart="true"
+        android:orientation="vertical">
 
         <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/change_user"
             android:id="@+id/change_user"
-            android:layout_weight="2" />
-
-        <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/change_name"
+            android:layout_weight="2"
+            android:text="@string/change_user" />
+
+        <Button
             android:id="@+id/change_name"
-            android:layout_weight="2" />
-
-        <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/change_status"
+            android:layout_weight="2"
+            android:text="@string/change_name" />
+
+        <Button
             android:id="@+id/change_status"
-            android:layout_weight="2" />
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/change_status" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/participants"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/settings"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:visibility="visible">
+
+        <GridView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="2" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/search_user"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/settings"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:visibility="invisible">
+
+        <Spinner
+            android:id="@+id/search_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/search_button"></Spinner>
+
+        <EditText
+            android:id="@+id/search_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/search_spinner"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/button_search" />
+
+        <ListView
+            android:id="@+id/search_listView"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/search_text">
+
+        </ListView>
+    </RelativeLayout>
 </RelativeLayout>

@@ -13,7 +13,6 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.entities.Chat;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,7 +67,7 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 
         Chat chat = chats.get(position);
         titleView.setText(chat.getName());
-        subtitleView.setText(chat.getNumberOfParticipants() + " Teilnehmer");
+        subtitleView.setText(chat.getStatus());
         iconView.setImageResource(R.drawable.chat_default_icon);
         row.setTag(chat.getId());
 

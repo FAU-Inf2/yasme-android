@@ -46,7 +46,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         activity = (AbstractYasmeActivity) getActivity();
 
         adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
-        adapter.setNotifyOnChange(true);
+        //adapter.setNotifyOnChange(true);
         setListAdapter(adapter);
 
         //holt vor allem den Namen des Users ab
