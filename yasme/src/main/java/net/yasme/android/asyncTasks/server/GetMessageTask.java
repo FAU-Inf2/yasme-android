@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.DeviceTask;
+import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.controller.Toaster;
@@ -74,7 +75,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
                 refreshTask.execute();
             }
 
-            // Store MessageKey if message cotains one
+            // Store MessageKey if message contains one
             storeMessageKey(message);
             // Decrypt message
             message = decrypt(message);
@@ -171,16 +172,20 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         //verify the signature of the key and save authenticity-status in messageKeyEncrypted
         if(messageKeyEncrypted.setAuthenticity(keyEncryption.verify(messageKeyEncrypted))){
             Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been verified");
-            Toaster.getInstance().toast(R.string.authentication_successful, Toast.LENGTH_LONG);
         }else{
             Log.d(this.getClass().getSimpleName(), "[???] MessageKey could not be verified");
-            Toaster.getInstance().toast(R.string.authentication_failed, Toast.LENGTH_LONG);
         }
 
         //decrypt the key with RSA
         MessageKey messageKey = keyEncryption.decrypt(messageKeyEncrypted);
         // TODO: storeKeyToDatabase
-        DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(messageKey);
+        if (DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(messageKey) != null) {
+            try {
+                MessageKeyTask.getInstance().deleteKey(messageKey.getId());
+            } catch(Exception e) {
+
+            }
+        }
         Log.d(this.getClass().getSimpleName(), "[???] Key " + messageKey.getId() + " aus den Nachrichten extrahiert und gespeichert");
     }
 }
