@@ -44,7 +44,8 @@
         <item>Search By E-Mail</item>
         <item>Search By Phone Number</item>
     </string-array>
-    <string name="phone_number">Phone Number</string>
+    <string name="phone_number">Telephone number</string>
+    <string name="search_no_results">No results</string>
 
     <!-- Settings -->
     <string name="action_settings">Settings</string>

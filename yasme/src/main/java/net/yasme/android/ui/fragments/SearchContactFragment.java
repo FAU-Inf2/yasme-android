@@ -22,10 +22,12 @@ import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.activities.ContactActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<ArrayList<User>> {
 
@@ -35,7 +37,7 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     private TextView searchText;
     private SimpleAdapter mAdapter;
 
-    private int counter = 0;
+    private AtomicInteger bgTasksRunning = new AtomicInteger(0);
 
     ContactListContent contactListContent;
 
@@ -109,6 +111,8 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
         }else{
             contactListContent.clearItems();
             //new SearchUserTask(searchSpinner,searchText,contactListContent,mAdapter).execute();
+            getActivity().setProgressBarIndeterminateVisibility(true);
+            bgTasksRunning.incrementAndGet();
             new SearchUserTask(SearchUserTask.SearchBy.getSearchBy(searchSpinner.getSelectedItemPosition()),searchText.getText().toString()).execute();
         }
     }
@@ -158,13 +162,18 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     @Override
     public void notifyFragment(ArrayList<User> userList) {
         Log.d(getClass().getSimpleName(),"SearchContactFragment has been notified!");
+        if (0 == bgTasksRunning.decrementAndGet()) {
+            getActivity().setProgressBarIndeterminateVisibility(false);
+        }
+
         if (userList != null && userList.size() != 0) {
             for (User u : userList) {
                 contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
             }
             mAdapter.notifyDataSetChanged();
         } else {
-            contactListContent.addItem(new ContactListContent.ContactListItem("null", "Sorry, No Contact Found", ""));
+            String noResults = DatabaseManager.INSTANCE.getContext().getResources().getString(R.string.search_no_results);
+            contactListContent.addItem(new ContactListContent.ContactListItem("null", noResults, ""));
         }
     }
 }

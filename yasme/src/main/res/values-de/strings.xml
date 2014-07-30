@@ -41,7 +41,8 @@
         <item>Nach E-Mail suchen</item>
         <item>Nach Telefonnummer suchen</item>
     </string-array>
-    <string name="phone_number">Phone Number</string>
+    <string name="phone_number">Telefonnummer</string>
+    <string name="search_no_results">Keine Ergebnisse</string>
 
     <!-- Settings -->
     <string name="action_settings">Einstellungen</string>
