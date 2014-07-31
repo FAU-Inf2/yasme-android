@@ -109,12 +109,8 @@ public class UserDetailsFragment
             //contact.setId(Long.valueOf(getArguments().getString(ARG_USERID)));
         }
 
-        //Register at observer
-        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
-        FragmentObservable<UserDetailsFragment, UserDetailsFragmentParam> obs =
-                ObservableRegistry.getObservable(UserDetailsFragment.class);
-        Log.d(this.getClass().getSimpleName(), "... successful");
-        obs.register(this);
+        activity = (AbstractYasmeActivity) getActivity();
+        selfUser = activity.getSelfUser();
     }
 
     @Override
@@ -134,13 +130,17 @@ public class UserDetailsFragment
         email.setText(contact.getEmail());
         number.setText("");
 
-        startChat.setOnClickListener(this);
-        addContact.setOnClickListener(this);
+        // Don't show button to add self to contacts
+        if (selfUser.getId() == contact.getId()) {
+            startChat.setVisibility(View.GONE);
+            addContact.setVisibility(View.GONE);
+        } else {
+            startChat.setOnClickListener(this);
+            addContact.setOnClickListener(this);
+        }
+
         mailButton.setOnClickListener(this);
         numberButton.setOnClickListener(this);
-
-        activity = (AbstractYasmeActivity) getActivity();
-        selfUser = activity.getSelfUser();
 
         if (!getArguments().getBoolean(ARG_CONTACTBUTTON)) {
             addContact.setVisibility(View.GONE);
@@ -161,8 +161,7 @@ public class UserDetailsFragment
         super.onStart();
         //Register at observer
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
-        FragmentObservable<UserDetailsFragment, UserDetailsFragmentParam> obs =
-                ObservableRegistry.getObservable(UserDetailsFragment.class);
+        FragmentObservable<UserDetailsFragment, UserDetailsFragmentParam> obs = ObservableRegistry.getObservable(UserDetailsFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
     }
