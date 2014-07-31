@@ -125,20 +125,21 @@ public class Chat implements Serializable {
         if (name == null) {
             name = "";
         }
+        String returnName = "";
         if (name.length() <= 0) {
             try {
                 int size = getParticipants().size();
                 for (int i = 0; i < size; i++) {
-                    name += getParticipants().get(i).getName();
+                    returnName += getParticipants().get(i).getName();
                     if(i < size - 1) {
-                        name += ", ";
+                        returnName += ", ";
                     }
                 }
             } catch (Exception e) {
-
+                Log.d(this.getClass().getSimpleName(), e.getMessage());
             }
         }
-        return name;
+        return returnName;
     }
 
     public Date getLastModified() {
@@ -163,10 +164,9 @@ public class Chat implements Serializable {
 
     @JsonIgnore
     public int getNumberOfParticipants() {
-
-        if (participants != null)
+        if (participants != null) {
             return participants.size();
-
+        }
         return 0;
     }
 
@@ -184,7 +184,6 @@ public class Chat implements Serializable {
     public void setId(long id) {
         this.id = id;
     }
-
 
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;

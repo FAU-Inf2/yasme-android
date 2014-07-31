@@ -2,7 +2,8 @@
     <!--ger-->
     <string name="title_chat_settings">Chat Einstellungen</string>
 
-    <string name="change_user">User hinzufügen</string>
+    <string name="add_user">User hinzufügen</string>
+    <string name="delete_user">User löschen</string>
     <string name="change_name">Chatnamen ändern</string>
     <string name="change_status">Chatstatus ändern</string>
 

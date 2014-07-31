@@ -23,15 +23,34 @@ public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
 
     /**
      * @return Returns true if it was successful, otherwise false
+     * @param params
+     *              0 is id of participant to remove
+     *              1 is method
      */
     @Override
     protected Boolean doInBackground(Long... params) {
-        try {
-            ChatTask.getInstance().removePartipantFromChat(params[0], chat.getId());
-        } catch (RestServiceException e) {
-            Log.w(this.getClass().getSimpleName(), e.getMessage());
-            return false;
+        switch(params[1].intValue()) {
+            case 0:
+                try {
+                    ChatTask.getInstance().removePartipantFromChat(params[0], chat.getId());
+                } catch (RestServiceException e) {
+                    Log.w(this.getClass().getSimpleName(), e.getMessage());
+                    return false;
+                }
+                break;
+            case 1:
+                try {
+                    ChatTask.getInstance().addParticipantToChat(params[0], chat.getId());
+                } catch (RestServiceException e) {
+                    Log.w(this.getClass().getSimpleName(), e.getMessage());
+                    return false;
+                }
+                break;
+            default:
+                break;
         }
+
+
         return true;
     }
 
