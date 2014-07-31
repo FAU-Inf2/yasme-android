@@ -21,16 +21,13 @@ import net.yasme.android.ui.fragments.RegisterFragment;
  * Represents an asynchronous login task used to authenticate the user.
  */
 public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
-    SharedPreferences storage;
-    Context context;
+    private SharedPreferences storage;
+    private String accessToken;
+    private long userId;
 
-    public UserLoginTask(SharedPreferences storage, Context context) {
+    public UserLoginTask(SharedPreferences storage) {
         this.storage = storage;
-        this.context = context;
     }
-
-    String accessToken;
-    long userId;
 
     /**
      *
@@ -57,7 +54,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             userId = Long.parseLong(loginReturn[0]);
             accessToken = loginReturn[1];
 
-            Log.d(this.getClass().getSimpleName(),loginReturn[0]);
+            Log.d(this.getClass().getSimpleName(), loginReturn[0]);
 
             // storage
             SharedPreferences.Editor editor = storage.edit();

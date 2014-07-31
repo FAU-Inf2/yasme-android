@@ -24,6 +24,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
     private String name;
     private String email;
     private String password;
+    private long userId;
 
     public UserRegistrationTask(SharedPreferences storage) {
         this.storage = storage;
@@ -49,7 +50,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
         try {
             PasswordEncryption pwEnc = new PasswordEncryption(new User(email,password));
             password = pwEnc.getSecurePassword();
-            long userId = UserTask.getInstance().registerUser(new User(password, name, email));
+            userId = UserTask.getInstance().registerUser(new User(password, name, email));
         } catch (RestServiceException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
@@ -61,6 +62,8 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         if(success) {
             SharedPreferences.Editor editor = storage.edit();
+            // Will be done by login task
+            //editor.putLong(AbstractYasmeActivity.USER_ID, userId);
             editor.putString(AbstractYasmeActivity.USER_NAME, name);
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
             editor.commit();

@@ -25,16 +25,14 @@ import net.yasme.android.ui.AbstractYasmeActivity;
  */
 public class RegisterFragment extends Fragment implements NotifiableFragment<RegisterFragment.RegParam> {
     private AbstractYasmeActivity activity;
-    private UserRegistrationTask regTask = null;
+    private SharedPreferences sharedPrefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         activity = (AbstractYasmeActivity) getActivity();
-
-        SharedPreferences storage = DatabaseManager.INSTANCE.getSharedPreferences();
-        regTask = new UserRegistrationTask(storage);
-
+        sharedPrefs = DatabaseManager.INSTANCE.getSharedPreferences();
         registerDialog();
     }
 
@@ -81,7 +79,8 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                         String inputPasswordCheck = password_check.getText()
                                 .toString();
 
-                        regTask.execute(inputName, inputMail, inputPassword, inputPasswordCheck);
+                        new UserRegistrationTask(sharedPrefs)
+                                .execute(inputName, inputMail, inputPassword, inputPasswordCheck);
                     }
                 }
         );
@@ -107,12 +106,12 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                             R.string.registration_successful),
                     Toast.LENGTH_SHORT
             ).show();
-            UserLoginTask authTask = new UserLoginTask(activity.getStorage(), activity.getApplicationContext());
+            UserLoginTask authTask = new UserLoginTask(sharedPrefs);
             authTask.execute(email, password);
             activity.getSelfUser().setEmail(email);
         } else {
             Toast.makeText(
-                    activity.getApplicationContext(),
+                    DatabaseManager.INSTANCE.getContext(),
                     getResources().getString(
                             R.string.registration_not_successful),
                     Toast.LENGTH_SHORT
@@ -135,7 +134,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     public void onStop() {
         super.onStop();
         FragmentObservable<RegisterFragment, RegParam> obs =
-                ObservableRegistry.getObservable(LoginFragment.class);
+                ObservableRegistry.getObservable(RegisterFragment.class);
         Log.d(this.getClass().getSimpleName(), "Remove from observer");
         obs.remove(this);
     }
@@ -176,7 +175,6 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         public RegLoginParam(Boolean success, long userId) {
             this.success = success;
             this.userId = userId;
-
         }
     }
 
