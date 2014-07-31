@@ -61,7 +61,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         activity = (AbstractYasmeActivity) getActivity();
 
         // Restore preferences
-        emailTmp = activity.getStorage().getString(AbstractYasmeActivity.USER_MAIL, "@yasme.net");
+        emailTmp = DatabaseManager.INSTANCE.getSharedPreferences().getString(AbstractYasmeActivity.USER_MAIL, "@yasme.net");
         accessToken = activity.getAccessToken();
     }
 

@@ -17,13 +17,14 @@ import net.yasme.android.asyncTasks.server.UserRegistrationTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
 /**
  * Created by robert on 06.07.14.
  */
 public class RegisterFragment extends Fragment implements NotifiableFragment<RegisterFragment.RegParam> {
-    AbstractYasmeActivity activity;
+    private AbstractYasmeActivity activity;
     private UserRegistrationTask regTask = null;
 
     @Override
@@ -31,7 +32,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         super.onCreate(savedInstanceState);
         activity = (AbstractYasmeActivity) getActivity();
 
-        SharedPreferences storage = activity.getStorage();
+        SharedPreferences storage = DatabaseManager.INSTANCE.getSharedPreferences();
         regTask = new UserRegistrationTask(storage);
 
         registerDialog();

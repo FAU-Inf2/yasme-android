@@ -2,6 +2,7 @@ package net.yasme.android.asyncTasks.server;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import net.yasme.android.connection.UserTask;
 import net.yasme.android.controller.ObservableRegistry;
@@ -18,15 +19,15 @@ import net.yasme.android.ui.fragments.RegisterFragment;
  * Represents an asynchronous task used to register the user.
  */
 public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
-    SharedPreferences storage;
+
+    private SharedPreferences storage;
+    private String name;
+    private String email;
+    private String password;
 
     public UserRegistrationTask(SharedPreferences storage) {
         this.storage = storage;
     }
-
-    String name;
-    String email;
-    String password;
 
     /**
      * @params params[0] is name
@@ -46,13 +47,11 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
         try {
-
             PasswordEncryption pwEnc = new PasswordEncryption(new User(email,password));
             password = pwEnc.getSecurePassword();
-
-            long userId = UserTask.getInstance().registerUser(new User(password, name,
-                    email));
+            long userId = UserTask.getInstance().registerUser(new User(password, name, email));
         } catch (RestServiceException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
         return true;
