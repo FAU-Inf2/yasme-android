@@ -37,6 +37,9 @@ public class ChatSettingsFragment extends Fragment implements NotifiableFragment
     private View participants;
     private View searchUser;
 
+    private SimpleAdapter mAddAdapter;
+    private final ContactListContent addParticipantsContent = new ContactListContent();
+
     public ChatSettingsFragment() {
 
     }
@@ -153,10 +156,27 @@ public class ChatSettingsFragment extends Fragment implements NotifiableFragment
         participants.setVisibility(View.INVISIBLE);
         searchUser.setVisibility(View.VISIBLE);
 
-        new GetContactsTask().execute();
+        mAddAdapter = new SimpleAdapter(getActivity(), addParticipantsContent.getMap(),
+                android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
+                new int[]{android.R.id.text1, android.R.id.text2});
 
-        long userId = 0;
-        new ChangeUserTask(chat).execute(userId, 1L);
+        // Set the adapter
+        AbsListView list = (AbsListView) searchUser.findViewById(R.id.search_listView);
+        list.setAdapter(mAddAdapter);
+
+        // Set OnItemClickListener so we can be notified on item clicks
+        list.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                        Long userId = addParticipantsContent.items.get(position).user.getId();
+                        //TODO: Warnung vorher einbauen
+                        new ChangeUserTask(chat).execute(userId, 1L);
+                    }
+                }
+        );
+
+        new GetContactsTask().execute();
     }
 
 
@@ -165,15 +185,15 @@ public class ChatSettingsFragment extends Fragment implements NotifiableFragment
         searchUser.setVisibility(View.INVISIBLE);
         participants.setVisibility(View.VISIBLE);
 
-        final SimpleAdapter mAdapter;
+        final SimpleAdapter mDelAdapter;
         final ContactListContent participantsContent = new ContactListContent();
-        mAdapter = new SimpleAdapter(getActivity(), participantsContent.getMap(),
+        mDelAdapter = new SimpleAdapter(getActivity(), participantsContent.getMap(),
                 android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
                 new int[]{android.R.id.text1, android.R.id.text2});
 
         // Set the adapter
         AbsListView list = (AbsListView) participants.findViewById(android.R.id.list);
-        list.setAdapter(mAdapter);
+        list.setAdapter(mDelAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         list.setOnItemClickListener(
@@ -181,7 +201,7 @@ public class ChatSettingsFragment extends Fragment implements NotifiableFragment
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         Long userId = participantsContent.items.get(position).user.getId();
-
+                        //TODO: Warnung vorher einauen
                         new ChangeUserTask(chat).execute(userId, 0L);
 
                     }
@@ -192,7 +212,7 @@ public class ChatSettingsFragment extends Fragment implements NotifiableFragment
             participantsContent.addItem(new ContactListContent.
                     ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
         }
-        mAdapter.notifyDataSetChanged();
+        mDelAdapter.notifyDataSetChanged();
     }
 
 
@@ -232,6 +252,12 @@ public class ChatSettingsFragment extends Fragment implements NotifiableFragment
 
     @Override
     public void notifyFragment(List<User> value) {
-
+        for (User u : value) {
+            //if(!chat.getParticipants().contains(u)) {
+                addParticipantsContent.addItem(new ContactListContent.
+                        ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
+           // }
+        }
+        mAddAdapter.notifyDataSetChanged();
     }
 }
