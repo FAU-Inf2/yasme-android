@@ -180,7 +180,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         synchronized(this) {
             long newLatestMessageOnDisplay = latestMessageOnDisplay.get();
             for (Message msg : messages) {
-                if (msg.getId() > latestMessageOnDisplay.get()) {
+                // Ignore messages which were not meant for this chat
+                if (msg.getChat().getId() == chat.getId() && msg.getId() > latestMessageOnDisplay.get()) {
                     newMessages.add(msg);
                     //localMessages.add(msg);
                     newLatestMessageOnDisplay = Math.max(newLatestMessageOnDisplay, msg.getId());
