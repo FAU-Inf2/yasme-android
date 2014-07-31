@@ -9,6 +9,7 @@ import net.yasme.android.connection.ChatTask;
 import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.DatabaseManager;
 
 /**
  * Created by robert on 29.07.14.
@@ -32,6 +33,7 @@ public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
             Log.w(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
+        DatabaseManager.INSTANCE.getChatDAO().update(chat);
         return true;
     }
 

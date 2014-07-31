@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.yasme.android.R;
@@ -44,6 +45,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         TextView textView;
         TextView dateView;
         ImageView imageView;
+        LinearLayout textViews;
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         if(msg == null) {
@@ -62,6 +64,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         textView = (TextView) rowView.findViewById(R.id.chat_item_message);
         dateView = (TextView) rowView.findViewById(R.id.chat_item_date);
         imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture);
+        textViews = (LinearLayout) rowView.findViewById(R.id.chat_item_text);
 
         String time = getDateOfMessage(msg);
         String name;
@@ -86,11 +89,15 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         } else {
             //textView.setText(/*name + ": " + */text);
             dateView.setText(name + ", " + time);
+
+            // This is a test with speech bubbles
+            //textViews.setBackgroundResource(R.drawable.bubble);
         }
 
         //dateView.setText(time);
         Log.d(this.getClass().getSimpleName(), name + ": " + msg.getMessage());
         imageView.setImageResource(R.drawable.chat_default_icon); //TODO
+
 
         rowView.requestFocus();
         return rowView;
