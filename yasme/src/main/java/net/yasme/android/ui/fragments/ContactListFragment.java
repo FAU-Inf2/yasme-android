@@ -23,7 +23,7 @@ import net.yasme.android.ui.fragments.InviteToChatFragment.AllUsersFetchedParam;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-public class ContactListItemFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<AllUsersFetchedParam> {
+public class ContactListFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<AllUsersFetchedParam> {
 
 
     private OnFragmentInteractionListener mListener;
@@ -41,7 +41,7 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ContactListItemFragment() { }
+    public ContactListFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,14 +70,14 @@ public class ContactListItemFragment extends Fragment implements AbsListView.OnI
     @Override
     public void onStart() {
         super.onStart();
-        FragmentObservable<ContactListItemFragment, AllUsersFetchedParam> obs = ObservableRegistry.getObservable(ContactListItemFragment.class);
+        FragmentObservable<ContactListFragment, AllUsersFetchedParam> obs = ObservableRegistry.getObservable(ContactListFragment.class);
         obs.register(this);
     }
 
 
     @Override
     public void onStop() {
-        FragmentObservable<ContactListItemFragment, AllUsersFetchedParam> obs = ObservableRegistry.getObservable(ContactListItemFragment.class);
+        FragmentObservable<ContactListFragment, AllUsersFetchedParam> obs = ObservableRegistry.getObservable(ContactListFragment.class);
         obs.remove(this);
         super.onStop();
     }

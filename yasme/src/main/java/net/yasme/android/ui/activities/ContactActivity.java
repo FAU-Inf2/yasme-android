@@ -5,7 +5,6 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -18,15 +17,16 @@ import android.view.Window;
 import net.yasme.android.R;
 import net.yasme.android.entities.User;
 import net.yasme.android.ui.AbstractYasmeActivity;
-import net.yasme.android.ui.fragments.ContactListItemFragment;
+import net.yasme.android.ui.fragments.ContactListFragment;
 import net.yasme.android.ui.fragments.OwnProfileFragment;
 import net.yasme.android.ui.fragments.SearchContactFragment;
 import net.yasme.android.ui.fragments.UserDetailsFragment;
 
 import java.util.Locale;
 
-public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListItemFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener, SearchContactFragment.OnSearchFragmentInteractionListener, OwnProfileFragment.OnOwnProfileFragmentInteractionListener {
+public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener, SearchContactFragment.OnSearchFragmentInteractionListener, OwnProfileFragment.OnOwnProfileFragmentInteractionListener {
 
+    public static final String SEARCH_FOR_CONTACTS = "search_for_new_contacts";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -87,6 +87,10 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+
+        if (getIntent().hasExtra(SEARCH_FOR_CONTACTS)) {
+            mViewPager.setCurrentItem(1);
+        }
     }
 
 
@@ -129,16 +133,12 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
 
     @Override
     public void onFragmentInteraction(User user, View view) {
-
         this.displayDetailsFragment(user, false);
-
     }
 
     @Override
     public void onSearchFragmentInteraction(User user) {
-
         this.displayDetailsFragment(user,true);
-
     }
 
     @Override
@@ -186,7 +186,7 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
 
         DialogFragment userDetailsFragment = UserDetailsFragment.newInstance(user, showAddContact);
         int style = userDetailsFragment.STYLE_NO_TITLE;
-        int theme = android.R.style.Theme_Holo;
+        //int theme = android.R.style.Theme_Holo;
         userDetailsFragment.setStyle(style, 0);
         userDetailsFragment.show(ft, "dialog");
 
@@ -208,29 +208,17 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            Bundle b = new Bundle();
-            b.putString("accessToken", accessToken);
-            b.putLong("userId", selfUser.getId());
 
             switch (position){
                 case 0:
-                    ContactListItemFragment clif = new ContactListItemFragment();
-                    clif.setArguments(b);
-                    return clif;
+                    return new ContactListFragment();
                 case 1:
-                    SearchContactFragment scf = new SearchContactFragment();
-                    scf.setArguments(b);
-                    return scf;
+                    return new SearchContactFragment();
                 case 2:
-                    OwnProfileFragment opf = new OwnProfileFragment();
-                    opf.setArguments(b);
-                    return opf;
+                    return new OwnProfileFragment();
                 default:
-                    ContactListItemFragment cliff = new ContactListItemFragment();
-                    cliff.setArguments(b);
-                    return cliff;
+                    return new ContactListFragment();
             }
-
         }
 
 

@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import net.yasme.android.R;
@@ -22,6 +24,7 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.activities.ChatActivity;
+import net.yasme.android.ui.activities.ContactActivity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,6 +43,7 @@ public class InviteToChatFragment
     private ListView chatPartners;
     private Button startChat;
     private ArrayAdapter<String> adapter;
+    private TextView emptyContactsNotice;
 
     public InviteToChatFragment() {
 
@@ -56,9 +60,7 @@ public class InviteToChatFragment
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
 
-
         activity = (AbstractYasmeActivity) getActivity();
-        findViewsById();
 
         //progress bar on
         getActivity().setProgressBarIndeterminateVisibility(true);
@@ -75,8 +77,29 @@ public class InviteToChatFragment
     }
 
     private void findViewsById() {
-        chatPartners = (ListView) activity.findViewById(R.id.inviteToChat_usersList);
-        startChat = (Button) activity.findViewById(R.id.inviteToChat_startChat);
+
+        if (null == startChat) {
+            startChat = (Button) activity.findViewById(R.id.inviteToChat_startChat);
+        }
+
+        if (null == emptyContactsNotice) {
+            emptyContactsNotice = (TextView) activity.findViewById(R.id.empty_contacts_notice);
+            emptyContactsNotice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), ContactActivity.class);
+                    // Message is immaterial
+                    intent.putExtra(ContactActivity.SEARCH_FOR_CONTACTS, "let me search for contacts");
+                    startActivity(intent);
+                }
+            });
+        }
+
+        if (null == chatPartners) {
+            chatPartners = (ListView) activity.findViewById(R.id.inviteToChat_usersList);
+            // Only show the notice when the list view is empty
+            chatPartners.setEmptyView(emptyContactsNotice);
+        }
     }
 
 
@@ -178,7 +201,7 @@ public class InviteToChatFragment
                 ObservableRegistry.getObservable(InviteToChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
-
+        findViewsById();
     }
 
     @Override

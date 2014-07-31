@@ -45,6 +45,7 @@
     <string name="contact_added_success">wurde erfolgreich als Kontakt hinzugefügt</string>
     <string name="contact_already_added">ist bereits in deiner Kontaktliste vorhanden</string>
     <string name="search_no_results">Keine Ergebnisse</string>
+    <string name="empty_contacts">Du hast noch keine Kontakte. Drücke hier, um neue Kontakte zu finden.</string>
 
     <!-- Settings -->
     <string name="action_settings">Einstellungen</string>

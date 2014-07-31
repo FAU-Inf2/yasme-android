@@ -70,10 +70,10 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.1.4'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.1.4'
     compile 'com.google.android.gms:play-services:3.1.+'
-    compile 'com.android.support:support-v4:+'
-    compile 'com.android.support:support-v13:19.+'
-    //compile 'com.android.support:support-v4:20.+'
-    //compile 'com.android.support:support-v13:20.+'
+    //compile 'com.android.support:support-v4:+'
+    //compile 'com.android.support:support-v13:19.+'
+    compile 'com.android.support:support-v4:20.+'
+    compile 'com.android.support:support-v13:20.+'
 }
 
 

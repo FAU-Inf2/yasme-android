@@ -21,4 +21,13 @@
         android:layout_height="fill_parent"
         android:layout_above="@id/inviteToChat_startChat"
         android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/empty_contacts_notice"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_contacts"
+        android:layout_alignParentTop="true"
+        android:textStyle="bold" />
+
 </RelativeLayout>

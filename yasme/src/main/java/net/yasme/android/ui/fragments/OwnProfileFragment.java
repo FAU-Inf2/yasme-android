@@ -37,9 +37,6 @@ import net.yasme.android.ui.AbstractYasmeActivity;
  */
 public class OwnProfileFragment extends Fragment implements View.OnClickListener, NotifiableFragment<Drawable> {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     private TextView name;
     private TextView email;
     private TextView number;
@@ -52,22 +49,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
     private OnOwnProfileFragmentInteractionListener mListener;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment OwnProfileFragment.
-     */
-    public static OwnProfileFragment newInstance(String param1, String param2) {
-        OwnProfileFragment fragment = new OwnProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
     public OwnProfileFragment() {
         // Required empty public constructor
     }
