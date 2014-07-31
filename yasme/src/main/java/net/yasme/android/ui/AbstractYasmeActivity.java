@@ -20,6 +20,7 @@ import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.activities.ChatListActivity;
 import net.yasme.android.ui.activities.ContactActivity;
+import net.yasme.android.ui.activities.InviteToChatActivity;
 
 
 /**
@@ -126,10 +127,17 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
                 return true;
             case R.id.action_chats:
                 intent = new Intent(this, ChatListActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            case R.id.action_add_chat:
+                intent = new Intent(this, InviteToChatActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 return true;
             case R.id.action_contacts:
                 intent = new Intent(this, ContactActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 return true;
             default:

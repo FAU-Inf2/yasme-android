@@ -67,7 +67,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
             // Assuming that the messages are sorted by id
             latestMessageOnDisplay = new AtomicLong(0);
-            new GetNewMessagesForChatTask(latestMessageOnDisplay.get(), chat.getId());
             // Ask server for new messages
             new GetMessageTask().execute();
             Log.d(this.getClass().getSimpleName(), "number of messages from DB: " + chat.getMessages().size());
@@ -104,6 +103,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 activity.getUserId(), new ArrayList<Message>());
         list.setAdapter(mAdapter);
         mAdapter.setNotifyOnChange(true);
+        notifyFragment(chat.getMessages());
 
         return rootView;
     }

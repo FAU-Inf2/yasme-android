@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -103,12 +102,13 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_search_contact) {
-            Intent intent = new Intent(this, InviteToChatActivity.class);
-            startActivity(intent);
-            return true;
-        }
+//        int id = item.getItemId();
+//        if (id == R.id.action_add_chat) {
+//            Intent intent = new Intent(this, InviteToChatActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//            startActivity(intent);
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 

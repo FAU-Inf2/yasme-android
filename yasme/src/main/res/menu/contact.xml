@@ -3,19 +3,18 @@
     tools:context="net.yasme.android.ui.activities.ContactActivity" >
 
     <item
-        android:id="@+id/action_search_contact"
+        android:id="@+id/action_add_chat"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:title="@string/action_search_contact"
-        android:icon="@drawable/ic_action_search"/>
+        android:title="@string/action_add_chat"
+        android:icon="@drawable/ic_action_add_group"/>
 
-     <item
-        android:id="@+id/action_chats"
-        android:orderInCategory="300"
-        android:showAsAction="always"
-        android:title="@string/action_chats"
-
-        android:icon="@drawable/ic_action_storage"/>
+    <item
+       android:id="@+id/action_chats"
+       android:orderInCategory="300"
+       android:showAsAction="always"
+       android:title="@string/action_chats"
+       android:icon="@drawable/ic_action_storage"/>
 
     <item
         android:visible="false"
