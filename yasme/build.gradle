@@ -28,6 +28,12 @@ android {
 
     buildTypes {
         release {
+
+            def connectionFile = "$buildDir/intermediates/res/release/values/values.xml"
+            println(connectionFile)
+            def updatedContent = new File(connectionFile).getText('UTF-8').replaceAll("devel.yasme.net", "connect.yasme.net")
+            new File(connectionFile).write(updatedContent, 'UTF-8')
+
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
