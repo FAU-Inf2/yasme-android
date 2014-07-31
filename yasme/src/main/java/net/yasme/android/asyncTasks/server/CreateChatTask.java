@@ -48,6 +48,12 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
             selectedUsers.add(selfUser);
         }
 
+        // selectedUsers contains at least the selfUser now
+        if (selectedUsers.size() == 1) {
+            Log.w(this.getClass().getSimpleName(), "Don't allow to create a chat which does only contain the self user");
+            return false;
+        }
+
         // Make sure that there is no such chat between the given participants yet
         List<Chat> matchingChats = databaseManager.getChatDAO().getByParticipantsExact(selectedUsers);
         if (null != matchingChats && matchingChats.size() > 0) {
