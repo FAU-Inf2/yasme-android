@@ -49,6 +49,7 @@
     <string name="contact_already_added">has already been added to your contact list</string>
     <string name="search_no_results">No results</string>
     <string name="empty_contacts">You do not have any contacts yet. Tap here to search for others.</string>
+    <string name="empty_contacts_swipe">You do not have any contacts yet. Swipe to the right hand side to search for others.</string>
 
     <!-- Settings -->
     <string name="action_settings">Settings</string>

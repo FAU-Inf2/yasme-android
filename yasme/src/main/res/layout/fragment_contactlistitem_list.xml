@@ -11,9 +11,12 @@
         android:layout_height="match_parent" />
 
     <TextView
-        android:id="@android:id/empty"
+        android:id="@+id/empty_contacts_notice_swipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center" />
+        android:text="@string/empty_contacts_swipe"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:textStyle="bold" />
 
 </FrameLayout>

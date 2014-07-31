@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.database.GetContactsTask;
@@ -94,6 +95,9 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
+
+        TextView emptyContactsNotice = (TextView) view.findViewById(R.id.empty_contacts_notice_swipe);
+        mListView.setEmptyView(emptyContactsNotice);
 
         return view;
     }
