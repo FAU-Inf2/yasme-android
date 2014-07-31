@@ -34,15 +34,29 @@ android {
         }
     }
 
-//    replaceConnection = {variant, fromString, toString ->
-//        def flavor = variant.productFlavors.get(0)
-//        def buildtype = variant.buildType
+    buildTypes.all { buildType ->
+        println buildType.name
+        println buildType.debuggable
+        print ""
+        if (!buildType.debuggable) {
+            //def connectionFile = "$buildDir/${buildType.name}/src/main/res/values/connection.xml"
+            //println(connectionFile)
+            //def updatedContent = new File(connectionFile).getText('UTF-8').replaceAll("devel.yasme.net", "connect.yasme.net")
+            //new File(connectionFile).write(updatedContent, 'UTF-8')
+        }
+    }
+
+//    replaceConnection = { buildType, fromString, toString ->
 //        def connectionFile = "$buildDir/${buildtype.name}/src/main/res/values/connection.xml"
-//        def updatedContent = new File(manifestFile).getText('UTF-8').replaceAll(fromString, toString)
+//        println(connectionFile)
+//        def updatedContent = new File(connectionFile).getText('UTF-8').replaceAll(fromString, toString)
 //        new File(connectionFile).write(updatedContent, 'UTF-8')
 //    }
 
     sourceSets {
+
+        main.java.srcDirs = ['src/main/java']
+        main.resources.srcDirs = ['src/main/resources']
 
         androidTest {
             java.srcDirs = ['src/test/java']
