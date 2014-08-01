@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -121,23 +122,22 @@ public class Chat implements Serializable {
         return status;
     }
 
+    @JsonProperty("name")
     public String getName() {
-        if (name == null) {
-            name = "";
+        if (name != null && name.length() > 0) {
+            return name;
         }
         String returnName = "";
-        if (name.length() <= 0) {
-            try {
-                int size = getParticipants().size();
-                for (int i = 0; i < size; i++) {
-                    returnName += getParticipants().get(i).getName();
-                    if(i < size - 1) {
-                        returnName += ", ";
-                    }
+        try {
+            int size = getParticipants().size();
+            for (int i = 0; i < size; i++) {
+                returnName += getParticipants().get(i).getName();
+                if(i < size - 1) {
+                    returnName += ", ";
                 }
-            } catch (Exception e) {
-                Log.d(this.getClass().getSimpleName(), e.getMessage());
             }
+        } catch (Exception e) {
+            Log.d(this.getClass().getSimpleName(), e.getMessage());
         }
         return returnName;
     }
