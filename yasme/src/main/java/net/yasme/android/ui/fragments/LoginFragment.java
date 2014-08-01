@@ -54,12 +54,11 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     private View focusView = null;
 
     protected String accessToken;
-    protected AbstractYasmeActivity activity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (AbstractYasmeActivity) getActivity();
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
 
         // Restore preferences
         // In debug app, show @yasme.net
@@ -77,8 +76,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         Log.d(this.getClass().getSimpleName(), "... successful");
 
         obs.register(this);
-        mProgressView = activity.findViewById(R.id.login_status);
-        mLoginFormView = activity.findViewById(R.id.login);
+        mProgressView = getActivity().findViewById(R.id.login_status);
+        mLoginFormView = getActivity().findViewById(R.id.login);
     }
 
     @Override
@@ -202,7 +201,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     }
 
     public void onPostLoginExecute(Boolean success, long userId) {
-
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         if (!ConnectionTask.isInitializedSession()) {
             ConnectionTask.initSession(userId, accessToken);
         }
@@ -262,7 +261,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
     public void onPostYasmeDeviceRegExecute(Boolean success, long deviceId) {
         if (success) {
-
+            AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
             // Initialize the session a second time because the deviceId was missing
             SharedPreferences devicePrefs = activity.getSharedPreferences(
                     AbstractYasmeActivity.DEVICE_PREFS,
@@ -287,7 +286,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
      * This method checks if there is a device in the DB
      */
     public boolean yasmeDeviceCheck() {
-
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         //set the deviceProduct
         this.deviceProduct = Build.MANUFACTURER + " " + Build.MODEL;
         Log.d(this.getClass().getSimpleName(), "MODEL is " + Build.MODEL);

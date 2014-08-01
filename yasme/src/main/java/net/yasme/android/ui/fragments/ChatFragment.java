@@ -34,9 +34,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * Created by martin on 21.06.2014.
  */
 public class ChatFragment extends Fragment implements NotifiableFragment<List<Message>> {
-
-    private AbstractYasmeActivity activity;
-
     private ChatAdapter mAdapter;
 
     //UI references
@@ -54,7 +51,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (AbstractYasmeActivity) getActivity();
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
 
         Intent intent = activity.getIntent();
         long chatId = intent.getLongExtra(activity.CHAT_ID, 1);
@@ -99,6 +96,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             }
         });
 
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         mAdapter = new ChatAdapter(activity, R.layout.chat_item_other,
                 activity.getUserId(), new ArrayList<Message>());
         list.setAdapter(mAdapter);
@@ -160,6 +158,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         getActivity().setProgressBarIndeterminateVisibility(true);
 
         // Send message and get new messages afterwards
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask()).execute(msgText);
 
         Log.d(this.getClass().getSimpleName(), "Send message in bg");

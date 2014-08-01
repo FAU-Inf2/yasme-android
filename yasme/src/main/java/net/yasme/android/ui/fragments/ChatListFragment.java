@@ -30,7 +30,6 @@ import java.util.List;
  */
 public class ChatListFragment extends ListFragment implements NotifiableFragment<List<Chat>> {
 
-    private AbstractYasmeActivity activity;
     private List<Chat> chatRooms = new ArrayList<Chat>();
     private ChatListAdapter adapter;
     private int counter;
@@ -43,6 +42,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         activity = (AbstractYasmeActivity) getActivity();
 
         adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
@@ -102,6 +102,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     }
 
     public void showChat(long chatId) {
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         Log.d(this.getClass().getSimpleName(), "ShowChat: " + chatId);
         Intent intent = new Intent(activity, ChatActivity.class);
         intent.putExtra(activity.USER_MAIL, activity.getUserMail());
