@@ -3,6 +3,7 @@ package net.yasme.android.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 
 import net.yasme.android.R;
 import net.yasme.android.entities.Message;
@@ -29,6 +33,23 @@ public class ChatAdapter extends ArrayAdapter<Message> {
     private final Context context;
     private List<Message> messages;
     private long selfId;
+
+    /**
+     *  @see <a href="http://developer.android.com/design/style/color.html">Color palette used</a>
+     *  from K9 Mail
+     */
+    private final static int CONTACT_DUMMY_COLORS_ARGB[] = {
+	    0xff33B5E5,
+	    0xffAA66CC,
+	    0xff99CC00,
+	    0xffFFBB33,
+	    0xffFF4444,
+	    0xff0099CC,
+	    0xff9933CC,
+	    0xff669900,
+	    0xffFF8800,
+	    0xffCC0000
+    };
 
     public ChatAdapter(Context context, int resource, long selfId, List<Message> messages) {
         super(context, resource, messages);
@@ -96,8 +117,15 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
         //dateView.setText(time);
         Log.d(this.getClass().getSimpleName(), name + ": " + msg.getMessage());
-        imageView.setImageResource(R.drawable.chat_default_icon); //TODO
-
+	if (imageView != null && !self) {
+		imageView.setImageResource(R.drawable.chat_default_icon); //TODO
+		imageView.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB[(int)msg.getSender().getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
+		TextView initial = (TextView) rowView.findViewById(R.id.chat_item_picture_text);
+		initial.setText(name.substring(0,1).toUpperCase());
+		LayerDrawable d = (LayerDrawable) textViews.getBackground();	
+		GradientDrawable bgShape = (GradientDrawable) d.findDrawableByLayerId (R.id.chat_item_line);
+		bgShape.setColor(CONTACT_DUMMY_COLORS_ARGB[(int)msg.getSender().getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
+	}
 
         rowView.requestFocus();
         return rowView;

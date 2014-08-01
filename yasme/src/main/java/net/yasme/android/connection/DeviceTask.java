@@ -25,7 +25,11 @@ public class DeviceTask extends ConnectionTask {
 
     public static DeviceTask getInstance() {
         if (instance == null) {
-            instance = new DeviceTask();
+            synchronized(DeviceTask.class) {
+                if (null == instance) {
+                    instance = new DeviceTask();
+                }
+            }
         }
         return instance;
     }

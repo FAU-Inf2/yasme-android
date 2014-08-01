@@ -2,29 +2,36 @@
     android:shape="rectangle">
     <stroke
         android:width="5dip"
-        android:color="@android:color/holo_purple" />
+        android:color="@android:color/holo_green_light" />
 </shape>
     -->
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle" >
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <corners
-        android:bottomLeftRadius="2dp"
-        android:bottomRightRadius="2dp"
-        android:radius="2dp"
-        android:topRightRadius="2dp" />
-    <stroke
-        android:width="3dp"
-        android:color="#70163F" />
-    <!-- YASME-Blackberry #70163F -->
-    <!-- Yellow #FFBB33 -->
-    <solid
-        android:color="#FFFFFF" />
-    <!-- F0D194 -->
-    <!-- YASME-Blackberry light #80264F -->
-    <!-- Yellow light #F0D194 -->
+	<item>
+		<shape xmlns:android="http://schemas.android.com/apk/res/android"
+			android:shape="rectangle">
+			<corners
+				android:topLeftRadius="2dp"
+				android:bottomLeftRadius="0dp"
+				android:bottomRightRadius="0dp"
+				android:topRightRadius="0dp" />
+			<solid
+				android:color="#CC3366" />
+		</shape>
+	</item>
 
-
-
-</shape>
+	<item android:bottom="2.5dp">
+		<shape xmlns:android="http://schemas.android.com/apk/res/android"
+			android:shape="rectangle">
+			<corners
+				android:topLeftRadius="2dp"
+				android:bottomLeftRadius="0dp"
+				android:bottomRightRadius="0dp"
+				android:topRightRadius="0dp" />
+			<solid
+				android:color="#FFFFFF" />
+		</shape>
+	</item>
+ 
+</layer-list>

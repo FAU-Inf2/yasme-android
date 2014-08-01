@@ -24,7 +24,12 @@ public class DiffieHellmanPartTask extends ConnectionTask {
 
     public static DiffieHellmanPartTask getInstance() {
         if (instance == null) {
-            instance = new DiffieHellmanPartTask();
+            synchronized (DiffieHellmanPartTask.class) {
+                if (null == instance) {
+                    instance = new DiffieHellmanPartTask();
+                }
+            }
+
         }
         return instance;
     }

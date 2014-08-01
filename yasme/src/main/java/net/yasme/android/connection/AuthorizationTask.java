@@ -21,7 +21,11 @@ public class AuthorizationTask extends ConnectionTask {
 
     public static AuthorizationTask getInstance() {
         if (instance == null) {
-            instance = new AuthorizationTask();
+            synchronized(AuthorizationTask.class) {
+                if (null == instance) {
+                    instance = new AuthorizationTask();
+                }
+            }
         }
         return instance;
     }
