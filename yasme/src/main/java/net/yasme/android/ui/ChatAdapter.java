@@ -121,6 +121,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 		imageView.setImageResource(R.drawable.chat_default_icon); //TODO
 		imageView.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB[(int)msg.getSender().getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
 		TextView initial = (TextView) rowView.findViewById(R.id.chat_item_picture_text);
+		initial.setText(name.substring(0,1).toUpperCase());
 		LayerDrawable d = (LayerDrawable) textViews.getBackground();	
 		GradientDrawable bgShape = (GradientDrawable) d.findDrawableByLayerId (R.id.chat_item_line);
 		bgShape.setColor(CONTACT_DUMMY_COLORS_ARGB[(int)msg.getSender().getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
