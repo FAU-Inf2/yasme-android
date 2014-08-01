@@ -34,24 +34,6 @@ android {
         }
     }
 
-//    buildTypes.all { buildType ->
-//        println buildType.name
-//        println buildType.debuggable
-//        if (!buildType.debuggable) {
-//            def connectionFile = "$buildDir/intermediates/res/${buildType.name}/values/values.xml"
-//            println(connectionFile)
-//            def updatedContent = new File(connectionFile).getText('UTF-8').replaceAll("devel.yasme.net", "connect.yasme.net")
-//            new File(connectionFile).write(updatedContent, 'UTF-8')
-//        }
-//    }
-
-//    replaceConnection = { buildType, fromString, toString ->
-//        def connectionFile = "$buildDir/${buildtype.name}/src/main/res/values/connection.xml"
-//        println(connectionFile)
-//        def updatedContent = new File(connectionFile).getText('UTF-8').replaceAll(fromString, toString)
-//        new File(connectionFile).write(updatedContent, 'UTF-8')
-//    }
-
     sourceSets {
 
 //        main.java.srcDirs = ['src/main/java']

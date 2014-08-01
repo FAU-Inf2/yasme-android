@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import net.yasme.android.BuildConfig;
 import net.yasme.android.R;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.controller.FragmentObservable;
@@ -64,8 +65,13 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         super.onCreate(savedInstanceState);
 
         if (!ConnectionTask.isInitialized()) {
+	    String server = getResources().getString(R.string.server_host);
+	    if (BuildConfig.DEBUG) {
+		    server = getResources().getString(R.string.server_host_debug);
+	    }
+	    Log.d(getClass().getSimpleName(), "YASME-Server: " + server);
             ConnectionTask.initParams(getResources().getString(R.string.server_scheme),
-                    getResources().getString(R.string.server_host),
+                    server,
                     getResources().getString(R.string.server_port));
         }
 
