@@ -18,6 +18,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import net.yasme.android.BuildConfig;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.DeviceRegistrationTask;
 import net.yasme.android.asyncTasks.server.UserLoginTask;
@@ -98,6 +99,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         emailView.setText(emailTmp);
 
         passwordView = (EditText) rootView.findViewById(R.id.password);
+        if (BuildConfig.DEBUG) {
+            passwordView.setText(R.string.default_password);
+        }
         passwordView
                 .setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override

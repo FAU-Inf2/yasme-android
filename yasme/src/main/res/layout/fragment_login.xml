@@ -67,7 +67,6 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:text="@string/default_password"
                     android:singleLine="true" />
 
                 <CheckBox
