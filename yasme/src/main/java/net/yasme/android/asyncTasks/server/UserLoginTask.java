@@ -10,6 +10,7 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.PasswordEncryption;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.LoginFragment;
 import net.yasme.android.ui.fragments.RegisterFragment;
@@ -26,12 +27,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
     private Boolean plainPassword = false;
     private long userId;
 
-    public UserLoginTask(SharedPreferences storage) {
-        this.storage = storage;
-    }
-
-    public UserLoginTask(SharedPreferences storage, boolean plainPassword) {
-        this(storage);
+    public UserLoginTask(Boolean plainPassword) {
         this.plainPassword = plainPassword;
     }
 
@@ -65,7 +61,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             Log.d(this.getClass().getSimpleName(), loginReturn[0]);
 
             // storage
-            SharedPreferences.Editor editor = storage.edit();
+            SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
             editor.putLong(AbstractYasmeActivity.USER_ID, userId);
             editor.putString(AbstractYasmeActivity.ACCESSTOKEN, accessToken);
             editor.putString(AbstractYasmeActivity.USER_MAIL, email);

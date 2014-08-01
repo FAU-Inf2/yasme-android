@@ -148,7 +148,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
      */
     public void attemptLogin() {
         if (authTask == null) {
-            authTask = new UserLoginTask(DatabaseManager.INSTANCE.getSharedPreferences(), true);
+            authTask = new UserLoginTask(true);
             Log.d(this.getClass().getSimpleName(), "AuthTask is null");
         }
 

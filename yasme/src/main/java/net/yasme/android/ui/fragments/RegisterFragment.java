@@ -79,7 +79,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                         String inputPasswordCheck = password_check.getText()
                                 .toString();
 
-                        new UserRegistrationTask(sharedPrefs)
+                        new UserRegistrationTask()
                                 .execute(inputName, inputMail, inputPassword, inputPasswordCheck);
                     }
                 }
@@ -106,7 +106,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                             R.string.registration_successful),
                     Toast.LENGTH_SHORT
             ).show();
-            UserLoginTask authTask = new UserLoginTask(sharedPrefs);
+            UserLoginTask authTask = new UserLoginTask(false);
             authTask.execute(email, password);
             activity.getSelfUser().setEmail(email);
         } else {

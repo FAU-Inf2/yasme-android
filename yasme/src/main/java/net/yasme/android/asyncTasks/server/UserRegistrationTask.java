@@ -9,6 +9,7 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.PasswordEncryption;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.RegisterFragment;
 
@@ -20,15 +21,12 @@ import net.yasme.android.ui.fragments.RegisterFragment;
  */
 public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
 
-    private SharedPreferences storage;
+
     private String name;
     private String email;
     private String password;
     private long userId;
 
-    public UserRegistrationTask(SharedPreferences storage) {
-        this.storage = storage;
-    }
 
     /**
      * @params params[0] is name
@@ -61,7 +59,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         if(success) {
-            SharedPreferences.Editor editor = storage.edit();
+            SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
             // Will be done by login task
             //editor.putLong(AbstractYasmeActivity.USER_ID, userId);
             editor.putString(AbstractYasmeActivity.USER_NAME, name);
