@@ -1,43 +1,57 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".contacts.SearchContact">
 
     <!-- TODO: Update blank fragment layout -->
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <TableRow
-            android:layout_width="wrap_content">
             <Spinner
                 android:id="@+id/search_spinner"
                 android:layout_width="fill_parent"
-                android:layout_height="10mm">
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true">
             </Spinner>
-        </TableRow>
-        <TableRow
-            android:layout_width="wrap_content">
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="15mm"
-                android:id="@+id/search_text" />
-        </TableRow>
-        <TableRow
-            android:layout_width="wrap_content">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="10mm"
-                android:text="@string/button_search"
-                android:id="@+id/search_button" />
-        </TableRow>
 
-        <ListView
-            android:layout_marginTop="5mm"
+    <ListView
+            android:id="@+id/search_listView"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:id="@+id/search_listView"></ListView>
-    </TableLayout>
+        android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout"></ListView>
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/search_spinner"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/search_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_search" />
+
+    </LinearLayout>
+
+</RelativeLayout>
