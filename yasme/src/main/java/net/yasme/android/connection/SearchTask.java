@@ -28,7 +28,12 @@ public class SearchTask extends ConnectionTask {
 
     public static SearchTask getInstance() {
         if (instance == null) {
-            instance = new SearchTask();
+            synchronized (SearchTask.class) {
+                if (null == instance) {
+                    instance = new SearchTask();
+                }
+            }
+
         }
         return instance;
     }

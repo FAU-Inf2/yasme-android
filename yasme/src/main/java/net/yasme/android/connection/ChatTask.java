@@ -31,7 +31,11 @@ public class ChatTask extends ConnectionTask {
 
     public static ChatTask getInstance() {
         if (instance == null) {
-            instance = new ChatTask();
+            synchronized(ChatTask.class) {
+                if (null == instance) {
+                    instance = new ChatTask();
+                }
+            }
         }
         return instance;
     }
