@@ -31,9 +31,13 @@ public class UserTask extends ConnectionTask {
 
     private static UserTask instance;
 
-    public static UserTask getInstance() {
+    public static synchronized UserTask getInstance() {
         if (instance == null) {
-            instance = new UserTask();
+            synchronized(UserTask.class) {
+                if (null == instance) {
+                    instance = new UserTask();
+                }
+            }
         }
         return instance;
     }

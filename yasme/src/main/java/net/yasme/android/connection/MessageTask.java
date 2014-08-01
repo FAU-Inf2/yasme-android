@@ -43,7 +43,13 @@ public class MessageTask extends ConnectionTask {
     private UserDAO userDAO = DatabaseManager.INSTANCE.getUserDAO();
 
 	public static MessageTask getInstance() {
-		if (instance == null) { instance = new MessageTask(); }
+		if (instance == null) {
+            synchronized (MessageTask.class) {
+                if (null == instance) {
+                    instance = new MessageTask();
+                }
+            }
+        }
 		return instance;
 	}
 

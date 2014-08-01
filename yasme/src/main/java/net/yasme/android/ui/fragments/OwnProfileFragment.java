@@ -45,8 +45,6 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
     private static int RESULT_LOAD_IMAGE = 1;
 
-    private AbstractYasmeActivity activity;
-
     private OnOwnProfileFragmentInteractionListener mListener;
 
 
@@ -58,7 +56,6 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activity = (AbstractYasmeActivity) getActivity();
 
         // Register at observer
         Log.d(this.getClass().getSimpleName(), "Try to get OwnProfileObservable");
@@ -70,6 +67,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         View layout = inflater.inflate(R.layout.fragment_own_profile, container, false);
 
         name = (TextView) layout.findViewById(R.id.own_contact_header);

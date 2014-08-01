@@ -38,7 +38,6 @@ public class InviteToChatFragment
         extends Fragment
         implements View.OnClickListener, NotifiableFragment<InviteToChatFragment.InviteToChatParam> {
 
-    private AbstractYasmeActivity activity;
     private List<User> users;
     private ListView chatPartners;
     private Button startChat;
@@ -60,7 +59,7 @@ public class InviteToChatFragment
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
 
-        activity = (AbstractYasmeActivity) getActivity();
+
 
         //progress bar on
         getActivity().setProgressBarIndeterminateVisibility(true);
@@ -79,11 +78,11 @@ public class InviteToChatFragment
     private void findViewsById() {
 
         if (null == startChat) {
-            startChat = (Button) activity.findViewById(R.id.inviteToChat_startChat);
+            startChat = (Button) getActivity().findViewById(R.id.inviteToChat_startChat);
         }
 
         if (null == emptyContactsNotice) {
-            emptyContactsNotice = (TextView) activity.findViewById(R.id.empty_contacts_notice);
+            emptyContactsNotice = (TextView) getActivity().findViewById(R.id.empty_contacts_notice);
             emptyContactsNotice.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -96,7 +95,7 @@ public class InviteToChatFragment
         }
 
         if (null == chatPartners) {
-            chatPartners = (ListView) activity.findViewById(R.id.inviteToChat_usersList);
+            chatPartners = (ListView) getActivity().findViewById(R.id.inviteToChat_usersList);
             // Only show the notice when the list view is empty
             chatPartners.setEmptyView(emptyContactsNotice);
         }
@@ -113,6 +112,7 @@ public class InviteToChatFragment
             findViewsById();
         }
 
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         User self = activity.getSelfUser();
 
         // Exclude self
@@ -145,6 +145,7 @@ public class InviteToChatFragment
 
     @Override
     public void onClick(View v) {
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         SparseBooleanArray checked = chatPartners.getCheckedItemPositions();
         Set<User> selectedUsers = new HashSet<>();
         ArrayList<String> selectedUserNames = new ArrayList<>();
@@ -168,6 +169,7 @@ public class InviteToChatFragment
 
 
     public void startChat(long chatId) {
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         Log.d(this.getClass().getSimpleName(), "Start chat: " + chatId);
         Intent intent = new Intent(activity, ChatActivity.class);
         intent.putExtra(activity.USER_MAIL, activity.getUserMail());

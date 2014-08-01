@@ -146,6 +146,10 @@ public class MessageEncryption {
             long deviceId = DatabaseManager.INSTANCE.getDeviceId();
             Device sender = new Device(deviceId);
             ArrayList<MessageKey> messageKeys = new ArrayList<MessageKey>();
+            List<Device> devices = getRecipientDevices(local);
+            if (local && devices.size() == 0) {
+                getRecipientDevices(false);
+            }
 
             //TODO: Try with local data first
             for (Device recipientDevice : getRecipientDevices(local)) {

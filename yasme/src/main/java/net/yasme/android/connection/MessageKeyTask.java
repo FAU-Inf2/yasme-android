@@ -31,7 +31,11 @@ public class MessageKeyTask extends ConnectionTask {
 
     public static MessageKeyTask getInstance() {
         if (instance == null) {
-            instance = new MessageKeyTask();
+            synchronized (MessageKeyTask.class) {
+                if (null == instance) {
+                    instance = new MessageKeyTask();
+                }
+            }
         }
         return instance;
     }

@@ -59,7 +59,6 @@ public class UserDetailsFragment
 
     private User contact;
     private User selfUser;
-    private AbstractYasmeActivity activity;
 
     private TextView contactName;
     private TextView email;
@@ -109,7 +108,7 @@ public class UserDetailsFragment
             //contact.setId(Long.valueOf(getArguments().getString(ARG_USERID)));
         }
 
-        activity = (AbstractYasmeActivity) getActivity();
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         selfUser = activity.getSelfUser();
     }
 
@@ -269,7 +268,7 @@ public class UserDetailsFragment
 
     public void startChat(long chatId) {
         // TODO
-
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         //Log.d(this.getClass().getSimpleName(), "Start chat: " + chatId);
         Intent intent = new Intent(activity, ChatActivity.class);
         intent.putExtra(activity.USER_MAIL, activity.getUserMail());
