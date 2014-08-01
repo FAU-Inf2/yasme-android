@@ -3,7 +3,6 @@ package net.yasme.android.connection;
 import android.util.Log;
 
 import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.ChatProperties;
 import net.yasme.android.entities.Device;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.RestServiceException;
@@ -162,8 +161,9 @@ public class ChatTask extends ConnectionTask {
     }
 
     public void updateChat(Chat chat) throws RestServiceException {
-        String path = chat.getId() + "/properties";
-        executeRequest(Request.PUT, path, new ChatProperties(chat.getName(),chat.getStatus()));
+             String path = chat.getId() + "/properties";
+        chat.setId(-1); // Tell the server: Do not overwrite chatProperties with server data
+        executeRequest(Request.PUT, path, chat);
         Log.d(this.getClass().getSimpleName(),"Chat updated");
     }
 
