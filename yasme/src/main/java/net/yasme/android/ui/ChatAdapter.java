@@ -3,6 +3,7 @@ package net.yasme.android.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,6 +99,11 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         Log.d(this.getClass().getSimpleName(), name + ": " + msg.getMessage());
 	if (imageView != null) {
 		imageView.setImageResource(R.drawable.chat_default_icon); //TODO
+		imageView.setBackgroundColor(Color.parseColor("#ABCDEF"));
+		if (!self) {
+			TextView initial = (TextView) rowView.findViewById(R.id.chat_item_picture_text);
+			initial.setText(name.substring(0,1).toUpperCase());
+		}
 	}
 
 
