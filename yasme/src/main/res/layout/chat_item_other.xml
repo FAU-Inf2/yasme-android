@@ -27,6 +27,7 @@
                 android:id="@+id/chat_item_date"
                 android:textSize="12sp"
                 android:gravity="left"
+                android:textColor="@color/chat_text_color_other"
                 android:ellipsize="marquee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -36,6 +37,7 @@
             android:id="@+id/chat_item_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/chat_text_color_other"
             android:gravity="center_vertical|left"
             android:textSize="16sp" />
 

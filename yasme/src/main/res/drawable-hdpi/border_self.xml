@@ -16,8 +16,15 @@
         android:topRightRadius="2dp" />
     <stroke
         android:width="3dp"
-        android:color="#FFBB33" />
+        android:color="#70163F" />
+    <!-- YASME-Blackberry #70163F -->
+    <!-- Yellow #FFBB33 -->
     <solid
-        android:color="#F0D194" />
+        android:color="#80264F" />
     <!-- F0D194 -->
+    <!-- YASME-Blackberry light #80264F -->
+    <!-- Yellow light #F0D194 -->
+
+
+
 </shape>

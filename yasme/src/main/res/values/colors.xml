@@ -2,7 +2,7 @@
 <resources>
        <color name="chat_text_bgcol_self">#FFCC3366</color>
        <color name="chat_text_bgcol_other">#FF00CC66</color>
-       <color name="chat_text_color_self">#FF000000</color>
+       <color name="chat_text_color_self">#FFFFFFFF</color>
        <color name="chat_text_color_other">#ff000000</color>
        <color name="user_details_window">#ffffffff</color>
 </resources>

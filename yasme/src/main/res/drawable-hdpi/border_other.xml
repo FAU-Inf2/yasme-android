@@ -15,7 +15,11 @@
         android:topRightRadius="2dp" />
     <stroke
         android:width="3dp"
-        android:color="#99CC00" />
+        android:color="#00CC66" />
+    <!-- YASME-Green #00CC66 -->
+    <!-- Green #99CC00 -->
     <solid
-        android:color="#C1D774" />
+        android:color="#10EC66" />
+    <!-- YASME-Green light #00CC66 -->
+    <!-- Green light #C1D774 -->
 </shape>
