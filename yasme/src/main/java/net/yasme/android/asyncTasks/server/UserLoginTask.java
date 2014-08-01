@@ -23,10 +23,16 @@ import net.yasme.android.ui.fragments.RegisterFragment;
 public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
     private SharedPreferences storage;
     private String accessToken;
+    private Boolean plainPassword = false;
     private long userId;
 
     public UserLoginTask(SharedPreferences storage) {
         this.storage = storage;
+    }
+
+    public UserLoginTask(SharedPreferences storage, boolean plainPassword) {
+        this(storage);
+        this.plainPassword = plainPassword;
     }
 
     /**
@@ -44,8 +50,10 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             Log.d(this.getClass().getSimpleName(),"e-Mail: " + email + " " + "Passwort: "
                     + password);
 
-            PasswordEncryption pwEnc = new PasswordEncryption(new User(email,password));
-            password = pwEnc.getSecurePassword();
+            if (plainPassword) {
+                PasswordEncryption pwEnc = new PasswordEncryption(new User(email, password));
+                password = pwEnc.getSecurePassword();
+            }
 
             String loginReturn[] = AuthorizationTask.getInstance().loginUser(new User(email,
                     password));
