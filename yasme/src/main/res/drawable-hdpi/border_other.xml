@@ -19,7 +19,7 @@
     <!-- YASME-Green #00CC66 -->
     <!-- Green #99CC00 -->
     <solid
-        android:color="#10EC66" />
+        android:color="#FFFFFF" />
     <!-- YASME-Green light #00CC66 -->
     <!-- Green light #C1D774 -->
 </shape>
