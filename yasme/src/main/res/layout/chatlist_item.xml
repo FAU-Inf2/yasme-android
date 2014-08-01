@@ -9,12 +9,10 @@
         android:id="@+id/chatlist_item_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
         android:layout_marginRight="6dip" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
@@ -23,20 +21,21 @@
             android:id="@+id/chatlist_item_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignWithParentIfMissing="true"
-            android:layout_toRightOf="@id/chatlist_item_icon"
             android:gravity="center_vertical"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/chatlist_item_subtitle"
             android:layout_width="fill_parent"
-            android:layout_height="26dip"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@id/chatlist_item_icon"
+            android:layout_height="match_parent"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/chatlist_item_last_message"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
             android:ellipsize="marquee"
             android:singleLine="true"
             android:textSize="12sp" />
