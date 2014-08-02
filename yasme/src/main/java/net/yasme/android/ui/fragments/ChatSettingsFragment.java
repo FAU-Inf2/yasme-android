@@ -21,17 +21,19 @@ import net.yasme.android.asyncTasks.server.ChangeChatProperties;
 import net.yasme.android.asyncTasks.server.ChangeUserTask;
 import net.yasme.android.asyncTasks.server.LeaveChatTask;
 import net.yasme.android.contacts.ContactListContent;
+import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
+import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
-import java.util.List;
-
 /**
  * Created by robert on 28.07.14.
  */
-public class ChatSettingsFragment extends Fragment implements NotifiableFragment<List<User>>{
+public class ChatSettingsFragment
+        extends Fragment
+        implements NotifiableFragment<InviteToChatFragment.AllUsersFetchedParam>{
     private final ContactListContent addParticipantsContent = new ContactListContent();
     private Chat chat;
     private View chatInfo;
@@ -48,6 +50,22 @@ public class ChatSettingsFragment extends Fragment implements NotifiableFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FragmentObservable<ChatSettingsFragment, InviteToChatFragment.AllUsersFetchedParam> obs =
+                ObservableRegistry.getObservable(ChatSettingsFragment.class);
+        obs.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        FragmentObservable<ChatSettingsFragment, InviteToChatFragment.AllUsersFetchedParam> obs =
+                ObservableRegistry.getObservable(ChatSettingsFragment.class);
+        obs.remove(this);
+        super.onStop();
     }
 
     @Override
@@ -261,12 +279,13 @@ public class ChatSettingsFragment extends Fragment implements NotifiableFragment
     }
 
     @Override
-    public void notifyFragment(List<User> value) {
-        for (User u : value) {
-            //if(!chat.getParticipants().contains(u)) {
+    public void notifyFragment(InviteToChatFragment.AllUsersFetchedParam value) {
+        addParticipantsContent.clearItems();
+        for (User u : value.getAllUsers()) {
+            if(!chat.getParticipants().contains(u)) {
                 addParticipantsContent.addItem(new ContactListContent.
                         ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
-           // }
+            }
         }
         mAddAdapter.notifyDataSetChanged();
     }
