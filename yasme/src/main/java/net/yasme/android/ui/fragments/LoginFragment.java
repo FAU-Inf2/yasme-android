@@ -33,27 +33,22 @@ import net.yasme.android.ui.activities.ChatListActivity;
 
 public class LoginFragment extends Fragment implements NotifiableFragment<LoginFragment.LoginParam> {
 
+    protected String accessToken;
     //Keep track of the login task to ensure we can cancel it if requested.
     private UserLoginTask authTask = null;
-
     // UI references.
     private EditText emailView;
     private EditText passwordView;
     private TextView loginStatusMessageView;
     private View mProgressView;
     private View mLoginFormView;
-
     // values for devices yasme server
     private String deviceProduct;
-
     // Values for name, email and password at the time of the login attempt.
     private String emailTmp;
     private String passwordTmp;
-
     // focusView for validate()
     private View focusView = null;
-
-    protected String accessToken;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -241,6 +236,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 showProgress(false);
                 Intent intent = new Intent(activity, ChatListActivity.class);
                 startActivity(intent);
+                getActivity().finish();
             } else {
                 // TODO register device
                 Log.d(this.getClass().getSimpleName(), "Device does not exist in Database");
@@ -279,6 +275,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             showProgress(false);
             Intent intent = new Intent(activity, ChatListActivity.class);
             startActivity(intent);
+            getActivity().finish();
         }
     }
 
