@@ -89,8 +89,9 @@ public class MessageEncryption {
 
     private Message encrypt (Message message, MessageKey messageKey) {
         if (messageKey == null) {
-            message.setMessage("Key could not be generated");
-            return message;
+            Log.e(getClass().getSimpleName(), "Message could not be encrypted");
+            Toaster.getInstance().toast(R.string.key_generation_failed,Toast.LENGTH_LONG);
+            return null;
         }
         AESEncryption aes = new AESEncryption(messageKey);
         message.setMessage(aes.encrypt(message.getMessage()));

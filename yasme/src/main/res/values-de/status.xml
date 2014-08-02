@@ -2,6 +2,7 @@
 <resources>
     <string name="connection_error">Verbindung konnte nicht hergestellt werden.</string>
     <string name="generate_key">Ein neuer Schlüssel wird generiert. Dies kann einige Zeit dauern.</string>
+    <string name="key_generation_failed">Schlüssel konnte nicht erzeugt werden.</string>
     <string name="authentication_successful">Chatpartner erfolgreich authentifiziert!</string>
     <string name="authentication_failed">Warnung: Chatpartner konnte nicht authenthifiziert werden! Inhalt der Nachricht:</string>
     <string name="decryption_failed">Entschlüsselung fehlgeschlagen. Schlüssel wurde nicht gefunden. Falls dieses Gerät erst kürzlich registriert wurde, können ältere Nachrichten nicht entschlüsselt werden.</string>

@@ -86,6 +86,10 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
             message = messageEncryption.encrypt(message);
         }
 
+        if (message == null) {
+            return null;
+        }
+
         // Send
         return  MessageTask.getInstance().sendMessage(message);
     }
