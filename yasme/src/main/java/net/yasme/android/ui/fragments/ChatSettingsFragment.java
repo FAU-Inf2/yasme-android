@@ -3,6 +3,7 @@ package net.yasme.android.ui.fragments;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.database.GetContactsTask;
@@ -197,9 +199,10 @@ public class ChatSettingsFragment
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                        Long userId = addParticipantsContent.items.get(position).user.getId();
-                        //TODO: Warnung vorher einbauen
-                        new ChangeUserTask(chat).execute(userId, 1L);
+                        User user = addParticipantsContent.items.get(position).user;
+                        showAlertDialog(getString(R.string.alert_add_user),
+                                user.getName() + getString(R.string.alert_add_user_message),
+                                new ChangeUserTask(chat), user.getId(), 1L);
                     }
                 }
         );
@@ -228,10 +231,10 @@ public class ChatSettingsFragment
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                        Long userId = participantsContent.items.get(position).user.getId();
-                        //TODO: Warnung vorher einauen
-                        new ChangeUserTask(chat).execute(userId, 0L);
-
+                        User user = participantsContent.items.get(position).user;
+                        showAlertDialog(getString(R.string.alert_delete_user),
+                                user.getName() + getString(R.string.alert_delete_user_message),
+                                new ChangeUserTask(chat), user.getId(), 0L);
                     }
                 }
         );
@@ -288,5 +291,34 @@ public class ChatSettingsFragment
             }
         }
         mAddAdapter.notifyDataSetChanged();
+    }
+
+    private void showAlertDialog(String title, String message, final AsyncTask task,
+                                 final Long userId, final Long rest) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle(title);
+
+        TextView text = new TextView(getActivity());
+        text.setText(message);
+
+        alert.setView(text);
+
+        // "OK" button to save the values
+        alert.setPositiveButton(R.string.registration_button_ok,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        task.execute(userId, rest);
+                    }
+                }
+        );
+        // "Cancel" button
+        alert.setNegativeButton(R.string.registration_button_cancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                }
+        );
+        alert.show();
     }
 }

@@ -15,6 +15,11 @@
     <string name="change_not_successful">Die Änderung war nicht erfolgreich</string>
 
 
+    <string name="alert_delete_user">Benutzer wirklich entfernen?</string>
+    <string name="alert_delete_user_message"> wird dann aus dem Chat entfernt</string>
+    <string name="alert_add_user">Benutzer hinzufügen?</string>
+    <string name="alert_add_user_message"> wird dann dem Chat hinzugefügt</string>
+
     <string name="OK">OK</string>
     <string name="cancel">Abbruch</string>
 
