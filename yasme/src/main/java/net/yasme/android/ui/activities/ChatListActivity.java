@@ -85,6 +85,7 @@ public class ChatListActivity extends AbstractYasmeActivity {
 	}
 
     protected void startLoginActivity() {
+        SharedPreferences storage = getPreferences(MODE_PRIVATE);
         storage.edit().clear().commit();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
