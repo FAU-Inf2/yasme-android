@@ -2,6 +2,7 @@
     <!--engl-->
     <string name="title_chat_settings">Chat settings</string>
 
+    <string name="info_text">Chat info</string>
     <string name="add_user">Add User</string>
     <string name="delete_user">Delete User</string>
     <string name="change_name">Change name of Chat</string>
@@ -16,9 +17,9 @@
 
 
     <string name="alert_delete_user">Do you want to remove this user?</string>
-    <string name="alert_delete_user_message"> will be removed from this chat</string>
+    <string name="alert_delete_user_message">will be removed from this chat</string>
     <string name="alert_add_user">Do you want to add this user?</string>
-    <string name="alert_add_user_message"> will be added to this chat</string>
+    <string name="alert_add_user_message">will be added to this chat</string>
 
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>

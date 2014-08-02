@@ -30,7 +30,6 @@ public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
         if(!success) {
             return;
         }
-        //SharedPreferences.Editor editor = storage.edit();
         SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
         editor.putLong(AbstractYasmeActivity.USER_ID, selfProfile.getId());
         editor.putString(AbstractYasmeActivity.USER_MAIL, selfProfile.getEmail());

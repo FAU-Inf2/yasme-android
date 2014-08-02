@@ -58,6 +58,12 @@
         android:layout_alignParentStart="true"
         android:orientation="horizontal">
 
+        <TableRow><Button
+            android:id="@+id/info"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/info_text" /></TableRow>
         <TableRow>
             <Button
                 android:id="@+id/add_user"
@@ -97,7 +103,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="@string/delete_user" /></TableRow>
+            android:text="@string/leave_chat" />
+        </TableRow>
     </TableLayout>
 
     <RelativeLayout

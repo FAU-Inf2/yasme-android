@@ -29,9 +29,7 @@ import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.activities.ChatActivity;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -72,6 +70,10 @@ public class UserDetailsFragment
 
     private OnDetailsFragmentInteractionListener mListener;
 
+    public UserDetailsFragment() {
+        // Required empty public constructor
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -91,10 +93,6 @@ public class UserDetailsFragment
         fragment.setArguments(args);
 
         return fragment;
-    }
-
-    public UserDetailsFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -202,15 +200,17 @@ public class UserDetailsFragment
                 addToContacts(contact, false);
 
                 // TODO
-                Log.d(this.getClass().getSimpleName(), "------------------- Create New Chat ---------------------------");
+                Log.d(this.getClass().getSimpleName(), "Create New Chat");
                 Set<User> selectedUsers = new HashSet<>();
                 selectedUsers.add(contact);
+                this.dismiss();
                 new CreateChatTask(selfUser, selectedUsers).execute();
                 break;
 
             case R.id.contact_detail_addcontact:
 
                 addToContacts(contact, true);
+                this.dismiss();
                 break;
 
             case R.id.mail_image_button:
@@ -278,12 +278,6 @@ public class UserDetailsFragment
         startActivity(intent);
     }
 
-
-    public interface OnDetailsFragmentInteractionListener {
-        public void onDetailsFragmentInteraction(User user, Integer buttonId);
-    }
-
-
     @Override
     public void notifyFragment(UserDetailsFragmentParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
@@ -305,7 +299,9 @@ public class UserDetailsFragment
 
     }
 
-
+    public interface OnDetailsFragmentInteractionListener {
+        public void onDetailsFragmentInteraction(User user, Integer buttonId);
+    }
 
     //superclass of notifyParameters
     public static class UserDetailsFragmentParam {

@@ -2,6 +2,7 @@
     <!--ger-->
     <string name="title_chat_settings">Chat Einstellungen</string>
 
+    <string name="info_text">Chatinfo</string>
     <string name="add_user">User hinzufügen</string>
     <string name="delete_user">User löschen</string>
     <string name="change_name">Chatnamen ändern</string>
@@ -16,9 +17,9 @@
 
 
     <string name="alert_delete_user">Benutzer wirklich entfernen?</string>
-    <string name="alert_delete_user_message"> wird dann aus dem Chat entfernt</string>
+    <string name="alert_delete_user_message">wird dann aus dem Chat entfernt</string>
     <string name="alert_add_user">Benutzer hinzufügen?</string>
-    <string name="alert_add_user_message"> wird dann dem Chat hinzugefügt</string>
+    <string name="alert_add_user_message">wird dann dem Chat hinzugefügt</string>
 
     <string name="OK">OK</string>
     <string name="cancel">Abbruch</string>

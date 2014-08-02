@@ -3,7 +3,6 @@ package net.yasme.android.ui.fragments;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -14,6 +13,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -36,11 +36,14 @@ import net.yasme.android.ui.AbstractYasmeActivity;
 public class ChatSettingsFragment
         extends Fragment
         implements NotifiableFragment<InviteToChatFragment.AllUsersFetchedParam>{
+
     private final ContactListContent addParticipantsContent = new ContactListContent();
+
     private Chat chat;
     private View chatInfo;
     private View participants;
     private View searchUser;
+
     private SimpleAdapter mAddAdapter;
     private boolean isOwner = false;
 
@@ -143,7 +146,23 @@ public class ChatSettingsFragment
         participants = rootView.findViewById(R.id.participants);
         searchUser = rootView.findViewById(R.id.search_user);
 
+        fillInfoView();
+
         return rootView;
+    }
+
+    public void fillInfoView() {
+        TextView name = (TextView) chatInfo.findViewById(R.id.chat_info_name);
+        TextView status = (TextView)chatInfo.findViewById(R.id.chat_info_status);
+        TextView number = (TextView)chatInfo.findViewById(R.id.chat_info_number_participants);
+        ListView participants = (ListView) chatInfo.findViewById(R.id.chat_info_participants);
+
+        name.setText(chat.getName());
+        status.setText(chat.getStatus());
+        number.setText(chat.getNumberOfParticipants() + " Teilnehmer");
+        participants.setAdapter(new SimpleAdapter(getActivity(), addParticipantsContent.getMap(),
+                android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
+                new int[]{android.R.id.text1, android.R.id.text2}));
     }
 
     private void changeName() {
@@ -201,8 +220,8 @@ public class ChatSettingsFragment
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         User user = addParticipantsContent.items.get(position).user;
                         showAlertDialog(getString(R.string.alert_add_user),
-                                user.getName() + getString(R.string.alert_add_user_message),
-                                new ChangeUserTask(chat), user.getId(), 1L);
+                                user.getName() + " " + getString(R.string.alert_add_user_message),
+                                chat, user.getId(), 1L);
                     }
                 }
         );
@@ -233,8 +252,8 @@ public class ChatSettingsFragment
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         User user = participantsContent.items.get(position).user;
                         showAlertDialog(getString(R.string.alert_delete_user),
-                                user.getName() + getString(R.string.alert_delete_user_message),
-                                new ChangeUserTask(chat), user.getId(), 0L);
+                                user.getName() + " " + getString(R.string.alert_delete_user_message),
+                                chat, user.getId(), 0L);
                     }
                 }
         );
@@ -293,7 +312,7 @@ public class ChatSettingsFragment
         mAddAdapter.notifyDataSetChanged();
     }
 
-    private void showAlertDialog(String title, String message, final AsyncTask task,
+    private void showAlertDialog(String title, String message, final Chat chat,
                                  final Long userId, final Long rest) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(title);
@@ -304,15 +323,15 @@ public class ChatSettingsFragment
         alert.setView(text);
 
         // "OK" button to save the values
-        alert.setPositiveButton(R.string.registration_button_ok,
+        alert.setPositiveButton(R.string.OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        task.execute(userId, rest);
+                        new ChangeUserTask(chat).execute(userId, rest);
                     }
                 }
         );
         // "Cancel" button
-        alert.setNegativeButton(R.string.registration_button_cancel,
+        alert.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         dialog.cancel();

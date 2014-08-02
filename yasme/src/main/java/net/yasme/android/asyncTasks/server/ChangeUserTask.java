@@ -49,8 +49,6 @@ public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
             default:
                 break;
         }
-
-
         return true;
     }
 
