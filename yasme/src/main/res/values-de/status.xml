@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="connection_error">Verbindung konnte nicht hergestellt werden.</string>
+    <string name="connection_error">Verbindung zum Yasme-Server konnte nicht hergestellt werden.</string>
     <string name="generate_key">Ein neuer Schlüssel wird generiert. Dies kann einige Zeit dauern.</string>
     <string name="key_generation_failed">Schlüssel konnte nicht erzeugt werden.</string>
     <string name="authentication_successful">Chatpartner erfolgreich authentifiziert!</string>

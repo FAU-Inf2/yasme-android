@@ -92,17 +92,17 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
         for (Chat chat : serverChats) {
-            Log.e(this.getClass().getSimpleName(), "Chat " + chat.getId() + " outdated?");
+            Log.d(this.getClass().getSimpleName(), "Chat " + chat.getId() + " outdated?");
             for (User user : chat.getParticipants()) {
-                Log.e(this.getClass().getSimpleName(), "User " + user.getId() + " outdated?");
+                Log.d(this.getClass().getSimpleName(), "User " + user.getId() + " outdated?");
                 User dbUser = userDAO.get(user.getId());
                 if (dbUser == null) {
-                    Log.e(this.getClass().getSimpleName(), "Yes, not in DB");
+                    Log.d(this.getClass().getSimpleName(), "Yes, not in DB");
                     refreshUserIds.add(user.getId());
                     continue;
                 }
                 if (user.getLastModified().compareTo(dbUser.getLastModified()) > 0) {
-                    Log.e(this.getClass().getSimpleName(), "Yes, not up-to-date");
+                    Log.d(this.getClass().getSimpleName(), "Yes, not up-to-date");
                     refreshUserIds.add(user.getId());
                 }
             }

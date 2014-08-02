@@ -1,8 +1,11 @@
 package net.yasme.android.connection;
 
 import android.util.Log;
+import android.widget.Toast;
 
+import net.yasme.android.R;
 import net.yasme.android.connection.ssl.HttpClient;
+import net.yasme.android.controller.Toaster;
 import net.yasme.android.exception.RestServiceException;
 
 import org.apache.http.HttpEntity;
@@ -303,6 +306,7 @@ public class ConnectionTask {
                 throw new RestServiceException((String)json.get("message"),Integer.parseInt(json.getString("code")));
             }
         } catch (IOException e) {
+            Toaster.getInstance().toast(R.string.connection_error, Toast.LENGTH_LONG);
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (JSONException e) {
             throw new RestServiceException(Error.ERROR);

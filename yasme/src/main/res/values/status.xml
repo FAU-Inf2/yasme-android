@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="connection_error">Connection failed.</string>
+    <string name="connection_error">Connection to Yasme-server failed.</string>
     <string name="generate_key">A new encryption key has to be generated. This could take a while.</string>
     <string name="key_generation_failed">Encryption key could not be generated.</string>
     <string name="authentication_successful">Chat Partner authenticated successfully</string>
