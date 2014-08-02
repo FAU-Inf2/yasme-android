@@ -22,19 +22,19 @@
         android:id="@+id/chat_action"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/text_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/type_text"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:layout_gravity="center">
+            android:ems="10"
+            android:hint="@string/type_text">
             <requestFocus />
         </EditText>
 
@@ -42,8 +42,8 @@
             android:id="@+id/button_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_send"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:background="@android:drawable/ic_menu_send" />
     </LinearLayout>
 
 </RelativeLayout>

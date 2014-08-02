@@ -76,7 +76,6 @@ public class ChatListActivity extends AbstractYasmeActivity {
 		if (id == R.id.action_add_chat) {
             Intent intent = new Intent(this, InviteToChatActivity.class);
             startActivity(intent);
-            finish();
 			return true;
 		}
         if (id == R.id.sign_out) {
@@ -86,12 +85,13 @@ public class ChatListActivity extends AbstractYasmeActivity {
 	}
 
     protected void startLoginActivity() {
+        storage.edit().clear().commit();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private class LogoutTask extends AsyncTask<Void, Void, Boolean> {
-
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
@@ -103,7 +103,6 @@ public class ChatListActivity extends AbstractYasmeActivity {
             }
             return true;
         }
-
         protected void onPostExecute(Boolean success) {
             if(!success) {
                 return;

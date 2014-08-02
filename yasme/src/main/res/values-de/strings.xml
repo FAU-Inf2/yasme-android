@@ -54,4 +54,7 @@
     <!-- Settings -->
     <string name="action_settings">Einstellungen</string>
 
+    <!-- Notification -->
+    <string name="notification_message">"Neue Nachrichten empfangen"</string>
+
 </resources>
