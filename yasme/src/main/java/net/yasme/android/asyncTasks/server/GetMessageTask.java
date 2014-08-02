@@ -1,6 +1,5 @@
 package net.yasme.android.asyncTasks.server;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -159,7 +158,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
                         .setContentInfo("" + numberOfNewMessages)
                         .setSmallIcon(android.R.drawable.ic_dialog_email)
                         .setPriority(1)
-                        .setDefaults(Notification.DEFAULT_VIBRATE)
+                        /*.setDefaults(Notification.DEFAULT_VIBRATE)*/
                         .setAutoCancel(true)
                         .setLargeIcon(getIcon(mContext));
 
