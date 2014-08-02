@@ -15,8 +15,6 @@ import net.yasme.android.exception.KeyOutdatedException;
  */
 public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
-    private MessageEncryption messageEncryption;
-    private MessageTask messageTask = MessageTask.getInstance();
     private AsyncTask onPostExecute;
     private Chat chat;
     private User sender;

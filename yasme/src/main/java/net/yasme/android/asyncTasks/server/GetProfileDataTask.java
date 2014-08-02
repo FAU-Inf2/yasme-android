@@ -14,11 +14,6 @@ import net.yasme.android.ui.AbstractYasmeActivity;
  * Created by robert on 19.06.14.
  */
 public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
-    //SharedPreferences storage;
-
-    //public GetProfileDataTask(SharedPreferences storage) {
-    //    this.storage = storage;
-    //}
 
     User selfProfile;
     protected Boolean doInBackground(String... params) {

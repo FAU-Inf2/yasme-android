@@ -58,7 +58,7 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
 
 
 
-    protected SharedPreferences storage;
+   // protected SharedPreferences storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
                     getResources().getString(R.string.server_port));
         }
 
-        storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
+        SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
         Long userId = storage.getLong(USER_ID, 0);
         String userName = storage.getString(USER_NAME, "dummy"); //TODO: evtl. anderen dummy namen
         String userMail = storage.getString(USER_MAIL, "@yasme.net");
@@ -166,10 +166,6 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
 
     public String getAccessToken() {
         return accessToken;
-    }
-
-    public SharedPreferences getStorage() {
-        return storage;
     }
 
     public void toast(final int messageId, final int duration) {

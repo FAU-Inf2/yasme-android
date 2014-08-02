@@ -48,8 +48,8 @@ public class ChatListActivity extends AbstractYasmeActivity {
         DatabaseManager.INSTANCE.setDeviceId(deviceId);
 
         if(!ConnectionTask.isInitializedSession()) {
-            long userId = storage.getLong(AbstractYasmeActivity.USER_ID, 0);
-            String accessToken = storage.getString(AbstractYasmeActivity.ACCESSTOKEN, "");
+            long userId = DatabaseManager.INSTANCE.getSharedPreferences().getLong(AbstractYasmeActivity.USER_ID, 0);
+            String accessToken = DatabaseManager.INSTANCE.getSharedPreferences().getString(AbstractYasmeActivity.ACCESSTOKEN, "");
             //initConnection Session
             ConnectionTask.initSession(userId, deviceId, accessToken);
         }

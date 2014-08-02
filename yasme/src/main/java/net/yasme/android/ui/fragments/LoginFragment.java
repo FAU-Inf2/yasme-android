@@ -202,7 +202,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         }
 
         activity.getSelfUser().setId(userId);
-        SharedPreferences.Editor editor = activity.getStorage().edit();
+        SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
         //showProgress(false);
         activity.setSignedInFlag(success);
         editor.putBoolean(AbstractYasmeActivity.SIGN_IN, activity.getSignedInFlag());
@@ -210,18 +210,19 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         if (success) {
             //Initialize database (once in application)
             if (!DatabaseManager.INSTANCE.isInitialized()) {
-                DatabaseManager.INSTANCE.init(activity.getApplicationContext(), activity.getStorage(), userId);
+                //DatabaseManager.INSTANCE.init(activity.getApplicationContext(), activity.getStorage(), userId);
+                Log.e(getClass().getSimpleName(), "DB-Manger hasn't been initialized");
             }
 
-            SharedPreferences devicePrefs = activity.getSharedPreferences(
-                    AbstractYasmeActivity.DEVICE_PREFS,
-                    AbstractYasmeActivity.MODE_PRIVATE);
+            //SharedPreferences devicePrefs = activity.getSharedPreferences(
+            //        AbstractYasmeActivity.DEVICE_PREFS,
+            //        AbstractYasmeActivity.MODE_PRIVATE);
 
             // check if there is a device in the Database
             if (yasmeDeviceCheck()) {
                 Log.d(this.getClass().getSimpleName(), "Device exists in Database");
 
-                long deviceId = devicePrefs.getLong(AbstractYasmeActivity.DEVICE_ID, -1);
+                long deviceId = DatabaseManager.INSTANCE.getSharedPreferences().getLong(AbstractYasmeActivity.DEVICE_ID, -1);
                 if (deviceId < 0) {
                     // Error ocurred
                     Log.e(this.getClass().getSimpleName(), "Could not load registered device's id from shared prefs");
@@ -242,7 +243,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 Log.d(this.getClass().getSimpleName(), "Device does not exist in Database");
                 Log.d(this.getClass().getSimpleName(), "Starting task to register device at yasme server");
 
-                new DeviceRegistrationTask(activity.getStorage(), activity)
+                new DeviceRegistrationTask(activity)
                         .execute(Long.toString(userId), this.deviceProduct);
 
             }

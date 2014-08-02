@@ -31,11 +31,6 @@ import java.util.List;
 // TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach
 // geloescht werden
 public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
-    SharedPreferences storage;
-
-    public GetMessageTask() {
-        this.storage = DatabaseManager.INSTANCE.getSharedPreferences();
-    }
 
     private List<Message> messages;
     private long lastMessageId;
@@ -44,7 +39,8 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(Object... params) {
-        lastMessageId = storage.getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
+
+        lastMessageId = DatabaseManager.INSTANCE.getSharedPreferences().getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
         try {
             messages = MessageTask.getInstance().getMessages(lastMessageId);
@@ -102,7 +98,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             // Store lastMessageId
             Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
 
-            SharedPreferences.Editor editor = storage.edit();
+            SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
             editor.commit();
         }

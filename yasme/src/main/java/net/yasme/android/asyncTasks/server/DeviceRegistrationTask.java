@@ -8,6 +8,7 @@ import android.util.Log;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.KeyEncryption;
 import net.yasme.android.gcm.CloudMessaging;
+import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
 import net.yasme.android.connection.DeviceTask;
@@ -21,14 +22,11 @@ import net.yasme.android.ui.fragments.LoginFragment;
  */
 public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
 
-
-    private SharedPreferences prefs;
     private long deviceId;
     private Activity activity;
     private String regId;
 
-    public DeviceRegistrationTask(SharedPreferences prefs, Activity activity){
-        this.prefs = prefs;
+    public DeviceRegistrationTask(Activity activity){
         this.activity = activity;
     }
 
@@ -116,7 +114,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         Log.d(this.getClass().getSimpleName(),"Device registered at yasme server");
         // if device registration was a success
         // store to SharedPreferences
-        SharedPreferences.Editor editor = prefs.edit();
+        SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
         editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
         editor.commit();
         Log.d(this.getClass().getSimpleName(),"Device stored to SharedPreferences");

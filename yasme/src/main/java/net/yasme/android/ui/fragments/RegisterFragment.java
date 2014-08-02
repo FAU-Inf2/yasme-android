@@ -24,15 +24,11 @@ import net.yasme.android.ui.AbstractYasmeActivity;
  * Created by robert on 06.07.14.
  */
 public class RegisterFragment extends Fragment implements NotifiableFragment<RegisterFragment.RegParam> {
-    private AbstractYasmeActivity activity;
-    private SharedPreferences sharedPrefs;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        activity = (AbstractYasmeActivity) getActivity();
-        sharedPrefs = DatabaseManager.INSTANCE.getSharedPreferences();
         registerDialog();
     }
 
@@ -101,14 +97,14 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         if (success) {
             //Login after registration was successfull
             Toast.makeText(
-                    activity.getApplicationContext(),
+                    getActivity().getApplicationContext(),
                     getResources().getString(
                             R.string.registration_successful),
                     Toast.LENGTH_SHORT
             ).show();
             UserLoginTask authTask = new UserLoginTask(false);
             authTask.execute(email, password);
-            activity.getSelfUser().setEmail(email);
+            ((AbstractYasmeActivity)getActivity()).getSelfUser().setEmail(email);
         } else {
             Toast.makeText(
                     DatabaseManager.INSTANCE.getContext(),

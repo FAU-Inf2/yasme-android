@@ -14,8 +14,6 @@ import net.yasme.android.ui.fragments.LoginFragment;
  */
 public class LoginActivity extends AbstractYasmeActivity {
 
-    private CloudMessaging cloudMessaging = null;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_with_single_fragment);
