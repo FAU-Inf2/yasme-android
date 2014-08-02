@@ -44,7 +44,6 @@ public class ChatListActivity extends AbstractYasmeActivity {
             return;
         }
 
-
         DatabaseManager.INSTANCE.setDeviceId(deviceId);
 
         if(!ConnectionTask.isInitializedSession()) {
@@ -85,8 +84,7 @@ public class ChatListActivity extends AbstractYasmeActivity {
 	}
 
     protected void startLoginActivity() {
-        SharedPreferences storage = getPreferences(MODE_PRIVATE);
-        storage.edit().clear().commit();
+        setSignedInFlag(false);
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();

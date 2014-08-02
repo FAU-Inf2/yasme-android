@@ -6,6 +6,7 @@
     <string name="delete_user">Delete User</string>
     <string name="change_name">Change name of Chat</string>
     <string name="change_status">Change status of Chat</string>
+    <string name="leave_chat">Leave Chat</string>
 
     <string name="change_name_hint">New name for chat</string>
     <string name="change_status_hint">New status name for chat</string>

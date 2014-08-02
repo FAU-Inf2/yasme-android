@@ -19,6 +19,7 @@ import net.yasme.android.R;
 import net.yasme.android.asyncTasks.database.GetContactsTask;
 import net.yasme.android.asyncTasks.server.ChangeChatProperties;
 import net.yasme.android.asyncTasks.server.ChangeUserTask;
+import net.yasme.android.asyncTasks.server.LeaveChatTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.entities.Chat;
@@ -31,14 +32,13 @@ import java.util.List;
  * Created by robert on 28.07.14.
  */
 public class ChatSettingsFragment extends Fragment implements NotifiableFragment<List<User>>{
+    private final ContactListContent addParticipantsContent = new ContactListContent();
     private Chat chat;
-
     private View chatInfo;
     private View participants;
     private View searchUser;
-
     private SimpleAdapter mAddAdapter;
-    private final ContactListContent addParticipantsContent = new ContactListContent();
+    private boolean isOwner = false;
 
     public ChatSettingsFragment() {
 
@@ -61,6 +61,7 @@ public class ChatSettingsFragment extends Fragment implements NotifiableFragment
         Button changeStatus = (Button) rootView.findViewById(R.id.change_status);
         Button addUser = (Button) rootView.findViewById(R.id.add_user);
         Button deleteUser = (Button) rootView.findViewById(R.id.delete_user);
+        Button leaveChat = (Button) rootView.findViewById(R.id.leave_chat);
 
 
         changeName.setOnClickListener(
@@ -99,12 +100,21 @@ public class ChatSettingsFragment extends Fragment implements NotifiableFragment
                     }
                 }
         );
+        leaveChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    Log.d(this.getClass().getSimpleName(), "leaveChat-Button pushed");
+                    new LeaveChatTask().execute(chat.getId());
+                }
+        }
+        );
 
         if(chat.getOwner().getId() != getActivity().
                 getSharedPreferences(AbstractYasmeActivity.STORAGE_PREFS,
                         AbstractYasmeActivity.MODE_PRIVATE).
                 getLong(AbstractYasmeActivity.USER_ID, 0L))
         {
+            isOwner = true;
             deleteUser.setVisibility(View.GONE);
         }
 
