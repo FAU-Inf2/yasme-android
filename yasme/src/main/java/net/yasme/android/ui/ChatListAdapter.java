@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.storage.DatabaseManager;
 
 import java.util.List;
 
@@ -61,14 +62,23 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
         row = inflater.inflate(layoutResourceId, parent, false);
+
         ImageView iconView = (ImageView)row.findViewById(R.id.chatlist_item_icon);
         TextView titleView = (TextView)row.findViewById(R.id.chatlist_item_title);
         TextView subtitleView = (TextView)row.findViewById(R.id.chatlist_item_subtitle);
+        TextView lastMessageView = (TextView)row.findViewById(R.id.chatlist_item_last_message);
+        lastMessageView.setVisibility(View.GONE);
 
         Chat chat = chats.get(position);
+
         titleView.setText(chat.getName());
         subtitleView.setText(chat.getStatus());
         iconView.setImageResource(R.drawable.chat_default_icon);
+
+        lastMessageView.setText(DatabaseManager.INSTANCE.getMessageDAO().
+                getNewestMessageOfChat(chat.getId()).getMessage());
+        lastMessageView.setVisibility(View.VISIBLE);
+
         row.setTag(chat.getId());
 
         return row;

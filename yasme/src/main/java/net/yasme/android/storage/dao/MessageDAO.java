@@ -30,6 +30,8 @@ public interface MessageDAO extends DAO<Message> {
      */
     public List<Message> getNewMessagesByChat(long chatId, long latestMessageId);
 
+    public Message getNewestMessageOfChat(long chatId);
+
     /**
      * Store the fields from an object to the database row corresponding to the id from the data
      * parameter. If you have made changes to an object, this is how you persist those changes

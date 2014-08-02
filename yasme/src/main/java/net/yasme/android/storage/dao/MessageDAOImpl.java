@@ -2,7 +2,6 @@ package net.yasme.android.storage.dao;
 
 import android.util.Log;
 
-import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
 
@@ -95,6 +94,33 @@ public enum MessageDAOImpl implements MessageDAO{
         }
 
         return null;
+    }
+
+    @Override
+    public Message getNewestMessageOfChat(long chatId) {
+        Message message = null;
+        Chat chat = new Chat();
+        chat.setId(chatId);
+
+        QueryBuilder<Message, Long> queryBuilder = databaseHelper.getMessageDao().queryBuilder();
+        Where where = queryBuilder.where();
+
+        try {
+            where.eq(DatabaseConstants.CHAT, chatId);
+            queryBuilder.orderBy(DatabaseConstants.MESSAGE_ID, true);
+            List<Message> messages = queryBuilder.query();
+            if(messages == null || messages.isEmpty()) {
+                message = new Message();
+                message.setMessage("Chat has no messages yet");
+                Log.d("", "lalalalalalalalalalalalalalalalalalalalalalalalallllllllllllllllllllllllll");
+            } else {
+                message = messages.get(messages.size()-1);
+            }
+        } catch (SQLException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+        }
+
+        return message;
     }
 
     @Override
