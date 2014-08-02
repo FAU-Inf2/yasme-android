@@ -147,22 +147,29 @@ public enum ChatDAOImpl implements ChatDAO {
         String query = "SELECT " + DatabaseConstants.CHAT_FIELD_NAME + ", count(*) AS " + count + " FROM " + DatabaseConstants.CHAT_USER_TABLE + " WHERE " + conditionBuilder.toString() + " GROUP BY " + DatabaseConstants.CHAT_FIELD_NAME + ";";
         Log.d(this.getClass().getSimpleName(), "Get by participants query: " + query);
 
+
+        GenericRawResults result = null;
         try {
-            GenericRawResults result = databaseHelper.getChatUserDao().queryRaw(query);
+            result = databaseHelper.getChatUserDao().queryRaw(query);
+
             List<String[]> matches = result.getResults();
-            List<Chat> chats = new ArrayList<>();
-            for (String[] match : matches) {
-                // match[0] chatId, match[1] number of matching participants
-                if (Integer.valueOf(match[1]) >= users.size()) {
-                    // All participants found
-                    chats.add(get(Long.valueOf(match[0])));
+                List<Chat> chats = new ArrayList<>();
+                for (String[] match : matches) {
+                    // match[0] chatId, match[1] number of matching participants
+                    if (Integer.valueOf(match[1]) >= users.size()) {
+                        // All participants found
+                        chats.add(get(Long.valueOf(match[0])));
+                    }
                 }
-            }
             return chats;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
-            return null;
         }
+        return null;
+        /*} catch (Exception e) {
+            Log.e(this.getClass().getSimpleName(), "Exception was thrown");
+            return null;
+        }*/
     }
 
     @Override
