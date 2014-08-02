@@ -92,7 +92,6 @@ public class ChatListActivity extends AbstractYasmeActivity {
     }
 
     private class LogoutTask extends AsyncTask<Void, Void, Boolean> {
-
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
@@ -104,7 +103,6 @@ public class ChatListActivity extends AbstractYasmeActivity {
             }
             return true;
         }
-
         protected void onPostExecute(Boolean success) {
             if(!success) {
                 return;

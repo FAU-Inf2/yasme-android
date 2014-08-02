@@ -1,16 +1,22 @@
 package net.yasme.android.asyncTasks.server;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.DeviceTask;
 import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.ObservableRegistry;
-import net.yasme.android.controller.Toaster;
 import net.yasme.android.encryption.KeyEncryption;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
@@ -21,6 +27,7 @@ import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.activities.ChatListActivity;
 import net.yasme.android.ui.fragments.ChatFragment;
 
 import java.util.List;
@@ -32,13 +39,11 @@ import java.util.List;
 // geloescht werden
 public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
     SharedPreferences storage;
-
+    private List<Message> messages;
+    private long lastMessageId;
     public GetMessageTask() {
         this.storage = DatabaseManager.INSTANCE.getSharedPreferences();
     }
-
-    private List<Message> messages;
-    private long lastMessageId;
 
     /**
      * @return Returns true if it was successful, otherwise false
@@ -105,7 +110,12 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             SharedPreferences.Editor editor = storage.edit();
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
             editor.commit();
+
+            mNotify(messages.size());
         }
+        //For notification testing:
+        //mNotify(messages.size());
+
 
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
         //ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
@@ -136,6 +146,46 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 //        }
 
         //Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+    }
+
+    private void mNotify(int numberOfNewMessages) {
+
+
+        Context mContext = DatabaseManager.INSTANCE.getContext();
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(mContext)
+                        .setContentTitle("Yasme")
+                        .setContentText("Received new messages")
+                        .setContentInfo("" + numberOfNewMessages)
+                        .setSmallIcon(android.R.drawable.ic_dialog_email)
+                        .setPriority(1)
+                        .setDefaults(Notification.DEFAULT_VIBRATE)
+                        .setAutoCancel(true)
+                        .setLargeIcon(getIcon(mContext));
+
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(mContext, ChatListActivity.class);
+
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0,
+                    resultIntent, 0);
+
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // mId allows you to update the notification later on.
+        int mId = 1;
+        mNotificationManager.notify(mId, mBuilder.build());
+    }
+
+    private Bitmap getIcon(Context mContext) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = false;
+        int imageHeight = options.outHeight;
+        int imageWidth = options.outWidth;
+        String imageType = options.outMimeType;
+        return BitmapFactory.decodeResource(mContext.getResources(), R.raw.logo, options);
     }
 
     private Message decrypt(Message message) {
