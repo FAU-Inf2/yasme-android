@@ -78,7 +78,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         counter = 0;
 
         //progress bar on
-        getActivity().setProgressBarIndeterminateVisibility(true);
+        //getActivity().setProgressBarIndeterminateVisibility(true);
 
         // At first, retrieve the chats from the database
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
@@ -160,7 +160,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         counter--;
         if(counter == 0) {
             //progress bar off
-            getActivity().setProgressBarIndeterminateVisibility(false);
+            //getActivity().setProgressBarIndeterminateVisibility(false);
         }
     }
 }

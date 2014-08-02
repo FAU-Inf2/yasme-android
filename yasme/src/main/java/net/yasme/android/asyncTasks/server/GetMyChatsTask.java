@@ -5,6 +5,7 @@ import android.util.Log;
 
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
@@ -40,6 +41,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         List<Chat> serverChats = null;
         try {
             serverChats = ChatTask.getInstance().getAllChatsForUser();
@@ -77,6 +79,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (!success) {
             Log.w(this.getClass().getSimpleName(), "failed");
             return;

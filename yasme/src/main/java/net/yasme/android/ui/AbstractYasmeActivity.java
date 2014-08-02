@@ -195,10 +195,22 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     }
 
     public void startSpinning() {
-        //setProgressBarIndeterminateVisibility(true);
+        runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                setProgressBarIndeterminateVisibility(true);
+            }
+        });
     }
 
     public void stopSpinning() {
-        //setProgressBarIndeterminateVisibility(false);
+        runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                setProgressBarIndeterminateVisibility(false);
+            }
+        });
     }
 }
