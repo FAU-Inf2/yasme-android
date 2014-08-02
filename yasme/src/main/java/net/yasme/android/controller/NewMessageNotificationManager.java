@@ -1,7 +1,9 @@
 package net.yasme.android.controller;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,12 +14,39 @@ import net.yasme.android.R;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.activities.ChatListActivity;
 
+import java.util.List;
+
 /**
  * Created by robert on 02.08.14.
  */
 public class NewMessageNotificationManager {
 
+    public boolean isForeground(String PackageName){
+        //get Context
+        Context mContext = DatabaseManager.INSTANCE.getContext();
+
+        // Get the Activity Manager
+        ActivityManager manager = (ActivityManager) mContext.
+                getSystemService(mContext.ACTIVITY_SERVICE);
+
+        // Get a list of running tasks, we are only interested in the last one,
+        // the top most so we give a 1 as parameter so we only get the topmost.
+        List<ActivityManager.RunningTaskInfo> task = manager.getRunningTasks(1);
+
+        // Get the info we need for comparison.
+        ComponentName componentInfo = task.get(0).topActivity;
+
+        // Check if it matches our package name.
+        if(componentInfo.getPackageName().equals(PackageName)) return true;
+
+        // If not then our app is not on the foreground.
+        return false;
+    }
+
     public void mNotify(int numberOfNewMessages) {
+        if(!isForeground("net.yasme.android")) {
+            return;
+        }
         Context mContext = DatabaseManager.INSTANCE.getContext();
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(mContext)
