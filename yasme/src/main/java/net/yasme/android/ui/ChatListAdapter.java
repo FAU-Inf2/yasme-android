@@ -75,9 +75,12 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         subtitleView.setText(chat.getStatus());
         iconView.setImageResource(R.drawable.chat_default_icon);
 
-        lastMessageView.setText(DatabaseManager.INSTANCE.getMessageDAO().
-                getNewestMessageOfChat(chat.getId()).getMessage());
-        lastMessageView.setVisibility(View.VISIBLE);
+        String lastMessage = DatabaseManager.INSTANCE.getMessageDAO().
+                getNewestMessageOfChat(chat.getId()).getMessage();
+        if(!lastMessage.isEmpty()) {
+            lastMessageView.setText(lastMessage);
+            lastMessageView.setVisibility(View.VISIBLE);
+        }
 
         row.setTag(chat.getId());
 

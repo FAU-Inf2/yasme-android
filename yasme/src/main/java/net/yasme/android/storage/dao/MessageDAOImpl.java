@@ -111,8 +111,7 @@ public enum MessageDAOImpl implements MessageDAO{
             List<Message> messages = queryBuilder.query();
             if(messages == null || messages.isEmpty()) {
                 message = new Message();
-                message.setMessage("Chat has no messages yet");
-                Log.d("", "lalalalalalalalalalalalalalalalalalalalalalalalallllllllllllllllllllllllll");
+                message.setMessage("");
             } else {
                 message = messages.get(messages.size()-1);
             }
