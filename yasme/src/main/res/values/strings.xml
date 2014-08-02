@@ -57,4 +57,7 @@
     <!-- Settings -->
     <string name="action_settings">Settings</string>
 
+    <!-- Notification -->
+    <string name="notification_message">"Received new messages"</string>
+
 </resources>

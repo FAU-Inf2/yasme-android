@@ -155,7 +155,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(mContext)
                         .setContentTitle("Yasme")
-                        .setContentText("Received new messages")
+                        .setContentText(mContext.getString(R.string.notification_message))
                         .setContentInfo("" + numberOfNewMessages)
                         .setSmallIcon(android.R.drawable.ic_dialog_email)
                         .setPriority(1)
