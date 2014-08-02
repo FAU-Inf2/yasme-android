@@ -15,6 +15,7 @@ import net.yasme.android.R;
 import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.controller.Toastable;
 import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.User;
@@ -100,12 +101,14 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     public void onStart() {
         super.onStart();
         Toaster.getInstance().register(this);
+        SpinnerObservable.getInstance().registerActivity(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         Toaster.getInstance().remove(this);
+        SpinnerObservable.getInstance().removeActivity(this);
     }
 
     public boolean getSignedInFlag() {
@@ -189,5 +192,13 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
                 toast.show();
             }
         });
+    }
+
+    public void startSpinning() {
+        //setProgressBarIndeterminateVisibility(true);
+    }
+
+    public void stopSpinning() {
+        //setProgressBarIndeterminateVisibility(false);
     }
 }

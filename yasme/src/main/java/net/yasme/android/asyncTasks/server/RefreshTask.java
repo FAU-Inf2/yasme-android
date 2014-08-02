@@ -7,6 +7,7 @@ import net.yasme.android.connection.ChatTask;
 import net.yasme.android.connection.DeviceTask;
 import net.yasme.android.connection.UserTask;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.User;
@@ -67,6 +68,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
+        //SpinnerObservable.getInstance().registerBackgroundTask(this);
         boolean result = true;
         Log.d(this.getClass().getSimpleName(), "Result " + result);
         for (long id : ids) {
@@ -105,6 +107,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        //SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (!success) {
             Log.w(this.getClass().getSimpleName(), "failed");
             return;
