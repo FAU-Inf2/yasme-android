@@ -9,9 +9,9 @@ import net.yasme.android.exception.RestServiceException;
 /**
  * Created by robert on 02.08.14.
  */
-public class LeaveChat extends AsyncTask<Long, Void, Boolean> {
+public class LeaveChatTask extends AsyncTask<Long, Void, Boolean> {
 
-    public LeaveChat() {
+    public LeaveChatTask() {
     }
 
 

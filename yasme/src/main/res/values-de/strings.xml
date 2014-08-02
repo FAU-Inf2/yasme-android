@@ -11,6 +11,9 @@
     <string name="action_contacts">Kontakte</string>
     <string name="action_chat_settings">Chat Einstellungen</string>
 
+    <string name="context_show_settings">Einstellungen</string>
+    <string name="context_leave">Chat verlassen</string>
+
     <!-- Home -->
     <string name="title_activity_home">Yasme</string>
     <string name="button_showChat">TestChat</string>

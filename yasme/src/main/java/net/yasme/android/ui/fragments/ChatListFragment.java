@@ -4,7 +4,11 @@ import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import net.yasme.android.R;
@@ -12,6 +16,7 @@ import net.yasme.android.asyncTasks.database.GetAllTask;
 import net.yasme.android.asyncTasks.server.GetMessageTask;
 import net.yasme.android.asyncTasks.server.GetMyChatsTask;
 import net.yasme.android.asyncTasks.server.GetProfileDataTask;
+import net.yasme.android.asyncTasks.server.LeaveChatTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
@@ -21,6 +26,7 @@ import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.ChatListAdapter;
 import net.yasme.android.ui.activities.ChatActivity;
+import net.yasme.android.ui.activities.ChatSettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +69,10 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
         FragmentObservable<ChatListFragment, List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
-
         obs.register(this);
+
+        //register for context menu
+        registerForContextMenu(this.getListView());
 
         //ab hier ist alles aus der onCreateMethode
         counter = 0;
@@ -100,6 +108,35 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         Chat chat = (Chat) getListAdapter().getItem(pos);
         showChat(chat.getId());
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater inflater = this.getActivity().getMenuInflater();
+        inflater.inflate(R.menu.chatlist_context, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Chat chat = (Chat) getListAdapter().getItem(info.position);
+        switch (item.getItemId()) {
+
+            case R.id.context_settings:
+                Intent intent = new Intent(getActivity(), ChatSettingsActivity.class);
+                intent.putExtra("chat", chat);
+                startActivity(intent);
+                return true;
+            case R.id.context_leave:
+                new LeaveChatTask().execute(chat.getId());
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
 
     public void showChat(long chatId) {
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
