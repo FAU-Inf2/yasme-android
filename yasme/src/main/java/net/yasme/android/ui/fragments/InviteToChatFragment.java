@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,9 +37,9 @@ public class InviteToChatFragment
         extends Fragment
         implements View.OnClickListener, NotifiableFragment<InviteToChatFragment.InviteToChatParam> {
 
-    private List<User> users;
-    private ListView chatPartners;
-    private Button startChat;
+    protected List<User> users;
+    protected ListView chatPartners;
+    protected Button startChat;
     private ArrayAdapter<String> adapter;
     private TextView emptyContactsNotice;
 
@@ -58,8 +57,6 @@ public class InviteToChatFragment
                 ObservableRegistry.getObservable(InviteToChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
-
-
 
         //progress bar on
         getActivity().setProgressBarIndeterminateVisibility(true);
@@ -163,7 +160,6 @@ public class InviteToChatFragment
                 selectedUserNames.add(users.get(position).getName());
             }
         }
-
         new CreateChatTask(activity.getSelfUser(), selectedUsers).execute();
     }
 
@@ -177,6 +173,7 @@ public class InviteToChatFragment
         intent.putExtra(activity.CHAT_ID, chatId);
         intent.putExtra(activity.USER_NAME, activity.getSelfUser().getName());
         startActivity(intent);
+        //getActivity().finish();
     }
 
     @Override
@@ -192,7 +189,6 @@ public class InviteToChatFragment
             updateChatPartnersList(contactsFetchedParam.getAllUsers());
         }
     }
-
 
     @Override
     public void onStart() {

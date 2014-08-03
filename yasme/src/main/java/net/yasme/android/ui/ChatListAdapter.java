@@ -15,6 +15,8 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseManager;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -32,6 +34,20 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         this.context = context;
         this.chats = chats;
     }
+
+    @Override
+    public void notifyDataSetChanged() {
+        Collections.sort(chats, new Comparator<Object>() {
+            @Override
+            public int compare(Object o, Object o2) {
+                Chat c1 = (Chat) o;
+                Chat c2 = (Chat) o2;
+                return c1.getLastModified().compareTo(c2.getLastModified());
+            }
+        });
+        super.notifyDataSetChanged();
+    }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
