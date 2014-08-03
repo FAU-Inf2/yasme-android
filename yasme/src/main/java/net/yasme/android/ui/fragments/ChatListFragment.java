@@ -152,6 +152,10 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     @Override
     public void notifyFragment(List<Chat> chatRooms) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+        if(chatRooms == null) {
+            adapter.notifyDataSetChanged();
+            return;
+        }
         ChatListAdapter adapter = (ChatListAdapter) this.getListAdapter();
         this.chatRooms = chatRooms;
         adapter.updateChats(chatRooms);

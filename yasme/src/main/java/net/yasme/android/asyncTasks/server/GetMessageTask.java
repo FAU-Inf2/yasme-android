@@ -20,6 +20,7 @@ import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.ChatFragment;
+import net.yasme.android.ui.fragments.ChatListFragment;
 
 import java.util.List;
 
@@ -108,6 +109,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
 
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
+        ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(null);
         //ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
 
         // Vibrate
