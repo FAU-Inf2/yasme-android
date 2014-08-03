@@ -130,7 +130,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
                 startActivity(intent);
                 return true;
             case R.id.context_leave:
-                new LeaveChatTask().execute(chat.getId());
+                new LeaveChatTask(chat).onPreExecute();
                 return true;
             default:
                 return super.onContextItemSelected(item);

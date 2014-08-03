@@ -27,6 +27,10 @@
     <string name="alert_delete_user_message">will be removed from this chat</string>
     <string name="alert_add_user">Do you want to add this user?</string>
     <string name="alert_add_user_message">will be added to this chat</string>
+    <string name="alert_owner">You are currently owner of the chat</string>
+    <string name="alert_owner_message">Please select a new owner from the list to proceed</string>
+    <string name="alert_leave">Leave chat</string>
+    <string name="alert_leave_message">Do you want to leave</string>
 
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>

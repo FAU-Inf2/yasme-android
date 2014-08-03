@@ -27,6 +27,11 @@
     <string name="alert_delete_user_message">wird dann aus dem Chat entfernt</string>
     <string name="alert_add_user">Benutzer hinzufügen?</string>
     <string name="alert_add_user_message">wird dann dem Chat hinzugefügt</string>
+    <string name="alert_owner">Sei sind Eigentümer des Chats</string>
+    <string name="alert_owner_message">Um fortzufahren wähle einen Teilnehmer aus der Liste als neuen
+        Eigentümer</string>
+    <string name="alert_leave">Chat verlassen</string>
+    <string name="alert_leave_message">Willst du den Cchat verlassen?</string>
 
     <string name="OK">OK</string>
     <string name="cancel">Abbruch</string>

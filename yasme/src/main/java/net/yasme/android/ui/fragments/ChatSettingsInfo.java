@@ -20,13 +20,15 @@ import net.yasme.android.asyncTasks.server.ChangeChatProperties;
 import net.yasme.android.asyncTasks.server.LeaveChatTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.User;
 
 /**
  * Created by robert on 03.08.14.
  */
 public class ChatSettingsInfo extends Fragment {
 
-    protected final ContactListContent addParticipantsContent = new ContactListContent();
+    protected final ContactListContent participantsContent = new ContactListContent();
+    protected SimpleAdapter mAdapter = null;
     private View chatInfo;
     private Chat chat;
 
@@ -71,7 +73,7 @@ public class ChatSettingsInfo extends Fragment {
                     @Override
                     public void onClick(View view) {
                         Log.d(this.getClass().getSimpleName(), "leaveChat-Button pushed");
-                        new LeaveChatTask().execute(chat.getId());
+                        new LeaveChatTask(chat).onPreExecute();
                     }
                 }
         );
@@ -156,8 +158,18 @@ public class ChatSettingsInfo extends Fragment {
         name.setText(chat.getName());
         status.setText(chat.getStatus());
         number.setText(chat.getNumberOfParticipants() + " Teilnehmer");
-        participants.setAdapter(new SimpleAdapter(getActivity(), addParticipantsContent.getMap(),
+
+        mAdapter = new SimpleAdapter(getActivity(), participantsContent.getMap(),
                 android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
-                new int[]{android.R.id.text1, android.R.id.text2}));
+                new int[]{android.R.id.text1, android.R.id.text2});
+        participants.setAdapter(mAdapter);
+
+        participantsContent.clearItems();
+
+        for (User u : chat.getParticipants()) {
+            participantsContent.addItem(new ContactListContent.
+                    ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
+        }
+        mAdapter.notifyDataSetChanged();
     }
 }

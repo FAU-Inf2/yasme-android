@@ -17,6 +17,7 @@ import net.yasme.android.asyncTasks.server.ChangeUserTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.DatabaseManager;
 
 /**
  * Created by robert on 03.08.14.
@@ -69,6 +70,9 @@ public class ChatSettingsRemove extends Fragment {
         participantsContent.clearItems();
 
         for (User u : chat.getParticipants()) {
+            if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
+                continue;
+            }
             participantsContent.addItem(new ContactListContent.
                     ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
         }
