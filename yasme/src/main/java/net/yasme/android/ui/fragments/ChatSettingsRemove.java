@@ -1,5 +1,8 @@
 package net.yasme.android.ui.fragments;
 
+import android.app.AlertDialog;
+import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,20 +12,30 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import net.yasme.android.R;
+import net.yasme.android.asyncTasks.server.ChangeUserTask;
 import net.yasme.android.contacts.ContactListContent;
+import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 
 /**
  * Created by robert on 03.08.14.
  */
-public class ChatSettingsRemove extends ChatSettingsFragment {
+public class ChatSettingsRemove extends Fragment {
 
-    ChatSettingsFragment csf = new ChatSettingsFragment();
     private View participants;
+    private Chat chat;
 
     public ChatSettingsRemove() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        chat = (Chat) bundle.getSerializable("chat");
     }
 
     @Override
@@ -74,5 +87,34 @@ public class ChatSettingsRemove extends ChatSettingsFragment {
                     ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
         }
         mDelAdapter.notifyDataSetChanged();
+    }
+
+    public void showAlertDialog(String title, String message, final Chat chat,
+                                final Long userId, final Long rest) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle(title);
+
+        TextView text = new TextView(getActivity());
+        text.setText(message);
+
+        alert.setView(text);
+
+        // "OK" button to save the values
+        alert.setPositiveButton(R.string.OK,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        new ChangeUserTask(chat).execute(userId, rest);
+                    }
+                }
+        );
+        // "Cancel" button
+        alert.setNegativeButton(R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                }
+        );
+        alert.show();
     }
 }

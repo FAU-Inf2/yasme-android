@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,7 +15,6 @@ import net.yasme.android.R;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.ChatSettingsAdd;
-import net.yasme.android.ui.fragments.ChatSettingsFragment;
 import net.yasme.android.ui.fragments.ChatSettingsInfo;
 import net.yasme.android.ui.fragments.ChatSettingsRemove;
 
@@ -34,23 +34,14 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
      */
     ChatSettingsActivity.SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
+
     private Chat chat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_with_single_fragment);
         chat = (Chat) getIntent().getSerializableExtra("chat");
-
-        if (savedInstanceState == null) {
-            Bundle args = new Bundle();
-            args.putSerializable("chat", chat);
-            ChatSettingsFragment csf = new ChatSettingsFragment();
-            csf.setArguments(args);
-            getFragmentManager().beginTransaction()
-                    .add(R.id.singleFragmentContainer, csf).commit();
-        }
 
         setContentView(R.layout.activity_contact);
 
@@ -63,8 +54,13 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.chat_settings_pager);
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        if(mViewPager == null) {
+            Log.e(this.getClass().getSimpleName(), "ViewPager ist null");
+        }
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+
 
         // When swiping between different sections, select the corresponding
         // tab. We can also use ActionBar.Tab#select() to do this if we have
@@ -94,7 +90,7 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
         };
 
         // Add 3 tabs, specifying the tab's text and TabListener
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
             actionBar.addTab(actionBar.newTab().setText(mSectionsPagerAdapter.getPageTitle(i))
                     .setTabListener(tabListener));
         }
@@ -131,15 +127,26 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
 
+            Bundle args = new Bundle();
+            args.putSerializable("chat", chat);
+
             switch (position){
                 case 0:
-                    return new ChatSettingsInfo();
+                    ChatSettingsInfo csi = new ChatSettingsInfo();
+                    csi.setArguments(args);
+                    return csi;
                 case 1:
-                    return new ChatSettingsAdd();
+                    ChatSettingsAdd csa = new ChatSettingsAdd();
+                    csa.setArguments(args);
+                    return csa;
                 case 2:
-                    return new ChatSettingsRemove();
+                    ChatSettingsRemove csr = new ChatSettingsRemove();
+                    csr.setArguments(args);
+                    return csr;
                 default:
-                    return new ChatSettingsInfo();
+                    ChatSettingsInfo csid = new ChatSettingsInfo();
+                    csid.setArguments(args);
+                    return csid;
             }
         }
 

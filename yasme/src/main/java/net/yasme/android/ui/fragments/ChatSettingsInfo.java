@@ -1,6 +1,7 @@
 package net.yasme.android.ui.fragments;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
@@ -17,16 +18,26 @@ import android.widget.TextView;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.ChangeChatProperties;
 import net.yasme.android.asyncTasks.server.LeaveChatTask;
+import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.entities.Chat;
 
 /**
  * Created by robert on 03.08.14.
  */
-public class ChatSettingsInfo extends ChatSettingsFragment {
+public class ChatSettingsInfo extends Fragment {
 
+    protected final ContactListContent addParticipantsContent = new ContactListContent();
     private View chatInfo;
+    private Chat chat;
 
     public ChatSettingsInfo() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        chat = (Chat) bundle.getSerializable("chat");
     }
 
     @Override
