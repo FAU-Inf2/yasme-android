@@ -233,7 +233,7 @@ public class UserDetailsFragment
         if (contact.isContact()) {
             if (showToast) {
                 String toast = contact.getName() + " " + context.getText(R.string.contact_already_added) + ".";
-                Toaster.getInstance().toast(toast, Toast.LENGTH_LONG, Gravity.TOP);
+                Toaster.getInstance().toast(toast, Toast.LENGTH_LONG);
             }
             return;
         }
@@ -244,7 +244,7 @@ public class UserDetailsFragment
 
         if (showToast) {
             String toast = contact.getName() + " " + context.getText(R.string.contact_added_success) + ".";
-            Toaster.getInstance().toast(toast, Toast.LENGTH_LONG, Gravity.TOP);
+            Toaster.getInstance().toast(toast, Toast.LENGTH_LONG);
         }
 
         // Refresh contact list in first tab

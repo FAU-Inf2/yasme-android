@@ -75,6 +75,7 @@ public enum MessageDAOImpl implements MessageDAO{
         return messageList;
     }
 
+
     @Override
     public List<Message> getNewMessagesByChat(long chatId, long latestMessageId) {
         Chat chat = new Chat();

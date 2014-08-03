@@ -133,6 +133,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             //Notified from GetMessageTask, new Messages are stored in the DB
             // Note that retrieved messages will be ordered ascending by id
             new GetNewMessagesForChatTask(latestMessageOnDisplay.get(), chat.getId()).execute();
+            // And don't stop the progress bar
+            return;
         } else {
             //Notified from GetNewMessageForChatTask
             updateViews(messages);

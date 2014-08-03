@@ -57,7 +57,12 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
         //ContactListContent.ContactListItem item = new ContactListContent.ContactListItem(String.valueOf(temp.getId()),temp.getName(),temp.getEmail(),temp);
         //contactListContent.addItem(item);
 
-        mAdapter = new SimpleAdapter(getActivity(), contactListContent.getMap(), android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
+        mAdapter = new SimpleAdapter(
+                getActivity(),
+                contactListContent.getMap(),
+                android.R.layout.simple_list_item_2,
+                new String[] {"name", "email"},
+                new int[]{ android.R.id.text1, android.R.id.text2});
 
         // progress bar on
         getActivity().setProgressBarIndeterminateVisibility(true);
