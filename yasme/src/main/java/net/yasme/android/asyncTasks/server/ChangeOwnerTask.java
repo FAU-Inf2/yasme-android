@@ -20,6 +20,7 @@ import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,6 @@ import java.util.List;
  */
 public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
     private Chat chat;
-    private Long leave;
     private Context context = DatabaseManager.INSTANCE.getContext();
 
     public ChangeOwnerTask(Chat chat) {
@@ -51,8 +51,15 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
 
         final ListView list = new ListView(context);
         list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        List<String> participantNames = new ArrayList<>();
+        for(User u : chat.getParticipants()) {
+            if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
+                continue;
+            }
+            participantNames.add(u.getName());
+        }
         final ArrayAdapter<List<User>> adapter = new ArrayAdapter<List<User>>(context,
-                android.R.layout.simple_list_item_single_choice, (List)chat.getParticipants());
+                android.R.layout.simple_list_item_single_choice, (List)participantNames);
         list.setAdapter(adapter);
 
         layout.addView(text, layoutParams);
@@ -67,6 +74,7 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
                         if(position != AdapterView.INVALID_POSITION) {
                             Long newUserId = chat.getParticipants().
                                     get(position).getId();
+                            dialog.cancel();
                             execute(newUserId);
                         }
                     }
@@ -90,7 +98,6 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(Long... params) {
-        leave = params[1];
         try {
             ChatTask.getInstance().changeOwnerOfChat(chat.getId(), params[0]);
         } catch (RestServiceException e) {
@@ -104,9 +111,8 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         if(success) {
             Toaster.getInstance().toast(R.string.change_successful, Toast.LENGTH_LONG);
-            if(leave == 1L) {
                 new LeaveChatTask(chat).onPreExecute();
-            }
+
         } else {
             Toaster.getInstance().toast(R.string.change_not_successful, Toast.LENGTH_LONG);
         }

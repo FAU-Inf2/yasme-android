@@ -40,6 +40,7 @@ public class LeaveChatTask extends AsyncTask<Long, Void, Boolean> {
         alert.setPositiveButton(R.string.OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
                         execute();
                     }
                 }
