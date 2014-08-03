@@ -2,13 +2,20 @@
     <!--ger-->
     <string name="title_chat_settings">Chat Einstellungen</string>
 
-    <string name="info_text">Chatinfo</string>
+    <string name="settings_title_tab1">Chatinfo</string>
+    <string name="settings_title_tab2">User hinzufügen</string>
+    <string name="settings_title_tab3">User löschen</string>
+
+
     <string name="add_user">User hinzufügen</string>
     <string name="delete_user">User löschen</string>
-    <string name="change_name">Chatnamen ändern</string>
-    <string name="change_status">Chatstatus ändern</string>
+    <string name="chat_info_name">Name</string>
+    <string name="chat_info_status">Status</string>
     <string name="leave_chat">Chat verlassen</string>
+    <string name="change">Ändern</string>
 
+    <string name="change_name">Chatname ändern</string>
+    <string name="change_status">Chatstatus ändern</string>
     <string name="change_name_hint">Neuer Chatname</string>
     <string name="change_status_hint">Neuer Chatstatus</string>
 
