@@ -181,7 +181,6 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     }
 
     public void toast(final String text, final int duration, final int gravity) {
-        //final int toastGravity = (-1 == gravity) ? Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM : gravity;
         runOnUiThread(new Runnable()
         {
             public void run()
