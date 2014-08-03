@@ -7,7 +7,7 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.UserDAO;
-import net.yasme.android.ui.fragments.ChatSettingsAdd;
+import net.yasme.android.ui.fragments.ChatSettingsA;
 import net.yasme.android.ui.fragments.ContactListFragment;
 import net.yasme.android.ui.fragments.InviteToChatFragment;
 
@@ -38,7 +38,7 @@ public class GetContactsTask extends AsyncTask<Void, Void, Boolean> {
                     notifyFragments(new InviteToChatFragment.AllUsersFetchedParam(success, contacts));
             ObservableRegistry.getObservable(ContactListFragment.class).
                     notifyFragments(new InviteToChatFragment.AllUsersFetchedParam(success, contacts));
-            ObservableRegistry.getObservable(ChatSettingsAdd.class).
+            ObservableRegistry.getObservable(ChatSettingsA.class).
                     notifyFragments(new InviteToChatFragment.AllUsersFetchedParam(success, contacts));
         } else {
             Log.w(this.getClass().getSimpleName(), "Get contacts not successful");

@@ -28,4 +28,12 @@
             android:layout_alignParentTop="true">
         </ListView>
 
+    <TextView
+        android:id="@+id/empty_contacts_notice"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/empty_contacts"
+        android:textStyle="bold" />
+
     </RelativeLayout>

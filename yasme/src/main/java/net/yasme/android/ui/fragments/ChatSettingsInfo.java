@@ -66,15 +66,17 @@ public class ChatSettingsInfo extends Fragment {
                     }
                 }
         );
-        leaveChat.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View view) {
-                                             Log.d(this.getClass().getSimpleName(), "leaveChat-Button pushed");
-                                             new LeaveChatTask().execute(chat.getId());
-                                         }
-                                     }
+        leaveChat.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d(this.getClass().getSimpleName(), "leaveChat-Button pushed");
+                        new LeaveChatTask().execute(chat.getId());
+                    }
+                }
         );
         chatInfo = rootView.findViewById(R.id.chat_settings_info);
+        fillInfoView();
         return rootView;
     }
 

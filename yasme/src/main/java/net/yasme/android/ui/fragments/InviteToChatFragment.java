@@ -37,9 +37,9 @@ public class InviteToChatFragment
         extends Fragment
         implements View.OnClickListener, NotifiableFragment<InviteToChatFragment.InviteToChatParam> {
 
-    private List<User> users;
-    private ListView chatPartners;
-    private Button startChat;
+    protected List<User> users;
+    protected ListView chatPartners;
+    protected Button startChat;
     private ArrayAdapter<String> adapter;
     private TextView emptyContactsNotice;
 
@@ -57,8 +57,6 @@ public class InviteToChatFragment
                 ObservableRegistry.getObservable(InviteToChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
-
-
 
         //progress bar on
         getActivity().setProgressBarIndeterminateVisibility(true);
@@ -191,7 +189,6 @@ public class InviteToChatFragment
             updateChatPartnersList(contactsFetchedParam.getAllUsers());
         }
     }
-
 
     @Override
     public void onStart() {

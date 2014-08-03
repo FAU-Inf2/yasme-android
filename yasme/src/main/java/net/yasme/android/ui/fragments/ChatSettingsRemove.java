@@ -4,13 +4,11 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -25,7 +23,9 @@ import net.yasme.android.entities.User;
  */
 public class ChatSettingsRemove extends Fragment {
 
+    final ContactListContent participantsContent = new ContactListContent();
     private View participants;
+    private AbsListView list;
     private Chat chat;
 
     public ChatSettingsRemove() {
@@ -42,31 +42,15 @@ public class ChatSettingsRemove extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat_settings_remove, container, false);
 
-        Button deleteUser = (Button) rootView.findViewById(R.id.delete_user);
-
-        deleteUser.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d(this.getClass().getSimpleName(), "deleteUser-Button pushed");
-                        deleteUser();
-                    }
-                }
-        );
-
         participants = rootView.findViewById(R.id.chat_settings_participants);
-        return rootView;
-    }
 
-    private void deleteUser() {
         final SimpleAdapter mDelAdapter;
-        final ContactListContent participantsContent = new ContactListContent();
         mDelAdapter = new SimpleAdapter(getActivity(), participantsContent.getMap(),
                 android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
                 new int[]{android.R.id.text1, android.R.id.text2});
 
         // Set the adapter
-        AbsListView list = (AbsListView) participants.findViewById(android.R.id.list);
+        list = (AbsListView) participants.findViewById(android.R.id.list);
         list.setAdapter(mDelAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
@@ -82,11 +66,15 @@ public class ChatSettingsRemove extends Fragment {
                 }
         );
 
+        participantsContent.clearItems();
+
         for (User u : chat.getParticipants()) {
             participantsContent.addItem(new ContactListContent.
                     ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
         }
         mDelAdapter.notifyDataSetChanged();
+
+        return rootView;
     }
 
     public void showAlertDialog(String title, String message, final Chat chat,
