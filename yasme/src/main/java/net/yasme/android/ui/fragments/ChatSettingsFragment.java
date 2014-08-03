@@ -199,7 +199,6 @@ public class ChatSettingsFragment
         alert.show();
     }
 
-
     private void addUser() {
         chatInfo.setVisibility(View.INVISIBLE);
         participants.setVisibility(View.INVISIBLE);
@@ -228,7 +227,6 @@ public class ChatSettingsFragment
 
         new GetContactsTask().execute();
     }
-
 
     private void deleteUser() {
         chatInfo.setVisibility(View.INVISIBLE);
@@ -264,7 +262,6 @@ public class ChatSettingsFragment
         }
         mDelAdapter.notifyDataSetChanged();
     }
-
 
     private void changeStatus() {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -304,7 +301,13 @@ public class ChatSettingsFragment
     public void notifyFragment(InviteToChatFragment.AllUsersFetchedParam value) {
         addParticipantsContent.clearItems();
         for (User u : value.getAllUsers()) {
-            if(!chat.getParticipants().contains(u)) {
+            boolean isParticipant = false;
+            for(User p : chat.getParticipants()) {
+                if(u.getId() == p.getId()) {
+                    isParticipant = true;
+                }
+            }
+            if(!isParticipant) {
                 addParticipantsContent.addItem(new ContactListContent.
                         ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
             }
