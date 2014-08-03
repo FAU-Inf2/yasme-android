@@ -180,14 +180,17 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         toast(text, duration, -1);
     }
 
-    public void toast(final String text, final int duration, int gravity) {
-        final int toastGravity = (-1 == gravity) ? Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM : gravity;
+    public void toast(final String text, final int duration, final int gravity) {
+        //final int toastGravity = (-1 == gravity) ? Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM : gravity;
         runOnUiThread(new Runnable()
         {
             public void run()
             {
                 Toast toast = Toast.makeText(getApplicationContext(), text, duration);
-                toast.setGravity(toastGravity, 0, 0);
+                if (-1 != gravity) {
+                    toast.setGravity(gravity, 0, 0);
+                }
+                // otherwise use default position
                 Log.d(getClass().getSimpleName(), "Toast: " + text);
                 toast.show();
             }
