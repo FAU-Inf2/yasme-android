@@ -41,12 +41,12 @@ public class KeyEncryption {
     //save own RSAKeys in SharedPreferences
     public boolean saveRSAKeys(long deviceId){
 
-        RSAKEY_STORAGE += "_"+deviceId;
+        String RSAKEY_STORAGE_USER = RSAKEY_STORAGE + "_" + deviceId;
 
         try {
 
             Context context = DatabaseManager.INSTANCE.getContext();
-            SharedPreferences privKeyStorage = context.getSharedPreferences(RSAKEY_STORAGE, Context.MODE_PRIVATE);
+            SharedPreferences privKeyStorage = context.getSharedPreferences(RSAKEY_STORAGE_USER, Context.MODE_PRIVATE);
             SharedPreferences.Editor keyeditor = privKeyStorage.edit();
 
             //delete existing keys
@@ -137,13 +137,13 @@ public class KeyEncryption {
     //get own PrivateKey from LocalStorage
     public PrivateKey getPrivateRSAKeyFromStorage(long selfDeviceId){
 
-        RSAKEY_STORAGE += "_"+selfDeviceId;
+        String RSAKEY_STORAGE_USER = RSAKEY_STORAGE + "_" + selfDeviceId;
 
         Context context = DatabaseManager.INSTANCE.getContext();
-        SharedPreferences privKeyStorage = context.getSharedPreferences(RSAKEY_STORAGE, Context.MODE_PRIVATE);
+        SharedPreferences privKeyStorage = context.getSharedPreferences(RSAKEY_STORAGE_USER, Context.MODE_PRIVATE);
         String privKeyInBase64 = privKeyStorage.getString(PRIVATEKEY, "");
 
-        Log.d(this.getClass().getSimpleName(),"[???] Load private Key from storage: " + RSAKEY_STORAGE);
+        Log.d(this.getClass().getSimpleName(),"[???] Load private Key from storage: " + RSAKEY_STORAGE_USER);
         //if Key is available
         if (privKeyInBase64 != "") {
 
@@ -193,10 +193,10 @@ public class KeyEncryption {
     //get own PublicKey in Base64
     public String getPublicRSAKeyInBase64FromStorage(long selfDeviceId){
 
-        RSAKEY_STORAGE += "_"+selfDeviceId;
+        String RSAKEY_STORAGE_USER = RSAKEY_STORAGE + "_" + selfDeviceId;
 
         Context context = DatabaseManager.INSTANCE.getContext();
-        SharedPreferences privKeyStorage = context.getSharedPreferences(RSAKEY_STORAGE, Context.MODE_PRIVATE);
+        SharedPreferences privKeyStorage = context.getSharedPreferences(RSAKEY_STORAGE_USER, Context.MODE_PRIVATE);
         String pubKeyInBase64 = privKeyStorage.getString(PUBLICKEY, "");
 
         return pubKeyInBase64;

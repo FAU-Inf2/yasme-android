@@ -171,14 +171,6 @@ public class MessageEncryption {
                 MessageKey messageKeySigned = keyEncryption.sign(messageKeyEncrypted);
                 Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been signed.");
 
-                /* TEST
-                if (keyEncryption.verify(messageKeySigned)){
-                    Log.d(this.getClass().getSimpleName(), "[????] Verification successful.");
-                }else{
-                    Log.d(this.getClass().getSimpleName(), "[????] Verification failed.");
-                }
-                TEST */
-
                 messageKeys.add(messageKeySigned);
                 Log.d(this.getClass().getSimpleName(),"[???] Key von " + deviceId + " für Device " + recipientDevice.getId() + " generiert");
             }
@@ -201,7 +193,7 @@ public class MessageEncryption {
 
         } catch (IncompleteKeyException e) {
             if (local) {
-                Log.e(this.getClass().getSimpleName(),"[???] Keyerzeugu");
+                Log.e(this.getClass().getSimpleName(),"[???] Keyerzeugung");
                 return sendKey(key,iv,false);
             } else {
                 Log.e(this.getClass().getSimpleName(),"[???] Key wurde nicht an den Server gesendet");
