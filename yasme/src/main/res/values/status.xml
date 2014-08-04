@@ -7,4 +7,5 @@
     <string name="authentication_failed">Warning: Chat partner could not be authenticated! Content of message:</string>
     <string name="decryption_failed">Message could not be decrypted. Key not found. If you have registered this device lately, you are not able to decrypt older messages.</string>
     <string name="key_decryption_failed">Key could not be decrypted. This is a bug!</string>
+    <string name="unknown_message_error">An unknown error occurred! Content of message:</string>
 </resources>
