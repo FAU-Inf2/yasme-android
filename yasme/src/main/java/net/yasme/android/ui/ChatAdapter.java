@@ -38,7 +38,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
      *  @see <a href="http://developer.android.com/design/style/color.html">Color palette used</a>
      *  from K9 Mail
      */
-    private final static int CONTACT_DUMMY_COLORS_ARGB[] = {
+    public final static int CONTACT_DUMMY_COLORS_ARGB[] = {
 	    0xff33B5E5,
 	    0xffAA66CC,
 	    0xff99CC00,

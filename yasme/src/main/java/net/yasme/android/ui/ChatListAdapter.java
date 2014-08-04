@@ -9,15 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 
 import net.yasme.android.R;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
+import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by martin on 18.06.2014.
@@ -27,6 +33,8 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
     Context context;
     int layoutResourceId;
     List<Chat> chats = null;
+
+    private final static int CHATPARTNER_VISIBLE_CNT = 10;
 
     public ChatListAdapter(Context context, int layoutResourceId, List<Chat> chats) {
         super(context, layoutResourceId, chats);
@@ -80,7 +88,6 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
         row = inflater.inflate(layoutResourceId, parent, false);
 
-        ImageView iconView = (ImageView)row.findViewById(R.id.chatlist_item_icon);
         TextView titleView = (TextView)row.findViewById(R.id.chatlist_item_title);
         TextView subtitleView = (TextView)row.findViewById(R.id.chatlist_item_subtitle);
         TextView lastMessageView = (TextView)row.findViewById(R.id.chatlist_item_last_message);
@@ -90,7 +97,6 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 
         titleView.setText(chat.getName());
         subtitleView.setText(chat.getStatus());
-        iconView.setImageResource(R.drawable.chat_default_icon);
 
         Message lastMessage = DatabaseManager.INSTANCE.getMessageDAO().
                 getNewestMessageOfChat(chat.getId());
@@ -99,6 +105,25 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
                     + ": " + lastMessage.getMessage());
             lastMessageView.setVisibility(View.VISIBLE);
         }
+
+	LinearLayout chatpartnerList = (LinearLayout) row.findViewById(R.id.chatpartner);  
+	ArrayList<User> users = chat.getParticipants();
+	for (int i = 0; i < users.size() && i < CHATPARTNER_VISIBLE_CNT; i++) {  
+		// TODO: skip self
+		View chatpartner = inflater.inflate(R.layout.chatpartner_item, null);  
+		ImageView img = (ImageView) chatpartner.findViewById(R.id.chatpartner_picture);
+		img.setImageResource(R.drawable.chatlist_default_icon);	
+		img.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int)users.get(i).getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
+		TextView text = (TextView) chatpartner.findViewById(R.id.chatpartner_picture_text);  
+		text.setText(users.get(i).getName().substring(0,1));
+		chatpartnerList.addView(chatpartner);  
+	} 
+	TextView moreUsers = (TextView) row.findViewById(R.id.chatlist_more_users);  
+	if (users.size() > CHATPARTNER_VISIBLE_CNT) {
+		moreUsers.setText("and " + (users.size() - CHATPARTNER_VISIBLE_CNT) + " more...");
+	} else {
+		moreUsers.setVisibility(View.GONE);
+	}
 
         row.setTag(chat.getId());
 
