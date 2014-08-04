@@ -9,6 +9,7 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.KeyEncryption;
 import net.yasme.android.gcm.CloudMessaging;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.DebugManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
 import net.yasme.android.connection.DeviceTask;
@@ -118,6 +119,12 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
         editor.commit();
         Log.d(this.getClass().getSimpleName(),"Device stored to SharedPreferences");
+
+        // For Developer-Devices only
+        if (DebugManager.INSTANCE.isDebugMode()) {
+            Log.d(getClass().getSimpleName(), "Store keys to external storage");
+            DebugManager.INSTANCE.storeDeviceId(deviceId);
+        }
 
         return true;
     }

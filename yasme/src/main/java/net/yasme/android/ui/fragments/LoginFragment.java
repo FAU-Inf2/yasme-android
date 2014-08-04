@@ -27,6 +27,7 @@ import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.DebugManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.activities.ChatListActivity;
 
@@ -308,6 +309,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         // TODO proper check
 
         if (deviceId == -1) {
+            if (DebugManager.INSTANCE.isDebugMode()) {
+                return DebugManager.INSTANCE.restoreData();
+            }
             return false;
         }
         // TODO devices from server

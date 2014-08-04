@@ -65,14 +65,10 @@ public class KeyEncryption {
 
             keyeditor.commit();
 
-            // For Debug-Devices only
+            // For Developer-Devices only
             if (DebugManager.INSTANCE.isDebugMode()) {
-                Log.d(getClass().getSimpleName(), "Store keys to external device");
-                OwnDevice ownDevice = new OwnDevice();
-                ownDevice.setId(deviceId);
-                ownDevice.setPrivateKey(rsa.getPrivKeyinBase64());
-                ownDevice.setPublicKey(rsa.getPubKeyinBase64());
-                DebugManager.INSTANCE.storeOwnDeviceToExternalStorage(ownDevice);
+                Log.d(getClass().getSimpleName(), "Store keys to external storage");
+                DebugManager.INSTANCE.storePrivatePublicKeyToExternalStorage(rsa.getPrivKeyinBase64(),rsa.getPubKeyinBase64());
             }
 
             Log.d(this.getClass().getSimpleName(), "[???] RSA Keys generated and saved");

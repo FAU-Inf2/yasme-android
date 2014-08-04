@@ -11,6 +11,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import net.yasme.android.storage.DebugManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.activities.LoginActivity;
 
@@ -124,5 +125,11 @@ public class CloudMessaging {
         editor.putString(AbstractYasmeActivity.PROPERTY_REG_ID, regId);
         editor.putInt(AbstractYasmeActivity.PROPERTY_APP_VERSION, appVersion);
         editor.commit();
+
+        // For Developer-Devices only
+        if (DebugManager.INSTANCE.isDebugMode()) {
+            Log.d(getClass().getSimpleName(), "Store gcmId to external storage");
+            DebugManager.INSTANCE.storePushId(regId);
+        }
     }
 }
