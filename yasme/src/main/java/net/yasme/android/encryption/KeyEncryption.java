@@ -6,6 +6,7 @@ package net.yasme.android.encryption;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.ContactsContract;
 import android.util.Base64;
 import android.util.Log;
 
@@ -71,7 +72,7 @@ public class KeyEncryption {
                 ownDevice.setId(deviceId);
                 ownDevice.setPrivateKey(rsa.getPrivKeyinBase64());
                 ownDevice.setPublicKey(rsa.getPubKeyinBase64());
-                DebugManager.INSTANCE.storeToExternalStorage("owndevice",ownDevice,false);
+                DebugManager.INSTANCE.storeOwnDeviceToExternalStorage(ownDevice);
             }
 
             Log.d(this.getClass().getSimpleName(), "[???] RSA Keys generated and saved");

@@ -213,7 +213,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 //DatabaseManager.INSTANCE.init(activity.getApplicationContext(), activity.getStorage(), userId);
                 Log.e(getClass().getSimpleName(), "DB-Manger hasn't been initialized");
             }
-
+            DatabaseManager.INSTANCE.setUserId(userId);
             //SharedPreferences devicePrefs = activity.getSharedPreferences(
             //        AbstractYasmeActivity.DEVICE_PREFS,
             //        AbstractYasmeActivity.MODE_PRIVATE);
