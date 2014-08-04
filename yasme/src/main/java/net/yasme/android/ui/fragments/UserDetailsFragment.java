@@ -60,7 +60,7 @@ public class UserDetailsFragment
 
     private TextView contactName;
     private TextView email;
-    private TextView number;
+    //private TextView number;
     private Button startChat;
     private Button addContact;
     private ImageButton mailButton;
@@ -117,7 +117,7 @@ public class UserDetailsFragment
         View layout = inflater.inflate(R.layout.fragment_user_details, container, false);
         contactName = (TextView) layout.findViewById(R.id.contact_header);
         email = (TextView) layout.findViewById(R.id.mailViewText);
-        number = (TextView) layout.findViewById(R.id.numberViewText);
+        //number = (TextView) layout.findViewById(R.id.numberViewText);
         startChat = (Button) layout.findViewById(R.id.contact_detail_newchat);
         addContact = (Button) layout.findViewById(R.id.contact_detail_addcontact);
         mailButton = (ImageButton) layout.findViewById(R.id.mail_image_button);
@@ -125,7 +125,7 @@ public class UserDetailsFragment
 
         contactName.setText(contact.getName());
         email.setText(contact.getEmail());
-        number.setText("");
+        //number.setText("");
 
         // Don't show button to add self to contacts
         if (selfUser.getId() == contact.getId()) {

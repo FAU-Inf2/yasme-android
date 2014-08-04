@@ -100,6 +100,7 @@
                 android:adjustViewBounds="false" />
         </TableRow>
 
+        <!--
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
@@ -141,7 +142,7 @@
                 android:focusableInTouchMode="false"
                 android:src="@android:drawable/ic_menu_call" />
         </TableRow>
-
+-->
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
