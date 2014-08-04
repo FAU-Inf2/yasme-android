@@ -89,8 +89,8 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
                     return LIKE;
                 case 1:
                     return MAIL;
-                case 2:
-                    return NUMBER;
+                //case 2:
+                //    return NUMBER;
             }
             return UNKNOWN;
         }
