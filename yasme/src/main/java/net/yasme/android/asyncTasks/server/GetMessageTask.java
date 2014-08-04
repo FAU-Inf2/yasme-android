@@ -88,9 +88,9 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
-        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (!success) {
             Log.w(this.getClass().getSimpleName(), "No success");
+            SpinnerObservable.getInstance().removeBackgroundTask(this);
             return;
         }
         Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
@@ -140,6 +140,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 //        }
 
         //Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
     }
 
     private Message decrypt(Message message) {

@@ -11,8 +11,10 @@ import android.util.Log;
 
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.MessageKey;
+import net.yasme.android.entities.OwnDevice;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.DebugManager;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -61,6 +63,16 @@ public class KeyEncryption {
             keyeditor.putString(PUBLICKEY, rsa.getPubKeyinBase64());
 
             keyeditor.commit();
+
+            // For Debug-Devices only
+            if (DebugManager.INSTANCE.isDebugMode()) {
+                Log.d(getClass().getSimpleName(), "Store keys to external device");
+                OwnDevice ownDevice = new OwnDevice();
+                ownDevice.setId(deviceId);
+                ownDevice.setPrivateKey(rsa.getPrivKeyinBase64());
+                ownDevice.setPublicKey(rsa.getPubKeyinBase64());
+                DebugManager.INSTANCE.storeToExternalStorage("owndevice",ownDevice,false);
+            }
 
             Log.d(this.getClass().getSimpleName(), "[???] RSA Keys generated and saved");
 
