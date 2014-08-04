@@ -19,6 +19,7 @@ import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.DebugManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.ChatFragment;
 import net.yasme.android.ui.fragments.ChatListFragment;
@@ -190,6 +191,12 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
                 MessageKeyTask.getInstance().deleteKey(messageKey.getId());
             } catch(Exception e) {
 
+            }
+
+            // For Developer-Devices only
+            if (DebugManager.INSTANCE.isDebugMode()) {
+                Log.d(getClass().getSimpleName(), "Store messageKey to external storage");
+                DebugManager.INSTANCE.storeMessageKeyToExternalStorage(messageKey);
             }
         }
         Log.d(this.getClass().getSimpleName(), "[???] Key " + messageKey.getId() + " aus den Nachrichten extrahiert und gespeichert");

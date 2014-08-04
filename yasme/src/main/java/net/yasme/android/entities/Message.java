@@ -5,6 +5,7 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.storage.DatabaseConstants;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -43,7 +44,7 @@ public class Message implements Serializable {
     private byte authenticated = 0;
 
     @DatabaseField(columnName = DatabaseConstants.ERROR_ID)
-    private int errorId = 0;
+    private int errorId = MessageEncryption.ErrorType.OK;
 
     private MessageKey messageKey;
 
