@@ -39,7 +39,7 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     private TextView searchText;
     private SimpleAdapter mAdapter;
 
-    private AtomicInteger bgTasksRunning = new AtomicInteger(0);
+    //private AtomicInteger bgTasksRunning = new AtomicInteger(0);
 
     ContactListContent contactListContent;
 
@@ -113,8 +113,8 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
         }else{
             contactListContent.clearItems();
             //new SearchUserTask(searchSpinner,searchText,contactListContent,mAdapter).execute();
-            getActivity().setProgressBarIndeterminateVisibility(true);
-            bgTasksRunning.incrementAndGet();
+            //getActivity().setProgressBarIndeterminateVisibility(true);
+            //bgTasksRunning.incrementAndGet();
             new SearchUserTask(SearchUserTask.SearchBy.getSearchBy(searchSpinner.getSelectedItemPosition()),searchText.getText().toString()).execute();
 
             // Hide keyboard
@@ -172,9 +172,9 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     @Override
     public void notifyFragment(ArrayList<User> userList) {
         Log.d(getClass().getSimpleName(),"SearchContactFragment has been notified!");
-        if (0 == bgTasksRunning.decrementAndGet()) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-        }
+        //if (0 == bgTasksRunning.decrementAndGet()) {
+        //    getActivity().setProgressBarIndeterminateVisibility(false);
+        //}
 
         if (userList != null && userList.size() != 0) {
             for (User u : userList) {

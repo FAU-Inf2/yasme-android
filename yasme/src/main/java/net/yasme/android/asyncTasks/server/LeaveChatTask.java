@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.ChatTask;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
@@ -61,6 +62,7 @@ public class LeaveChatTask extends AsyncTask<Long, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(Long... params) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         if(chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId()) {
             isOwner = true;
             return false;
@@ -76,6 +78,7 @@ public class LeaveChatTask extends AsyncTask<Long, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if(!success) {
             if (isOwner) {
                 new ChangeOwnerTask(chat).onPreExecute();

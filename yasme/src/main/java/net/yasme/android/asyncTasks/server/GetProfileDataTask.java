@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.connection.UserTask;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
@@ -17,6 +18,7 @@ public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
 
     User selfProfile;
     protected Boolean doInBackground(String... params) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         try {
             selfProfile = UserTask.getInstance().getUserData();
         } catch (RestServiceException e) {
@@ -27,6 +29,7 @@ public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
     }
 
     protected void onPostExecute(final Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if(!success) {
             return;
         }

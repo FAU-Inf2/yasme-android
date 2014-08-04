@@ -36,7 +36,7 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
     //The Adapter which will be used to populate the ListView/GridView with Views.
     private SimpleAdapter mAdapter;
 
-    private AtomicInteger bgTasksRunning = new AtomicInteger(0);
+    //private AtomicInteger bgTasksRunning = new AtomicInteger(0);
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -65,9 +65,9 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
                 new int[]{ android.R.id.text1, android.R.id.text2});
 
         // progress bar on
-        getActivity().setProgressBarIndeterminateVisibility(true);
+        //getActivity().setProgressBarIndeterminateVisibility(true);
 
-        bgTasksRunning.getAndIncrement();
+        //bgTasksRunning.getAndIncrement();
         new GetContactsTask().execute();
         //new GetAllUsersTask(this.getClass()).execute(); //TODO: delete GetAllUsersTask, if not needed anymore
     }
@@ -191,9 +191,9 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
         }
 
         // Stop spinner if this was the only background task
-        if (0 == bgTasksRunning.decrementAndGet()) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-        }
+        //if (0 == bgTasksRunning.decrementAndGet()) {
+        //    getActivity().setProgressBarIndeterminateVisibility(false);
+        //}
 
     }
 

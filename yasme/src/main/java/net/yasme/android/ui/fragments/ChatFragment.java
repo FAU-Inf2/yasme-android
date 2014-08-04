@@ -142,7 +142,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Log.d(this.getClass().getSimpleName(), "Received " + messages.size() + " messages");
 
         //progress bar off
-        getActivity().setProgressBarIndeterminateVisibility(false);
+        //getActivity().setProgressBarIndeterminateVisibility(false);
     }
 
     public Chat getChat() {
@@ -157,7 +157,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         }
 
         //progress bar on
-        getActivity().setProgressBarIndeterminateVisibility(true);
+        //getActivity().setProgressBarIndeterminateVisibility(true);
 
         // Send message and get new messages afterwards
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();

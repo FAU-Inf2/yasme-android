@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.UserDAO;
@@ -23,6 +24,7 @@ public class GetContactsTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... voids) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         contacts = userDao.getContacts();
         if(contacts == null) {
             return false;
@@ -32,6 +34,7 @@ public class GetContactsTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             // Notify
             ObservableRegistry.getObservable(InviteToChatFragment.class).

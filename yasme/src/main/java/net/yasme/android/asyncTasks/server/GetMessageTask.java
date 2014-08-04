@@ -9,6 +9,7 @@ import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.NewMessageNotificationManager;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.encryption.KeyEncryption;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
@@ -38,7 +39,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(Object... params) {
-
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         lastMessageId = DatabaseManager.INSTANCE.getSharedPreferences().getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
         try {
@@ -87,6 +88,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (!success) {
             Log.w(this.getClass().getSimpleName(), "No success");
             return;
