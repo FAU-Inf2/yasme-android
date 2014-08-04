@@ -48,6 +48,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     }
 
+    public static final String RESTORE_LATEST_MESSAGE_ON_DISPLAY = "LATEST_MESSAGE_ON_DISPLAY";
+    public static final String RESTORE_CHAT_ID = "CHAT_ID";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +87,20 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+
+        // Restore saved state if member variables are null
+        if (null != savedInstanceState && null == latestMessageOnDisplay) {
+            long latestMessageOnDisplayId = savedInstanceState.getLong(RESTORE_LATEST_MESSAGE_ON_DISPLAY);
+            latestMessageOnDisplay = new AtomicLong(latestMessageOnDisplayId);
+        }
+        if (null != savedInstanceState && null == chat) {
+            long chatId = savedInstanceState.getLong(RESTORE_CHAT_ID);
+            chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
+            if (null == chat) {
+                Log.e(this.getClass().getSimpleName(), "Oh no, looks like this chat has been deleted in the meantime");
+                return rootView;
+            }
+        }
 
         editMessage = (EditText) rootView.findViewById(R.id.text_message);
         list = (ListView) rootView.findViewById(R.id.chat_messageList);
@@ -125,6 +142,16 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Log.d(this.getClass().getSimpleName(), "Remove from observer");
         obs.remove(this);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        // Save states
+        savedInstanceState.putLong(RESTORE_LATEST_MESSAGE_ON_DISPLAY, latestMessageOnDisplay.get());
+        savedInstanceState.putLong(RESTORE_CHAT_ID, chat.getId());
+    }
+
 
     @Override
     public void notifyFragment(List<Message> messages) {

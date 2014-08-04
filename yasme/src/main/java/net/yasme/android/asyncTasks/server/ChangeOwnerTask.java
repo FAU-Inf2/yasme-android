@@ -114,7 +114,8 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if(success) {
             Toaster.getInstance().toast(R.string.change_successful, Toast.LENGTH_LONG);
-                new LeaveChatTask(chat).onPreExecute();
+            // this will fail!
+                new LeaveChatTask(chat, null).onPreExecute();
 
         } else {
             Toaster.getInstance().toast(R.string.change_not_successful, Toast.LENGTH_LONG);

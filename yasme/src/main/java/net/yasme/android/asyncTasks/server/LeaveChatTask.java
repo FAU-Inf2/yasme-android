@@ -1,5 +1,6 @@
 package net.yasme.android.asyncTasks.server;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,10 @@ import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.activities.ChatSettingsActivity;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by robert on 02.08.14.
@@ -21,40 +26,44 @@ public class LeaveChatTask extends AsyncTask<Long, Void, Boolean> {
     private Chat chat;
     private boolean isOwner = false;
     private Context context = DatabaseManager.INSTANCE.getContext();
+    private final WeakReference<Activity> activityWeakReference;
 
-    public LeaveChatTask(Chat chat) {
+    public LeaveChatTask(Chat chat, Activity activity) {
         this.chat = chat;
+        this.activityWeakReference = new WeakReference<>(activity);
     }
+
 
     @Override
     public void onPreExecute() {
         super.onPreExecute();
-        AlertDialog.Builder alert = new AlertDialog.Builder(context);
-        alert.setTitle(context.getString(R.string.alert_leave));
 
-        TextView text = new TextView(context);
-        text.setText(context.getString(R.string.alert_leave_message));
+        if (activityWeakReference.get() != null && !activityWeakReference.get().isFinishing()) {
+            AlertDialog alert = new AlertDialog.Builder(activityWeakReference.get()).create();
+            alert.setTitle(context.getString(R.string.alert_leave));
+            alert.setMessage(context.getString(R.string.alert_leave_message));
 
-        alert.setView(text);
+            alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
+                            execute();
+                        }
+            });
 
-        // "OK" button to save the values
-        alert.setPositiveButton(R.string.OK,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                        execute();
-                    }
-                }
-        );
-        // "Cancel" button
-        alert.setNegativeButton(R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.cancel();
-                    }
-                }
-        );
-        alert.show();
+            alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+            alert.show();
+
+        } else {
+            Log.w(this.getClass().getSimpleName(), "Activity has finished before message could be shown.");
+        }
     }
 
     /**
