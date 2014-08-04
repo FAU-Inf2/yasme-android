@@ -182,7 +182,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         //decrypt the key with RSA
         MessageKey messageKey = keyEncryption.decrypt(messageKeyEncrypted);
         // TODO: storeKeyToDatabase
-        if (DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(messageKey) != null) {
+        if (messageKey != null && DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(messageKey) != null) {
             try {
                 MessageKeyTask.getInstance().deleteKey(messageKey.getId());
             } catch(Exception e) {

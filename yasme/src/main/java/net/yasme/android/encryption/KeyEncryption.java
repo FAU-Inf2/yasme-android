@@ -99,6 +99,9 @@ public class KeyEncryption {
 
         if (privKey != null) {
             String key = rsa.decrypt(messageKey.getMessageKey(), privKey);
+            if (key == null) {
+                return null;
+            }
             messageKey.setKey(key);
             return messageKey;
         }

@@ -15,6 +15,10 @@ import javax.crypto.Cipher;
 
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
+
+import net.yasme.android.R;
+import net.yasme.android.controller.Toaster;
 
 public class RSAEncryption extends net.yasme.android.encryption.Base64 {
 
@@ -148,24 +152,19 @@ public class RSAEncryption extends net.yasme.android.encryption.Base64 {
 
     //decrypt
     public String decrypt(String encrypted, PrivateKey privKey) {
-        byte[] decrypted = null;
-
         try{
             byte[] encrypted_decode = base64Decode(encrypted);
             Cipher cipher = Cipher.getInstance(MODE);
             cipher.init(Cipher.DECRYPT_MODE, privKey);
-            decrypted = cipher.doFinal(encrypted_decode);
-
+            byte[] decrypted = cipher.doFinal(encrypted_decode);
             Log.d(this.getClass().getSimpleName(),"[???] RSA Decryption successful.");
-
-
             return new String(decrypted);
         } catch (Exception e){
-            Log.d(this.getClass().getSimpleName(),"[???] decrypt failed");
-            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
-            return "Couldn't be decrypted: "+ encrypted;
+            Log.d(this.getClass().getSimpleName(),"[???] Key-decryption failed: " + encrypted + " PrivKey: " + privKey.toString());
+            Log.d(this.getClass().getSimpleName(),"[???] " + e.getMessage());
+            Toaster.getInstance().toast(R.string.key_decryption_failed, Toast.LENGTH_LONG);
+            return null;
         }
-
     }
 
     public PublicKey convertBase64toPubKey(String base64){
