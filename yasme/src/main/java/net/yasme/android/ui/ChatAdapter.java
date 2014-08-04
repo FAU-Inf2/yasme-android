@@ -98,7 +98,8 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
         String text;
         if (msg.getErrorId() != 0) {
-            text = context.getResources().getString(msg.getErrorId()) + msg.getMessage();
+            //text = context.getResources().getString(msg.getErrorId()) + msg.getMessage();
+            text = context.getResources().getString(R.string.decryption_failed) + msg.getMessage();
         } else {
             text = msg.getMessage();
         }
