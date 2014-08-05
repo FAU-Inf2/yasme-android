@@ -44,7 +44,7 @@
         translatable="false">Contact</string>
     <string-array name="search_spinner_content">
         <item>Search By Name</item>
-        <item>Search By E-Mail</item>
+        <!--<item>Search By E-Mail</item>-->
         <!--<item>Search By Phone Number</item>-->
     </string-array>
     <string name="phone_number">Telephone number</string>

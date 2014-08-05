@@ -1,14 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_margin="15dp"
     tools:context=".ui.UserDetailsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/contact_header"
         android:textStyle="bold"
@@ -17,18 +17,36 @@
         android:layout_margin="5pt" />
 
 
-    <!--<ImageView
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/user_details_window"
-        android:id="@+id/imageView"
-        android:layout_column="0"
-        android:layout_gravity="left|top"
-        android:minHeight="20mm"
-        android:minWidth="20mm"
-        android:src="@android:drawable/ic_menu_camera"
-        android:layout_margin="2mm" />-->
+        android:layout_height="100dp"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="15dp">
 
+        <ImageView
+            android:id="@+id/contact_details_profile_picture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true" />
+
+        <TextView
+            android:id="@+id/contact_details_profile_picture_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/contact_details_profile_picture"
+            android:layout_alignRight="@+id/contact_details_profile_picture"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="1dp"
+            android:text="B"
+            android:textSize="80sp"
+            android:textColor="#FFFFFF" />
+    </RelativeLayout>
+
+
+    <!--
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,10 +81,11 @@
             android:adjustViewBounds="false" />
 
     </RelativeLayout>
+    -->
 
     <Button
         android:layout_marginTop="20px"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/contact_details_start_chat"
         android:id="@+id/contact_detail_newchat"
@@ -74,10 +93,11 @@
 
     <Button
         android:layout_marginTop="20px"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:text="@string/contact_details_add_contact"
         android:id="@+id/contact_detail_addcontact"
-        android:layout_gravity="center" />
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:singleLine="true"/>
 
 </LinearLayout>

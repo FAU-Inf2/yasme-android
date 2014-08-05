@@ -5,6 +5,8 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +30,7 @@ import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.ChatAdapter;
 import net.yasme.android.ui.activities.ChatActivity;
 
 import java.util.HashSet;
@@ -59,11 +63,12 @@ public class UserDetailsFragment
     private User selfUser;
 
     private TextView contactName;
-    private TextView email;
-    //private TextView number;
+    private ImageView profilePicture;
+    // private TextView email;
+    // private TextView number;
     private Button startChat;
     private Button addContact;
-    private ImageButton mailButton;
+    // private ImageButton mailButton;
     // private ImageButton numberButton;
     private UserDAO userDAO = DatabaseManager.INSTANCE.getUserDAO();
     private Context context = DatabaseManager.INSTANCE.getContext();
@@ -116,16 +121,25 @@ public class UserDetailsFragment
 
         View layout = inflater.inflate(R.layout.fragment_user_details, container, false);
         contactName = (TextView) layout.findViewById(R.id.contact_header);
-        email = (TextView) layout.findViewById(R.id.mailViewText);
+        profilePicture = (ImageView) layout.findViewById(R.id.contact_details_profile_picture);
+        // email = (TextView) layout.findViewById(R.id.mailViewText);
         //number = (TextView) layout.findViewById(R.id.numberViewText);
         startChat = (Button) layout.findViewById(R.id.contact_detail_newchat);
         addContact = (Button) layout.findViewById(R.id.contact_detail_addcontact);
-        mailButton = (ImageButton) layout.findViewById(R.id.mail_image_button);
+        // mailButton = (ImageButton) layout.findViewById(R.id.mail_image_button);
         // numberButton = (ImageButton) layout.findViewById(R.id.number_image_button);
 
         contactName.setText(contact.getName());
-        email.setText(contact.getEmail());
-        //number.setText("");
+        // email.setText(contact.getEmail());
+        // number.setText("");
+
+        // Show first letter of contact name as profile image
+        if (profilePicture != null) {
+            profilePicture.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) contact.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
+            TextView initial = (TextView) layout.findViewById(R.id.contact_details_profile_picture_text);
+            initial.setText(contact.getName().substring(0,1).toUpperCase());
+        }
+
 
         // Don't show button to add self to contacts
         if (selfUser.getId() == contact.getId()) {
@@ -136,8 +150,8 @@ public class UserDetailsFragment
             addContact.setOnClickListener(this);
         }
 
-        mailButton.setOnClickListener(this);
-        //numberButton.setOnClickListener(this);
+        // mailButton.setOnClickListener(this);
+        // numberButton.setOnClickListener(this);
 
         if (!getArguments().getBoolean(ARG_CONTACTBUTTON)) {
             addContact.setVisibility(View.GONE);
@@ -146,11 +160,11 @@ public class UserDetailsFragment
         return layout;
     }
 
-    public void onButtonPressed(String s) {
-        if (mListener != null) {
-            mListener.onDetailsFragmentInteraction(contact, 0);
-        }
-    }
+//    public void onButtonPressed(String s) {
+//        if (mListener != null) {
+//            mListener.onDetailsFragmentInteraction(contact, 0);
+//        }
+//    }
 
 
     @Override
@@ -210,9 +224,9 @@ public class UserDetailsFragment
                 this.dismiss();
                 break;
 
-            case R.id.mail_image_button:
-                this.sendMail(contact.getEmail());
-                break;
+            //case R.id.mail_image_button:
+            //    this.sendMail(contact.getEmail());
+            //    break;
             //case R.id.number_image_button:
             //    break;
         }

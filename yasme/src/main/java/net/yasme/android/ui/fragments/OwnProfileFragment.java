@@ -82,7 +82,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         //imageButton.setOnClickListener(this);
 
         // TODO Load profile image into imageButton area as AsyncTask
-        Drawable profilePicture = null;
+       //Drawable profilePicture = null;
        /*
         try {
             profilePicture = UserTask.getInstance().getProfilePicture(u.getId());
