@@ -50,7 +50,8 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
             public int compare(Object o, Object o2) {
                 Chat c1 = (Chat) o;
                 Chat c2 = (Chat) o2;
-                return c1.getLastModified().compareTo(c2.getLastModified());
+                //return -1*(c1.getMessages().get(c1.getMessages().size()).getDateSent().compareTo(c2.getMessages().get(c2.getMessages().size()).getDateSent()));
+                return -1*(c1.getLastModified().compareTo(c2.getLastModified()));
             }
         });
         super.notifyDataSetChanged();

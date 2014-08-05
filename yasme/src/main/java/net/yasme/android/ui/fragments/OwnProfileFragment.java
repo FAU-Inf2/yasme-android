@@ -39,11 +39,9 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
     private TextView name;
     private TextView email;
-    private TextView number;
+    //private TextView number;
 
     //private ImageButton imageButton;
-
-    private static int RESULT_LOAD_IMAGE = 1;
 
     private OnOwnProfileFragmentInteractionListener mListener;
 
@@ -65,14 +63,13 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         View layout = inflater.inflate(R.layout.fragment_own_profile, container, false);
 
         name = (TextView) layout.findViewById(R.id.own_contact_header);
         email = (TextView) layout.findViewById(R.id.own_mailViewText);
-        number = (TextView) layout.findViewById(R.id.own_numberViewText);
+        //number = (TextView) layout.findViewById(R.id.own_numberViewText);
 
         //imageButton = (ImageButton) layout.findViewById(R.id.own_imageButton);
 
@@ -80,7 +77,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
         name.setText(u.getName());
         email.setText(u.getEmail());
-        number.setText("");
+        // number.setText("");
 
         //imageButton.setOnClickListener(this);
 

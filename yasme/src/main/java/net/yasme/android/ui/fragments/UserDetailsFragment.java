@@ -60,11 +60,11 @@ public class UserDetailsFragment
 
     private TextView contactName;
     private TextView email;
-    private TextView number;
+    //private TextView number;
     private Button startChat;
     private Button addContact;
     private ImageButton mailButton;
-    private ImageButton numberButton;
+    // private ImageButton numberButton;
     private UserDAO userDAO = DatabaseManager.INSTANCE.getUserDAO();
     private Context context = DatabaseManager.INSTANCE.getContext();
 
@@ -117,15 +117,15 @@ public class UserDetailsFragment
         View layout = inflater.inflate(R.layout.fragment_user_details, container, false);
         contactName = (TextView) layout.findViewById(R.id.contact_header);
         email = (TextView) layout.findViewById(R.id.mailViewText);
-        number = (TextView) layout.findViewById(R.id.numberViewText);
+        //number = (TextView) layout.findViewById(R.id.numberViewText);
         startChat = (Button) layout.findViewById(R.id.contact_detail_newchat);
         addContact = (Button) layout.findViewById(R.id.contact_detail_addcontact);
         mailButton = (ImageButton) layout.findViewById(R.id.mail_image_button);
-        numberButton = (ImageButton) layout.findViewById(R.id.number_image_button);
+        // numberButton = (ImageButton) layout.findViewById(R.id.number_image_button);
 
         contactName.setText(contact.getName());
         email.setText(contact.getEmail());
-        number.setText("");
+        //number.setText("");
 
         // Don't show button to add self to contacts
         if (selfUser.getId() == contact.getId()) {
@@ -137,7 +137,7 @@ public class UserDetailsFragment
         }
 
         mailButton.setOnClickListener(this);
-        numberButton.setOnClickListener(this);
+        //numberButton.setOnClickListener(this);
 
         if (!getArguments().getBoolean(ARG_CONTACTBUTTON)) {
             addContact.setVisibility(View.GONE);
@@ -198,12 +198,9 @@ public class UserDetailsFragment
 
                 // Add to contacts, but don't show toasts
                 addToContacts(contact, false);
-
-                // TODO
-                Log.d(this.getClass().getSimpleName(), "Create New Chat");
                 Set<User> selectedUsers = new HashSet<>();
                 selectedUsers.add(contact);
-                this.dismiss();
+                // Don't dismiss. Wait until you're notified and than go to the chat view
                 new CreateChatTask(selfUser, selectedUsers).execute();
                 break;
 
@@ -216,8 +213,8 @@ public class UserDetailsFragment
             case R.id.mail_image_button:
                 this.sendMail(contact.getEmail());
                 break;
-            case R.id.number_image_button:
-                break;
+            //case R.id.number_image_button:
+            //    break;
         }
 
     }
@@ -240,7 +237,7 @@ public class UserDetailsFragment
 
         contact.addToContacts();
         userDAO.addOrUpdate(contact);
-        Log.d(this.getClass().getSimpleName(), "contactAdded");
+        Log.d(this.getClass().getSimpleName(), "contact added");
 
         if (showToast) {
             String toast = contact.getName() + " " + context.getText(R.string.contact_added_success) + ".";
@@ -255,12 +252,13 @@ public class UserDetailsFragment
     private void sendMail(String email) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-        i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
-        i.putExtra(Intent.EXTRA_TEXT, "Message powered by YASME");
+        i.putExtra(Intent.EXTRA_EMAIL, new String[] { email });
+        i.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.contact_details_email_default_subject));
+        i.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.contact_details_email_default_body));
         try {
-            startActivity(Intent.createChooser(i, "Send mail..."));
+            startActivity(Intent.createChooser(i, context.getString(R.string.contact_details_compose_email_action)));
         } catch (android.content.ActivityNotFoundException ex) {
+            Log.e(this.getClass().getSimpleName(), ex.getMessage());
             ex.printStackTrace();
         }
 
@@ -323,21 +321,16 @@ public class UserDetailsFragment
     public static class UserDetailsParam extends UserDetailsFragmentParam {
         private Boolean success;
         private Long userId;
-        private String accessToken;
 
-        public UserDetailsParam(Boolean success, Long userId, String accessToken) {
+        public UserDetailsParam(Boolean success, Long userId) {
             this.success = success;
             this.userId = userId;
-            this.accessToken = accessToken;
         }
 
         public Long getUserId() {
             return userId;
         }
 
-        public String getAccessToken() {
-            return accessToken;
-        }
 
         public Boolean getSuccess() {
             return success;

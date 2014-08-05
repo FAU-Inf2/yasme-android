@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.ChatTask;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.exception.RestServiceException;
@@ -27,6 +28,7 @@ public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(String... params) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         try {
             ChatTask.getInstance().updateChat(chat);
         } catch (RestServiceException e) {
@@ -42,6 +44,7 @@ public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
      *
      */
     protected void onPostExecute(final Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if(success) {
             Toaster.getInstance().toast(R.string.change_successful, Toast.LENGTH_LONG);
         } else {

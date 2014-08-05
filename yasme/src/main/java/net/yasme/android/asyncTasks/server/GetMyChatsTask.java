@@ -79,14 +79,15 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
-        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (!success) {
             Log.w(this.getClass().getSimpleName(), "failed");
+            SpinnerObservable.getInstance().removeBackgroundTask(this);
             return;
         }
 
         Log.i(this.getClass().getSimpleName(), "success");
         ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(chatsToReturn);
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
     }
 
     private boolean refresh(List<Chat> serverChats) {

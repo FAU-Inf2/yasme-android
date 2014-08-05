@@ -42,7 +42,7 @@
     <string-array name="search_spinner_content">
         <item>Nach Namen suchen</item>
         <item>Nach E-Mail suchen</item>
-        <item>Nach Telefonnummer suchen</item>
+        <!--<item>Nach Telefonnummer suchen</item>-->
     </string-array>
     <string name="phone_number">Telefonnummer</string>
     <string name="contact_added_success">wurde erfolgreich als Kontakt hinzugefügt</string>
@@ -50,6 +50,15 @@
     <string name="search_no_results">Keine Ergebnisse</string>
     <string name="empty_contacts">Du hast noch keine Kontakte. Drücke hier, um neue Kontakte zu finden.</string>
     <string name="empty_contacts_swipe">Du hast noch keine Kontakte. Streiche nach links, um neue Kontakte zu finden.</string>
+
+    <!-- Contact details -->
+    <string name="contact_details_start_chat">Chat!</string>
+    <string name="contact_details_add_contact">Zu Kontakten hinzufügen</string>
+    <string name="contact_details_email">E-Mail</string>
+    <string name="contact_details_email_default">Keine E-Mail-Adresse</string>
+    <string name="contact_details_compose_email_action">E-Mail verfassen...</string>
+    <string name="contact_details_email_default_subject"></string>
+    <string name="contact_details_email_default_body"></string>
 
     <!-- Settings -->
     <string name="action_settings">Einstellungen</string>

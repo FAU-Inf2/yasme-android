@@ -1,175 +1,83 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="15dp"
     tools:context=".ui.UserDetailsFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TableLayout
+    <TextView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/user_details_window">
+        android:layout_height="wrap_content"
+        android:text="@string/contact_header"
+        android:textStyle="bold"
+        android:textSize="16pt"
+        android:id="@+id/contact_header"
+        android:layout_margin="5pt" />
 
-        <TableRow
-            android:layout_height="20mm"
-            android:layout_width="match_parent"
-            android:background="@color/user_details_window">
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:text="@string/contact_header"
-                android:textStyle="bold"
-                android:textSize="16pt"
-                android:id="@+id/contact_header"
-                android:layout_margin="5pt"
-                android:layout_span="5" />
-        </TableRow>
 
-        <TableRow
-            android:layout_height="20mm"
-            android:layout_width="match_parent">
+    <!--<ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/user_details_window"
+        android:id="@+id/imageView"
+        android:layout_column="0"
+        android:layout_gravity="left|top"
+        android:minHeight="20mm"
+        android:minWidth="20mm"
+        android:src="@android:drawable/ic_menu_camera"
+        android:layout_margin="2mm" />-->
 
-        </TableRow>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="@string/contact_details_email"
+        android:id="@+id/mailView"
+        android:textSize="8pt" />
 
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@color/user_details_window"></TableRow>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" >
 
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@color/user_details_window">
+        <TextView
+            android:layout_gravity="center"
+            android:layout_alignParentLeft="true"
+            android:text="@string/contact_details_email_default"
+            android:id="@+id/mailViewText"
+            android:textSize="10pt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/user_details_window"
-                android:id="@+id/imageView"
-                android:layout_column="0"
-                android:layout_gravity="left|top"
-                android:minHeight="20mm"
-                android:minWidth="20mm"
-                android:src="@android:drawable/ic_menu_camera"
-                android:layout_margin="2mm" />
-        </TableRow>
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:id="@+id/mail_image_button"
+            android:layout_gravity="center"
+            android:layout_alignParentRight="true"
+            android:src="@android:drawable/ic_dialog_email"
+            android:adjustViewBounds="false" />
 
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"></TableRow>
+    </RelativeLayout>
 
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"></TableRow>
+    <Button
+        android:layout_marginTop="20px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/contact_details_start_chat"
+        android:id="@+id/contact_detail_newchat"
+        android:layout_gravity="center" />
 
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+    <Button
+        android:layout_marginTop="20px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/contact_details_add_contact"
+        android:id="@+id/contact_detail_addcontact"
+        android:layout_gravity="center" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="E-Mail:"
-                android:id="@+id/mailView"
-                android:layout_column="0"
-                android:textSize="8pt"
-                android:textColor="#ff6e37d2"
-                android:layout_marginLeft="2mm"
-                android:layout_marginTop="4mm"
-                android:layout_marginRight="2mm" />
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Contact Mail"
-                android:id="@+id/mailViewText"
-                android:layout_column="0"
-                android:textSize="10pt"
-                android:layout_marginLeft="4mm"
-                android:layout_marginTop="0.5mm"
-                android:layout_marginRight="30pt" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/mail_image_button"
-                android:layout_column="5"
-                android:src="@android:drawable/ic_dialog_email"
-                android:adjustViewBounds="false" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/phone_number"
-                android:textAlignment="center"
-                android:id="@+id/numberView"
-                android:layout_column="0"
-                android:textSize="8pt"
-                android:textColor="#ff6e37d2"
-                android:layout_marginLeft="2mm"
-                android:layout_marginTop="4mm"
-                android:layout_marginRight="2mm" />
-
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Contact Number"
-                android:id="@+id/numberViewText"
-                android:layout_column="0"
-                android:textSize="10pt"
-                android:layout_marginLeft="4mm"
-                android:layout_marginTop="0.5mm"
-                android:layout_marginRight="30pt"
-                android:layout_marginBottom="5mm"
-                android:textAlignment="center" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/number_image_button"
-                android:layout_column="5"
-                android:focusableInTouchMode="false"
-                android:src="@android:drawable/ic_menu_call" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Chat"
-                android:id="@+id/contact_detail_newchat"
-                android:layout_column="0"
-                android:layout_span="6"
-                android:layout_marginLeft="2mm" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Contact"
-                android:id="@+id/contact_detail_addcontact"
-                android:layout_column="0"
-                android:layout_span="6"
-                android:layout_marginLeft="2mm" />
-        </TableRow>
-
-    </TableLayout>
-
-</FrameLayout>
+</LinearLayout>

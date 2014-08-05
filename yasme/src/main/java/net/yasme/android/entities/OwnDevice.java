@@ -22,6 +22,7 @@ public class OwnDevice {
     private User user;
     private String number;  // optional
     private String publicKey;
+    private String privateKey;
     private String product; // product name e.g. Google Nexux 5
     private String pushId;
 
@@ -117,5 +118,13 @@ public class OwnDevice {
 
     public Date getLastModified() {
         return this.lastModified;
+    }
+
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
     }
 }

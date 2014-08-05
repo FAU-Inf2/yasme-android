@@ -7,6 +7,7 @@ import android.util.Log;
 import net.yasme.android.connection.UserTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.fragments.ChatListFragment;
@@ -23,6 +24,7 @@ public class GetProfilePictureTask extends AsyncTask<String, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(String... params) {
+            SpinnerObservable.getInstance().registerBackgroundTask(this);
             long userId = Long.parseLong(params[0]);
 
             try {
@@ -37,6 +39,7 @@ public class GetProfilePictureTask extends AsyncTask<String, Void, Boolean> {
 
         @Override
         protected void onPostExecute(Boolean success) {
+            SpinnerObservable.getInstance().removeBackgroundTask(this);
             if (success && null != profilePicture) {
                 // Notify registered fragments
                 FragmentObservable<OwnProfileFragment, Drawable> obs = ObservableRegistry.getObservable(ChatListFragment.class);

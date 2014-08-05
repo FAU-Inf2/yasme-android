@@ -104,7 +104,7 @@ public class MessageEncryption {
         MessageKey messageKey = getKey(message.getMessageKeyId());
         if (messageKey == null) {
             message.setMessage("");
-            message.setErrorId(R.string.decryption_failed);
+            message.setErrorId(ErrorType.DECRYPTION_FAILED);
             return message;
         }
         AESEncryption aes = new AESEncryption(messageKey);
@@ -113,7 +113,7 @@ public class MessageEncryption {
         //is the message successfully authenticated?
         message.setAuthenticity(messageKey.getAuthenticity());
         if (message.getErrorId() == 0 && !messageKey.getAuthenticity()) {
-            message.setErrorId(R.string.authentication_failed);
+            message.setErrorId(ErrorType.AUTHENTICATION_FAILED);
         }
 
         return message;
@@ -203,6 +203,12 @@ public class MessageEncryption {
             Log.d(this.getClass().getSimpleName(),"Fail to send key: "+e.getMessage());
             return null;
         }
+    }
+
+    public static class ErrorType {
+        public static final int OK = 0;
+        public static final int DECRYPTION_FAILED = 10;
+        public static final int AUTHENTICATION_FAILED = 20;
     }
 }
 

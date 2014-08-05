@@ -19,6 +19,7 @@ import net.yasme.android.asyncTasks.server.SendMessageTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseManager;
@@ -47,6 +48,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     public ChatFragment() {
 
     }
+
+    public static final String RESTORE_LATEST_MESSAGE_ON_DISPLAY = "LATEST_MESSAGE_ON_DISPLAY";
+    public static final String RESTORE_CHAT_ID = "CHAT_ID";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,20 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+
+        // Restore saved state if member variables are null
+        if (null != savedInstanceState && null == latestMessageOnDisplay) {
+            long latestMessageOnDisplayId = savedInstanceState.getLong(RESTORE_LATEST_MESSAGE_ON_DISPLAY);
+            latestMessageOnDisplay = new AtomicLong(latestMessageOnDisplayId);
+        }
+        if (null != savedInstanceState && null == chat) {
+            long chatId = savedInstanceState.getLong(RESTORE_CHAT_ID);
+            chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
+            if (null == chat) {
+                Log.e(this.getClass().getSimpleName(), "Oh no, looks like this chat has been deleted in the meantime");
+                return rootView;
+            }
+        }
 
         editMessage = (EditText) rootView.findViewById(R.id.text_message);
         list = (ListView) rootView.findViewById(R.id.chat_messageList);
@@ -127,6 +145,16 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        // Save states
+        savedInstanceState.putLong(RESTORE_LATEST_MESSAGE_ON_DISPLAY, latestMessageOnDisplay.get());
+        savedInstanceState.putLong(RESTORE_CHAT_ID, chat.getId());
+    }
+
+
+    @Override
     public void notifyFragment(List<Message> messages) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         if(messages == null) {
@@ -142,7 +170,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Log.d(this.getClass().getSimpleName(), "Received " + messages.size() + " messages");
 
         //progress bar off
-        getActivity().setProgressBarIndeterminateVisibility(false);
+        //getActivity().setProgressBarIndeterminateVisibility(false);
     }
 
     public Chat getChat() {
@@ -157,7 +185,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         }
 
         //progress bar on
-        getActivity().setProgressBarIndeterminateVisibility(true);
+        //getActivity().setProgressBarIndeterminateVisibility(true);
 
         // Send message and get new messages afterwards
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
@@ -191,7 +219,23 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             latestMessageOnDisplay.set(newLatestMessageOnDisplay);
         }
 
-        mAdapter.addAll(newMessages);
+        int count = 0;
+        ArrayList<Message> newNewMessages = new ArrayList<>();
+        for (int i = 0; i < newMessages.size(); i++) {
+            Message msg = newMessages.get(i);
+            if (msg.getErrorId() == MessageEncryption.ErrorType.DECRYPTION_FAILED) {
+                count++;
+                if (i >= newMessages.size() - 1 || newMessages.get(i+1).getErrorId() != MessageEncryption.ErrorType.DECRYPTION_FAILED) {
+                    msg.setMessage(String.valueOf(count) + " " + getResources().getString(R.string.decryption_failed));
+                    msg.setErrorId(0);
+                    newNewMessages.add(msg);
+                }
+            } else {
+                newNewMessages.add(msg);
+            }
+        }
+
+        mAdapter.addAll(newNewMessages);
         editMessage.requestFocus();
     }
 

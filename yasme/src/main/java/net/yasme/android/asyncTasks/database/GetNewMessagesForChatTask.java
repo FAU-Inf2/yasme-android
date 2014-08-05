@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.MessageDAO;
@@ -28,7 +29,7 @@ public class GetNewMessagesForChatTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         messages = messageDao.getNewMessagesByChat(chatId, latestMessageId);
         if(messages == null) {
             return false;
@@ -38,6 +39,7 @@ public class GetNewMessagesForChatTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             // Notify
             ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
