@@ -60,53 +60,37 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        //ChatHolder holder = null;
-        /*
-        if(row == null)
-        {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
+	ChatListViewHolder holder;
+	LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+	if (convertView == null) {
+		row = inflater.inflate(layoutResourceId, parent, false);
+		holder = new ChatListViewHolder();
+		holder.titleView = (TextView)row.findViewById(R.id.chatlist_item_title);
+		holder.subtitleView = (TextView)row.findViewById(R.id.chatlist_item_subtitle);
+		holder.lastMessageView = (TextView)row.findViewById(R.id.chatlist_item_last_message);
+		holder.chatpartnerList = (LinearLayout) row.findViewById(R.id.chatpartner);  
+		holder.moreUsers = (TextView) row.findViewById(R.id.chatlist_more_users);
 
-            holder = new ChatHolder();
-            holder.iconView = (ImageView)row.findViewById(R.id.chatlist_item_icon);
-            holder.titleView = (TextView)row.findViewById(R.id.chatlist_item_title);
-            holder.subtitleView = (TextView)row.findViewById(R.id.chatlist_item_subtitle);
-
-            row.setTag(holder);
-        }
-        else
-        {
-            holder = (ChatHolder)row.getTag();
-        }
+		row.setTag(holder);
+	} else {
+		holder = (ChatListViewHolder) convertView.getTag();
+	}
+        holder.lastMessageView.setVisibility(View.GONE);
 
         Chat chat = chats.get(position);
+
         holder.titleView.setText(chat.getName());
-        holder.subtitleView.setText(chat.getNumberOfParticipants() + " Teilnehmer");
-        holder.iconView.setImageResource(R.drawable.ic_action_cc_bcc);
-        */
-
-        LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-        row = inflater.inflate(layoutResourceId, parent, false);
-
-        TextView titleView = (TextView)row.findViewById(R.id.chatlist_item_title);
-        TextView subtitleView = (TextView)row.findViewById(R.id.chatlist_item_subtitle);
-        TextView lastMessageView = (TextView)row.findViewById(R.id.chatlist_item_last_message);
-        lastMessageView.setVisibility(View.GONE);
-
-        Chat chat = chats.get(position);
-
-        titleView.setText(chat.getName());
-        subtitleView.setText(chat.getStatus());
+        holder.subtitleView.setText(chat.getStatus());
 
         Message lastMessage = DatabaseManager.INSTANCE.getMessageDAO().
                 getNewestMessageOfChat(chat.getId());
         if(!lastMessage.getMessage().isEmpty()) {
-            lastMessageView.setText(lastMessage.getSender().getName()
+            holder.lastMessageView.setText(lastMessage.getSender().getName()
                     + ": " + lastMessage.getMessage());
-            lastMessageView.setVisibility(View.VISIBLE);
+            holder.lastMessageView.setVisibility(View.VISIBLE);
         }
 
-	LinearLayout chatpartnerList = (LinearLayout) row.findViewById(R.id.chatpartner);  
+	holder.chatpartnerList.removeAllViews(); // TODO: also recycle these
 	ArrayList<User> users = chat.getParticipants();
 	for (int i = 0; i < users.size() && i < CHATPARTNER_VISIBLE_CNT; i++) {  
 		// TODO: skip self
@@ -116,27 +100,16 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 		img.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int)users.get(i).getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
 		TextView text = (TextView) chatpartner.findViewById(R.id.chatpartner_picture_text);  
 		text.setText(users.get(i).getName().substring(0,1));
-		chatpartnerList.addView(chatpartner);  
+		holder.chatpartnerList.addView(chatpartner);  
 	} 
-	TextView moreUsers = (TextView) row.findViewById(R.id.chatlist_more_users);  
 	if (users.size() > CHATPARTNER_VISIBLE_CNT) {
-		moreUsers.setText("and " + (users.size() - CHATPARTNER_VISIBLE_CNT) + " more...");
+		holder.moreUsers.setText("and " + (users.size() - CHATPARTNER_VISIBLE_CNT) + " more...");
 	} else {
-		moreUsers.setVisibility(View.GONE);
+		holder.moreUsers.setVisibility(View.GONE);
 	}
-
-        row.setTag(chat.getId());
 
         return row;
     }
-    /*
-    static class ChatHolder
-    {
-        ImageView iconView;
-        TextView titleView;
-        TextView subtitleView;
-    }
-    */
 
     public void updateChats(List<Chat> updatedChats) {
         // This:
@@ -148,4 +121,10 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         }
         Log.d(this.getClass().getSimpleName(), "Chats updated: " + this.chats.size());
     }
+
+    static class ChatListViewHolder {
+	    TextView titleView, subtitleView, lastMessageView, moreUsers;
+	    LinearLayout chatpartnerList;
+    }
 }
+
