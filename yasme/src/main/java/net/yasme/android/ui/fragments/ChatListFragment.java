@@ -17,10 +17,12 @@ import net.yasme.android.asyncTasks.server.GetMessageTask;
 import net.yasme.android.asyncTasks.server.GetMyChatsTask;
 import net.yasme.android.asyncTasks.server.GetProfileDataTask;
 import net.yasme.android.asyncTasks.server.LeaveChatTask;
+import net.yasme.android.connection.AuthorizationTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.ui.AbstractYasmeActivity;
@@ -30,6 +32,8 @@ import net.yasme.android.ui.activities.ChatSettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by martin on 21.06.2014.
@@ -165,5 +169,20 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
             //progress bar off
             //getActivity().setProgressBarIndeterminateVisibility(false);
         }
+    }
+
+    private void startAlarm() {
+        Timer timer = new Timer("outDatedServerCall");
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    AuthorizationTask.getInstance().outdated();
+                } catch (RestServiceException e) {
+                    Log.e(this.getClass().getSimpleName(), e.getMessage());
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(task, 0, 86400000);
     }
 }

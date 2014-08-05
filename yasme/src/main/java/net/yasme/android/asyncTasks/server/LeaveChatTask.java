@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.ChatTask;
@@ -14,8 +13,6 @@ import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.ui.AbstractYasmeActivity;
-import net.yasme.android.ui.activities.ChatSettingsActivity;
 
 import java.lang.ref.WeakReference;
 
@@ -23,10 +20,10 @@ import java.lang.ref.WeakReference;
  * Created by robert on 02.08.14.
  */
 public class LeaveChatTask extends AsyncTask<Long, Void, Boolean> {
+    private final WeakReference<Activity> activityWeakReference;
     private Chat chat;
     private boolean isOwner = false;
     private Context context = DatabaseManager.INSTANCE.getContext();
-    private final WeakReference<Activity> activityWeakReference;
 
     public LeaveChatTask(Chat chat, Activity activity) {
         this.chat = chat;
@@ -49,6 +46,7 @@ public class LeaveChatTask extends AsyncTask<Long, Void, Boolean> {
                             dialog.dismiss();
                             // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
                             execute();
+                            dialog.dismiss();
                         }
             });
 

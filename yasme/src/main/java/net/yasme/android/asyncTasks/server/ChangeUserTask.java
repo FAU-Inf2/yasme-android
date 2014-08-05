@@ -34,7 +34,7 @@ public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
         switch(params[1].intValue()) {
             case 0:
                 try {
-                    ChatTask.getInstance().removePartipantFromChat(params[0], chat.getId());
+                    ChatTask.getInstance().removeParticipantFromChat(params[0], chat.getId());
                 } catch (RestServiceException e) {
                     Log.w(this.getClass().getSimpleName(), e.getMessage());
                     return false;

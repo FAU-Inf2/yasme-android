@@ -173,7 +173,7 @@ public class InviteToChatFragment
         intent.putExtra(activity.CHAT_ID, chatId);
         intent.putExtra(activity.USER_NAME, activity.getSelfUser().getName());
         startActivity(intent);
-        //getActivity().finish();
+        getActivity().finish();
     }
 
     @Override

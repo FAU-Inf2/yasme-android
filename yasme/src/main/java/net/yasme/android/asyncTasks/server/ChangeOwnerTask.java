@@ -75,8 +75,8 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
                         if(position != AdapterView.INVALID_POSITION) {
                             Long newUserId = chat.getParticipants().
                                     get(position).getId();
-                            dialog.cancel();
                             execute(newUserId);
+                            dialog.dismiss();
                         }
                     }
                 }

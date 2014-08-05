@@ -27,9 +27,9 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         chat = (Chat) bundle.getSerializable("chat");
-        super.onCreate(savedInstanceState);
     }
 
     @Override

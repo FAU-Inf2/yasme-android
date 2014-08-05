@@ -103,6 +103,13 @@ public class Chat implements Serializable {
         return id;
     }
 
+    /**
+     * Setters *
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @JsonIgnoreProperties({ "pw", "email", "name", "devices", "lastModified", "created" })
     public ArrayList<User> getParticipants() {
         if (participants == null) {
@@ -115,11 +122,19 @@ public class Chat implements Serializable {
         return new ArrayList<User>(participants);
     }
 
+    public void setParticipants(List<User> participants) {
+        this.participants = participants;
+    }
+
     public String getStatus() {
         if(status == null || status.isEmpty()) {
             return (getNumberOfParticipants() + " Teilnehmer");
         }
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @JsonProperty("name")
@@ -131,7 +146,11 @@ public class Chat implements Serializable {
         try {
             int size = getParticipants().size();
             for (int i = 0; i < size; i++) {
-                returnName += getParticipants().get(i).getName();
+                //long selfId = DatabaseManager.INSTANCE.getUserId();
+                //if(selfId == participants.get(i).getId()) {
+                //    continue;
+                //}
+                returnName += participants.get(i).getName();
                 if(i < size - 1) {
                     returnName += ", ";
                 }
@@ -142,16 +161,32 @@ public class Chat implements Serializable {
         return returnName;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Date getLastModified() {
         return lastModified;
+    }
+
+    public void setLastModified(Timestamp lastModified) {
+        this.lastModified = lastModified;
     }
 
     public Date getCreated() {
         return created;
     }
 
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
     public String getProfilePicture() {
         return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     @JsonIgnoreProperties({ "pw", "email", "name", "devices", "lastModified", "created" })
@@ -160,6 +195,10 @@ public class Chat implements Serializable {
             owner = new User("Dummy", 12);
         }
         return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     @JsonIgnore
@@ -178,47 +217,12 @@ public class Chat implements Serializable {
         return new ArrayList<Message>(messages);
     }
 
-    /**
-     * Setters *
-     */
-    public void setId(long id) {
-        this.id = id;
+    public void setMessages(ArrayList<Message> messages) {
+        this.messages = messages;
     }
 
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
-    }
-
-    public void setParticipants(List<User> participants) {
-        this.participants = participants;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public void setLastModified(Timestamp lastModified) {
-        this.lastModified = lastModified;
-    }
-
-    public void setCreated(Timestamp created) {
-        this.created = created;
-    }
-
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
-
-    public void setMessages(ArrayList<Message> messages) {
-        this.messages = messages;
     }
 
     /**

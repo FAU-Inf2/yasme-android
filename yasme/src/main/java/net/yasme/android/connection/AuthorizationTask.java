@@ -9,6 +9,9 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
 /**
@@ -19,6 +22,14 @@ public class AuthorizationTask extends ConnectionTask {
 
     private static AuthorizationTask instance;
 
+    private AuthorizationTask() {
+        try {
+            this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/sign").build();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static AuthorizationTask getInstance() {
         if (instance == null) {
             synchronized(AuthorizationTask.class) {
@@ -28,14 +39,6 @@ public class AuthorizationTask extends ConnectionTask {
             }
         }
         return instance;
-    }
-
-    private AuthorizationTask() {
-        try {
-            this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/sign").build();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
     }
 
     public String[] loginUser(User user) throws RestServiceException {
@@ -53,5 +56,18 @@ public class AuthorizationTask extends ConnectionTask {
             throws RestServiceException {
         executeRequest(Request.POST, "out");
         Log.d(this.getClass().getSimpleName(),"Signed out successful");
+    }
+
+    public String outdated() throws RestServiceException {
+        HttpResponse response = executeRequest(Request.GET, "sendInfoToClient");
+        String answer = "";
+        try {
+            answer = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
+                    .readLine();
+        } catch (IOException e) {
+            Log.d(this.getClass().getSimpleName(), e.getMessage());
+        }
+        Log.d(this.getClass().getSimpleName(), "is device outdated");
+        return answer;
     }
 }

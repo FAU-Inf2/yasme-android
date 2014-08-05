@@ -2,6 +2,8 @@ package net.yasme.android.connection;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Device;
 import net.yasme.android.exception.Error;
@@ -9,7 +11,6 @@ import net.yasme.android.exception.RestServiceException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +30,15 @@ public class ChatTask extends ConnectionTask {
 
     private static ChatTask instance;
 
+    private ChatTask() {
+
+        try {
+            this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/chat").build();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static ChatTask getInstance() {
         if (instance == null) {
             synchronized(ChatTask.class) {
@@ -38,15 +48,6 @@ public class ChatTask extends ConnectionTask {
             }
         }
         return instance;
-    }
-
-    private ChatTask() {
-
-        try {
-            this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/chat").build();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
     }
 
     public List<Chat> getAllChatsForUser() throws RestServiceException {
@@ -150,7 +151,7 @@ public class ChatTask extends ConnectionTask {
         Log.d(this.getClass().getSimpleName(),"Owner changed");
     }
 
-    public void removePartipantFromChat(long participantId, long chatId)
+    public void removeParticipantFromChat(long participantId, long chatId)
             throws RestServiceException {
         String path = "par/" + participantId + "/" + chatId;
         executeRequest(Request.DELETE, path);
