@@ -105,6 +105,7 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 	} 
 	if (users.size() > CHATPARTNER_VISIBLE_CNT) {
 		holder.moreUsers.setText("and " + (users.size() - CHATPARTNER_VISIBLE_CNT) + " more...");
+		holder.moreUsers.setVisibility(View.VISIBLE);
 	} else {
 		holder.moreUsers.setVisibility(View.GONE);
 	}
