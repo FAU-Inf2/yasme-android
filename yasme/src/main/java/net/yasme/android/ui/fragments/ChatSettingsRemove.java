@@ -11,10 +11,12 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.ChangeUserTask;
 import net.yasme.android.contacts.ContactListContent;
+import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
@@ -60,9 +62,13 @@ public class ChatSettingsRemove extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         User user = participantsContent.items.get(position).user;
-                        showAlertDialog(getString(R.string.alert_delete_user),
-                                user.getName() + " " + getString(R.string.alert_delete_user_message),
-                                chat, user.getId(), 0L);
+                        if(chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId()) {
+                            showAlertDialog(getString(R.string.alert_delete_user),
+                                    user.getName() + " " + getString(R.string.alert_delete_user_message),
+                                    chat, user.getId(), 0L);
+                        } else {
+                            Toaster.getInstance().toast(R.string.alert_not_owner, Toast.LENGTH_LONG);
+                        }
                     }
                 }
         );
