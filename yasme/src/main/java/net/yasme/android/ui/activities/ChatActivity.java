@@ -2,6 +2,8 @@ package net.yasme.android.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -42,12 +44,14 @@ public class ChatActivity extends AbstractYasmeActivity {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int itemId = item.getItemId();
-
-        if (itemId == R.id.action_chats) {
-            Intent intent = new Intent(this, ChatListActivity.class);
-            startActivity(intent);
-            return true;
+        Intent intent;
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case android.R.id.home:
+                if (NavUtils.getParentActivityName(this) != null) {
+                    NavUtils.navigateUpFromSameTask(this);
+                }
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

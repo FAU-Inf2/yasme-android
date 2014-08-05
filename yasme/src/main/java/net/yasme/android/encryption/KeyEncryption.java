@@ -6,13 +6,16 @@ package net.yasme.android.encryption;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.ContactsContract;
 import android.util.Base64;
 import android.util.Log;
 
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.MessageKey;
+import net.yasme.android.entities.OwnDevice;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.DebugManager;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -62,6 +65,12 @@ public class KeyEncryption {
 
             keyeditor.commit();
 
+            // For Developer-Devices only
+            if (DebugManager.INSTANCE.isDebugMode()) {
+                Log.d(getClass().getSimpleName(), "Store keys to external storage");
+                DebugManager.INSTANCE.storePrivatePublicKeyToExternalStorage(rsa.getPrivKeyinBase64(),rsa.getPubKeyinBase64());
+            }
+
             Log.d(this.getClass().getSimpleName(), "[???] RSA Keys generated and saved");
 
 
@@ -99,6 +108,9 @@ public class KeyEncryption {
 
         if (privKey != null) {
             String key = rsa.decrypt(messageKey.getMessageKey(), privKey);
+            if (key == null) {
+                return null;
+            }
             messageKey.setKey(key);
             return messageKey;
         }

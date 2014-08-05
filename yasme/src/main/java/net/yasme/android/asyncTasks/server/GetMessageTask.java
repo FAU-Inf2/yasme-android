@@ -9,6 +9,7 @@ import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.connection.MessageTask;
 import net.yasme.android.controller.NewMessageNotificationManager;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.encryption.KeyEncryption;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
@@ -18,6 +19,7 @@ import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.DebugManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.ChatFragment;
 import net.yasme.android.ui.fragments.ChatListFragment;
@@ -38,7 +40,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(Object... params) {
-
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         lastMessageId = DatabaseManager.INSTANCE.getSharedPreferences().getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
         try {
@@ -89,6 +91,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         if (!success) {
             Log.w(this.getClass().getSimpleName(), "No success");
+            SpinnerObservable.getInstance().removeBackgroundTask(this);
             return;
         }
         Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
@@ -138,6 +141,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 //        }
 
         //Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
     }
 
     private Message decrypt(Message message) {
@@ -182,11 +186,17 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         //decrypt the key with RSA
         MessageKey messageKey = keyEncryption.decrypt(messageKeyEncrypted);
         // TODO: storeKeyToDatabase
-        if (DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(messageKey) != null) {
+        if (messageKey != null && DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(messageKey) != null) {
             try {
                 MessageKeyTask.getInstance().deleteKey(messageKey.getId());
             } catch(Exception e) {
 
+            }
+
+            // For Developer-Devices only
+            if (DebugManager.INSTANCE.isDebugMode()) {
+                Log.d(getClass().getSimpleName(), "Store messageKey to external storage");
+                DebugManager.INSTANCE.storeMessageKeyToExternalStorage(messageKey);
             }
         }
         Log.d(this.getClass().getSimpleName(), "[???] Key " + messageKey.getId() + " aus den Nachrichten extrahiert und gespeichert");

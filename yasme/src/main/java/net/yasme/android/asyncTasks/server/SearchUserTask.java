@@ -8,6 +8,7 @@ import android.widget.TextView;
 import net.yasme.android.connection.SearchTask;
 import net.yasme.android.contacts.ContactListContent;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.ui.fragments.LoginFragment;
@@ -45,7 +46,7 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
 
     @Override
     protected List<User> doInBackground(String... params) {
-
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         SearchTask searchTask = SearchTask.getInstance();
         List<User> uList = new ArrayList<User>();
 
@@ -72,6 +73,7 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
 
 
     protected void onPostExecute(List<User> userList) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         ObservableRegistry.getObservable(SearchContactFragment.class).notifyFragments(userList);
     }
 
@@ -87,8 +89,8 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
                     return LIKE;
                 case 1:
                     return MAIL;
-                case 2:
-                    return NUMBER;
+                //case 2:
+                //    return NUMBER;
             }
             return UNKNOWN;
         }

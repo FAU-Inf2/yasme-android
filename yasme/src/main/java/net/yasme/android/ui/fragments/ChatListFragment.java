@@ -49,7 +49,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         super.onCreate(savedInstanceState);
 
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        activity = (AbstractYasmeActivity) getActivity();
 
         adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
         //adapter.setNotifyOnChange(true);
@@ -130,7 +129,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
                 startActivity(intent);
                 return true;
             case R.id.context_leave:
-                new LeaveChatTask(chat).onPreExecute();
+                new LeaveChatTask(chat, getActivity()).onPreExecute();
                 return true;
             default:
                 return super.onContextItemSelected(item);

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.storage.dao.DAO;
 
 /**
@@ -24,11 +25,13 @@ public class GetTask<D extends Object, T extends DAO<D>> extends AsyncTask<Void,
 
     @Override
     protected Boolean doInBackground(Void... voids) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         return null != (data = specificDAO.get(idToGet));
     }
 
     @Override
     protected void onPostExecute(Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             // Notify
             ObservableRegistry.getObservable(classToNotify).notifyFragments(data);

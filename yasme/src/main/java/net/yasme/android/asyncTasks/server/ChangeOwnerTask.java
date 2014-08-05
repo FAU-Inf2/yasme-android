@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.ChatTask;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
@@ -98,6 +99,7 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(Long... params) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         try {
             ChatTask.getInstance().changeOwnerOfChat(chat.getId(), params[0]);
         } catch (RestServiceException e) {
@@ -109,9 +111,11 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if(success) {
             Toaster.getInstance().toast(R.string.change_successful, Toast.LENGTH_LONG);
-                new LeaveChatTask(chat).onPreExecute();
+            // this will fail!
+                new LeaveChatTask(chat, null).onPreExecute();
 
         } else {
             Toaster.getInstance().toast(R.string.change_not_successful, Toast.LENGTH_LONG);

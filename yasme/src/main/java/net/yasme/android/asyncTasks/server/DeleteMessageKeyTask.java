@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.connection.MessageKeyTask;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.entities.MessageKey;
 
 /**
@@ -14,6 +15,7 @@ public class DeleteMessageKeyTask extends AsyncTask<Long, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Long... params) {
+            SpinnerObservable.getInstance().registerBackgroundTask(this);
 
             /**
              * @param params [0] is keyId
@@ -34,6 +36,6 @@ public class DeleteMessageKeyTask extends AsyncTask<Long, Void, Boolean> {
         }
 
         protected void onPostExecute(Boolean result) {
-
+            SpinnerObservable.getInstance().removeBackgroundTask(this);
         }
 }

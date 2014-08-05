@@ -6,6 +6,7 @@ import android.util.Log;
 import net.yasme.android.asyncTasks.database.AddIfNotExistsTask;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
@@ -42,6 +43,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(String... params) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
 
         // Add self to selected users and names
         if (!selectedUsers.contains(selfUser)) {
@@ -99,6 +101,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
      * Invokes the fragment's method to show the chat activity
      */
     protected void onPostExecute(final Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (newChatId == -1) {
             // Something went wrong
             Log.e(this.getClass().getSimpleName(), "newChatId is still -1.");

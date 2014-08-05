@@ -73,7 +73,7 @@ public class ChatSettingsInfo extends Fragment {
                     @Override
                     public void onClick(View view) {
                         Log.d(this.getClass().getSimpleName(), "leaveChat-Button pushed");
-                        new LeaveChatTask(chat).onPreExecute();
+                        new LeaveChatTask(chat, getActivity()).onPreExecute();
                     }
                 }
         );

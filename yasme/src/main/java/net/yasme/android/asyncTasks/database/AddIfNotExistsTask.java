@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.storage.dao.DAO;
 
 /**
@@ -28,11 +29,13 @@ public class AddIfNotExistsTask<D extends Object, T extends DAO<D>> extends Asyn
 
     @Override
     protected Boolean doInBackground(Object... objects) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         return null != (data = specificDAO.addIfNotExists(data));
     }
 
     @Override
     protected void onPostExecute(Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             // Notify
             if (null != classToNotify) {

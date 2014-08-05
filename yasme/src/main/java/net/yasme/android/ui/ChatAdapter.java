@@ -16,6 +16,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 
 import net.yasme.android.R;
+import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseManager;
 
@@ -97,8 +98,20 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         }
 
         String text;
-        if (msg.getErrorId() != 0) {
-            text = context.getResources().getString(msg.getErrorId()) + msg.getMessage();
+        if (msg.getErrorId() != MessageEncryption.ErrorType.OK) {
+            switch (msg.getErrorId()) {
+                case MessageEncryption.ErrorType.DECRYPTION_FAILED:
+                    text = context.getResources().getString(R.string.decryption_failed) + msg.getMessage();
+                    break;
+                case MessageEncryption.ErrorType.AUTHENTICATION_FAILED:
+                    text = context.getResources().getString(R.string.authentication_failed) + msg.getMessage();
+                    break;
+                default:
+                    text = context.getResources().getString(R.string.unknown_message_error) + msg.getMessage();
+                    break;
+            }
+            //text = context.getResources().getString(msg.getErrorId()) + msg.getMessage();
+            //text = context.getResources().getString(R.string.decryption_failed) + msg.getMessage();
         } else {
             text = msg.getMessage();
         }
