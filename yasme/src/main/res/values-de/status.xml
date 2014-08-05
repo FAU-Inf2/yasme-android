@@ -5,7 +5,7 @@
     <string name="key_generation_failed">Schlüssel konnte nicht erzeugt werden.</string>
     <string name="authentication_successful">Chatpartner erfolgreich authentifiziert!</string>
     <string name="authentication_failed">Warnung: Chatpartner konnte nicht authenthifiziert werden! Inhalt der Nachricht:</string>
-    <string name="decryption_failed">Entschlüsselung fehlgeschlagen. Schlüssel wurde nicht gefunden. Falls dieses Gerät erst kürzlich registriert wurde, können ältere Nachrichten nicht entschlüsselt werden.</string>
+    <string name="decryption_failed">Nachricht(en) konnten nicht entschlüsselt werden. Falls dieses Gerät erst kürzlich registriert wurde, können ältere Nachrichten nicht entschlüsselt werden.</string>
     <string name="key_decryption_failed">Schlüssel konnte nicht entschlüsselt werden. Das ist ein Fehler!</string>
     <string name="unknown_message_error">Ein unbekannter Fehler ist aufgetreten! Inhalt der Nachricht:</string>
 </resources>

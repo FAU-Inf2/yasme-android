@@ -19,6 +19,7 @@ import net.yasme.android.asyncTasks.server.SendMessageTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
 import net.yasme.android.storage.DatabaseManager;
@@ -218,7 +219,23 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             latestMessageOnDisplay.set(newLatestMessageOnDisplay);
         }
 
-        mAdapter.addAll(newMessages);
+        int count = 0;
+        ArrayList<Message> newNewMessages = new ArrayList<>();
+        for (int i = 0; i < newMessages.size(); i++) {
+            Message msg = newMessages.get(i);
+            if (msg.getErrorId() == MessageEncryption.ErrorType.DECRYPTION_FAILED) {
+                count++;
+                if (i >= newMessages.size() - 1 || newMessages.get(i+1).getErrorId() != MessageEncryption.ErrorType.DECRYPTION_FAILED) {
+                    msg.setMessage(String.valueOf(count) + " " + getResources().getString(R.string.decryption_failed));
+                    msg.setErrorId(0);
+                    newNewMessages.add(msg);
+                }
+            } else {
+                newNewMessages.add(msg);
+            }
+        }
+
+        mAdapter.addAll(newNewMessages);
         editMessage.requestFocus();
     }
 
