@@ -4,13 +4,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.Message;
 import net.yasme.android.entities.MessageKey;
 import net.yasme.android.entities.OwnDevice;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.activities.LoginActivity;
 
 import org.json.JSONArray;
 
@@ -34,7 +38,7 @@ public enum DebugManager {
     private final String OWNDEVICE = "owndevice";
     private final String MESSAGEKEYS = "messagekeys";
 
-    private boolean debugMode = false;
+    private boolean debugMode = true;
     private OwnDevice ownDevice = new OwnDevice();
 
     public boolean isDebugMode() {
@@ -108,8 +112,16 @@ public enum DebugManager {
 
     public boolean restoreData() {
         Log.d(getClass().getSimpleName(),"Restoring data");
-        restoreOwnDeviceFromExternalStorage();
-        restoreMessageKeysFromExternalStorage();
+        if (!restoreOwnDeviceFromExternalStorage()) {
+            Log.d(getClass().getSimpleName(), "Restoring OwnDevice failed");
+            return false;
+        }
+        if (!restoreMessageKeysFromExternalStorage()) {
+            Log.d(getClass().getSimpleName(), "Restoring MessageKeys failed");
+            return false;
+        }
+        Log.d(getClass().getSimpleName(), "Restoring successful");
+        Toaster.getInstance().toast("Restoring Debug-Data successful", Toast.LENGTH_LONG);
         return true;
     }
 
@@ -122,9 +134,26 @@ public enum DebugManager {
         try {
             OwnDevice device = getOwnDeviceFromExternalStorage();
             if (device == null) {
+                Log.d(getClass().getSimpleName(), "Device is null");
                 return false;
             }
 
+            // Restore devId
+            Log.d(getClass().getSimpleName(), "Restore devId");
+            SharedPreferences.Editor editor1 = DatabaseManager.INSTANCE.getSharedPreferences().edit();
+            editor1.putLong(AbstractYasmeActivity.DEVICE_ID, ownDevice.getId());
+            editor1.commit();
+
+            // Restore pushId and app version
+            Log.d(getClass().getSimpleName(), "Restore pushId");
+            SharedPreferences prefs = DatabaseManager.INSTANCE.getContext().getSharedPreferences(LoginActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor2 = prefs.edit();
+            editor2.putString(AbstractYasmeActivity.PROPERTY_REG_ID, ownDevice.getPushId());
+            //editor.putInt(AbstractYasmeActivity.PROPERTY_APP_VERSION, appVersion);
+            editor2.commit();
+
+            // Restore PrivatePublicKey
+            Log.d(getClass().getSimpleName(), "Restore PrivPubKeys");
             String RSAKEY_STORAGE_USER = RSAKEY_STORAGE + "_" + ownDevice.getId();
             Context context = DatabaseManager.INSTANCE.getContext();
             SharedPreferences privKeyStorage = context.getSharedPreferences(RSAKEY_STORAGE_USER, Context.MODE_PRIVATE);
@@ -132,7 +161,9 @@ public enum DebugManager {
 
             keyeditor.putString(PRIVATEKEY, device.getPrivateKey());
             keyeditor.putString(PUBLICKEY,device.getPublicKey());
+            keyeditor.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -149,6 +180,7 @@ public enum DebugManager {
             Log.d(getClass().getSimpleName(), "PubKey: " + device.getPublicKey());
             return device;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -167,13 +199,15 @@ public enum DebugManager {
             for (int i = 0; i < jsonArray.length() - 1; i++) {
                 MessageKey messageKey = new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
                         toString(), MessageKey.class);
+                messageKey.setAuthenticity(true);
                 DatabaseManager.INSTANCE.getMessageKeyDAO().addOrUpdate(messageKey);
             }
 
             //OwnDevice device = new ObjectMapper().readValue(text, OwnDevice.class);
             //return device;
-            return false;
+            return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
