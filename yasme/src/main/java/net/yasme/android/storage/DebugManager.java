@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -171,7 +172,7 @@ public enum DebugManager {
 
     private OwnDevice getOwnDeviceFromExternalStorage() {
         String text = readText(OWNDEVICE);
-        if (text == null) {
+        if (text == null || text == "") {
             return null;
         }
         Log.d(getClass().getSimpleName(), "Device-Text: " + text);
@@ -187,10 +188,14 @@ public enum DebugManager {
 
     private boolean restoreMessageKeysFromExternalStorage() {
         String text = readText(MESSAGEKEYS);
-        String json = "[" + text + "{}]";
         if (text == null) {
             return false;
         }
+        if (text == "") {
+            // No messageKey stored yet
+            return true;
+        }
+        String json = "[" + text + "{}]";
         Log.d(getClass().getSimpleName(), "MessageKeys-Text: " + text);
         try {
             Log.d(getClass().getSimpleName(), "JSON: " + json);
@@ -203,8 +208,6 @@ public enum DebugManager {
                 DatabaseManager.INSTANCE.getMessageKeyDAO().addOrUpdate(messageKey);
             }
 
-            //OwnDevice device = new ObjectMapper().readValue(text, OwnDevice.class);
-            //return device;
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -213,6 +216,7 @@ public enum DebugManager {
     }
 
     private String readText(String name) {
+        String filename = "";
         try {
             Log.d(getClass().getSimpleName(), "Open dir");
             File dir = getDir();
@@ -220,7 +224,8 @@ public enum DebugManager {
                 return null;
             }
             Log.d(getClass().getSimpleName(), "Open file");
-            String filename = dir.getAbsolutePath() + "/" + name + ".txt";
+            filename = dir.getAbsolutePath() + "/" + name + ".txt";
+
 
             BufferedReader br = new BufferedReader(new FileReader(filename));
             StringBuilder sb = new StringBuilder();
@@ -232,7 +237,11 @@ public enum DebugManager {
             }
             br.close();
             return sb.toString();
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
+            Log.d(getClass().getSimpleName(), "File " + filename + " not found.");
+            return "";
+        }
+        catch (Exception e) {
             e.printStackTrace();
             return null;
         }
