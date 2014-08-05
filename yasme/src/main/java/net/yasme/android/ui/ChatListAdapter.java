@@ -8,11 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.LinearLayout;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
+import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.entities.Chat;
@@ -20,21 +17,20 @@ import net.yasme.android.entities.Message;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Created by martin on 18.06.2014.
  */
 public class ChatListAdapter extends ArrayAdapter<Chat> {
 
+    private final static int CHATPARTNER_VISIBLE_CNT = 10;
     Context context;
     int layoutResourceId;
     List<Chat> chats = null;
-
-    private final static int CHATPARTNER_VISIBLE_CNT = 10;
 
     public ChatListAdapter(Context context, int layoutResourceId, List<Chat> chats) {
         super(context, layoutResourceId, chats);
@@ -93,9 +89,11 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 
 	holder.chatpartnerList.removeAllViews(); // TODO: also recycle these
 	ArrayList<User> users = chat.getParticipants();
-	for (int i = 0; i < users.size() && i < CHATPARTNER_VISIBLE_CNT; i++) {  
-		// TODO: skip self
-		View chatpartner = inflater.inflate(R.layout.chatpartner_item, null);  
+	for (int i = 0; i < users.size() && i < CHATPARTNER_VISIBLE_CNT; i++) {
+        if(DatabaseManager.INSTANCE.getUserId() == users.get(i).getId()) {
+            continue;
+        }
+		View chatpartner = inflater.inflate(R.layout.chatpartner_item, null);
 		ImageView img = (ImageView) chatpartner.findViewById(R.id.chatpartner_picture);
 		img.setImageResource(R.drawable.chatlist_default_icon);	
 		img.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int)users.get(i).getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
