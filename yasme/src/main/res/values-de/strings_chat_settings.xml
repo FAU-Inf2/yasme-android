@@ -32,7 +32,7 @@
     <string name="alert_owner_message">Um fortzufahren, wähle einen Teilnehmer aus der Liste als neuen
         Eigentümer</string>
     <string name="alert_leave">Chat verlassen</string>
-    <string name="alert_leave_message">Willst du den Cchat verlassen?</string>
+    <string name="alert_leave_message">Willst du den Chat verlassen?</string>
 
     <string name="OK">OK</string>
     <string name="cancel">Abbruch</string>
