@@ -53,17 +53,17 @@ public class Chat implements Serializable {
     @ForeignCollectionField(columnName = DatabaseConstants.MESSAGES)
     private Collection<Message> messages;
 
+    @JsonIgnore
+    @DatabaseField(columnName = DatabaseConstants.LAST_MESSAGE, foreign = true)
+    private Message lastMessage;
+
     /**
      * Constructors *
      */
-    public Chat(long id, User user) {
+    public Chat(long id) {
         this.id = id;
         this.participants = new ArrayList<User>();
         this.messages = new ArrayList<Message>();
-        // setup Encryption for this chat
-        // TODO: DEVICE-ID statt USERID uebergeben
-        //long creatorDevice = user.getId();
-        //aes = new MessageEncryption(this, user);
     }
 
     /**
@@ -242,5 +242,13 @@ public class Chat implements Serializable {
             messages = new ArrayList<Message>();
         }
         messages.add(msg);
+    }
+
+    public Message getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(Message lastMessage) {
+        this.lastMessage = lastMessage;
     }
 }

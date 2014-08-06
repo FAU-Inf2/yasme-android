@@ -79,7 +79,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             Log.w(this.getClass().getSimpleName(), "get chat from DB failed");
         }
         if (chat == null) {
-            chat = new Chat(chatId, activity.getSelfUser());
+            chat = new Chat(chatId);
         }
     }
 

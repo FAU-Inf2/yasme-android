@@ -2,6 +2,7 @@ package net.yasme.android.asyncTasks.server;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import net.yasme.android.connection.DeviceTask;
@@ -20,6 +21,7 @@ import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.DebugManager;
+import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.ChatFragment;
 import net.yasme.android.ui.fragments.ChatListFragment;
@@ -80,8 +82,22 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             message = decrypt(message);
 
             if (null == DatabaseManager.INSTANCE.getMessageDAO().addIfNotExists(message)) {//changed from addOrUpdate
+
                 Log.e(this.getClass().getSimpleName(), "Storing a message in database failed");
                 return false;
+            } else {
+                if (message.getChat() != null) {
+                    ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+                    Chat chat = chatDAO.get(message.getId());
+                    if (chat != null) {
+                        chat.setLastMessage(message);
+                        chatDAO.addOrUpdate(chat);
+                    } else {
+                        Log.e(getClass().getSimpleName(), "Chat not found in DB");
+                    }
+                } else {
+                    Log.e(getClass().getSimpleName(), "Chat not found in Message");
+                }
             }
             lastMessageId = Math.max(lastMessageId, message.getId());
         }
