@@ -157,7 +157,7 @@ public class ChatSettingsInfo extends Fragment {
 
         name.setText(chat.getName());
         status.setText(chat.getStatus());
-        number.setText(chat.getNumberOfParticipants() + " Teilnehmer");
+        number.setText(" " + chat.getNumberOfParticipants());
 
         mAdapter = new SimpleAdapter(getActivity(), participantsContent.getMap(),
                 android.R.layout.simple_list_item_2, new String[]{"name", "mail"},

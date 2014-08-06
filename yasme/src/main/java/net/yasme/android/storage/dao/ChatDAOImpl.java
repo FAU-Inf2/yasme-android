@@ -71,6 +71,9 @@ public enum ChatDAOImpl implements ChatDAO {
     public Chat get(long id) {
         try {
             Chat ret = databaseHelper.getChatDao().queryForId(id);
+            if(ret == null) {
+                return null;
+            }
             ret.setParticipants(loadParticipants(ret));
             return ret;
         } catch (SQLException e) {

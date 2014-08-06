@@ -18,6 +18,7 @@
     <string name="change_status">Chatstatus ändern</string>
     <string name="change_name_hint">Neuer Chatname</string>
     <string name="change_status_hint">Neuer Chatstatus</string>
+    <string name="number_of_participants">Anzahl Teilnehmer: </string>
 
     <string name="change_successful">Die Änderung war erfolgreich</string>
     <string name="change_not_successful">Die Änderung war nicht erfolgreich</string>
@@ -33,6 +34,9 @@
         Eigentümer</string>
     <string name="alert_leave">Chat verlassen</string>
     <string name="alert_leave_message">Willst du den Chat verlassen?</string>
+
+    <string name="contact_list_empty">Alle deine Kontakte sind momentan Teilnehmer in diesem Chat.
+        Drücke hier, um neue Kontakte zu finden.</string>
 
     <string name="OK">OK</string>
     <string name="cancel">Abbruch</string>
