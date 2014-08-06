@@ -112,7 +112,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
         }
         if (refreshUserIds.size() > 0 ) {
             Log.e(this.getClass().getSimpleName(), refreshUserIds.size() + " users are not up-to-date");
-            RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER,refreshUserIds,true);
+            RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER, refreshUserIds, true);
             refreshTask.execute();
         }
         return true;

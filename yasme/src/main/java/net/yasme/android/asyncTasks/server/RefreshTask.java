@@ -142,6 +142,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
             List<Device> devices = DeviceTask.getInstance().getAllDevices(id);
             deviceDAO.deleteAll(new User(id));
             for (Device device : devices) {
+                device.getUser().addToContacts();
                 deviceDAO.addOrUpdate(device);
             }
             Log.d(this.getClass().getSimpleName(), "... successful" + id);
