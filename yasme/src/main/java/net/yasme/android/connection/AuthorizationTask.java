@@ -4,6 +4,7 @@ import android.util.Log;
 
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
+import net.yasme.android.storage.DatabaseManager;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -48,12 +49,14 @@ public class AuthorizationTask extends ConnectionTask {
         Header userID = httpResponse.getFirstHeader("userId");
         Header token = httpResponse.getFirstHeader("Authorization");
 
+        DatabaseManager.INSTANCE.setUserId(Long.parseLong(userID.getValue()));
+        DatabaseManager.INSTANCE.setAccessToken(token.getValue());
+
         Log.d(this.getClass().getSimpleName(),"Login successful!");
         return new String[]{userID.getValue(), token.getValue()};
     }
 
-    public void logoutUser()
-            throws RestServiceException {
+    public void logoutUser() throws RestServiceException {
         executeRequest(Request.POST, "out");
         Log.d(this.getClass().getSimpleName(),"Signed out successful");
     }

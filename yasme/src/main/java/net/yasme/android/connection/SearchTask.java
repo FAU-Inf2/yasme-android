@@ -11,6 +11,7 @@ import net.yasme.android.entities.Device;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.*;
 import net.yasme.android.exception.Error;
+import net.yasme.android.storage.DatabaseManager;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
@@ -135,6 +136,7 @@ public class SearchTask extends ConnectionTask {
         ArrayList<Device> devices = new ArrayList<Device>();
 
         try {
+            long userId = DatabaseManager.INSTANCE.getUserId();
             String path = "allDevices/" + userId;
             HttpResponse httpResponse = executeRequest(Request.GET, path);
 

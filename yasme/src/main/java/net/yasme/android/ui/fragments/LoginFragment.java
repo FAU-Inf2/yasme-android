@@ -198,9 +198,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
     public void onPostLoginExecute(Boolean success, long userId) {
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        if (!ConnectionTask.isInitializedSession()) {
-            ConnectionTask.initSession(userId, accessToken);
-        }
+        //if (!ConnectionTask.isInitializedSession()) {
+        //    ConnectionTask.initSession(userId, accessToken);
+        //}
 
         activity.getSelfUser().setId(userId);
         SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
@@ -231,8 +231,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                     return;
                 }
 
-                // Initialize the session a second time because the deviceId was missing
-                ConnectionTask.initSession(userId, deviceId, accessToken);
                 DatabaseManager.INSTANCE.setDeviceId(deviceId);
 
                 showProgress(false);
@@ -270,7 +268,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 Log.e(this.getClass().getSimpleName(), "Did not find user id in shared prefs");
                 return;
             }
-            ConnectionTask.initSession(userId, deviceId, accessToken);
+
+            //ConnectionTask.initSession(userId, deviceId, accessToken);
             DatabaseManager.INSTANCE.setDeviceId(deviceId);
 
             Log.d(this.getClass().getSimpleName(), "Login after device registration at yasme server");
@@ -393,9 +392,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     public static class LoginProcessParam extends LoginParam {
         private Long userId;
 
-        public LoginProcessParam(Boolean success, Long userId) {
+        public LoginProcessParam(Boolean success) {
             this.success = success;
-            this.userId = userId;
+            this.userId = DatabaseManager.INSTANCE.getUserId();
         }
 
         public Long getUserId() {
@@ -406,9 +405,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     public static class DeviceRegistrationParam extends LoginParam {
         private Long deviceId;
 
-        public DeviceRegistrationParam(Boolean success, Long deviceId) {
+        public DeviceRegistrationParam(Boolean success) {
             this.success = success;
-            this.deviceId = deviceId;
+            this.deviceId = DatabaseManager.INSTANCE.getDeviceId();
         }
 
         public Long getDeviceId() {

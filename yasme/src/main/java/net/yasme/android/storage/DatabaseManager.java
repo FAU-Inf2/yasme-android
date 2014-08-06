@@ -3,6 +3,7 @@ package net.yasme.android.storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import net.yasme.android.entities.User;
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.ChatDAOImpl;
 import net.yasme.android.storage.dao.MessageDAO;
@@ -13,6 +14,7 @@ import net.yasme.android.storage.dao.DeviceDAO;
 import net.yasme.android.storage.dao.DeviceDAOImpl;
 import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.storage.dao.UserDAOImpl;
+import net.yasme.android.ui.AbstractYasmeActivity;
 
 //import net.yasme.android.storage.dao.CurrentKeyDAO;
 //import net.yasme.android.storage.dao.CurrentKeyDAOImpl;
@@ -26,8 +28,9 @@ public enum DatabaseManager {
     private boolean mInitialized = false;
     private DatabaseHelper mHelper;
     private Context mContext;
-    private long mUserId;
-    private long mDeviceId;
+    private long mUserId = -1;
+    private long mDeviceId = -1;
+    private String mAccessToken = null;
     private SharedPreferences mSharedPreferences;
 
     private UserDAO userDAO;
@@ -35,6 +38,7 @@ public enum DatabaseManager {
     private MessageDAO messageDAO;
     private MessageKeyDAO messageKeyDAO;
     private DeviceDAO deviceDAO;
+
 
     public void init(Context context, SharedPreferences sharedPreferences, long userId) {
         mContext = context;
@@ -98,18 +102,44 @@ public enum DatabaseManager {
     }
 
     public long getUserId() {
+        if (-1 == mUserId) {
+            mUserId = getSharedPreferences().getLong(AbstractYasmeActivity.USER_ID, -1);
+        }
         return mUserId;
     }
 
     public void setUserId(long mUserId) {
         this.mUserId = mUserId;
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putLong(AbstractYasmeActivity.USER_ID, mUserId);
+        editor.commit();
     }
 
     public long getDeviceId() {
+        if (-1 == mDeviceId) {
+            mDeviceId = getSharedPreferences().getLong(AbstractYasmeActivity.DEVICE_ID, -1);
+        }
         return mDeviceId;
     }
 
     public void setDeviceId(long mDeviceId) {
         this.mDeviceId = mDeviceId;
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putLong(AbstractYasmeActivity.DEVICE_ID, mDeviceId);
+        editor.commit();
+    }
+
+    public String getAccessToken() {
+        if (null == mAccessToken) {
+            mAccessToken = getSharedPreferences().getString(AbstractYasmeActivity.ACCESSTOKEN, null);
+        }
+        return mAccessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.mAccessToken = accessToken;
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putString(AbstractYasmeActivity.ACCESSTOKEN, mAccessToken);
+        editor.commit();
     }
 }

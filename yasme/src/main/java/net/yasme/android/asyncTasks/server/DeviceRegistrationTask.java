@@ -115,9 +115,9 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         Log.d(this.getClass().getSimpleName(),"Device registered at yasme server");
         // if device registration was a success
         // store to SharedPreferences
-        SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
-        editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
-        editor.commit();
+        //SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
+        //editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
+        //editor.commit();
         Log.d(this.getClass().getSimpleName(),"Device stored to SharedPreferences");
 
         // For Developer-Devices only
@@ -133,7 +133,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         // after device registration
         if(success){
-            ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(new LoginFragment.DeviceRegistrationParam(success, deviceId));
+            ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(new LoginFragment.DeviceRegistrationParam(success));
         }
     }
 }

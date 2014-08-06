@@ -39,7 +39,7 @@ public enum DebugManager {
     private final String OWNDEVICE = "owndevice";
     private final String MESSAGEKEYS = "messagekeys";
 
-    private boolean debugMode = true;
+    private boolean debugMode = false;
     private OwnDevice ownDevice = new OwnDevice();
 
     public boolean isDebugMode() {

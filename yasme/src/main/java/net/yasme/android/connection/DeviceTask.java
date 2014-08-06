@@ -6,6 +6,8 @@ import net.yasme.android.entities.Device;
 import net.yasme.android.entities.OwnDevice;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.exception.Error;
+import net.yasme.android.storage.DatabaseManager;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,10 +51,12 @@ public class DeviceTask extends ConnectionTask {
 
             Log.d(this.getClass().getSimpleName(),"Device registration was successful");
 
-            return (new JSONObject((new BufferedReader(
+            long deviceId = (new JSONObject((new BufferedReader(
                     new InputStreamReader(httpResponse.getEntity()
                             .getContent())
             )).readLine())).getLong("id");
+            DatabaseManager.INSTANCE.setDeviceId(deviceId);
+            return deviceId;
 
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);

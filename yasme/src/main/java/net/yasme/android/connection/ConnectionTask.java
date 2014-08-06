@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import net.yasme.android.exception.Error;
+import net.yasme.android.storage.DatabaseManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,14 +56,14 @@ public abstract class ConnectionTask {
 
     protected static boolean initialized = false;
 
-    /*
-     * Session Params
-     */
-    protected static String userId;
-    protected static String deviceId;
-    protected static String accessToken;
+//    /*
+//     * Session Params
+//     */
+//    protected static String userId;
+//    protected static String deviceId;
+//    protected static String accessToken;
 
-    protected static boolean initializedSession = false;
+//    protected static boolean initializedSession = false;
 
     /*
      * Connection Objects
@@ -82,7 +83,7 @@ public abstract class ConnectionTask {
         ConnectionTask.serverPort = Integer.parseInt(serverPort);
 
         ConnectionTask.initialized = true;
-        ConnectionTask.initializedSession = false;
+        //ConnectionTask.initializedSession = false;
 
         buildBaseURI();
 
@@ -90,37 +91,38 @@ public abstract class ConnectionTask {
                 .withDefaultPrettyPrinter();
     }
 
-    public static void initSession(long userId, String accessToken) {
+//    public static void initSession(long userId, String accessToken) {
+//
+//        if (!initialized) {
+//            Log.e(ConnectionTask.class.getSimpleName(), "Server Params not initialized");
+//        }
+//        ConnectionTask.userId = Long.toString(userId);
+//        ConnectionTask.accessToken = accessToken;
+//        ConnectionTask.deviceId = "-1";
+//        Log.i(ConnectionTask.class.getSimpleName(), "Bear in mind that deviceId has not been set yet.");
+//        initializedSession = true;
+//    }
+//
+//    public static void initSession(long userId, long deviceId, String accessToken) {
+//        if (!initialized) {
+//            Log.e(ConnectionTask.class.getSimpleName(), "Server Params not initialized");
+//        }
+//
+//        ConnectionTask.userId = Long.toString(userId);
+//        ConnectionTask.deviceId = Long.toString(deviceId);
+//        ConnectionTask.accessToken = accessToken;
+//        ConnectionTask.initializedSession = true;
+//    }
 
-        if (!initialized) {
-            Log.e(ConnectionTask.class.getSimpleName(), "Server Params not initialized");
-        }
-        ConnectionTask.userId = Long.toString(userId);
-        ConnectionTask.accessToken = accessToken;
-        ConnectionTask.deviceId = "-1";
-        Log.i(ConnectionTask.class.getSimpleName(), "Bear in mind that deviceId has not been set yet.");
-        initializedSession = true;
-    }
-
-    public static void initSession(long userId, long deviceId, String accessToken) {
-        if (!initialized) {
-            Log.e(ConnectionTask.class.getSimpleName(), "Server Params not initialized");
-        }
-
-        ConnectionTask.userId = Long.toString(userId);
-        ConnectionTask.deviceId = Long.toString(deviceId);
-        ConnectionTask.accessToken = accessToken;
-        ConnectionTask.initializedSession = true;
-    }
 
 
     public static boolean isInitialized() {
         return initialized;
     }
 
-    public static boolean isInitializedSession() {
-        return initializedSession;
-    }
+    //public static boolean isInitializedSession() {
+    //    return initializedSession;
+    //}
 
     private static void buildBaseURI() {
         try {
@@ -168,11 +170,14 @@ public abstract class ConnectionTask {
             }
         }
 
-        if (initializedSession) {
-            requestBase.setHeader("userId", userId);
-            requestBase.setHeader("Authorization", accessToken);
-            requestBase.setHeader("deviceId", deviceId);
-        }
+        long userId = DatabaseManager.INSTANCE.getUserId();
+        long deviceId = DatabaseManager.INSTANCE.getDeviceId();
+        String accessToken = DatabaseManager.INSTANCE.getAccessToken();
+
+        requestBase.setHeader("userId", Long.toString(userId));
+        requestBase.setHeader("Authorization", accessToken);
+        requestBase.setHeader("deviceId", Long.toString(deviceId));
+
 
         return executeRequest(requestBase);
     }
@@ -281,19 +286,17 @@ public abstract class ConnectionTask {
             }
         }
 
-        Log.d(this.getClass().getSimpleName(),"Session initialized? " + initializedSession);
+        // Get userId, deviceId and accessToken from central DatabaseManager
+        long userId = DatabaseManager.INSTANCE.getUserId();
+        long deviceId = DatabaseManager.INSTANCE.getDeviceId();
+        String accessToken = DatabaseManager.INSTANCE.getAccessToken();
 
-        if (initializedSession) {
-            requestBase.setHeader("userId", userId);
-            requestBase.setHeader("Authorization", accessToken);
-            requestBase.setHeader("deviceId", deviceId);
-
-            Log.d(this.getClass().getSimpleName(),"userId:  " + userId + " accessToken: " + accessToken);
-        }
+        requestBase.setHeader("userId", Long.toString(userId));
+        requestBase.setHeader("Authorization", accessToken);
+        requestBase.setHeader("deviceId", Long.toString(deviceId));
     }
 
     private HttpResponse executeRequest(HttpRequestBase requestBase) throws RestServiceException {
-        Log.d(getClass().getSimpleName(), "DeviceId is: " + deviceId);
         try {
             HttpResponse httpResponse = HttpClient.createSSLClient().execute(requestBase);
             int statusCode = httpResponse.getStatusLine().getStatusCode();

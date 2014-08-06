@@ -44,15 +44,6 @@ public class ChatListActivity extends AbstractYasmeActivity {
             return;
         }
 
-        DatabaseManager.INSTANCE.setDeviceId(deviceId);
-
-        if(!ConnectionTask.isInitializedSession()) {
-            long userId = DatabaseManager.INSTANCE.getSharedPreferences().getLong(AbstractYasmeActivity.USER_ID, 0);
-            String accessToken = DatabaseManager.INSTANCE.getSharedPreferences().getString(AbstractYasmeActivity.ACCESSTOKEN, "");
-            //initConnection Session
-            ConnectionTask.initSession(userId, deviceId, accessToken);
-        }
-
         if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.singleFragmentContainer, new ChatListFragment()).commit();

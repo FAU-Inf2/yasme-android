@@ -23,10 +23,7 @@ import net.yasme.android.ui.fragments.RegisterFragment;
  * Represents an asynchronous login task used to authenticate the user.
  */
 public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
-    private SharedPreferences storage;
-    private String accessToken;
     private Boolean plainPassword = false;
-    private long userId;
 
     public UserLoginTask(Boolean plainPassword) {
         this.plainPassword = plainPassword;
@@ -55,21 +52,6 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             String loginReturn[] = AuthorizationTask.getInstance().loginUser(new User(email,
                     password));
 
-            Log.d(this.getClass().getSimpleName(),"LoginReturn:");
-            userId = Long.parseLong(loginReturn[0]);
-            accessToken = loginReturn[1];
-
-            Log.d(this.getClass().getSimpleName(), loginReturn[0]);
-
-            ConnectionTask.initSession(userId, accessToken);
-
-            // storage
-            SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
-            editor.putLong(AbstractYasmeActivity.USER_ID, userId);
-            editor.putString(AbstractYasmeActivity.ACCESSTOKEN, accessToken);
-            editor.putString(AbstractYasmeActivity.USER_MAIL, email);
-            editor.commit();
-
         } catch (RestServiceException e) {
             return false;
         }
@@ -80,8 +62,8 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(
-                new LoginFragment.LoginProcessParam(success, userId));
+                new LoginFragment.LoginProcessParam(success));
         ObservableRegistry.getObservable(RegisterFragment.class).notifyFragments(
-                new RegisterFragment.RegLoginParam(success, userId));
+                new RegisterFragment.RegLoginParam(success));
     }
 }

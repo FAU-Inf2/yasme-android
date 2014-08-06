@@ -168,9 +168,9 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
             return userId;
         }
 
-        public RegLoginParam(Boolean success, long userId) {
+        public RegLoginParam(Boolean success) {
             this.success = success;
-            this.userId = userId;
+            this.userId = DatabaseManager.INSTANCE.getUserId();
         }
     }
 
