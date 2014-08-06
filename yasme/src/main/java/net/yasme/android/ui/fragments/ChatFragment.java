@@ -68,9 +68,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
             // Assuming that the messages are sorted by id
             latestMessageOnDisplay = new AtomicLong(0);
-            // Ask server for new messages
-            new GetMessageTask().execute();
-            Log.d(this.getClass().getSimpleName(), "number of messages from DB: " + chat.getMessages().size());
+
+            //Log.d(this.getClass().getSimpleName(), "number of messages from DB: " + chat.getMessages().size());
         } catch (NullPointerException e) {
             // Occurs when new chat has been generated, but id hasn't been returned by the server yet
 
@@ -133,6 +132,12 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Log.d(this.getClass().getSimpleName(), "... successful");
 
         obs.register(this);
+    }
+
+    @Override
+    public void onResume() {
+        // Ask server for new messages
+        new GetMessageTask().execute();
     }
 
     @Override

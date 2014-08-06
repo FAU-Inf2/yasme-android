@@ -46,7 +46,6 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
             public int compare(Object o1, Object o2) {
                 Chat c1 = (Chat) o1;
                 Chat c2 = (Chat) o2;
-                //return -1*(c1.getMessages().get(c1.getMessages().size()).getDateSent().compareTo(c2.getMessages().get(c2.getMessages().size()).getDateSent()));
                 if (c1.getLastMessage() == null && c2.getLastMessage() == null) {
                     Log.d(getClass().getSimpleName(),"LastMessages not set");
                     return 0;

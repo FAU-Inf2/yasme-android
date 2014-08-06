@@ -3,44 +3,50 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/chat_settings_info" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" >
 
-        android:orientation="vertical"
-        >
-
-        <TextView
-            android:id="@+id/chat_info_number_participants"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/linearLayout2" />
-
-        <ListView
+    <ListView
             android:id="@+id/chat_info_participants"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/leave_chat"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/chat_info_number_participants"
+        android:layout_below="@+id/linearLayout4"
             android:footerDividersEnabled="false"
-            android:numColumns="2" />
+        android:numColumns="2" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
+    <Button
+            android:id="@+id/leave_chat"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:text="@string/leave_chat" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="@android:drawable/divider_horizontal_textfield"
+        android:orientation="vertical"
+        android:showDividers="middle|end">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="4"
                 android:orientation="vertical">
@@ -50,13 +56,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="@string/chat_info_name" />
+                    android:text="@string/chat_info_name"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/chat_info_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2" />
+                    android:layout_weight="2"
+                    android:textStyle="italic" />
 
             </LinearLayout>
 
@@ -70,17 +78,13 @@
 
         <LinearLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/linearLayout"
+            android:focusable="false"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="4"
                 android:orientation="vertical">
@@ -90,13 +94,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="@string/chat_info_status" />
+                    android:text="@string/chat_info_status"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/chat_info_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2" />
+                    android:layout_weight="2"
+                    android:textStyle="italic" />
 
             </LinearLayout>
 
@@ -107,15 +113,23 @@
                 android:text="@string/change" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/leave_chat"
+        <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/leave_chat" />
+            android:orientation="horizontal">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/number_of_participants" />
+
+            <TextView
+                android:id="@+id/chat_info_number_participants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

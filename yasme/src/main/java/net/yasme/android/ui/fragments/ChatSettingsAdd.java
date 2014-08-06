@@ -24,6 +24,7 @@ import java.util.List;
  */
 public class ChatSettingsAdd extends InviteToChatFragment {
     private Chat chat;
+    private TextView emptyContactsNotice;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_invite_to_chat, container, false);
+        emptyContactsNotice = (TextView) rootView.findViewById(R.id.empty_contacts_notice);
         return rootView;
     }
 
@@ -48,6 +50,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     private void adaptToSettings() {
         startChat.setText(getString(R.string.add_user));
         startChat.setOnClickListener(this);
+        emptyContactsNotice.setText(getString(R.string.contact_list_empty));
     }
 
     @Override

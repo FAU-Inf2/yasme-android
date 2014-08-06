@@ -2,30 +2,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="net.yasme.android.ui.activities.ChatListActivity">
 
     <ListView
         android:id="@+id/chatroom_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/server_messages"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/profile"
-        android:layout_above="@+id/server_messages"> </ListView>
+        android:layout_below="@+id/profile"> </ListView>
 
     <TextView
         android:id="@+id/server_messages"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="false"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:text="diverse Meldungen vom Server"
+        android:layout_alignParentStart="false"
         android:layout_centerHorizontal="true"
         android:enabled="false"
         android:focusable="false"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentBottom="true" />
+        android:text="diverse Meldungen vom Server" />
 
 
     <LinearLayout
@@ -34,11 +38,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:measureWithLargestChild="false"
         android:layout_alignParentStart="false"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:measureWithLargestChild="false"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/profileInfo"
