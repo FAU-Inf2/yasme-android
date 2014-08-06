@@ -121,7 +121,9 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
             editor.commit();
 
-            notifier.mNotify(messages.size());
+            if(!(messages.size() == 1 && messages.get(0).getSender().getId() == DatabaseManager.INSTANCE.getUserId())) {
+                notifier.mNotify(messages.size());
+            }
         }
         //For notification testing:
         //mNotify(messages.size());
