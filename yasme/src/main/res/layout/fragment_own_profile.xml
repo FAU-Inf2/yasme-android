@@ -48,7 +48,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="E-Mail:"
+        android:text="@string/own_profile_email"
         android:id="@+id/own_profile_email_description"
         android:layout_column="0"
         android:textSize="8pt"
@@ -60,7 +60,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Contact Mail"
+        android:text=""
         android:id="@+id/own_profile_email"
         android:layout_column="0"
         android:textSize="10pt"

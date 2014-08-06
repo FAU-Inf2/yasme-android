@@ -84,7 +84,6 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
                 contactListContent.getMap(), android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
 
         searchResultView.setAdapter(mAdapter);
-
         searchResultView.setOnItemClickListener(this);
 
         searchButton.setOnClickListener(this);
@@ -181,6 +180,7 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
         } else {
             String noResults = DatabaseManager.INSTANCE.getContext().getResources().getString(R.string.search_no_results);
             contactListContent.addItem(new ContactListContent.ContactListItem("null", noResults, ""));
+            mAdapter.notifyDataSetChanged();
         }
     }
 }
