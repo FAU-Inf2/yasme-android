@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.yasme.android.R;
@@ -18,19 +19,21 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.ChatAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link OwnProfileFragment.OnOwnProfileFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link OwnProfileFragment#newInstance} factory method to
+ * Use the OwnProfileFragment#newInstance factory method to
  * create an instance of this fragment.
  *
  */
 public class OwnProfileFragment extends Fragment implements View.OnClickListener, NotifiableFragment<Drawable> {
 
     private TextView name;
+    private ImageView profilePicture;
     private TextView email;
     //private TextView number;
 
@@ -47,7 +50,6 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         // Register at observer
         Log.d(this.getClass().getSimpleName(), "Try to get OwnProfileObservable");
         FragmentObservable<OwnProfileFragment, Drawable> obs = ObservableRegistry.getObservable(OwnProfileFragment.class);
@@ -60,16 +62,22 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         View layout = inflater.inflate(R.layout.fragment_own_profile, container, false);
 
-        name = (TextView) layout.findViewById(R.id.own_contact_header);
-        email = (TextView) layout.findViewById(R.id.own_mailViewText);
+        name = (TextView) layout.findViewById(R.id.own_profile_header);
+        email = (TextView) layout.findViewById(R.id.own_profile_email);
+        profilePicture = (ImageView) layout.findViewById(R.id.own_profile_picture);
         //number = (TextView) layout.findViewById(R.id.own_numberViewText);
 
         //imageButton = (ImageButton) layout.findViewById(R.id.own_imageButton);
 
-        User u = activity.getSelfUser();
+        User self = activity.getSelfUser();
 
-        name.setText(u.getName());
-        email.setText(DatabaseManager.INSTANCE.getUserEmail());
+        name.setText(self.getName());
+        email.setText(self.getEmail());
+
+        // Show nice profile picture
+        profilePicture.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
+        TextView initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
+        initial.setText(self.getName().substring(0,1).toUpperCase());
         // number.setText("");
 
         //imageButton.setOnClickListener(this);

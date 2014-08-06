@@ -63,14 +63,14 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         super.onCreate(savedInstanceState);
 
         if (!ConnectionTask.isInitialized()) {
-	    String server = getResources().getString(R.string.server_host);
-	    if (BuildConfig.DEBUG) {
-		    server = getResources().getString(R.string.server_host_debug);
-	    }
-	    Log.d(getClass().getSimpleName(), "YASME-Server: " + server);
-            ConnectionTask.initParams(getResources().getString(R.string.server_scheme),
-                    server,
-                    getResources().getString(R.string.server_port));
+            String server = getResources().getString(R.string.server_host);
+            if (BuildConfig.DEBUG) {
+                server = getResources().getString(R.string.server_host_debug);
+            }
+            Log.d(getClass().getSimpleName(), "YASME-Server: " + server);
+                ConnectionTask.initParams(getResources().getString(R.string.server_scheme),
+                        server,
+                        getResources().getString(R.string.server_port));
         }
 
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);

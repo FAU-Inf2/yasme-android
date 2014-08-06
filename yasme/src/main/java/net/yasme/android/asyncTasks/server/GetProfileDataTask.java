@@ -35,10 +35,9 @@ public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
         }
         SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
         editor.putLong(AbstractYasmeActivity.USER_ID, selfProfile.getId());
-        editor.putString(AbstractYasmeActivity.USER_MAIL, selfProfile.getEmail());
+        // Don't store the mail. It will be null since the server won't deliver any email addresses any more
+        //editor.putString(AbstractYasmeActivity.USER_MAIL, selfProfile.getEmail());
         editor.putString(AbstractYasmeActivity.USER_NAME, selfProfile.getName());
         editor.commit();
-
-        DatabaseManager.INSTANCE.setUserEmail(selfProfile.getEmail());
     }
 }
