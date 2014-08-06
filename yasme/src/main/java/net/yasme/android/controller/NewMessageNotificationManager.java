@@ -20,6 +20,28 @@ import java.util.List;
  * Created by robert on 02.08.14.
  */
 public class NewMessageNotificationManager {
+    private int numberOfMessages;
+    private Context mContext;
+    private NotificationManager mNotificationManager;
+    private NotificationCompat.Builder mBuilder;
+    // mId allows you to update the notification later on.
+    private int mId;
+
+    public NewMessageNotificationManager() {
+        mContext = DatabaseManager.INSTANCE.getContext();
+        numberOfMessages = 0;
+        mNotificationManager = (NotificationManager) mContext
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(mContext)
+                        .setContentTitle("Yasme")
+                        .setContentText(mContext.getString(R.string.notification_message))
+                        .setSmallIcon(android.R.drawable.ic_dialog_email)
+                        .setPriority(1)
+                        /*.setDefaults(Notification.DEFAULT_VIBRATE)*/
+                        .setAutoCancel(true)
+                        .setLargeIcon(getIcon(mContext));
+        mId = 1;
+    }
 
     public boolean isForeground(String PackageName){
         //get Context
@@ -43,21 +65,12 @@ public class NewMessageNotificationManager {
         return false;
     }
 
-    public void mNotify(int numberOfNewMessages) {
+    public void mNotify(final int numberOfNewMessages) {
         if(isForeground("net.yasme.android")) {
             return;
         }
-        Context mContext = DatabaseManager.INSTANCE.getContext();
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(mContext)
-                        .setContentTitle("Yasme")
-                        .setContentText(mContext.getString(R.string.notification_message))
-                        .setContentInfo("" + numberOfNewMessages)
-                        .setSmallIcon(android.R.drawable.ic_dialog_email)
-                        .setPriority(1)
-                        /*.setDefaults(Notification.DEFAULT_VIBRATE)*/
-                        .setAutoCancel(true)
-                        .setLargeIcon(getIcon(mContext));
+        mNotificationManager.cancel(mId);
+        numberOfMessages = numberOfNewMessages;
 
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(mContext, ChatListActivity.class);
@@ -67,11 +80,8 @@ public class NewMessageNotificationManager {
                 resultIntent, 0);
 
         mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder.setContentInfo("" + numberOfMessages);
 
-        // mId allows you to update the notification later on.
-        int mId = 1;
         mNotificationManager.notify(mId, mBuilder.build());
     }
 

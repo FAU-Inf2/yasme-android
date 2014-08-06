@@ -3,14 +3,15 @@ package net.yasme.android.storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import net.yasme.android.controller.NewMessageNotificationManager;
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.ChatDAOImpl;
+import net.yasme.android.storage.dao.DeviceDAO;
+import net.yasme.android.storage.dao.DeviceDAOImpl;
 import net.yasme.android.storage.dao.MessageDAO;
 import net.yasme.android.storage.dao.MessageDAOImpl;
 import net.yasme.android.storage.dao.MessageKeyDAO;
 import net.yasme.android.storage.dao.MessageKeyDAOImpl;
-import net.yasme.android.storage.dao.DeviceDAO;
-import net.yasme.android.storage.dao.DeviceDAOImpl;
 import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.storage.dao.UserDAOImpl;
 import net.yasme.android.ui.AbstractYasmeActivity;
@@ -32,6 +33,7 @@ public enum DatabaseManager {
     private String mAccessToken = null;
     private SharedPreferences mSharedPreferences;
     private String mUserEmail;
+    private NewMessageNotificationManager notifier = null;
 
     private UserDAO userDAO;
     private ChatDAO chatDAO;
@@ -155,5 +157,12 @@ public enum DatabaseManager {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putString(AbstractYasmeActivity.USER_MAIL, mUserEmail);
         editor.commit();
+    }
+
+    public NewMessageNotificationManager getNotifier() {
+        if(notifier == null) {
+            return new NewMessageNotificationManager();
+        }
+        return notifier;
     }
 }
