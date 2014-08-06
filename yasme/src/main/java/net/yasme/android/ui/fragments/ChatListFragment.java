@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.database.GetAllTask;
@@ -173,14 +174,25 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
     private void startAlarm() {
         Timer timer = new Timer("outdatedServerCall");
+        final String outdatedMessage;
+
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
+                TextView server = (TextView) getActivity().findViewById(R.id.server_messages);
+                String outdatedMessage;
                 try {
-                    AuthorizationTask.getInstance().outdated();
+                    outdatedMessage = AuthorizationTask.getInstance().outdated();
                 } catch (RestServiceException e) {
                     Log.e(this.getClass().getSimpleName(), e.getMessage());
+                    outdatedMessage = "";
                 }
+                if(outdatedMessage.isEmpty()) {
+                    server.setVisibility(View.GONE);
+                    return;
+                }
+                server.setText(outdatedMessage);
+                server.setVisibility(View.VISIBLE);
             }
         };
         timer.scheduleAtFixedRate(task, 0, 86400000);
