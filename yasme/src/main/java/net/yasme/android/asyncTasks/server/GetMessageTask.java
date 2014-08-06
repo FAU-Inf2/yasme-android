@@ -36,7 +36,11 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
     private List<Message> messages;
     private long lastMessageId;
-    private NewMessageNotificationManager notifier = new NewMessageNotificationManager();
+    private NewMessageNotificationManager notifier;
+
+    public GetMessageTask() {
+        notifier = DatabaseManager.INSTANCE.getNotifier();
+    }
 
     /**
      * @return Returns true if it was successful, otherwise false
