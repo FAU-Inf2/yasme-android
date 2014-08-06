@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.connection.AuthorizationTask;
+import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.PasswordEncryption;
 import net.yasme.android.entities.User;
@@ -59,6 +60,8 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             accessToken = loginReturn[1];
 
             Log.d(this.getClass().getSimpleName(), loginReturn[0]);
+
+            ConnectionTask.initSession(userId, accessToken);
 
             // storage
             SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
