@@ -172,7 +172,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     }
 
     private void startAlarm() {
-        Timer timer = new Timer("outDatedServerCall");
+        Timer timer = new Timer("outdatedServerCall");
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
