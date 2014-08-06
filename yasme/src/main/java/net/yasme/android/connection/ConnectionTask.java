@@ -33,7 +33,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-public class ConnectionTask {
+public abstract class ConnectionTask {
 
     public enum Request {
         POST,
