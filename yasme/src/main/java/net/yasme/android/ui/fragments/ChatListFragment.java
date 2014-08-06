@@ -42,7 +42,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
     private List<Chat> chatRooms = new ArrayList<Chat>();
     private ChatListAdapter adapter;
-    private int counter;
 
     public ChatListFragment() {
 
@@ -76,23 +75,22 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         //register for context menu
         registerForContextMenu(this.getListView());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         //ab hier ist alles aus der onCreateMethode
-        counter = 0;
-
-        //progress bar on
-        //getActivity().setProgressBarIndeterminateVisibility(true);
 
         // At first, retrieve the chats from the database
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        counter++;
         new GetAllTask(chatDAO, ChatListFragment.class).execute();
 
         // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
         // Aktualisiert die Datenbank auf den aktuellen Stand des Servers
-        counter++;
-        new GetMyChatsTask().execute();
 
+        new GetMyChatsTask().execute();
         new GetMessageTask().execute();
     }
 
@@ -163,12 +161,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         this.chatRooms = chatRooms;
         adapter.updateChats(chatRooms);
         adapter.notifyDataSetChanged();
-
-        counter--;
-        if(counter == 0) {
-            //progress bar off
-            //getActivity().setProgressBarIndeterminateVisibility(false);
-        }
     }
 
     private void startAlarm() {
