@@ -41,29 +41,33 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 
     @Override
     public void notifyDataSetChanged() {
+        Log.d(getClass().getSimpleName(), "Notify");
         Collections.sort(chats, new Comparator<Object>() {
             @Override
             public int compare(Object o1, Object o2) {
+                Log.d(getClass().getSimpleName(), "Compare");
                 Chat c1 = (Chat) o1;
+                c1 = DatabaseManager.INSTANCE.getChatDAO().get(c1.getId());
                 Chat c2 = (Chat) o2;
+                c2 = DatabaseManager.INSTANCE.getChatDAO().get(c2.getId());
                 if (c1.getLastMessage() == null && c2.getLastMessage() == null) {
                     Log.d(getClass().getSimpleName(),"LastMessages not set");
                     return 0;
                 }
                 if (c1.getLastMessage() == null) {
                     Log.d(getClass().getSimpleName(),"LastMessage " + c1.getId() + " not set");
-                    return -1;
+                    return 1;
                 }
                 if (c2.getLastMessage() == null) {
                     Log.d(getClass().getSimpleName(),"LastMessage " + c2.getId() + " not set");
-                    return 1;
-                }
-                if (c1.getLastMessage().getId() < c2.getLastMessage().getId()) {
-                    Log.d(getClass().getSimpleName(),"Chat  " + c1.getId() + "  before Chat  " + c2.getId());
                     return -1;
                 }
+                if (c1.getLastMessage().getId() < c2.getLastMessage().getId()) {
+                    Log.d(getClass().getSimpleName(),"Chat  " + c1.getId() + "(" + c1.getLastMessage().getId() + ")  before Chat  " + c2.getId() + "(" + c2.getLastMessage().getId() + ")");
+                    return 1;
+                }
                 Log.d(getClass().getSimpleName(),"Chat 2 before Chat 1");
-                return 1;
+                return -1;
                 //return -1 * (c1.getLastModified().compareTo(c2.getLastModified()));
             }
         });

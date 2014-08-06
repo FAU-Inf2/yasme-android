@@ -85,13 +85,15 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
                 Log.e(this.getClass().getSimpleName(), "Storing a message in database failed");
                 return false;
             } else {
+                Log.d(getClass().getSimpleName(), "Message successfully stored");
                 if (message.getChat() != null) {
+                    Log.d(getClass().getSimpleName(), "Get Chat from DB");
                     ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-                    Chat chat = chatDAO.get(message.getId());
+                    Chat chat = chatDAO.get(message.getChat().getId());
                     if (chat != null) {
                         chat.setLastMessage(message);
                         chatDAO.addOrUpdate(chat);
-                        Log.d(getClass().getSimpleName(), "Set lastMessage for chat " + chat.getId());
+                        Log.d(getClass().getSimpleName(), "Set lastMessage for chat " + chat.getId() +": " + message.getId());
                     } else {
                         Log.e(getClass().getSimpleName(), "Chat not found in DB");
                     }

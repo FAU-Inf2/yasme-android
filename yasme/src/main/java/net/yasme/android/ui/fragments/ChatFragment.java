@@ -137,6 +137,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(getClass().getSimpleName(), "Update Chat");
         // Ask server for new messages
         new GetMessageTask().execute();
     }

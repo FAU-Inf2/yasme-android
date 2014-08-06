@@ -236,6 +236,13 @@ public enum ChatDAOImpl implements ChatDAO {
                 next = indexToBeRemoved + 1;
             }
 
+            // if lastMessage is null, do not overwrite
+            if (chat.getLastMessage() == null) {
+                Chat tmp = get(chat.getId());
+                if (tmp != null && tmp.getLastMessage() != null) {
+                    chat.setLastMessage(tmp.getLastMessage());
+                }
+            }
             databaseHelper.getChatDao().update(chat);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
