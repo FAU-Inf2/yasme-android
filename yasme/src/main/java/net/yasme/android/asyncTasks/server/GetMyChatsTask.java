@@ -99,7 +99,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
             for (User user : chat.getParticipants()) {
                 Log.d(this.getClass().getSimpleName(), "User " + user.getId() + " outdated?");
                 User dbUser = userDAO.get(user.getId());
-                if (dbUser == null) {
+                if (dbUser == null || dbUser.getLastModified() == null) {
                     Log.d(this.getClass().getSimpleName(), "Yes, not in DB");
                     refreshUserIds.add(user.getId());
                     continue;
