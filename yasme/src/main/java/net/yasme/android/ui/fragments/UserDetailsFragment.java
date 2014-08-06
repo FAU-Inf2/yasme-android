@@ -106,14 +106,14 @@ public class UserDetailsFragment
             //contact.setEmail(getArguments().getString(ARG_USERMAIL));
             //contact.setId(Long.valueOf(getArguments().getString(ARG_USERID)));
         }
-
-        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        selfUser = activity.getSelfUser();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+        selfUser = activity.getSelfUser();
 
         View layout = inflater.inflate(R.layout.fragment_user_details, container, false);
         contactName = (TextView) layout.findViewById(R.id.contact_header);

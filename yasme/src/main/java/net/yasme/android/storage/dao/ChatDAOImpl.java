@@ -163,14 +163,21 @@ public enum ChatDAOImpl implements ChatDAO {
             result = databaseHelper.getChatUserDao().queryRaw(query);
 
             List<String[]> matches = result.getResults();
-                List<Chat> chats = new ArrayList<>();
-                for (String[] match : matches) {
-                    // match[0] chatId, match[1] number of matching participants
-                    if (Integer.valueOf(match[1]) >= users.size()) {
-                        // All participants found
-                        chats.add(get(Long.valueOf(match[0])));
+            List<Chat> chats = new ArrayList<>();
+            for (String[] match : matches) {
+                // match[0] chatId, match[1] number of matching participants
+                if (Integer.valueOf(match[1]) >= users.size()) {
+                    // All participants found
+                    Chat get = get(Long.valueOf(match[0]));
+                    if (null == get) {
+                        // Null should not happen actually
+                        Log.e(this.getClass().getSimpleName(), "A chat (id=" + match[0] + ") which contains the given users (and more) could not be retrieved from the database");
+                    }
+                    else {
+                        chats.add(get);
                     }
                 }
+            }
             return chats;
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
