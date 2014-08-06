@@ -21,8 +21,6 @@ import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
 import net.yasme.android.ui.fragments.InviteToChatFragment.AllUsersFetchedParam;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 
 public class ContactListFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<AllUsersFetchedParam> {
 

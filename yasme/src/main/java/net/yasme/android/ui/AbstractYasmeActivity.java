@@ -6,15 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import net.yasme.android.BuildConfig;
 import net.yasme.android.R;
 import net.yasme.android.connection.ConnectionTask;
-import net.yasme.android.controller.FragmentObservable;
-import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.controller.Toastable;
 import net.yasme.android.controller.Toaster;

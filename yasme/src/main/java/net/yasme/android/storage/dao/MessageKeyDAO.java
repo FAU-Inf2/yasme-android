@@ -1,8 +1,6 @@
 package net.yasme.android.storage.dao;
 
-import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.MessageKey;
-import net.yasme.android.entities.User;
 
 import java.util.List;
 

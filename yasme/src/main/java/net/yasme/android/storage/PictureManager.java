@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import net.yasme.android.entities.User;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 

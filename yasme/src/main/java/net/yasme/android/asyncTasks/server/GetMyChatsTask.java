@@ -14,7 +14,6 @@ import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.UserDAO;
 import net.yasme.android.ui.fragments.ChatListFragment;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

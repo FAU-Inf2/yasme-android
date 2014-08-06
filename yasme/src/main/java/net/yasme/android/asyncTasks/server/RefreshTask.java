@@ -5,20 +5,15 @@ import android.util.Log;
 
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.connection.DeviceTask;
-import net.yasme.android.connection.UserTask;
-import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.controller.SpinnerObservable;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.User;
-import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.DeviceDAO;
 import net.yasme.android.storage.dao.UserDAO;
-import net.yasme.android.ui.fragments.ChatListFragment;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

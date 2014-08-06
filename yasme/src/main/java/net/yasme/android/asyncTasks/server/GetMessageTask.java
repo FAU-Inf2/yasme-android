@@ -2,7 +2,6 @@ package net.yasme.android.asyncTasks.server;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import net.yasme.android.connection.DeviceTask;

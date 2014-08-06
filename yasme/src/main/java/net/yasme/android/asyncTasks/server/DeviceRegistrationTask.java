@@ -1,14 +1,12 @@
 package net.yasme.android.asyncTasks.server;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.KeyEncryption;
 import net.yasme.android.gcm.CloudMessaging;
-import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.DebugManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 

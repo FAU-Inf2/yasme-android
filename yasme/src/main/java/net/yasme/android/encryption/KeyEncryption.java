@@ -6,22 +6,14 @@ package net.yasme.android.encryption;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.provider.ContactsContract;
-import android.util.Base64;
 import android.util.Log;
 
-import net.yasme.android.entities.Device;
 import net.yasme.android.entities.MessageKey;
-import net.yasme.android.entities.OwnDevice;
-import net.yasme.android.entities.User;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.DebugManager;
 
-import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 
 public class KeyEncryption {
 

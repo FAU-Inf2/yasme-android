@@ -5,7 +5,6 @@ import android.util.Log;
 
 import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.controller.SpinnerObservable;
-import net.yasme.android.entities.MessageKey;
 
 /**
  * Created by martin on 06.07.2014.

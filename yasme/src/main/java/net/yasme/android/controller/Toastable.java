@@ -1,7 +1,5 @@
 package net.yasme.android.controller;
 
-import android.view.Gravity;
-
 /**
  * Created by martin on 19.07.2014.
  */

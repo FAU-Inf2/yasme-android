@@ -22,7 +22,6 @@ import net.yasme.android.BuildConfig;
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.server.DeviceRegistrationTask;
 import net.yasme.android.asyncTasks.server.UserLoginTask;
-import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;

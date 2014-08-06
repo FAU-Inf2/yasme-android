@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import net.yasme.android.R;
-import net.yasme.android.gcm.CloudMessaging;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.LoginFragment;
 

@@ -3,7 +3,6 @@ package net.yasme.android.storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import net.yasme.android.entities.User;
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.ChatDAOImpl;
 import net.yasme.android.storage.dao.MessageDAO;

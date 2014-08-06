@@ -1,7 +1,5 @@
 package net.yasme.android.entities;
 
-import android.util.Log;
-
 /**
  * Created by florianwinklmeier on 16.06.14.
  */

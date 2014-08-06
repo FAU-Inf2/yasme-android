@@ -1,12 +1,10 @@
 package net.yasme.android.encryption;
 
-import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.ChatTask;
-import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.connection.MessageKeyTask;
 import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.Chat;
@@ -18,18 +16,8 @@ import net.yasme.android.exception.*;
 import net.yasme.android.storage.DatabaseManager;
 
 
-import org.apache.http.HttpResponse;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MessageEncryption {
     Chat chat;

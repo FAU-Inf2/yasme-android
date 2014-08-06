@@ -1,18 +1,13 @@
 package net.yasme.android.asyncTasks.server;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import net.yasme.android.connection.AuthorizationTask;
-import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.encryption.PasswordEncryption;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.LoginFragment;
 import net.yasme.android.ui.fragments.RegisterFragment;
 

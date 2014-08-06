@@ -11,10 +11,8 @@ import android.view.Window;
 
 import net.yasme.android.R;
 import net.yasme.android.connection.AuthorizationTask;
-import net.yasme.android.connection.ConnectionTask;
 import net.yasme.android.connection.ssl.HttpClient;
 import net.yasme.android.exception.RestServiceException;
-import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.ChatListFragment;
 

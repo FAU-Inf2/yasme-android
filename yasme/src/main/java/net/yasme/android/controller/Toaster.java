@@ -1,14 +1,8 @@
 package net.yasme.android.controller;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
-import net.yasme.android.R;
-import net.yasme.android.storage.DatabaseConstants;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.ui.AbstractYasmeActivity;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -3,7 +3,6 @@ package net.yasme.android.asyncTasks.server;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import net.yasme.android.asyncTasks.database.AddIfNotExistsTask;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.controller.SpinnerObservable;
@@ -11,7 +10,6 @@ import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.ui.AbstractYasmeActivity;
 import net.yasme.android.ui.fragments.InviteToChatFragment;
 import net.yasme.android.ui.fragments.UserDetailsFragment;
 

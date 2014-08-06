@@ -4,11 +4,9 @@ import android.util.Log;
 
 import net.yasme.android.entities.Device;
 import net.yasme.android.entities.User;
-import net.yasme.android.storage.DatabaseConstants;
 import net.yasme.android.storage.DatabaseHelper;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

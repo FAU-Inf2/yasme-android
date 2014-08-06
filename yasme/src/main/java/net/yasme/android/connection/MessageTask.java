@@ -1,17 +1,8 @@
 package net.yasme.android.connection;
 
 import android.util.Log;
-import android.widget.Toast;
 
-import net.yasme.android.R;
-import net.yasme.android.controller.Toaster;
-import net.yasme.android.encryption.KeyEncryption;
-import net.yasme.android.encryption.MessageEncryption;
-import net.yasme.android.entities.Chat;
-import net.yasme.android.entities.Device;
 import net.yasme.android.entities.Message;
-import net.yasme.android.entities.MessageKey;
-import net.yasme.android.entities.User;
 import net.yasme.android.exception.Error;
 import net.yasme.android.exception.KeyOutdatedException;
 import net.yasme.android.exception.RestServiceException;
@@ -25,14 +16,12 @@ import org.apache.http.client.utils.URIBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MessageTask extends ConnectionTask {

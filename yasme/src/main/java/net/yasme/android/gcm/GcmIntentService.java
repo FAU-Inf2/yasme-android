@@ -4,16 +4,13 @@ package net.yasme.android.gcm;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import net.yasme.android.asyncTasks.server.GetMessageTask;
-import net.yasme.android.ui.AbstractYasmeActivity;
 
 
 /**
