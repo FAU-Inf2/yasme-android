@@ -92,6 +92,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
                     if (chat != null) {
                         chat.setLastMessage(message);
                         chatDAO.addOrUpdate(chat);
+                        Log.d(getClass().getSimpleName(), "Set lastMessage for chat " + chat.getId());
                     } else {
                         Log.e(getClass().getSimpleName(), "Chat not found in DB");
                     }
