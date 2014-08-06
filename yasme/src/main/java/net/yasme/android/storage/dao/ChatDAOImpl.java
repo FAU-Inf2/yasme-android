@@ -124,9 +124,16 @@ public enum ChatDAOImpl implements ChatDAO {
     public List<Chat> getByParticipantsExact(Set<User> users) {
         List<Chat> theseParticipantsOrMore = getByTheseParticipantsOrMore(users);
         List<Chat> exactMatch = new ArrayList<>();
-        for (Chat chat : theseParticipantsOrMore) {
-            if (chat.getParticipants().size() == users.size()) {
-                exactMatch.add(chat);
+        if (null != theseParticipantsOrMore && theseParticipantsOrMore.size() > 0) {
+            for (Chat chat : theseParticipantsOrMore) {
+                Log.d(this.getClass().getSimpleName(), "Chat " + chat.getId() + " has " + chat.getParticipants().toString() + " participants");
+                if (null == chat.getParticipants() || chat.getParticipants().size() < 2) {
+                    Log.e(this.getClass().getSimpleName(), "Chat " + chat.getId() + " has no or less than 2 participants?!");
+                } else {
+                    if (chat.getParticipants().size() == users.size()) {
+                        exactMatch.add(chat);
+                    }
+                }
             }
         }
         return exactMatch;
@@ -169,10 +176,6 @@ public enum ChatDAOImpl implements ChatDAO {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
         }
         return null;
-        /*} catch (Exception e) {
-            Log.e(this.getClass().getSimpleName(), "Exception was thrown");
-            return null;
-        }*/
     }
 
     @Override
