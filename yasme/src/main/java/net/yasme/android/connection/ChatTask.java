@@ -55,8 +55,11 @@ public class ChatTask extends ConnectionTask {
         List<Chat> chats = new ArrayList<Chat>();
         try {
             HttpResponse httpResponse = executeRequest(Request.GET, "");
-            JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
-                    httpResponse.getEntity().getContent())).readLine());
+
+            String json = new BufferedReader(new InputStreamReader(
+                    httpResponse.getEntity().getContent())).readLine();
+            JSONArray jsonArray = new JSONArray(json);
+            Log.d(this.getClass().getSimpleName(), json);
 
             //for (int i = 0; i < jsonArray.length(); i++) {
             //    Log.d(this.getClass().getSimpleName(), jsonArray.optString(i));

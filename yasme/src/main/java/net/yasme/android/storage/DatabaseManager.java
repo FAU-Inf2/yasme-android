@@ -31,6 +31,7 @@ public enum DatabaseManager {
     private long mDeviceId = -1;
     private String mAccessToken = null;
     private SharedPreferences mSharedPreferences;
+    private String mUserEmail;
 
     private UserDAO userDAO;
     private ChatDAO chatDAO;
@@ -139,6 +140,20 @@ public enum DatabaseManager {
         this.mAccessToken = accessToken;
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putString(AbstractYasmeActivity.ACCESSTOKEN, mAccessToken);
+        editor.commit();
+    }
+
+    public String getUserEmail() {
+        if (null == mUserEmail || "" == mUserEmail) {
+            mUserEmail = getSharedPreferences().getString(AbstractYasmeActivity.USER_MAIL, null);
+        }
+        return mUserEmail;
+    }
+
+    public void setUserEmail(String mUserEmail) {
+        this.mUserEmail = mUserEmail;
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putString(AbstractYasmeActivity.USER_MAIL, mUserEmail);
         editor.commit();
     }
 }

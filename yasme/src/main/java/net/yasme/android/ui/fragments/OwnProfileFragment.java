@@ -16,6 +16,7 @@ import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
 
 /**
@@ -68,7 +69,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         User u = activity.getSelfUser();
 
         name.setText(u.getName());
-        email.setText(u.getEmail());
+        email.setText(DatabaseManager.INSTANCE.getUserEmail());
         // number.setText("");
 
         //imageButton.setOnClickListener(this);

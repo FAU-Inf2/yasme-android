@@ -38,5 +38,7 @@ public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
         editor.putString(AbstractYasmeActivity.USER_MAIL, selfProfile.getEmail());
         editor.putString(AbstractYasmeActivity.USER_NAME, selfProfile.getName());
         editor.commit();
+
+        DatabaseManager.INSTANCE.setUserEmail(selfProfile.getEmail());
     }
 }
