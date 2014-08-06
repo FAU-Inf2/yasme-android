@@ -12,7 +12,7 @@
     <string name="server_port" translatable="false">443</string>
 -->
     <string name="server_scheme" translatable="false">https</string>
-    <string name="server_host" translatable="false">devel.yasme.net</string>
-    <string name="server_host_debug" translatable="false">connect.yasme.net</string>
+    <string name="server_host_debug" translatable="false">devel.yasme.net</string>
+    <string name="server_host" translatable="false">connect.yasme.net</string>
     <string name="server_port" translatable="false">443</string>
 </resources>
