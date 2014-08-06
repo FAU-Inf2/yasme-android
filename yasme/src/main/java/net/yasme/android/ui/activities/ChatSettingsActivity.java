@@ -60,8 +60,6 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
         }
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-
-
         // When swiping between different sections, select the corresponding
         // tab. We can also use ActionBar.Tab#select() to do this if we have
         // a reference to the Tab.

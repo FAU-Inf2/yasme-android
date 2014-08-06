@@ -44,7 +44,7 @@ public class NewMessageNotificationManager {
     }
 
     public void mNotify(int numberOfNewMessages) {
-        if(!isForeground("net.yasme.android")) {
+        if(isForeground("net.yasme.android")) {
             return;
         }
         Context mContext = DatabaseManager.INSTANCE.getContext();
