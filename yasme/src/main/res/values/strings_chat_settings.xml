@@ -18,6 +18,7 @@
     <string name="change_status">Change status</string>
     <string name="change_name_hint">New name for chat</string>
     <string name="change_status_hint">New status name for chat</string>
+    <string name="number_of_participants">Number of participants: </string>
 
     <string name="change_successful">Change was successful</string>
     <string name="change_not_successful">Change was not successful</string>
@@ -32,6 +33,9 @@
     <string name="alert_owner_message">Please select a new owner from the list to proceed</string>
     <string name="alert_leave">Leave chat</string>
     <string name="alert_leave_message">Do you want to leave</string>
+
+    <string name="contact_list_empty">All your contacts are participant in the current chat.
+            Tap here to search for others.</string>
 
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
