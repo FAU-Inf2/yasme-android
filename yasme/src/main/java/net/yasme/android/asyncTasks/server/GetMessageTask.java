@@ -112,6 +112,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        int size = messages.size();
         if (!success) {
             Log.w(this.getClass().getSimpleName(), "No success");
             SpinnerObservable.getInstance().removeBackgroundTask(this);
@@ -119,7 +120,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         }
         Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
 
-        if(messages.size() > 0) {
+        if(size > 0) {
             // Store lastMessageId
             Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
 
@@ -127,8 +128,8 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
             editor.commit();
 
-            if(!(messages.size() == 1 && messages.get(0).getSender().getId() == DatabaseManager.INSTANCE.getUserId())) {
-                notifier.mNotify(messages.size());
+            if(!(size == 1 && messages.get(0).getSender().getId() == DatabaseManager.INSTANCE.getUserId())) {
+                notifier.mNotify(size, messages.get(size-1).getId());
             }
         }
         //For notification testing:
@@ -137,7 +138,6 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
         ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(null);
-        //ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
 
         // Vibrate
 //        if (messages.size() > 0) {

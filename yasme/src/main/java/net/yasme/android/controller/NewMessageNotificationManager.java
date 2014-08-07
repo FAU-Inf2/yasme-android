@@ -12,7 +12,8 @@ import android.support.v4.app.NotificationCompat;
 
 import net.yasme.android.R;
 import net.yasme.android.storage.DatabaseManager;
-import net.yasme.android.ui.activities.ChatListActivity;
+import net.yasme.android.ui.AbstractYasmeActivity;
+import net.yasme.android.ui.activities.ChatActivity;
 
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class NewMessageNotificationManager {
         return false;
     }
 
-    public void mNotify(final int numberOfNewMessages) {
+    public void mNotify(final int numberOfNewMessages, final long newestMessageId) {
         if(isForeground("net.yasme.android")) {
             return;
         }
@@ -73,7 +74,8 @@ public class NewMessageNotificationManager {
         numberOfMessages = numberOfNewMessages;
 
         // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(mContext, ChatListActivity.class);
+        Intent resultIntent = new Intent(mContext, ChatActivity.class);
+        resultIntent.putExtra(AbstractYasmeActivity.CHAT_ID, newestMessageId);
 
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0,
