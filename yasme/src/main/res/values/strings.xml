@@ -69,4 +69,7 @@
     <!-- Notification -->
     <string name="notification_message">"Received new messages"</string>
 
+    <string name="unable_create_chat">Unable to create new Chat. Maybe there is an internal
+        server error</string>
+
 </resources>

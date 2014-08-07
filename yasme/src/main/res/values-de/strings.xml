@@ -66,4 +66,6 @@
     <!-- Notification -->
     <string name="notification_message">"Neue Nachrichten empfangen"</string>
 
+    <string name="unable_create_chat">Neuer Chat konnte nicht erstellt werden. Möglicherweise
+        liegt ein Problem am Server vor</string>
 </resources>

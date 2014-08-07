@@ -2,10 +2,13 @@ package net.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import net.yasme.android.R;
 import net.yasme.android.connection.ChatTask;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.controller.SpinnerObservable;
+import net.yasme.android.controller.Toaster;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
 import net.yasme.android.exception.RestServiceException;
@@ -83,9 +86,12 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
                 Log.e(this.getClass().getSimpleName(), e.getMessage());
                 return false;
             }
+            if(newChatId == -1) {
+                return false;
+            }
             newChat.setId(newChatId);
             // If a new chat was created, store it in the internal database
-            if (null == DatabaseManager.INSTANCE.getChatDAO().addIfNotExists(newChat)) {
+            if (null == databaseManager.getChatDAO().addIfNotExists(newChat)) {
                 Log.e(this.getClass().getSimpleName(), "Could not store new chat in database");
                 return false;
             }
@@ -103,10 +109,10 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
         if (newChatId == -1) {
             // Something went wrong
             Log.e(this.getClass().getSimpleName(), "newChatId is still -1.");
+            Toaster.getInstance().toast(R.string.unable_create_chat, Toast.LENGTH_LONG);
         }
 
         if (success) {
-            //Observer mit zwei Fragments UserDetailFragment und Invite to Chat benachrichtigen
             ObservableRegistry.getObservable(UserDetailsFragment.class).
                     notifyFragments(new UserDetailsFragment.NewChatParam(newChatId));
             ObservableRegistry.getObservable(InviteToChatFragment.class).
