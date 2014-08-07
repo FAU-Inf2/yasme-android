@@ -1,7 +1,6 @@
 package net.yasme.android.controller;
 
 import android.app.ActivityManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -40,8 +39,8 @@ public class NewMessageNotificationManager {
                         .setContentText(mContext.getString(R.string.notification_message))
                         .setSmallIcon(R.drawable.ic_notify_y)
                         .setPriority(1)
-                        .setDefaults(Notification.DEFAULT_VIBRATE)
-                        .setDefaults(Notification.DEFAULT_SOUND)
+                        /*.setDefaults(Notification.DEFAULT_VIBRATE)
+                        .setDefaults(Notification.DEFAULT_SOUND)*/
                         .setAutoCancel(true)
                         .setLargeIcon(getIcon(mContext));
         mId = 1;
