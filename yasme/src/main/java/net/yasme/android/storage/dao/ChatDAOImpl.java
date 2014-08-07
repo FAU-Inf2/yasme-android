@@ -124,9 +124,16 @@ public enum ChatDAOImpl implements ChatDAO {
     public List<Chat> getByParticipantsExact(Set<User> users) {
         List<Chat> theseParticipantsOrMore = getByTheseParticipantsOrMore(users);
         List<Chat> exactMatch = new ArrayList<>();
-        for (Chat chat : theseParticipantsOrMore) {
-            if (chat.getParticipants().size() == users.size()) {
-                exactMatch.add(chat);
+        if (null != theseParticipantsOrMore && theseParticipantsOrMore.size() > 0) {
+            for (Chat chat : theseParticipantsOrMore) {
+                Log.d(this.getClass().getSimpleName(), "Chat " + chat.getId() + " has " + chat.getParticipants().toString() + " participants");
+                if (null == chat.getParticipants() || chat.getParticipants().size() < 2) {
+                    Log.e(this.getClass().getSimpleName(), "Chat " + chat.getId() + " has no or less than 2 participants?!");
+                } else {
+                    if (chat.getParticipants().size() == users.size()) {
+                        exactMatch.add(chat);
+                    }
+                }
             }
         }
         return exactMatch;
@@ -156,23 +163,26 @@ public enum ChatDAOImpl implements ChatDAO {
             result = databaseHelper.getChatUserDao().queryRaw(query);
 
             List<String[]> matches = result.getResults();
-                List<Chat> chats = new ArrayList<>();
-                for (String[] match : matches) {
-                    // match[0] chatId, match[1] number of matching participants
-                    if (Integer.valueOf(match[1]) >= users.size()) {
-                        // All participants found
-                        chats.add(get(Long.valueOf(match[0])));
+            List<Chat> chats = new ArrayList<>();
+            for (String[] match : matches) {
+                // match[0] chatId, match[1] number of matching participants
+                if (Integer.valueOf(match[1]) >= users.size()) {
+                    // All participants found
+                    Chat get = get(Long.valueOf(match[0]));
+                    if (null == get) {
+                        // Null should not happen actually
+                        Log.e(this.getClass().getSimpleName(), "A chat (id=" + match[0] + ") which contains the given users (and more) could not be retrieved from the database");
+                    }
+                    else {
+                        chats.add(get);
                     }
                 }
+            }
             return chats;
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
         }
         return null;
-        /*} catch (Exception e) {
-            Log.e(this.getClass().getSimpleName(), "Exception was thrown");
-            return null;
-        }*/
     }
 
     @Override

@@ -86,7 +86,9 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
                 Log.e(this.getClass().getSimpleName(), e.getMessage());
                 return false;
             }
-            if(newChatId == -1) {
+
+            if (newChatId < 0) {
+                Log.e(this.getClass().getSimpleName(), "Chat was created at server. However, the new chat id is still " + newChatId);
                 return false;
             }
             newChat.setId(newChatId);
