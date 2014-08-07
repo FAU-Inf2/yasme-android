@@ -1,6 +1,7 @@
 package net.yasme.android.controller;
 
 import android.app.ActivityManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import net.yasme.android.R;
 import net.yasme.android.storage.DatabaseManager;
@@ -38,13 +40,14 @@ public class NewMessageNotificationManager {
                         .setContentText(mContext.getString(R.string.notification_message))
                         .setSmallIcon(R.drawable.ic_notify_y)
                         .setPriority(1)
-                        /*.setDefaults(Notification.DEFAULT_VIBRATE)*/
+                        .setDefaults(Notification.DEFAULT_VIBRATE)
+                        .setDefaults(Notification.DEFAULT_SOUND)
                         .setAutoCancel(true)
                         .setLargeIcon(getIcon(mContext));
         mId = 1;
     }
 
-    private boolean isForeground(String PackageName){
+    private boolean isForeground(){
         //get Context
         Context mContext = DatabaseManager.INSTANCE.getContext();
 
@@ -60,14 +63,15 @@ public class NewMessageNotificationManager {
         ComponentName componentInfo = task.get(0).topActivity;
 
         // Check if it matches our package name.
-        if(componentInfo.getPackageName().equals(PackageName)) return true;
+        if(componentInfo.getPackageName().equals(mContext.getPackageName())) return true;
 
         // If not then our app is not on the foreground.
         return false;
     }
 
     public void mNotify(final int numberOfNewMessages, final long newestMessageId) {
-        if(isForeground("net.yasme.android")) {
+        if(isForeground()) {
+            Log.i(this.getClass().getSimpleName(), "App in foreground");
             return;
         }
         mNotificationManager.cancel(mId);

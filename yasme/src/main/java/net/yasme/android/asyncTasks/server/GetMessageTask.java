@@ -133,7 +133,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             }
         }
         //For notification testing:
-        //notifier.mNotify(messages.size());
+        //notifier.mNotify(messages.size(), 0);
 
 
         ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
