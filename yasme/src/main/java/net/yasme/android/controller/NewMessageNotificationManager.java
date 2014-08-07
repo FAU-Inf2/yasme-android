@@ -35,7 +35,7 @@ public class NewMessageNotificationManager {
         mBuilder = new NotificationCompat.Builder(mContext)
                         .setContentTitle("Yasme")
                         .setContentText(mContext.getString(R.string.notification_message))
-                        .setSmallIcon(android.R.drawable.ic_dialog_email)
+                        .setSmallIcon(R.drawable.ic_notify_y)
                         .setPriority(1)
                         /*.setDefaults(Notification.DEFAULT_VIBRATE)*/
                         .setAutoCancel(true)
@@ -43,7 +43,7 @@ public class NewMessageNotificationManager {
         mId = 1;
     }
 
-    public boolean isForeground(String PackageName){
+    private boolean isForeground(String PackageName){
         //get Context
         Context mContext = DatabaseManager.INSTANCE.getContext();
 
