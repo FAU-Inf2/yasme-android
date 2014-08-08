@@ -112,34 +112,34 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
-        int size = messages.size();
         if (!success) {
             Log.w(this.getClass().getSimpleName(), "No success");
             SpinnerObservable.getInstance().removeBackgroundTask(this);
             return;
-        }
-        Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
+        } else {
+            Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
 
-        if(size > 0) {
-            // Store lastMessageId
-            Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
+            int size = messages.size();
+            if (size > 0) {
+                // Store lastMessageId
+                Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
 
-            SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
-            editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
-            editor.commit();
+                SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
+                editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
+                editor.commit();
 
-            if(!(size == 1 && messages.get(0).getSender().getId() == DatabaseManager.INSTANCE.getUserId())) {
-                notifier.mNotify(size, messages.get(size-1).getId());
+                if (!(size == 1 && messages.get(0).getSender().getId() == DatabaseManager.INSTANCE.getUserId())) {
+                    notifier.mNotify(size, messages.get(size - 1).getId());
+                }
             }
-        }
-        //For notification testing:
-        //notifier.mNotify(messages.size(), 0);
+            //For notification testing:
+            //notifier.mNotify(messages.size(), 0);
 
 
-        ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
-        ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(null);
+            ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
+            ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(null);
 
-        // Vibrate
+            // Vibrate
 //        if (messages.size() > 0) {
 //            Context context = DatabaseManager.INSTANCE.getContext();
 //            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -164,8 +164,9 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 //            notificationManager.notify(1, mBuilder.build());
 //        }
 
-        //Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        SpinnerObservable.getInstance().removeBackgroundTask(this);
+            //Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            SpinnerObservable.getInstance().removeBackgroundTask(this);
+        }
     }
 
     private Message decrypt(Message message) {
