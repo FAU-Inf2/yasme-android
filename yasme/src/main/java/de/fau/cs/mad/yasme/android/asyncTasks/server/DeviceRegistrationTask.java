@@ -4,16 +4,15 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import de.fau.cs.mad.yasme.android.connection.DeviceTask;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.encryption.KeyEncryption;
-import de.fau.cs.mad.yasme.android.gcm.CloudMessaging;
-import de.fau.cs.mad.yasme.android.storage.DebugManager;
-import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
-
-import de.fau.cs.mad.yasme.android.connection.DeviceTask;
 import de.fau.cs.mad.yasme.android.entities.OwnDevice;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
+import de.fau.cs.mad.yasme.android.gcm.CloudMessaging;
+import de.fau.cs.mad.yasme.android.storage.DebugManager;
+import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.LoginFragment;
 
 /**
@@ -24,6 +23,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
     private long deviceId;
     private Activity activity;
     private String regId;
+    private String fragmentToNotify;
 
     public DeviceRegistrationTask(Activity activity){
         this.activity = activity;
@@ -32,10 +32,11 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
     /**
     * @params params[0] is userId
     * @params params[1] is product
-    * @params params[2] is regId
+    * @params params[2] is fragmentToNotify
     */
     @Override
     protected Boolean doInBackground(String... params) {
+        fragmentToNotify = params[2];
 
         long userId = Long.parseLong(params[0]);
 
@@ -131,7 +132,10 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         // after device registration
         if(success){
-            ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(new LoginFragment.DeviceRegistrationParam(success));
+            if(fragmentToNotify.compareTo(LoginFragment.class.getName()) == 0) {
+                ObservableRegistry.getObservable(LoginFragment.class)
+                        .notifyFragments(new LoginFragment.DeviceRegistrationParam(success));
+            }
         }
     }
 }

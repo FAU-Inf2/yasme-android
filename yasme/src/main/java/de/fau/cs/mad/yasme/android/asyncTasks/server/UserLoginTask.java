@@ -22,6 +22,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
     private Boolean plainPassword = false;
     private String email;
     private String password;
+    private String fragmentToNotify;
 
     public UserLoginTask(Boolean plainPassword) {
         this.plainPassword = plainPassword;
@@ -32,9 +33,11 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
      * @param params
      *          0 is email
      *          1 is password
+     *          2 is fragmentToNotify
      * @return
      */
     protected Boolean doInBackground(String... params) {
+        fragmentToNotify = params[2];
         GetInfoTask getInfoTask = new GetInfoTask(0);
         getInfoTask.execute();
 //        try {
@@ -69,9 +72,12 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             DatabaseManager.INSTANCE.setUserEmail(email);
         }
 
-        ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(
-                new LoginFragment.LoginProcessParam(success));
-        ObservableRegistry.getObservable(RegisterFragment.class).notifyFragments(
-                new RegisterFragment.RegLoginParam(success));
+        if(fragmentToNotify.compareTo(LoginFragment.class.getName()) == 0) {
+            ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(
+                    new LoginFragment.LoginProcessParam(success));
+        } else if(fragmentToNotify.compareTo(RegisterFragment.class.getName()) == 0) {
+            ObservableRegistry.getObservable(RegisterFragment.class).notifyFragments(
+                    new RegisterFragment.RegLoginParam(success));
+        }
     }
 }

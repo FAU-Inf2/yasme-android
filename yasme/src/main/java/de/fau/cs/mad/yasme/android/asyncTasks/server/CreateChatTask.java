@@ -4,6 +4,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.ChatTask;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
@@ -16,12 +22,6 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.fragments.InviteToChatFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.UserDetailsFragment;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 /**
  * Created by bene on 22.06.14.
  */
@@ -32,6 +32,7 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
     private Set<User> selectedUsers;
     private long newChatId = -1;
     private Chat newChat;
+    private String fragmentToNotify;
 
     public CreateChatTask(User selfUser, Set<User> selectedUsers) {
         this.selfUser = selfUser;
@@ -41,9 +42,11 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
 
     /**
      * @return Returns true if it was successful, otherwise false
+     * @param params 0 is fragmentToNotify
      */
     @Override
     protected Boolean doInBackground(String... params) {
+        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
 
         // Add self to selected users and names
@@ -115,10 +118,13 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
         }
 
         if (success) {
-            ObservableRegistry.getObservable(UserDetailsFragment.class).
-                    notifyFragments(new UserDetailsFragment.NewChatParam(newChatId));
-            ObservableRegistry.getObservable(InviteToChatFragment.class).
-                    notifyFragments(new InviteToChatFragment.ChatRegisteredParam(true, newChatId));
+            if(fragmentToNotify.compareTo(UserDetailsFragment.class.getName()) == 0) {
+                ObservableRegistry.getObservable(UserDetailsFragment.class).
+                        notifyFragments(new UserDetailsFragment.NewChatParam(newChatId));
+            } else if(fragmentToNotify.compareTo(InviteToChatFragment.class.getName()) == 0) {
+                ObservableRegistry.getObservable(InviteToChatFragment.class).
+                        notifyFragments(new InviteToChatFragment.ChatRegisteredParam(true, newChatId));
+            }
         }
     }
 }

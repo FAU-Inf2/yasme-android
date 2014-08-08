@@ -13,6 +13,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetNewMessagesForChatTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetMessageTask;
@@ -28,10 +32,6 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by martin on 21.06.2014.
@@ -139,7 +139,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         super.onResume();
         Log.d(getClass().getSimpleName(), "Update Chat");
         // Ask server for new messages
-        new GetMessageTask().execute();
+        new GetMessageTask().execute(this.getClass().getName());
     }
 
     @Override
@@ -167,7 +167,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         if(messages == null) {
             //Notified from GetMessageTask, new Messages are stored in the DB
             // Note that retrieved messages will be ordered ascending by id
-            new GetNewMessagesForChatTask(latestMessageOnDisplay.get(), chat.getId()).execute();
+            new GetNewMessagesForChatTask(latestMessageOnDisplay.get(), chat.getId())
+                    .execute(this.getClass().getName());
             // And don't stop the progress bar
             return;
         } else {

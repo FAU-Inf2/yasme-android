@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetContactsTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.CreateChatTask;
@@ -28,9 +31,6 @@ import de.fau.cs.mad.yasme.android.storage.dao.UserDAO;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -211,7 +211,7 @@ public class UserDetailsFragment
                 Set<User> selectedUsers = new HashSet<>();
                 selectedUsers.add(contact);
                 // Don't dismiss. Wait until you're notified and than go to the chat view
-                new CreateChatTask(selfUser, selectedUsers).execute();
+                new CreateChatTask(selfUser, selectedUsers).execute(this.getClass().getName());
                 break;
 
             case R.id.contact_detail_addcontact:
@@ -255,7 +255,7 @@ public class UserDetailsFragment
         }
 
         // Refresh contact list in first tab
-        new GetContactsTask().execute();
+        new GetContactsTask().execute(this.getClass().getName());
     }
 
 

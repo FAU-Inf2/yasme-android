@@ -3,6 +3,10 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import de.fau.cs.mad.yasme.android.connection.ChatTask;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
@@ -14,10 +18,6 @@ import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.storage.dao.UserDAO;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 /**
  * Created by robert on 07.07.14.
  */
@@ -26,6 +26,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
     private DatabaseManager dbManager;
     private UserDAO userDAO;
     private ChatDAO chatDAO;
+    private String fragmentToNotify;
 
     private List<Chat> chatsToReturn;
 
@@ -40,6 +41,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
+        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         List<Chat> serverChats = null;
         try {
@@ -86,7 +88,9 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
         }
 
         Log.i(this.getClass().getSimpleName(), "success");
-        ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(chatsToReturn);
+        if(fragmentToNotify.compareTo(ChatListFragment.class.getName()) == 0) {
+            ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(chatsToReturn);
+        }
         SpinnerObservable.getInstance().removeBackgroundTask(this);
     }
 

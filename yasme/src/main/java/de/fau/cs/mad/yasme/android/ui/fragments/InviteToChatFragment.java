@@ -14,6 +14,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetContactsTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.CreateChatTask;
@@ -24,11 +29,6 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by bene on 22.06.14.
@@ -62,7 +62,7 @@ public class InviteToChatFragment
         getActivity().setProgressBarIndeterminateVisibility(true);
 
         //new GetAllUsersTask(this.getClass()).execute(); //TODO: delete GetAllUsersTask, if not needed anymore
-        new GetContactsTask().execute();
+        new GetContactsTask().execute(this.getClass().getName());
     }
 
     @Override
@@ -160,7 +160,7 @@ public class InviteToChatFragment
                 selectedUserNames.add(users.get(position).getName());
             }
         }
-        new CreateChatTask(activity.getSelfUser(), selectedUsers).execute();
+        new CreateChatTask(activity.getSelfUser(), selectedUsers).execute(this.getClass().getName());
     }
 
 

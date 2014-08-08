@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetAllTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetMessageTask;
@@ -27,9 +30,6 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatListAdapter;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by martin on 21.06.2014.
@@ -81,13 +81,13 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         // At first, retrieve the chats from the database
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        new GetAllTask(chatDAO, ChatListFragment.class).execute();
+        new GetAllTask(chatDAO, ChatListFragment.class).execute(this.getClass().getName());
 
         // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
         // Aktualisiert die Datenbank auf den aktuellen Stand des Servers
 
-        new GetMyChatsTask().execute();
-        new GetMessageTask().execute();
+        new GetMyChatsTask().execute(this.getClass().getName());
+        new GetMessageTask().execute(this.getClass().getName());
     }
 
     @Override

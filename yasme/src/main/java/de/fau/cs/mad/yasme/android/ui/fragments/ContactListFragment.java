@@ -66,7 +66,7 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
         //getActivity().setProgressBarIndeterminateVisibility(true);
 
         //bgTasksRunning.getAndIncrement();
-        new GetContactsTask().execute();
+        new GetContactsTask().execute(this.getClass().getName());
         //new GetAllUsersTask(this.getClass()).execute(); //TODO: delete GetAllUsersTask, if not needed anymore
     }
 
@@ -146,35 +146,6 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
 //        }
 //    }
 
-    /**
-    * This interface must be implemented by activities that contain this
-    * fragment to allow an interaction in this fragment to be communicated
-    * to the activity and potentially other fragments contained in that
-    * activity.
-    * <p>
-    * See the Android Training lesson <a href=
-    * "http://developer.android.com/training/basics/fragments/communicating.html"
-    * >Communicating with Other Fragments</a> for more information.
-    */
-    public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(User user, View view);
-    }
-
-
-//    private void getContacts(){
-//
-//        UserDAO userDAO = DatabaseManager.INSTANCE.getUserDAO();
-//
-//        List<User> userList = userDAO.getContacts();
-//        if (userList != null){
-//            for(User u:userList){
-//                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail(),u));
-//            }
-//            mAdapter.notifyDataSetChanged();
-//        }
-//
-//    }
-
     public void notifyFragment(InviteToChatFragment.AllUsersFetchedParam param) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
 
@@ -193,6 +164,35 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
         //    getActivity().setProgressBarIndeterminateVisibility(false);
         //}
 
+    }
+
+
+//    private void getContacts(){
+//
+//        UserDAO userDAO = DatabaseManager.INSTANCE.getUserDAO();
+//
+//        List<User> userList = userDAO.getContacts();
+//        if (userList != null){
+//            for(User u:userList){
+//                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()),u.getName(),u.getEmail(),u));
+//            }
+//            mAdapter.notifyDataSetChanged();
+//        }
+//
+//    }
+
+    /**
+    * This interface must be implemented by activities that contain this
+    * fragment to allow an interaction in this fragment to be communicated
+    * to the activity and potentially other fragments contained in that
+    * activity.
+    * <p>
+    * See the Android Training lesson <a href=
+    * "http://developer.android.com/training/basics/fragments/communicating.html"
+    * >Communicating with Other Fragments</a> for more information.
+    */
+    public interface OnFragmentInteractionListener {
+        public void onFragmentInteraction(User user, View view);
     }
 
 

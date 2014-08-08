@@ -2,15 +2,15 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.fau.cs.mad.yasme.android.connection.SearchTask;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.ui.fragments.SearchContactFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by florianwinklmeier on 07.07.14.
@@ -24,6 +24,7 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
     //private SimpleAdapter mAdapter;
     private SearchBy searchBy;
     private String searchText;
+    private String fragmentToNotify;
 
     /*
     public SearchUserTask(Spinner searchSpinner, TextView searchText,
@@ -41,6 +42,7 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
 
     @Override
     protected List<User> doInBackground(String... params) {
+        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         SearchTask searchTask = SearchTask.getInstance();
         List<User> uList = new ArrayList<User>();
@@ -69,7 +71,9 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
 
     protected void onPostExecute(List<User> userList) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
-        ObservableRegistry.getObservable(SearchContactFragment.class).notifyFragments(userList);
+        if(fragmentToNotify.compareTo(SearchContactFragment.class.getName()) == 0) {
+            ObservableRegistry.getObservable(SearchContactFragment.class).notifyFragments(userList);
+        }
     }
 
     public enum SearchBy {

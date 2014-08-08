@@ -75,7 +75,8 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                                 .toString();
 
                         new UserRegistrationTask()
-                                .execute(inputName, inputMail, inputPassword, inputPasswordCheck);
+                                .execute(inputName, inputMail, inputPassword, inputPasswordCheck,
+                                        this.getClass().getName());
                     }
                 }
         );
@@ -102,7 +103,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                     Toast.LENGTH_SHORT
             ).show();
             UserLoginTask authTask = new UserLoginTask(false);
-            authTask.execute(email, password);
+            authTask.execute(email, password, this.getClass().getName());
             ((AbstractYasmeActivity)getActivity()).getSelfUser().setEmail(email);
         } else {
             Toast.makeText(
@@ -163,13 +164,13 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     public static class RegLoginParam extends RegParam{
         private long userId;
 
-        public long getUserId() {
-            return userId;
-        }
-
         public RegLoginParam(Boolean success) {
             this.success = success;
             this.userId = DatabaseManager.INSTANCE.getUserId();
+        }
+
+        public long getUserId() {
+            return userId;
         }
     }
 

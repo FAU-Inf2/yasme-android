@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.List;
+
 import de.fau.cs.mad.yasme.android.connection.DeviceTask;
 import de.fau.cs.mad.yasme.android.connection.MessageKeyTask;
 import de.fau.cs.mad.yasme.android.connection.MessageTask;
@@ -25,18 +27,17 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
 
-import java.util.List;
-
 /**
  * Created by robert on 19.06.14.
  */
 // TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach
 // geloescht werden
-public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
+public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
 
     private List<Message> messages;
     private long lastMessageId;
     private NewMessageNotificationManager notifier;
+    private String fragmentToNotify;
 
     public GetMessageTask() {
         notifier = DatabaseManager.INSTANCE.getNotifier();
@@ -45,7 +46,8 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
     /**
      * @return Returns true if it was successful, otherwise false
      */
-    protected Boolean doInBackground(Object... params) {
+    protected Boolean doInBackground(String... params) {
+        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         lastMessageId = DatabaseManager.INSTANCE.getSharedPreferences().getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
@@ -135,9 +137,11 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             //For notification testing:
             //notifier.mNotify(messages.size(), 0);
 
-
-            ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
-            ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(null);
+            if(fragmentToNotify.compareTo(ChatFragment.class.getName()) == 0) {
+                ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
+            } else if(fragmentToNotify.compareTo(ChatListFragment.class.getName()) == 0) {
+                ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(null);
+            }
 
             // Vibrate
 //        if (messages.size() > 0) {

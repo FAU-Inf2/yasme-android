@@ -10,11 +10,12 @@ import de.fau.cs.mad.yasme.android.storage.dao.DAO;
 /**
  * Created by bene on 11.07.14.
  */
-public class AddOrUpdateTask<D extends Object, T extends DAO<D>> extends AsyncTask<Object, Void, Boolean> {
+public class AddOrUpdateTask<D extends Object, T extends DAO<D>> extends AsyncTask<String, Void, Boolean> {
 
     private T specificDAO;
     private D data;
     private Class classToNotify;
+    private String fragmentToNotify;
 
     public AddOrUpdateTask(T specificDAO, D data) {
         this.specificDAO = specificDAO;
@@ -28,7 +29,8 @@ public class AddOrUpdateTask<D extends Object, T extends DAO<D>> extends AsyncTa
     }
 
     @Override
-    protected Boolean doInBackground(Object... objects) {
+    protected Boolean doInBackground(String... params) {
+        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         return null != (data = specificDAO.addOrUpdate(data));
     }
@@ -39,7 +41,9 @@ public class AddOrUpdateTask<D extends Object, T extends DAO<D>> extends AsyncTa
         if (success) {
             // Notify
             if (null != classToNotify) {
-                ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
+                if(fragmentToNotify.compareTo(classToNotify.getName()) == 0) {
+                    ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
+                }
             }
         }
         else {

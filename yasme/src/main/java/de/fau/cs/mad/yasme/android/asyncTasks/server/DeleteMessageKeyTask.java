@@ -12,29 +12,30 @@ import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 // Async-Task for sending Key to Server
 public class DeleteMessageKeyTask extends AsyncTask<Long, Void, Boolean> {
 
-        @Override
-        protected Boolean doInBackground(Long... params) {
-            SpinnerObservable.getInstance().registerBackgroundTask(this);
+    @Override
+    protected Boolean doInBackground(Long... params) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
 
-            /**
-             * @param params [0] is keyId
-             *        params [1] is DeviceId from User
-             * @return Returns true if it was successful, otherwise false
-             */
+        /**
+         * @param params [0] is keyId
+         *        params [1] is DeviceId from User
+         * @return Returns true if it was successful, otherwise false
+         */
 
-            try {
+        try {
 
-                //delete Key
-                MessageKeyTask keytask = MessageKeyTask.getInstance();
-                keytask.deleteKey(params[0]);
+            //delete Key
+            MessageKeyTask keytask = MessageKeyTask.getInstance();
+            keytask.deleteKey(params[0]);
 
-            } catch (Exception e) {
-                Log.d(this.getClass().getSimpleName(),e.getMessage());
-            }
-            return true;
+        } catch (Exception e) {
+            Log.d(this.getClass().getSimpleName(), e.getMessage());
         }
+        return true;
+    }
 
-        protected void onPostExecute(Boolean result) {
-            SpinnerObservable.getInstance().removeBackgroundTask(this);
-        }
+    @Override
+    protected void onPostExecute(Boolean result) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
+    }
 }

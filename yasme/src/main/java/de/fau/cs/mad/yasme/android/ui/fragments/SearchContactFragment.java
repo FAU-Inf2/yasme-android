@@ -16,6 +16,8 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SearchUserTask;
 import de.fau.cs.mad.yasme.android.contacts.ContactListContent;
@@ -26,20 +28,16 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
 
-import java.util.ArrayList;
-
 public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<ArrayList<User>> {
 
+    ContactListContent contactListContent;
     private Spinner searchSpinner;
     private Button searchButton;
     private ListView searchResultView;
     private TextView searchText;
-    private SimpleAdapter mAdapter;
 
     //private AtomicInteger bgTasksRunning = new AtomicInteger(0);
-
-    ContactListContent contactListContent;
-
+    private SimpleAdapter mAdapter;
     private OnSearchFragmentInteractionListener mListener;
 
     @Override
@@ -111,7 +109,11 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
             //new SearchUserTask(searchSpinner,searchText,contactListContent,mAdapter).execute();
             //getActivity().setProgressBarIndeterminateVisibility(true);
             //bgTasksRunning.incrementAndGet();
-            new SearchUserTask(SearchUserTask.SearchBy.getSearchBy(searchSpinner.getSelectedItemPosition()),searchText.getText().toString()).execute();
+            new SearchUserTask(
+                    SearchUserTask.SearchBy.getSearchBy(
+                            searchSpinner.getSelectedItemPosition()),
+                            searchText.getText().toString())
+                    .execute(this.getClass().getName());
 
             // Hide keyboard
             InputMethodManager inputManager =
@@ -130,8 +132,23 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
         }
     }
 
-    public interface OnSearchFragmentInteractionListener {
-        public void onSearchFragmentInteraction(User user);
+    @Override
+    public void notifyFragment(ArrayList<User> userList) {
+        Log.d(getClass().getSimpleName(),"SearchContactFragment has been notified!");
+        //if (0 == bgTasksRunning.decrementAndGet()) {
+        //    getActivity().setProgressBarIndeterminateVisibility(false);
+        //}
+
+        if (userList != null && userList.size() != 0) {
+            for (User u : userList) {
+                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
+            }
+            mAdapter.notifyDataSetChanged();
+        } else {
+            String noResults = DatabaseManager.INSTANCE.getContext().getResources().getString(R.string.search_no_results);
+            contactListContent.addItem(new ContactListContent.ContactListItem("null", noResults, ""));
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     /*
@@ -165,22 +182,7 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     }
     */
 
-    @Override
-    public void notifyFragment(ArrayList<User> userList) {
-        Log.d(getClass().getSimpleName(),"SearchContactFragment has been notified!");
-        //if (0 == bgTasksRunning.decrementAndGet()) {
-        //    getActivity().setProgressBarIndeterminateVisibility(false);
-        //}
-
-        if (userList != null && userList.size() != 0) {
-            for (User u : userList) {
-                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
-            }
-            mAdapter.notifyDataSetChanged();
-        } else {
-            String noResults = DatabaseManager.INSTANCE.getContext().getResources().getString(R.string.search_no_results);
-            contactListContent.addItem(new ContactListContent.ContactListItem("null", noResults, ""));
-            mAdapter.notifyDataSetChanged();
-        }
+    public interface OnSearchFragmentInteractionListener {
+        public void onSearchFragmentInteraction(User user);
     }
 }

@@ -106,7 +106,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
             throw new IllegalArgumentException("chatId <= 0");
         }
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        new GetTask<>(chatDAO, chatId, this.getClass());
+        new GetTask<>(chatDAO, chatId, this.getClass()); //TODO: da fehlt noch was, oder?
     }
 
 

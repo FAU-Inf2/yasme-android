@@ -10,11 +10,12 @@ import de.fau.cs.mad.yasme.android.storage.dao.DAO;
 /**
  * Created by bene on 11.07.14.
  */
-public class DeleteTask<D extends Object, T extends DAO<D>> extends AsyncTask<Void, Void, Boolean> {
+public class DeleteTask<D extends Object, T extends DAO<D>> extends AsyncTask<String, Void, Boolean> {
 
     private T specificDAO;
     private D objectToDelete;
     private Class classToNotify;
+    private String fragmentToNotify;
 
     public DeleteTask(T specificDAO, D objectToDelete) {
         this.specificDAO = specificDAO;
@@ -28,7 +29,8 @@ public class DeleteTask<D extends Object, T extends DAO<D>> extends AsyncTask<Vo
     }
 
     @Override
-    protected Boolean doInBackground(Void... voids) {
+    protected Boolean doInBackground(String... params) {
+        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         return specificDAO.delete(objectToDelete);
     }
@@ -39,7 +41,9 @@ public class DeleteTask<D extends Object, T extends DAO<D>> extends AsyncTask<Vo
         if (success) {
             // Notify
             if (null != classToNotify) {
-                ObservableRegistry.getObservable(classToNotify).notifyFragments(success);
+                if(fragmentToNotify.compareTo(classToNotify.getName()) == 0) {
+                    ObservableRegistry.getObservable(classToNotify).notifyFragments(success);
+                }
             }
         }
         else {
