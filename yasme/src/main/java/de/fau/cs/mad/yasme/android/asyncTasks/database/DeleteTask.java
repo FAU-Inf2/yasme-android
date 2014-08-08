@@ -15,7 +15,6 @@ public class DeleteTask<D extends Object, T extends DAO<D>> extends AsyncTask<St
     private T specificDAO;
     private D objectToDelete;
     private Class classToNotify;
-    private String fragmentToNotify;
 
     public DeleteTask(T specificDAO, D objectToDelete) {
         this.specificDAO = specificDAO;
@@ -30,7 +29,6 @@ public class DeleteTask<D extends Object, T extends DAO<D>> extends AsyncTask<St
 
     @Override
     protected Boolean doInBackground(String... params) {
-        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         return specificDAO.delete(objectToDelete);
     }
@@ -41,9 +39,7 @@ public class DeleteTask<D extends Object, T extends DAO<D>> extends AsyncTask<St
         if (success) {
             // Notify
             if (null != classToNotify) {
-                if(fragmentToNotify.compareTo(classToNotify.getName()) == 0) {
                     ObservableRegistry.getObservable(classToNotify).notifyFragments(success);
-                }
             }
         }
         else {

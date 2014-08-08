@@ -15,7 +15,6 @@ public class AddIfNotExistsTask<D extends Object, T extends DAO<D>> extends Asyn
     private T specificDAO;
     private D data;
     private Class classToNotify;
-    private String fragmentToNotify;
 
     public AddIfNotExistsTask(T specificDAO, D data) {
         this.specificDAO = specificDAO;
@@ -30,7 +29,6 @@ public class AddIfNotExistsTask<D extends Object, T extends DAO<D>> extends Asyn
 
     @Override
     protected Boolean doInBackground(String... params) {
-        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         return null != (data = specificDAO.addIfNotExists(data));
     }
@@ -41,9 +39,7 @@ public class AddIfNotExistsTask<D extends Object, T extends DAO<D>> extends Asyn
         if (success) {
             // Notify
             if (null != classToNotify) {
-                if(fragmentToNotify.compareTo(classToNotify.getName()) == 0) {
                     ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
-                }
             }
         }
         else {

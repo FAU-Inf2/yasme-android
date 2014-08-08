@@ -17,7 +17,6 @@ public class GetAllTask<D extends Object, T extends DAO<D>> extends AsyncTask<St
     private T specificDAO;
     private List<D> data;
     private Class classToNotify;
-    private String fragmentToNotify;
 
     public GetAllTask(T specificDAO, Class classToNotify) {
         this.specificDAO = specificDAO;
@@ -26,7 +25,6 @@ public class GetAllTask<D extends Object, T extends DAO<D>> extends AsyncTask<St
 
     @Override
     protected Boolean doInBackground(String... params) {
-        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         return null != (data = specificDAO.getAll());
     }
@@ -36,9 +34,7 @@ public class GetAllTask<D extends Object, T extends DAO<D>> extends AsyncTask<St
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             // Notify
-            if(fragmentToNotify.compareTo(classToNotify.getName()) == 0) {
-                ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
-            }
+            ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
         }
         else {
             Log.w(this.getClass().getSimpleName(), "Did not invoke notification as task did not finish successfully.");
