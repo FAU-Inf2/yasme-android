@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import net.yasme.android.R;
 import net.yasme.android.asyncTasks.database.GetNewMessagesForChatTask;
@@ -19,6 +20,7 @@ import net.yasme.android.asyncTasks.server.SendMessageTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.controller.Toaster;
 import net.yasme.android.encryption.MessageEncryption;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.Message;
@@ -35,22 +37,18 @@ import java.util.concurrent.atomic.AtomicLong;
  * Created by martin on 21.06.2014.
  */
 public class ChatFragment extends Fragment implements NotifiableFragment<List<Message>> {
+    public static final String RESTORE_LATEST_MESSAGE_ON_DISPLAY = "LATEST_MESSAGE_ON_DISPLAY";
+    public static final String RESTORE_CHAT_ID = "CHAT_ID";
     private ChatAdapter mAdapter;
-
     //UI references
     private EditText editMessage;
     private ListView list;
-
+    //private List<Message> localMessages = new ArrayList<>();
     private Chat chat;
     private AtomicLong latestMessageOnDisplay;
-    //private List<Message> localMessages = new ArrayList<>();
-
     public ChatFragment() {
 
     }
-
-    public static final String RESTORE_LATEST_MESSAGE_ON_DISPLAY = "LATEST_MESSAGE_ON_DISPLAY";
-    public static final String RESTORE_CHAT_ID = "CHAT_ID";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +76,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             Log.w(this.getClass().getSimpleName(), "get chat from DB failed");
         }
         if (chat == null) {
-            chat = new Chat(chatId);
+            Toaster.getInstance().toast(R.string.unable_open_chat, Toast.LENGTH_SHORT);
+            getActivity().finish();
+            return;
         }
     }
 

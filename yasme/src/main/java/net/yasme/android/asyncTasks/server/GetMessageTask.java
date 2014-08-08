@@ -129,7 +129,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
                 editor.commit();
 
                 if (!(size == 1 && messages.get(0).getSender().getId() == DatabaseManager.INSTANCE.getUserId())) {
-                    notifier.mNotify(size, messages.get(size - 1).getId());
+                    notifier.mNotify(size, messages.get(size - 1).getChatId());
                 }
             }
             //For notification testing:

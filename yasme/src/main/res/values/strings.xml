@@ -76,5 +76,6 @@
 
     <string name="unable_create_chat">Unable to create new Chat. Maybe there is an internal
         server error</string>
+    <string name="unable_open_chat">Yasme was unable to open the chat</string>
 
 </resources>
