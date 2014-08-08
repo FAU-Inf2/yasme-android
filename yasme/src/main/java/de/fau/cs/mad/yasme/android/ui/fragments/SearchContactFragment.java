@@ -112,8 +112,8 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
             new SearchUserTask(
                     SearchUserTask.SearchBy.getSearchBy(
                             searchSpinner.getSelectedItemPosition()),
-                            searchText.getText().toString())
-                    .execute(this.getClass().getName());
+                            searchText.getText().toString(), this.getClass())
+                    .execute();
 
             // Hide keyboard
             InputMethodManager inputManager =

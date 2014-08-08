@@ -24,7 +24,7 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
     //private SimpleAdapter mAdapter;
     private SearchBy searchBy;
     private String searchText;
-    private String fragmentToNotify;
+    private Class classToNotify;
 
     /*
     public SearchUserTask(Spinner searchSpinner, TextView searchText,
@@ -35,14 +35,14 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
         this.mAdapter = mAdapter;
     }
     */
-    public SearchUserTask(SearchBy searchBy, String searchText) {
+    public SearchUserTask(SearchBy searchBy, String searchText, Class classToNotify) {
         this.searchBy = searchBy;
         this.searchText = searchText;
+        this.classToNotify = classToNotify;
     }
 
     @Override
     protected List<User> doInBackground(String... params) {
-        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         SearchTask searchTask = SearchTask.getInstance();
         List<User> uList = new ArrayList<User>();
@@ -71,7 +71,7 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
 
     protected void onPostExecute(List<User> userList) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
-        if(fragmentToNotify.compareTo(SearchContactFragment.class.getName()) == 0) {
+        if(classToNotify == SearchContactFragment.class) {
             ObservableRegistry.getObservable(SearchContactFragment.class).notifyFragments(userList);
         }
     }

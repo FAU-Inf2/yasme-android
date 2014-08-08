@@ -10,7 +10,7 @@ import de.fau.cs.mad.yasme.android.storage.dao.DAO;
 /**
  * Created by bene on 11.07.14.
  */
-public class DeleteTask<D extends Object, T extends DAO<D>> extends AsyncTask<String, Void, Boolean> {
+public class DeleteTask<D extends Object, T extends DAO<D>> extends AsyncTask<Object, Void, Boolean> {
 
     private T specificDAO;
     private D objectToDelete;
@@ -28,7 +28,7 @@ public class DeleteTask<D extends Object, T extends DAO<D>> extends AsyncTask<St
     }
 
     @Override
-    protected Boolean doInBackground(String... params) {
+    protected Boolean doInBackground(Object... objects) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         return specificDAO.delete(objectToDelete);
     }

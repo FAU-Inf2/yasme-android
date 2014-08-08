@@ -66,7 +66,7 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
         //getActivity().setProgressBarIndeterminateVisibility(true);
 
         //bgTasksRunning.getAndIncrement();
-        new GetContactsTask().execute(this.getClass().getName());
+        new GetContactsTask(this.getClass()).execute();
         //new GetAllUsersTask(this.getClass()).execute(); //TODO: delete GetAllUsersTask, if not needed anymore
     }
 

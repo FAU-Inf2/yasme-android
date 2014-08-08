@@ -139,7 +139,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         super.onResume();
         Log.d(getClass().getSimpleName(), "Update Chat");
         // Ask server for new messages
-        new GetMessageTask().execute(this.getClass().getName());
+        new GetMessageTask(this.getClass()).execute();
     }
 
     @Override
@@ -167,7 +167,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         if(messages == null) {
             //Notified from GetMessageTask, new Messages are stored in the DB
             // Note that retrieved messages will be ordered ascending by id
-            new GetNewMessagesForChatTask(latestMessageOnDisplay.get(), chat.getId())
+            new GetNewMessagesForChatTask(latestMessageOnDisplay.get(), chat.getId(), this.getClass())
                     .execute(this.getClass().getName());
             // And don't stop the progress bar
             return;
@@ -197,7 +197,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         // Send message and get new messages afterwards
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask()).execute(msgText);
+        new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask(this.getClass())).execute(msgText);
 
         Log.d(this.getClass().getSimpleName(), "Send message in bg");
         // Empty the input field after send button was pressed

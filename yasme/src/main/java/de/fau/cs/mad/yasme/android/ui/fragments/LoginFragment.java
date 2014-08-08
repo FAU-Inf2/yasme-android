@@ -149,7 +149,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
      */
     public void attemptLogin() {
         if (authTask == null) {
-            authTask = new UserLoginTask(true);
+            authTask = new UserLoginTask(true, this.getClass());
             Log.d(this.getClass().getSimpleName(), "AuthTask is null");
         }
 
@@ -191,7 +191,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
 
-            authTask.execute(emailTmp, passwordTmp, this.getClass().getName());
+            authTask.execute(emailTmp, passwordTmp);
             authTask = null;
         }
     }
@@ -238,7 +238,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 Log.d(this.getClass().getSimpleName(), "Device does not exist in Database");
                 Log.d(this.getClass().getSimpleName(), "Starting task to register device at yasme server");
 
-                new DeviceRegistrationTask(activity)
+                new DeviceRegistrationTask(activity, this.getClass())
                         .execute(Long.toString(userId), this.deviceProduct, this.getClass().getName());
 
             }

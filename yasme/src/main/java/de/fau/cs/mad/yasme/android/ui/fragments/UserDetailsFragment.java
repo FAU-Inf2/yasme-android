@@ -211,7 +211,7 @@ public class UserDetailsFragment
                 Set<User> selectedUsers = new HashSet<>();
                 selectedUsers.add(contact);
                 // Don't dismiss. Wait until you're notified and than go to the chat view
-                new CreateChatTask(selfUser, selectedUsers).execute(this.getClass().getName());
+                new CreateChatTask(selfUser, selectedUsers, this.getClass()).execute();
                 break;
 
             case R.id.contact_detail_addcontact:
@@ -255,7 +255,7 @@ public class UserDetailsFragment
         }
 
         // Refresh contact list in first tab
-        new GetContactsTask().execute(this.getClass().getName());
+        new GetContactsTask(this.getClass()).execute();
     }
 
 

@@ -9,7 +9,6 @@ import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
-import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.OwnProfileFragment;
 
@@ -18,14 +17,12 @@ import de.fau.cs.mad.yasme.android.ui.fragments.OwnProfileFragment;
  */
 public class GetProfilePictureTask extends AsyncTask<String, Void, Boolean> {
 
-    private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
     private Drawable profilePicture;
-    private String fragmentToNotify;
+    private Class classToNotify;
 
 
     @Override
     protected Boolean doInBackground(String... params) {
-        fragmentToNotify = params[1];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         long userId = Long.parseLong(params[0]);
 
@@ -43,7 +40,7 @@ public class GetProfilePictureTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success && null != profilePicture) {
-            if (fragmentToNotify.compareTo(ChatListFragment.class.getName()) == 0) {
+            if (classToNotify == ChatListFragment.class) {
                 // Notify registered fragments
                 FragmentObservable<OwnProfileFragment, Drawable> obs =
                         ObservableRegistry.getObservable(ChatListFragment.class);

@@ -23,20 +23,19 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
     private long deviceId;
     private Activity activity;
     private String regId;
-    private String fragmentToNotify;
+    private Class classToNotify;
 
-    public DeviceRegistrationTask(Activity activity){
+    public DeviceRegistrationTask(Activity activity, Class classToNotify){
         this.activity = activity;
+        this.classToNotify = classToNotify;
     }
 
     /**
     * @params params[0] is userId
     * @params params[1] is product
-    * @params params[2] is fragmentToNotify
     */
     @Override
     protected Boolean doInBackground(String... params) {
-        fragmentToNotify = params[2];
 
         long userId = Long.parseLong(params[0]);
 
@@ -132,7 +131,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         // after device registration
         if(success){
-            if(fragmentToNotify.compareTo(LoginFragment.class.getName()) == 0) {
+            if(classToNotify == LoginFragment.class) {
                 ObservableRegistry.getObservable(LoginFragment.class)
                         .notifyFragments(new LoginFragment.DeviceRegistrationParam(success));
             }

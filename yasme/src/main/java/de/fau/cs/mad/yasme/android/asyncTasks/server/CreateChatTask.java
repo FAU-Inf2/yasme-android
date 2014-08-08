@@ -32,11 +32,12 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
     private Set<User> selectedUsers;
     private long newChatId = -1;
     private Chat newChat;
-    private String fragmentToNotify;
+    private Class classToNotify;
 
-    public CreateChatTask(User selfUser, Set<User> selectedUsers) {
+    public CreateChatTask(User selfUser, Set<User> selectedUsers, Class classToNotify) {
         this.selfUser = selfUser;
         this.selectedUsers = selectedUsers;
+        this.classToNotify = classToNotify;
     }
 
 
@@ -46,7 +47,6 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(String... params) {
-        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
 
         // Add self to selected users and names
@@ -118,10 +118,10 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
         }
 
         if (success) {
-            if(fragmentToNotify.compareTo(UserDetailsFragment.class.getName()) == 0) {
+            if(classToNotify == UserDetailsFragment.class) {
                 ObservableRegistry.getObservable(UserDetailsFragment.class).
                         notifyFragments(new UserDetailsFragment.NewChatParam(newChatId));
-            } else if(fragmentToNotify.compareTo(InviteToChatFragment.class.getName()) == 0) {
+            } else if(classToNotify == InviteToChatFragment.class) {
                 ObservableRegistry.getObservable(InviteToChatFragment.class).
                         notifyFragments(new InviteToChatFragment.ChatRegisteredParam(true, newChatId));
             }

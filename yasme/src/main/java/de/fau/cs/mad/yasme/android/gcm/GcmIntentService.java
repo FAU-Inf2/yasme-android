@@ -44,7 +44,7 @@ public class GcmIntentService extends IntentService {
 				// If it's a regular GCM message, do some work.
 				Log.d(this.getClass().getSimpleName(), "Received message with type message from GCM");
 				if (extras.containsKey("type") && extras.get("type").equals("msg")) {
-					new GetMessageTask().execute(this.getClass().getName());
+					new GetMessageTask(this.getClass()).execute();
 				}
 			}
 		}

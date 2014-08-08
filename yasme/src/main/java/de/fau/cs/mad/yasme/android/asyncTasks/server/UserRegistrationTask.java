@@ -24,8 +24,12 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
     private String name;
     private String email;
     private String password;
-    private String fragmentToNotify;
+    private Class classToNotify;
     private long userId;
+
+    public UserRegistrationTask(Class classToNotify) {
+        this.classToNotify  = classToNotify;
+    }
 
 
     /**
@@ -33,7 +37,6 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
      * @params params[1] is email
      * @params params[2] is password
      * @params params[3] is password_check
-     * @params params[4] is fragmentToNotify
      */
     @Override
     protected Boolean doInBackground(String... params) {
@@ -42,7 +45,6 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
         email = params[1].toLowerCase();
         password = params[2];
         String password_check = params[3];
-        fragmentToNotify = params[4];
 
         if (!password.equals(password_check)) {
             return false;
@@ -69,7 +71,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
             editor.commit();
         }
-        if(fragmentToNotify.compareTo(RegisterFragment.class.getSimpleName()) == 0) {
+        if(classToNotify == RegisterFragment.class) {
             ObservableRegistry.getObservable(RegisterFragment.class).notifyFragments(
                     new RegisterFragment.RegistrationParam(success, email, password));
         }

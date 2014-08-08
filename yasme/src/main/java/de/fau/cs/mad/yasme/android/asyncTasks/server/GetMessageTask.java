@@ -37,17 +37,17 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
     private List<Message> messages;
     private long lastMessageId;
     private NewMessageNotificationManager notifier;
-    private String fragmentToNotify;
+    private Class classToNotify;
 
-    public GetMessageTask() {
+    public GetMessageTask(Class classToNotify) {
         notifier = DatabaseManager.INSTANCE.getNotifier();
+        this.classToNotify = classToNotify;
     }
 
     /**
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
-        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         lastMessageId = DatabaseManager.INSTANCE.getSharedPreferences().getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
@@ -137,9 +137,9 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
             //For notification testing:
             //notifier.mNotify(messages.size(), 0);
 
-            if(fragmentToNotify.compareTo(ChatFragment.class.getName()) == 0) {
+            if(classToNotify == ChatFragment.class) {
                 ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
-            } else if(fragmentToNotify.compareTo(ChatListFragment.class.getName()) == 0) {
+            } else if(classToNotify == ChatListFragment.class) {
                 ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(null);
             }
 

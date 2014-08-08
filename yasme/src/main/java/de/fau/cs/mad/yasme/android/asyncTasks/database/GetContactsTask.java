@@ -20,11 +20,14 @@ import de.fau.cs.mad.yasme.android.ui.fragments.InviteToChatFragment;
 public class GetContactsTask extends AsyncTask<String, Void, Boolean> {
     private List<User> contacts;
     private UserDAO userDao = DatabaseManager.INSTANCE.getUserDAO();
-    private String fragmentToNotify;
+    private Class classToNotify;
+
+    public GetContactsTask(Class classToNotify) {
+        this.classToNotify = classToNotify;
+    }
 
     @Override
     protected Boolean doInBackground(String... params) {
-        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         contacts = userDao.getContacts();
         if(contacts == null) {
@@ -38,13 +41,13 @@ public class GetContactsTask extends AsyncTask<String, Void, Boolean> {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             // Notify
-            if(fragmentToNotify.compareTo(InviteToChatFragment.class.getName()) == 0) {
+            if(classToNotify == InviteToChatFragment.class) {
                 ObservableRegistry.getObservable(InviteToChatFragment.class).
                         notifyFragments(new InviteToChatFragment.AllUsersFetchedParam(success, contacts));
-            } else if(fragmentToNotify.compareTo(ContactListFragment.class.getName()) == 0) {
+            } else if(classToNotify == ContactListFragment.class) {
                 ObservableRegistry.getObservable(ContactListFragment.class).
                         notifyFragments(new InviteToChatFragment.AllUsersFetchedParam(success, contacts));
-            } else if(fragmentToNotify.compareTo(ChatSettingsAdd.class.getName()) == 0) {
+            } else if(classToNotify == ChatSettingsAdd.class) {
                 ObservableRegistry.getObservable(ChatSettingsAdd.class).
                         notifyFragments(new InviteToChatFragment.AllUsersFetchedParam(success, contacts));
             }

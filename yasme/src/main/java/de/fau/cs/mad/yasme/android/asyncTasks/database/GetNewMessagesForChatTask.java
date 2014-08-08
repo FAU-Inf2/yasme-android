@@ -20,17 +20,17 @@ public class GetNewMessagesForChatTask extends AsyncTask<String, Void, Boolean> 
     private MessageDAO messageDao;
     private long chatId;
     private long latestMessageId;
-    private String fragmentToNotify;
+    private Class classToNotify;
 
-    public GetNewMessagesForChatTask(long latestMessageId, long chatId) {
+    public GetNewMessagesForChatTask(long latestMessageId, long chatId, Class classToNotify) {
         messageDao = DatabaseManager.INSTANCE.getMessageDAO();
         this.chatId = chatId;
         this.latestMessageId = latestMessageId;
+        this.classToNotify = classToNotify;
     }
 
     @Override
     protected Boolean doInBackground(String... params) {
-        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         messages = messageDao.getNewMessagesByChat(chatId, latestMessageId);
         if(messages == null) {
@@ -44,7 +44,7 @@ public class GetNewMessagesForChatTask extends AsyncTask<String, Void, Boolean> 
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             // Notify
-            if(fragmentToNotify.compareTo(ChatFragment.class.getName()) == 0) {
+            if(classToNotify == ChatFragment.class) {
                 ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
             }
         }

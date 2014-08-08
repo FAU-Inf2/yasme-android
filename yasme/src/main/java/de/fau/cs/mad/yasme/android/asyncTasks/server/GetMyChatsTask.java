@@ -26,14 +26,15 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
     private DatabaseManager dbManager;
     private UserDAO userDAO;
     private ChatDAO chatDAO;
-    private String fragmentToNotify;
+    private Class classToNotify;
 
     private List<Chat> chatsToReturn;
 
-    public GetMyChatsTask() {
+    public GetMyChatsTask(Class classToNotify) {
         dbManager = DatabaseManager.INSTANCE;
         userDAO = DatabaseManager.INSTANCE.getUserDAO();
         chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+        this.classToNotify = classToNotify;
     }
 
     /**
@@ -41,7 +42,6 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
-        fragmentToNotify = params[0];
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         List<Chat> serverChats = null;
         try {
@@ -88,7 +88,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
         }
 
         Log.i(this.getClass().getSimpleName(), "success");
-        if(fragmentToNotify.compareTo(ChatListFragment.class.getName()) == 0) {
+        if(classToNotify == ChatListFragment.class) {
             ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(chatsToReturn);
         }
         SpinnerObservable.getInstance().removeBackgroundTask(this);

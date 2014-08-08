@@ -62,7 +62,7 @@ public class InviteToChatFragment
         getActivity().setProgressBarIndeterminateVisibility(true);
 
         //new GetAllUsersTask(this.getClass()).execute(); //TODO: delete GetAllUsersTask, if not needed anymore
-        new GetContactsTask().execute(this.getClass().getName());
+        new GetContactsTask(this.getClass()).execute();
     }
 
     @Override
@@ -160,7 +160,7 @@ public class InviteToChatFragment
                 selectedUserNames.add(users.get(position).getName());
             }
         }
-        new CreateChatTask(activity.getSelfUser(), selectedUsers).execute(this.getClass().getName());
+        new CreateChatTask(activity.getSelfUser(), selectedUsers, this.getClass()).execute();
     }
 
 
