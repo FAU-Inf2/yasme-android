@@ -12,6 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.ChatTask;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
@@ -21,36 +24,31 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by robert on 03.08.14.
  */
 public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
     private Chat chat;
-    private Context context = DatabaseManager.INSTANCE.getContext();
+    private Context mContext = DatabaseManager.INSTANCE.getContext();
 
     public ChangeOwnerTask(Chat chat) {
         this.chat = chat;
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        AlertDialog.Builder alert = new AlertDialog.Builder(context);
-        alert.setTitle(context.getString(R.string.alert_owner));
+    public static void preExecute(Context mContext, final ChangeOwnerTask task, final Chat chat) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+        alert.setTitle(mContext.getString(R.string.alert_owner));
 
-        LinearLayout layout = new LinearLayout(context);
+        LinearLayout layout = new LinearLayout(mContext);
         layout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
 
-        TextView text = new TextView(context);
-        text.setText(context.getString(R.string.alert_owner_message));
+        TextView text = new TextView(mContext);
+        text.setText(mContext.getString(R.string.alert_owner_message));
 
-        final ListView list = new ListView(context);
+        final ListView list = new ListView(mContext);
         list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         List<String> participantNames = new ArrayList<>();
         for(User u : chat.getParticipants()) {
@@ -59,7 +57,7 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
             }
             participantNames.add(u.getName());
         }
-        final ArrayAdapter<List<User>> adapter = new ArrayAdapter<List<User>>(context,
+        final ArrayAdapter<List<User>> adapter = new ArrayAdapter<List<User>>(mContext,
                 android.R.layout.simple_list_item_single_choice, (List)participantNames);
         list.setAdapter(adapter);
 
@@ -75,7 +73,7 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
                         if(position != AdapterView.INVALID_POSITION) {
                             Long newUserId = chat.getParticipants().
                                     get(position).getId();
-                            execute(newUserId);
+                            task.execute(newUserId);
                             dialog.dismiss();
                         }
                     }
@@ -114,9 +112,8 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if(success) {
             Toaster.getInstance().toast(R.string.change_successful, Toast.LENGTH_LONG);
-            // this will fail!
-                new LeaveChatTask(chat, null).onPreExecute();
-
+            LeaveChatTask task = new LeaveChatTask(chat);
+            LeaveChatTask.preExecute(mContext, task);
         } else {
             Toaster.getInstance().toast(R.string.change_not_successful, Toast.LENGTH_LONG);
         }

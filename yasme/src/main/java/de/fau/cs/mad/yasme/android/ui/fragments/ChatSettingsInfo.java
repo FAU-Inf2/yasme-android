@@ -91,7 +91,8 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                     @Override
                     public void onClick(View view) {
                         Log.d(this.getClass().getSimpleName(), "leaveChat-Button pushed");
-                        new LeaveChatTask(chat, getActivity()).onPreExecute();
+                        LeaveChatTask task = new LeaveChatTask(chat);
+                        LeaveChatTask.preExecute(getActivity(), task);
                     }
                 }
         );
