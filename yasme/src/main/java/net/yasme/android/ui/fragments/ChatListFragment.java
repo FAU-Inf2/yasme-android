@@ -3,6 +3,7 @@ package net.yasme.android.ui.fragments;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -23,6 +24,7 @@ import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
 import net.yasme.android.entities.Chat;
+import net.yasme.android.entities.ServerInfo;
 import net.yasme.android.exception.RestServiceException;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.dao.ChatDAO;
@@ -164,29 +166,29 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         adapter.notifyDataSetChanged();
     }
 
-    private void startAlarm() {
-        Timer timer = new Timer("outdatedServerCall");
-        final String outdatedMessage;
-
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                TextView server = (TextView) getActivity().findViewById(R.id.server_messages);
-                String outdatedMessage;
-                try {
-                    outdatedMessage = AuthorizationTask.getInstance().outdated();
-                } catch (RestServiceException e) {
-                    Log.e(this.getClass().getSimpleName(), e.getMessage());
-                    outdatedMessage = "";
-                }
-                if(outdatedMessage.isEmpty()) {
-                    server.setVisibility(View.GONE);
-                    return;
-                }
-                server.setText(outdatedMessage);
-                server.setVisibility(View.VISIBLE);
-            }
-        };
-        timer.scheduleAtFixedRate(task, 0, 86400000);
-    }
+//    private void startAlarm() {
+//        Timer timer = new Timer("outdatedServerCall");
+//        final String outdatedMessage;
+//
+//        TimerTask task = new TimerTask() {
+//            @Override
+//            public void run() {
+//                TextView server = (TextView) getActivity().findViewById(R.id.server_messages);
+//                String outdatedMessage;
+//                try {
+//                    outdatedMessage = AuthorizationTask.getInstance().outdated();
+//                } catch (RestServiceException e) {
+//                    Log.e(this.getClass().getSimpleName(), e.getMessage());
+//                    outdatedMessage = "";
+//                }
+//                if(outdatedMessage.isEmpty()) {
+//                    server.setVisibility(View.GONE);
+//                    return;
+//                }
+//                server.setText(outdatedMessage);
+//                server.setVisibility(View.VISIBLE);
+//            }
+//        };
+//        timer.scheduleAtFixedRate(task, 0, 86400000);
+//    }
 }

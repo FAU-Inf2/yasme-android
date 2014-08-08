@@ -33,6 +33,9 @@ public enum ChatDAOImpl implements ChatDAO {
 
     @Override
     public Chat addIfNotExists(Chat chat) {
+        if (null == chat || chat.getId() < 0) {
+            throw new IllegalArgumentException("Chat is null or id < 0");
+        }
         try {
             Chat ret = databaseHelper.getChatDao().createIfNotExists(chat);
             // Add participants
@@ -54,6 +57,9 @@ public enum ChatDAOImpl implements ChatDAO {
 
     @Override
     public Chat addOrUpdate(Chat chat) {
+        if (null == chat || chat.getId() < 0) {
+            throw new IllegalArgumentException("Chat is null or id < 0");
+        }
         try {
             Chat fromDb = databaseHelper.getChatDao().queryForId(chat.getId());
             if (null == fromDb) {
@@ -187,6 +193,9 @@ public enum ChatDAOImpl implements ChatDAO {
 
     @Override
     public Chat update(Chat chat) {
+        if (null == chat || chat.getId() < 0) {
+            throw new IllegalArgumentException("Chat is null or id < 0");
+        }
         try {
             List<ChatUser> dbParticipants = databaseHelper.getChatUserDao().queryForEq(DatabaseConstants.CHAT_FIELD_NAME, chat.getId());
 

@@ -53,6 +53,8 @@ public abstract class ConnectionTask {
     protected static String serverHost;
     protected static int serverPort;
     protected static URI baseURI;
+    protected static String language;
+    protected static int versionCode;
 
     protected static boolean initialized = false;
 
@@ -76,11 +78,13 @@ public abstract class ConnectionTask {
     protected URI uri;
 
 
-    public static void initParams(String serverScheme, String serverHost, String serverPort) {
+    public static void initParams(String serverScheme, String serverHost, String serverPort, String language, int versionCode) {
 
         ConnectionTask.serverScheme = serverScheme;
         ConnectionTask.serverHost = serverHost;
         ConnectionTask.serverPort = Integer.parseInt(serverPort);
+        ConnectionTask.language = language;
+        ConnectionTask.versionCode = versionCode;
 
         ConnectionTask.initialized = true;
         //ConnectionTask.initializedSession = false;
@@ -177,6 +181,7 @@ public abstract class ConnectionTask {
         requestBase.setHeader("userId", Long.toString(userId));
         requestBase.setHeader("Authorization", accessToken);
         requestBase.setHeader("deviceId", Long.toString(deviceId));
+        requestBase.setHeader("version", Integer.toString(versionCode));
 
 
         return executeRequest(requestBase);
@@ -294,6 +299,7 @@ public abstract class ConnectionTask {
         requestBase.setHeader("userId", Long.toString(userId));
         requestBase.setHeader("Authorization", accessToken);
         requestBase.setHeader("deviceId", Long.toString(deviceId));
+        requestBase.setHeader("version", Integer.toString(versionCode));
     }
 
     private HttpResponse executeRequest(HttpRequestBase requestBase) throws RestServiceException {

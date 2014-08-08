@@ -3,6 +3,8 @@
 
     <string name="app_name">Yasme</string>
 
+    <string name="language">de</string>
+
     <!-- Menu -->
     <string name="action_chats">Chats</string>
     <string name="action_chat">Chat</string>

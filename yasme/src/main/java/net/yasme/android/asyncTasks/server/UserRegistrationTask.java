@@ -58,6 +58,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        new GetInfoTask().execute();
         if(success) {
             SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
             // Will be done by login task

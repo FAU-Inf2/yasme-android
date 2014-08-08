@@ -16,16 +16,21 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import net.yasme.android.R;
+import net.yasme.android.asyncTasks.database.GetTask;
 import net.yasme.android.asyncTasks.server.ChangeChatProperties;
 import net.yasme.android.asyncTasks.server.LeaveChatTask;
 import net.yasme.android.contacts.ContactListContent;
+import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.entities.Chat;
 import net.yasme.android.entities.User;
+import net.yasme.android.storage.DatabaseManager;
+import net.yasme.android.storage.dao.ChatDAO;
+import net.yasme.android.ui.activities.ChatSettingsActivity;
 
 /**
  * Created by robert on 03.08.14.
  */
-public class ChatSettingsInfo extends Fragment {
+public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Chat> {
 
     protected final ContactListContent participantsContent = new ContactListContent();
     protected SimpleAdapter mAdapter = null;
@@ -39,11 +44,24 @@ public class ChatSettingsInfo extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        chat = (Chat) bundle.getSerializable("chat");
+        // Try to load chat from bundle
+        chat = (Chat) bundle.getSerializable(ChatSettingsActivity.CHAT_OBJECT);
+        if (null == chat) {
+            loadChat(bundle.getLong(ChatSettingsActivity.CHAT_ID));
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (null == chat) {
+            Bundle bundle = getArguments();
+            chat = (Chat) bundle.getSerializable(ChatSettingsActivity.CHAT_OBJECT);
+            // And if that won't work, directly retrieve the chat from the database
+            if (null == chat) {
+                loadChat(bundle.getLong(ChatSettingsActivity.CHAT_ID));
+            }
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_chat_settings_info, container, false);
 
         Button changeName = (Button) rootView.findViewById(R.id.change_name);
@@ -78,9 +96,20 @@ public class ChatSettingsInfo extends Fragment {
                 }
         );
         chatInfo = rootView.findViewById(R.id.chat_settings_info);
-        fillInfoView();
         return rootView;
     }
+
+
+    private void loadChat(long chatId) {
+        // load chat from database
+        if (chatId <= 0) {
+            throw new IllegalArgumentException("chatId <= 0");
+        }
+        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+        new GetTask<>(chatDAO, chatId, this.getClass());
+    }
+
+
 
     private void changeName() {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -171,5 +200,15 @@ public class ChatSettingsInfo extends Fragment {
                     ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
         }
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void notifyFragment(Chat chat) {
+        if (null == chat) {
+            Log.e(this.getClass().getSimpleName(), " was waiting for a chat object but turned out it was null");
+        } else {
+            this.chat = chat;
+            fillInfoView();
+        }
     }
 }
