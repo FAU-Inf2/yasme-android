@@ -32,6 +32,9 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
      * may be best to switch to a
      * {@link android.support.v13.app.FragmentStatePagerAdapter}.
      */
+    public static final String CHAT_ID = "chatId";
+    public static final String CHAT_OBJECT = "chatObject";
+
     ChatSettingsActivity.SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
 
@@ -124,8 +127,10 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
 
+            // It may be a better idea to pass the chat id and retrieve
             Bundle args = new Bundle();
-            args.putSerializable("chat", chat);
+            args.putLong(CHAT_ID, chat.getId());
+            args.putSerializable(CHAT_OBJECT, chat);
 
             switch (position){
                 case 0:
