@@ -1,5 +1,5 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
-    tools:context="net.yasme.android.ui.activities.LoginActivity">
+    tools:context="de.fau.cs.mad.yasme.android.ui.activities.LoginActivity">
 
 
 </menu>

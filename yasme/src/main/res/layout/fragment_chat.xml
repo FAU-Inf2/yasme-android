@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.yasme.android.ui.activities.ChatActivity">
+    tools:context="de.fau.cs.mad.yasme.android.ui.activities.ChatActivity">
 <!-- nice background: EEDEBC -->
     <ListView
         android:id="@+id/chat_messageList"
