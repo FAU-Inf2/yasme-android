@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,6 +26,7 @@ import net.yasme.android.asyncTasks.server.UserLoginTask;
 import net.yasme.android.controller.FragmentObservable;
 import net.yasme.android.controller.NotifiableFragment;
 import net.yasme.android.controller.ObservableRegistry;
+import net.yasme.android.entities.ServerInfo;
 import net.yasme.android.storage.DatabaseManager;
 import net.yasme.android.storage.DebugManager;
 import net.yasme.android.ui.AbstractYasmeActivity;
@@ -243,7 +245,13 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             }
             editor.commit();
         } else {
-            passwordView.setError(getString(R.string.error_incorrect_user_or_password));
+            Log.d(getClass().getSimpleName(), "Login failed");
+            ServerInfo serverInfo = DatabaseManager.INSTANCE.getServerInfo();
+            if (serverInfo != null && serverInfo.hasMessage()) {
+                passwordView.setError(DatabaseManager.INSTANCE.getServerInfo().getMessage());
+            } else {
+                passwordView.setError(getString(R.string.error_incorrect_user_or_password));
+            }
             passwordView.requestFocus();
             editor.commit();
             showProgress(false);

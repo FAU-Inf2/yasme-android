@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import net.yasme.android.controller.NewMessageNotificationManager;
+import net.yasme.android.entities.ServerInfo;
 import net.yasme.android.storage.dao.ChatDAO;
 import net.yasme.android.storage.dao.ChatDAOImpl;
 import net.yasme.android.storage.dao.DeviceDAO;
@@ -31,6 +32,8 @@ public enum DatabaseManager {
     private long mUserId = -1;
     private long mDeviceId = -1;
     private String mAccessToken = null;
+    private long serverInfoUpdateTime = -1;
+    private ServerInfo serverInfo = null;
     private SharedPreferences mSharedPreferences;
     private String mUserEmail;
     private NewMessageNotificationManager notifier = null;
@@ -143,6 +146,28 @@ public enum DatabaseManager {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putString(AbstractYasmeActivity.ACCESSTOKEN, mAccessToken);
         editor.commit();
+    }
+
+    public long getServerInfoUpdateTime() {
+        if (-1 == serverInfoUpdateTime) {
+            serverInfoUpdateTime = getSharedPreferences().getLong(AbstractYasmeActivity.SERVERINFOUPDATETIME, -1);
+        }
+        return serverInfoUpdateTime;
+    }
+
+    public void setServerInfoUpdateTime() {
+        this.serverInfoUpdateTime = System.currentTimeMillis();
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putLong(AbstractYasmeActivity.SERVERINFOUPDATETIME, serverInfoUpdateTime);
+        editor.commit();
+    }
+
+    public ServerInfo getServerInfo() {
+        return serverInfo;
+    }
+
+    public void setServerInfo(ServerInfo serverInfo) {
+        this.serverInfo = serverInfo;
     }
 
     public String getUserEmail() {

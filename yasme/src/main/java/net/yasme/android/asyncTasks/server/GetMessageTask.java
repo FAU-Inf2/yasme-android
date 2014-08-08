@@ -112,12 +112,12 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
-        int size = messages.size();
-        if (!success) {
+        if (messages == null || !success) {
             Log.w(this.getClass().getSimpleName(), "No success");
             SpinnerObservable.getInstance().removeBackgroundTask(this);
             return;
         }
+        int size = messages.size();
         Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
 
         if(size > 0) {

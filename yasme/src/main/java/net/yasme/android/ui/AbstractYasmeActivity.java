@@ -38,6 +38,9 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     public final static String ACCESSTOKEN = "net.yasme.android.ACCESSTOKEN";
     public final static String SIGN_IN = "net.yasme.android.SIGN_IN";
 
+    public final static String SERVERINFOUPDATETIME = "net.yasme.android.SERVERINFOUPDATETIME";
+    public final static String SERVERMESSAGE = "net.yasme.android.SERVERMESSAGE";
+
     public final static String STORAGE_PREFS = "net.yasme.android.STORAGE_PREFS";
     public final static String DEVICE_PREFS = "net.yasme.android.STORAGE_PREFS";
     public final static String PUSH_PREFS = "net.yasme.android.STORAGE_PREFS";
@@ -70,8 +73,10 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
             Log.d(getClass().getSimpleName(), "YASME-Server: " + server);
                 ConnectionTask.initParams(getResources().getString(R.string.server_scheme),
                         server,
-                        getResources().getString(R.string.server_port));
+                        getResources().getString(R.string.server_port),getResources().getString(R.string.language),getVersion());
         }
+
+
 
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
         Long userId = storage.getLong(USER_ID, 0);
@@ -212,4 +217,13 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
             }
         });
     }
+
+    public int getVersion() {
+        try {
+            return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
 }

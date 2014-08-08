@@ -78,6 +78,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        new GetInfoTask().execute();
         if (!success) {
             Log.w(this.getClass().getSimpleName(), "failed");
             SpinnerObservable.getInstance().removeBackgroundTask(this);
