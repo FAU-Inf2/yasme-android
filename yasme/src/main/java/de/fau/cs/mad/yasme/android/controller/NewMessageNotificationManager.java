@@ -96,6 +96,6 @@ public class NewMessageNotificationManager {
         int imageHeight = options.outHeight;
         int imageWidth = options.outWidth;
         String imageType = options.outMimeType;
-        return BitmapFactory.decodeResource(mContext.getResources(), R.raw.logo, options);
+        return BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_launcher, options);
     }
 }
