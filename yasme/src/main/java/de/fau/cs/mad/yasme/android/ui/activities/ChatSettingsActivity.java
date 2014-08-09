@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
 import java.util.Locale;
 
@@ -43,6 +44,9 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //progress bar in actionbar
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         chatId = getIntent().getLongExtra(CHAT_ID, -1);
         if (chatId <= 0) {
