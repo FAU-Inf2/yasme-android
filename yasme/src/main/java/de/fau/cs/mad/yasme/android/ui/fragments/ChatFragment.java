@@ -60,7 +60,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
 
         Intent intent = activity.getIntent();
-        long chatId = intent.getLongExtra(activity.CHAT_ID, 1);
+        long chatId = intent.getLongExtra(activity.CHAT_ID, -1);
+        if (chatId <= 0) {
+            throw new ExceptionInInitializerError("chatId <= 0");
+        }
 
         //add the fragments own menu items
         setHasOptionsMenu(true);
