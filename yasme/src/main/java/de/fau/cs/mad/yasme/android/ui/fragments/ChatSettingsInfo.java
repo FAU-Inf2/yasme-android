@@ -57,11 +57,17 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == chat) {
             Bundle bundle = getArguments();
-            chat = (Chat) bundle.getSerializable(ChatSettingsActivity.CHAT_OBJECT);
-            // And if that won't work, directly retrieve the chat from the database
-            if (null == chat) {
-                loadChat(bundle.getLong(ChatSettingsActivity.CHAT_ID));
+            long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
+             // Make sure that fragment is registered. Registering twice won't cause any issues
+        FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
+        obs.register(this);
+
+            // load chat from database
+            if (chatId <= 0) {
+                throw new IllegalArgumentException("chatId <= 0");
             }
+            ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+            new GetTask<>(chatDAO, chatId, this.getClass()).execute();
         }
 
         View rootView = inflater.inflate(R.layout.fragment_chat_settings_info, container, false);
@@ -102,7 +108,6 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         return rootView;
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -118,20 +123,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         obs.remove(this);
     }
 
-    private void loadChat(long chatId) {
-        // load chat from database
-        if (chatId <= 0) {
-            throw new IllegalArgumentException("chatId <= 0");
-        }
-        // Make sure that fragment is registered. Registering twice won't cause any issues
-        FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
-        obs.register(this);
-
-        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        new GetTask<>(chatDAO, chatId, this.getClass()).execute();
-    }
-
-
+       
 
     private void changeName() {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());

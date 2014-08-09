@@ -15,9 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeUserTask;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.User;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
+import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 
 /**
  * Created by robert on 03.08.14.
@@ -38,7 +42,13 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        chat = (Chat) bundle.getSerializable("chat");
+        long chatId = bundle.getLong(ChatSettingsActivity.CHAT_OBJECT);
+        // load chat from database
+        if (chatId <= 0) {
+            throw new IllegalArgumentException("chatId <= 0");
+        }
+        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+        new GetTask<>(chatDAO, chatId, this.getClass()).execute();
     }
 
     @Override
@@ -46,6 +56,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_invite_to_chat, container, false);
         emptyContactsNotice = (TextView) rootView.findViewById(R.id.empty_contacts_notice);
+        startChat.setVisibility(View.INVISIBLE);
         return rootView;
     }
 
@@ -83,6 +94,9 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     }
 
     public void updateChatPartnersList(List<User> allUsers) {
+        if(chat == null) {
+
+        }
         List<User> filteredUsers = new ArrayList<>();
         for (User u : allUsers) {
             boolean isParticipant = false;
@@ -125,5 +139,15 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                 }
         );
         alert.show();
+    }
+
+    @Override
+    public void notifyFragment(InviteToChatParam inviteToChatParam) {
+        super.notifyFragment(inviteToChatParam);
+        if(inviteToChatParam instanceof GetChatParam) {
+            chat = ((GetChatParam) inviteToChatParam).getChat();
+            startChat.setVisibility(View.VISIBLE);
+
+        }
     }
 }

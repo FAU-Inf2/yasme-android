@@ -28,7 +28,7 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 /**
  * Created by robert on 03.08.14.
  */
-public class ChatSettingsRemove extends Fragment implements NotifiableFragment<Chat>{
+public class ChatSettingsRemove extends Fragment implements NotifiableFragment<Chat> {
 
     final ContactListContent participantsContent = new ContactListContent();
     SimpleAdapter mDelAdapter;
@@ -42,7 +42,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
     @Override
     public void onResume() {
         super.onResume();
-        if(mDelAdapter != null) {
+        if (mDelAdapter != null) {
             mDelAdapter.notifyDataSetChanged();
         }
     }
@@ -51,7 +51,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        long chatId = (long) bundle.getSerializable(ChatSettingsActivity.CHAT_ID);
+        long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
         // load chat from database
         if (chatId <= 0) {
             throw new IllegalArgumentException("chatId <= 0");
@@ -80,7 +80,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         User user = participantsContent.items.get(position).user;
-                        if(chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId()) {
+                        if (chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId()) {
                             showAlertDialog(getString(R.string.alert_delete_user),
                                     user.getName() + " " + getString(R.string.alert_delete_user_message),
                                     chat, user.getId(), 0L);
@@ -90,6 +90,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
                     }
                 }
         );
+
         return rootView;
     }
 
