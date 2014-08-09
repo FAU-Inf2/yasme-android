@@ -27,11 +27,20 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 public class ChatSettingsRemove extends Fragment {
 
     final ContactListContent participantsContent = new ContactListContent();
+    final SimpleAdapter mDelAdapter = new SimpleAdapter(getActivity(), participantsContent.getMap(),
+        android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
+        new int[]{android.R.id.text1, android.R.id.text2});
     private View participants;
     private AbsListView list;
     private Chat chat;
 
     public ChatSettingsRemove() {
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mDelAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -46,11 +55,6 @@ public class ChatSettingsRemove extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_chat_settings_remove, container, false);
 
         participants = rootView.findViewById(R.id.chat_settings_participants);
-
-        final SimpleAdapter mDelAdapter;
-        mDelAdapter = new SimpleAdapter(getActivity(), participantsContent.getMap(),
-                android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
-                new int[]{android.R.id.text1, android.R.id.text2});
 
         // Set the adapter
         list = (AbsListView) participants.findViewById(android.R.id.list);

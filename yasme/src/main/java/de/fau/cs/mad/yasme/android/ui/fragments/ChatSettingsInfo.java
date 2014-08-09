@@ -37,7 +37,12 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     private View chatInfo;
     private Chat chat;
 
-    public ChatSettingsInfo() {
+    public ChatSettingsInfo() {}
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
