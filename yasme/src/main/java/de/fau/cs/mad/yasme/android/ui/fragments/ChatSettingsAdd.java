@@ -41,19 +41,22 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        long chatId = bundle.getLong(ChatSettingsActivity.CHAT_OBJECT);
-        // load chat from database
-        if (chatId <= 0) {
-            throw new IllegalArgumentException("chatId <= 0");
-        }
-        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        new GetTask<>(chatDAO, chatId, this.getClass()).execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if(chat == null) {
+            Bundle bundle = getArguments();
+            long chatId = bundle.getLong(ChatSettingsActivity.CHAT_OBJECT);
+            // load chat from database
+            if (chatId <= 0) {
+                throw new IllegalArgumentException("chatId <= 0");
+            }
+            ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+            new GetTask<>(chatDAO, chatId, this.getClass()).execute();
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_invite_to_chat, container, false);
         emptyContactsNotice = (TextView) rootView.findViewById(R.id.empty_contacts_notice);
         startChat.setVisibility(View.INVISIBLE);
@@ -95,7 +98,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
     public void updateChatPartnersList(List<User> allUsers) {
         if(chat == null) {
-
+            //TODO: Chat noch nich aus DB geladen - evtl.warten??
         }
         List<User> filteredUsers = new ArrayList<>();
         for (User u : allUsers) {
@@ -147,7 +150,18 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         if(inviteToChatParam instanceof GetChatParam) {
             chat = ((GetChatParam) inviteToChatParam).getChat();
             startChat.setVisibility(View.VISIBLE);
+        }
+    }
 
+    public static class GetChatParam extends InviteToChatParam {
+        private Chat chat;
+
+        public GetChatParam(Chat chat) {
+            this.chat = chat;
+        }
+
+        public Chat getChat() {
+            return chat;
         }
     }
 }

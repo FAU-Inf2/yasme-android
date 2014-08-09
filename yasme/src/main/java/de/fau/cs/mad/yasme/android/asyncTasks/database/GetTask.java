@@ -34,7 +34,7 @@ public class GetTask<D extends Object, T extends DAO<D>> extends AsyncTask<Objec
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             // Notify
-                ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
+            ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
         }
         else {
             Log.w(this.getClass().getSimpleName(), "Did not invoke notification as task did not finish successfully.");

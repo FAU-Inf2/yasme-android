@@ -17,7 +17,9 @@ import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeUserTask;
 import de.fau.cs.mad.yasme.android.contacts.ContactListContent;
+import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
+import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.User;
@@ -48,20 +50,21 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
-        // load chat from database
-        if (chatId <= 0) {
-            throw new IllegalArgumentException("chatId <= 0");
-        }
-        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        new GetTask<>(chatDAO, chatId, this.getClass()).execute();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (null == chat) {
+            Bundle bundle = getArguments();
+            long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
+            // Make sure that fragment is registered. Registering twice won't cause any issues
+            FragmentObservable<ChatSettingsRemove, Chat> obs = ObservableRegistry.getObservable(ChatSettingsRemove.class);
+            obs.register(this);
+
+            // load chat from database
+            if (chatId <= 0) {
+                throw new IllegalArgumentException("chatId <= 0");
+            }
+            ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+            new GetTask<>(chatDAO, chatId, this.getClass()).execute();
+        }
         View rootView = inflater.inflate(R.layout.fragment_chat_settings_remove, container, false);
 
         participants = rootView.findViewById(R.id.chat_settings_participants);
