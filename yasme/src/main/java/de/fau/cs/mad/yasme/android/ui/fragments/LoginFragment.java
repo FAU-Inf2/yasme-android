@@ -56,9 +56,10 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         super.onCreate(savedInstanceState);
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
 
-        // Restore preferences
         // In debug app, show @yasme.net
         String defaultEmail = (BuildConfig.DEBUG) ? "@yasme.net" : "";
+
+        // Restore preferences
         emailTmp = DatabaseManager.INSTANCE.getSharedPreferences().getString(AbstractYasmeActivity.USER_MAIL, defaultEmail);
         accessToken = activity.getAccessToken();
     }

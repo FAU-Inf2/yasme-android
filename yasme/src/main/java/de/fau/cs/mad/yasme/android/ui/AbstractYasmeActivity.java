@@ -76,8 +76,6 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
                         getResources().getString(R.string.server_port),getResources().getString(R.string.language),getVersion());
         }
 
-
-
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
         Long userId = storage.getLong(USER_ID, 0);
         String userName = storage.getString(USER_NAME, "dummy"); //TODO: evtl. anderen dummy namen
@@ -93,7 +91,7 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         selfUser.setEmail(userMail);
         selfUser.setPw(userPw);
 
-        //Initialize database (once in application)
+        //Initialize databaseManager (once in application)
         if(!DatabaseManager.INSTANCE.isInitialized()) {
             DatabaseManager.INSTANCE.init(this, storage, userId);
         }

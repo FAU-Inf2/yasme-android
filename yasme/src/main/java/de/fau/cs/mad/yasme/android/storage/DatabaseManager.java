@@ -17,9 +17,6 @@ import de.fau.cs.mad.yasme.android.storage.dao.UserDAO;
 import de.fau.cs.mad.yasme.android.storage.dao.UserDAOImpl;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 
-//import de.fau.cs.mad.yasme.android.storage.dao.CurrentKeyDAO;
-//import de.fau.cs.mad.yasme.android.storage.dao.CurrentKeyDAOImpl;
-
 /**
  * Created by robert on 13.06.14.
  */
@@ -27,6 +24,7 @@ public enum DatabaseManager {
     INSTANCE;
 
     private boolean mInitialized = false;
+    private boolean mDBInitialized = false;
     private DatabaseHelper mHelper;
     private Context mContext;
     private long mUserId = -1;
@@ -49,15 +47,23 @@ public enum DatabaseManager {
         mContext = context;
         mSharedPreferences = sharedPreferences;
         mUserId = userId;
-        mHelper = new DatabaseHelper(context, userId);
+        initDB(context, userId);
         initializeDAOs();
         mInitialized = true;
+    }
+
+    public void initDB(Context context, long userId) {
+        mHelper = new DatabaseHelper(context, userId);
+        mDBInitialized = true;
     }
 
     public boolean isInitialized() {
         return mInitialized;
     }
 
+    public boolean isDBInitialized() {
+        return mDBInitialized;
+    }
 
     private DatabaseHelper getHelper() {
         return mHelper;

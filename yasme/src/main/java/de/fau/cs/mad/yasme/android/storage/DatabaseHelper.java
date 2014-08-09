@@ -11,6 +11,8 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import java.sql.SQLException;
+
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Device;
 import de.fau.cs.mad.yasme.android.entities.Message;
@@ -18,15 +20,13 @@ import de.fau.cs.mad.yasme.android.entities.MessageKey;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 
-import java.sql.SQLException;
-
 /**
  * Created by robert on 13.06.14.
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // when anything changes in your database objects, we have to increase the database version
-    private static final int DATABASE_VERSION = 55;
+    private static final int DATABASE_VERSION = 56;
 
     // name of the database file
     private static final String DATABASE = "de.fau.cs.mad.yasme.android.DATABASE";

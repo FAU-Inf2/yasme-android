@@ -18,59 +18,68 @@ import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
 
 public class ChatListActivity extends AbstractYasmeActivity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         //progress bar in actionbar
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-		setContentView(R.layout.activity_with_single_fragment);
+        setContentView(R.layout.activity_with_single_fragment);
 
-        if(HttpClient.context == null) {
+        if (HttpClient.context == null) {
             //TODO: temporäre Lösung:
             HttpClient.context = this.getApplicationContext();
         }
 
-        SharedPreferences devicePrefs = getSharedPreferences(DEVICE_PREFS,MODE_PRIVATE);
+        SharedPreferences devicePrefs = getSharedPreferences(DEVICE_PREFS, MODE_PRIVATE);
         long deviceId = devicePrefs.getLong(AbstractYasmeActivity.DEVICE_ID, -1);
 
-        if(!getSignedInFlag()) {
+        if (!getSignedInFlag()) {
             Log.i(this.getClass().getSimpleName(), "Not logged in, starting login activity");
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             return;
         }
+        //else {
+            //Initialize database (once in application)
+        //    if (!DatabaseManager.INSTANCE.isDBInitialized()) {
+        //        long userId =
+        //                getSharedPreferences(AbstractYasmeActivity.STORAGE_PREFS, MODE_PRIVATE)
+        //                        .getLong(AbstractYasmeActivity.USER_ID, 0);
+        //        DatabaseManager.INSTANCE.initDB(this, userId);
+        //    }
+        //}
 
         if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.singleFragmentContainer, new ChatListFragment()).commit();
-		}
+            getFragmentManager().beginTransaction()
+                    .add(R.id.singleFragmentContainer, new ChatListFragment()).commit();
+        }
     }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.chatlist, menu);
-		return true;
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.chatlist, menu);
+        return true;
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_add_chat) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_add_chat) {
             Intent intent = new Intent(this, InviteToChatActivity.class);
             startActivity(intent);
-			return true;
-		}
+            return true;
+        }
         if (id == R.id.sign_out) {
             new LogoutTask().execute();
         }
-		return super.onOptionsItemSelected(item);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
     protected void startLoginActivity() {
         setSignedInFlag(false);
@@ -91,8 +100,9 @@ public class ChatListActivity extends AbstractYasmeActivity {
             }
             return true;
         }
+
         protected void onPostExecute(Boolean success) {
-            if(!success) {
+            if (!success) {
                 return;
             }
             startLoginActivity();
