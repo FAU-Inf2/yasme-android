@@ -50,10 +50,10 @@ public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if(success) {
+            ObservableRegistry.getObservable(classToNotify).notifyFragments(chat);
             Toaster.getInstance().toast(R.string.change_successful, Toast.LENGTH_LONG);
         } else {
             Toaster.getInstance().toast(R.string.change_not_successful, Toast.LENGTH_LONG);
         }
-        ObservableRegistry.getObservable(classToNotify).notifyFragments(chat);
     }
 }
