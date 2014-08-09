@@ -15,6 +15,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeChatProperties;
@@ -24,6 +26,7 @@ import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.Chat;
+import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
@@ -55,7 +58,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         if (null == chat) {
             Bundle bundle = getArguments();
             long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
-             // Make sure that fragment is registered. Registering twice won't cause any issues
+            // Make sure that fragment is registered. Registering twice won't cause any issues
             FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
             obs.register(this);
 
@@ -63,6 +66,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
             if (chatId <= 0) {
                 throw new IllegalArgumentException("chatId <= 0");
             }
+
             ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
             new GetTask<>(chatDAO, chatId, this.getClass()).execute();
         }
