@@ -40,7 +40,7 @@ public class InviteToChatFragment
     protected List<User> users;
     protected ListView chatPartners;
     protected Button startChat;
-    private ArrayAdapter<String> adapter;
+    protected ArrayAdapter<String> adapter;
     private TextView emptyContactsNotice;
 
     public InviteToChatFragment() {

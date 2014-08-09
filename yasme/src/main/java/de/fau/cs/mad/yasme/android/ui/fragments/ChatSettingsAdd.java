@@ -11,13 +11,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeUserTask;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by robert on 03.08.14.
@@ -25,6 +25,14 @@ import java.util.List;
 public class ChatSettingsAdd extends InviteToChatFragment {
     private Chat chat;
     private TextView emptyContactsNotice;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,10 +52,10 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     @Override
     public void onStart() {
         super.onStart();
-        adaptToSettings();
+        adaptToSettingsFragment();
     }
 
-    private void adaptToSettings() {
+    private void adaptToSettingsFragment() {
         startChat.setText(getString(R.string.add_user));
         startChat.setOnClickListener(this);
         emptyContactsNotice.setText(getString(R.string.contact_list_empty));

@@ -37,7 +37,14 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     private View chatInfo;
     private Chat chat;
 
-    public ChatSettingsInfo() {
+    public ChatSettingsInfo() {}
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -45,10 +52,13 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         // Try to load chat from bundle
-        chat = (Chat) bundle.getSerializable(ChatSettingsActivity.CHAT_OBJECT);
-        if (null == chat) {
-            loadChat(bundle.getLong(ChatSettingsActivity.CHAT_ID));
+        long chatId = (long) bundle.getSerializable(ChatSettingsActivity.CHAT_ID);
+        // load chat from database
+        if (chatId <= 0) {
+            throw new IllegalArgumentException("chatId <= 0");
         }
+        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+        new GetTask<>(chatDAO, chatId, this.getClass()).execute();
     }
 
     @Override
@@ -107,7 +117,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
             throw new IllegalArgumentException("chatId <= 0");
         }
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        new GetTask<>(chatDAO, chatId, this.getClass()); //TODO: da fehlt noch was, oder?
+        new GetTask<>(chatDAO, chatId, this.getClass()).execute();
     }
 
 

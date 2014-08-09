@@ -4,13 +4,6 @@ import android.util.Log;
 
 import com.j256.ormlite.dao.GenericRawResults;
 
-import de.fau.cs.mad.yasme.android.entities.Chat;
-import de.fau.cs.mad.yasme.android.entities.User;
-import de.fau.cs.mad.yasme.android.storage.ChatUser;
-import de.fau.cs.mad.yasme.android.storage.DatabaseConstants;
-import de.fau.cs.mad.yasme.android.storage.DatabaseHelper;
-import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -18,6 +11,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import de.fau.cs.mad.yasme.android.entities.Chat;
+import de.fau.cs.mad.yasme.android.entities.User;
+import de.fau.cs.mad.yasme.android.storage.ChatUser;
+import de.fau.cs.mad.yasme.android.storage.DatabaseConstants;
+import de.fau.cs.mad.yasme.android.storage.DatabaseHelper;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 /**
  * Created by bene on 11.07.14.
@@ -87,7 +87,6 @@ public enum ChatDAOImpl implements ChatDAO {
             return null;
         }
     }
-
 
     private List<User> loadParticipants(Chat chat) throws SQLException {
         // If a chat object was found, fill it's participants list

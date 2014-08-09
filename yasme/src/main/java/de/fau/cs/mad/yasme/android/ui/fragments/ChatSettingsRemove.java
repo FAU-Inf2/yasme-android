@@ -14,19 +14,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeUserTask;
 import de.fau.cs.mad.yasme.android.contacts.ContactListContent;
+import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
+import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 
 /**
  * Created by robert on 03.08.14.
  */
-public class ChatSettingsRemove extends Fragment {
+public class ChatSettingsRemove extends Fragment implements NotifiableFragment<Chat>{
 
     final ContactListContent participantsContent = new ContactListContent();
+    SimpleAdapter mDelAdapter;
     private View participants;
     private AbsListView list;
     private Chat chat;
@@ -35,10 +40,24 @@ public class ChatSettingsRemove extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if(mDelAdapter != null) {
+            mDelAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        chat = (Chat) bundle.getSerializable("chat");
+        long chatId = (long) bundle.getSerializable(ChatSettingsActivity.CHAT_ID);
+        // load chat from database
+        if (chatId <= 0) {
+            throw new IllegalArgumentException("chatId <= 0");
+        }
+        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+        new GetTask<>(chatDAO, chatId, this.getClass()).execute();
     }
 
     @Override
@@ -47,7 +66,6 @@ public class ChatSettingsRemove extends Fragment {
 
         participants = rootView.findViewById(R.id.chat_settings_participants);
 
-        final SimpleAdapter mDelAdapter;
         mDelAdapter = new SimpleAdapter(getActivity(), participantsContent.getMap(),
                 android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
                 new int[]{android.R.id.text1, android.R.id.text2});
@@ -72,18 +90,6 @@ public class ChatSettingsRemove extends Fragment {
                     }
                 }
         );
-
-        participantsContent.clearItems();
-
-        for (User u : chat.getParticipants()) {
-            if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
-                continue;
-            }
-            participantsContent.addItem(new ContactListContent.
-                    ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
-        }
-        mDelAdapter.notifyDataSetChanged();
-
         return rootView;
     }
 
@@ -114,5 +120,20 @@ public class ChatSettingsRemove extends Fragment {
                 }
         );
         alert.show();
+    }
+
+    @Override
+    public void notifyFragment(Chat value) {
+        chat = value;
+        participantsContent.clearItems();
+
+        for (User u : chat.getParticipants()) {
+            if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
+                continue;
+            }
+            participantsContent.addItem(new ContactListContent.
+                    ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
+        }
+        mDelAdapter.notifyDataSetChanged();
     }
 }
