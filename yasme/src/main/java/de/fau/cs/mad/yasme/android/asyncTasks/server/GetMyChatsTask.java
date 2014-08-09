@@ -3,6 +3,7 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,14 +28,19 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
     private UserDAO userDAO;
     private ChatDAO chatDAO;
     private Class classToNotify;
+    private long selfId = DatabaseManager.INSTANCE.getUserId();
 
     private List<Chat> chatsToReturn;
 
     public GetMyChatsTask(Class classToNotify) {
-        dbManager = DatabaseManager.INSTANCE;
-        userDAO = DatabaseManager.INSTANCE.getUserDAO();
-        chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+        this.dbManager = DatabaseManager.INSTANCE;
+        this.userDAO = DatabaseManager.INSTANCE.getUserDAO();
+        this.chatDAO = DatabaseManager.INSTANCE.getChatDAO();
         this.classToNotify = classToNotify;
+
+        if (this.selfId <= 0) {
+            throw new ExceptionInInitializerError("self id <= 0. DatabaseManager was not initialized correctly");
+        }
     }
 
     /**
@@ -70,11 +76,43 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
             Log.e(this.getClass().getSimpleName(), "Refreshing all chats failed");
         }
 
+        // Add all the chat's participants as contacts
+        // This could be done more efficiently in chatDAO's refresh method but would destroy the layer abstraction
+        addAllParticipantsAsContact(serverChats);
+
         if (null == (chatsToReturn = chatDAO.getAll())) {
             Log.e(this.getClass().getSimpleName(), "Error while trying to retrieve all chats from the database.");
             return false;
         }
         return true;
+    }
+
+
+    private void addAllParticipantsAsContact(Collection<Chat> chats) {
+        // Get my contacts first and fill set with their ids
+        List<User> contacts = userDAO.getContacts();
+        Set<Long> myContactIds = new HashSet<>();
+        for (User contact : contacts) {
+            myContactIds.add(contact.getId());
+        }
+
+        // After refreshAll, we can assume that all participants have already been added to the client database
+        for (Chat chat : chats) {
+            for (User user : chat.getParticipants()) {
+                long userId = user.getId();
+                if (!myContactIds.contains(userId) && userId != selfId) {
+                    User addAsContact = userDAO.get(userId);
+                    if (null == addAsContact) {
+                        // Should not happen actually!
+                        Log.e(this.getClass().getSimpleName(), "User was not stored in database! There must have been an error before");
+                        continue;
+                    }
+                    addAsContact.addToContacts();
+                    userDAO.update(addAsContact);
+                    myContactIds.add(addAsContact.getId());
+                }
+            }
+        }
     }
 
 
