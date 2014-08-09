@@ -13,6 +13,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import de.fau.cs.mad.yasme.android.storage.DatabaseConstants;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -94,6 +95,27 @@ public class Chat implements Serializable {
         this.name = name;
         this.owner = owner;
         this.messages = messages;
+    }
+
+    public Chat(Chat origin) throws IllegalAccessException {
+        // Clone constructor
+
+        // This may fail if someone adds a field but forgets to add the new field to this constructor
+//        this.id = origin.id;
+//        this.participants = origin.participants;
+//        this.status = origin.status;
+//        this.name = origin.name;
+//        this.owner = origin.owner;
+//        this.lastModified = origin.lastModified;
+//        this.created = origin.created;
+//        this.profilePicture = origin.profilePicture;
+//        this.messages = origin.messages;
+//        this.lastMessage = origin.lastMessage;
+
+        Field[] fields = this.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.set(this, field.get(origin));
+        }
     }
 
     /**
@@ -250,5 +272,15 @@ public class Chat implements Serializable {
 
     public void setLastMessage(Message lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+
+    public Chat clone() {
+        try {
+            return new Chat(this);
+        } catch (IllegalAccessException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return null;
+        }
     }
 }

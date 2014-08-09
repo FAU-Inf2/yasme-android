@@ -169,9 +169,16 @@ public class ChatTask extends ConnectionTask {
     }
 
     public void updateChat(Chat chat) throws RestServiceException {
-             String path = chat.getId() + "/properties";
-        chat.setId(-1); // Tell the server: Do not overwrite chatProperties with server data
-        executeRequest(Request.PUT, path, chat);
+        // Copy the chat object first
+        Chat clone = chat.clone();
+        if (null == clone) {
+            Log.e(this.getClass().getSimpleName(), "Cannot clone chat");
+            return;
+        }
+
+        String path = clone.getId() + "/properties";
+        clone.setId(-1); // Tell the server not to overwrite the properties with server data
+        executeRequest(Request.PUT, path, clone);
         Log.d(this.getClass().getSimpleName(),"Chat updated");
     }
 

@@ -127,10 +127,9 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Grab the EditText's input
-                        String inputName = chatName.getText().toString();
-                        Chat newChat = chat;
-                        newChat.setName(inputName);
-                        new ChangeChatProperties(newChat).execute();
+                        String newName = chatName.getText().toString();
+                        chat.setName(newName);
+                        new ChangeChatProperties(chat).execute();
                     }
                 }
         );
