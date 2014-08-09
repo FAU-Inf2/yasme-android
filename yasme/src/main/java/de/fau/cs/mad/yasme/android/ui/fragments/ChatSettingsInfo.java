@@ -15,13 +15,18 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeChatProperties;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.LeaveChatTask;
 import de.fau.cs.mad.yasme.android.contacts.ContactListContent;
+import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
+import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.Chat;
+import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
@@ -47,19 +52,6 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         }
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        // Try to load chat from bundle
-        long chatId = (long) bundle.getSerializable(ChatSettingsActivity.CHAT_ID);
-        // load chat from database
-        if (chatId <= 0) {
-            throw new IllegalArgumentException("chatId <= 0");
-        }
-        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        new GetTask<>(chatDAO, chatId, this.getClass()).execute();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -111,11 +103,30 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Register at observer
+        FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
+        obs.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
+        obs.remove(this);
+    }
+
     private void loadChat(long chatId) {
         // load chat from database
         if (chatId <= 0) {
             throw new IllegalArgumentException("chatId <= 0");
         }
+        // Make sure that fragment is registered. Registering twice won't cause any issues
+        FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
+        obs.register(this);
+
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
         new GetTask<>(chatDAO, chatId, this.getClass()).execute();
     }
