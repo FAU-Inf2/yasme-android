@@ -11,14 +11,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Locale;
+
 import de.fau.cs.mad.yasme.android.R;
-import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsAdd;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsInfo;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsRemove;
-
-import java.util.Locale;
 
 /**
  * Created by robert on 28.07.14.
@@ -38,13 +37,13 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
     ChatSettingsActivity.SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
 
-    private Chat chat;
+    private long chatId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        chat = (Chat) getIntent().getSerializableExtra("chat");
+        chatId = (long) getIntent().getSerializableExtra(CHAT_ID);
 
         setContentView(R.layout.activity_contact);
 
@@ -129,8 +128,7 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
 
             // It may be a better idea to pass the chat id and retrieve
             Bundle args = new Bundle();
-            args.putLong(CHAT_ID, chat.getId());
-            args.putSerializable(CHAT_OBJECT, chat);
+            args.putLong(CHAT_ID, chatId);
 
             switch (position){
                 case 0:

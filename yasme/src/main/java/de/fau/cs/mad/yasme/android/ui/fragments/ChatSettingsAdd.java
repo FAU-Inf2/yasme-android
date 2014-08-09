@@ -29,7 +29,9 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     @Override
     public void onResume() {
         super.onResume();
-        adapter.notifyDataSetChanged();
+        if(adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -50,10 +52,10 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     @Override
     public void onStart() {
         super.onStart();
-        adaptToSettings();
+        adaptToSettingsFragment();
     }
 
-    private void adaptToSettings() {
+    private void adaptToSettingsFragment() {
         startChat.setText(getString(R.string.add_user));
         startChat.setOnClickListener(this);
         emptyContactsNotice.setText(getString(R.string.contact_list_empty));

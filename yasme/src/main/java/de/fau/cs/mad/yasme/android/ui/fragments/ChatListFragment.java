@@ -120,10 +120,9 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         Chat chat = (Chat) getListAdapter().getItem(info.position);
         switch (item.getItemId()) {
-
             case R.id.context_settings:
                 Intent intent = new Intent(getActivity(), ChatSettingsActivity.class);
-                intent.putExtra("chat", chat);
+                intent.putExtra(ChatSettingsActivity.CHAT_ID, chat.getId());
                 startActivity(intent);
                 return true;
             case R.id.context_leave:

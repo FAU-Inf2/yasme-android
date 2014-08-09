@@ -192,9 +192,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             return;
         }
 
-        //progress bar on
-        //getActivity().setProgressBarIndeterminateVisibility(true);
-
         // Send message and get new messages afterwards
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask(this.getClass())).execute(msgText);
@@ -256,7 +253,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         int itemId = item.getItemId();
         if (itemId == R.id.action_chat_settings) {
             Intent intent = new Intent(getActivity(), ChatSettingsActivity.class);
-            intent.putExtra("chat", chat);
+            intent.putExtra(ChatSettingsActivity.CHAT_ID, chat.getId());
             startActivity(intent);
             return true;
         }
