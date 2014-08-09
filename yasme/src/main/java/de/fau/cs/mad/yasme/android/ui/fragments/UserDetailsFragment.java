@@ -255,7 +255,7 @@ public class UserDetailsFragment
         }
 
         // Refresh contact list in first tab
-        new GetContactsTask(this.getClass()).execute();
+        new GetContactsTask(ContactListFragment.class).execute();
     }
 
 

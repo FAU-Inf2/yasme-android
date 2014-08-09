@@ -86,11 +86,14 @@ public abstract class ConnectionTask {
         ConnectionTask.language = language;
         ConnectionTask.versionCode = versionCode;
 
-        ConnectionTask.initialized = true;
+
         //ConnectionTask.initializedSession = false;
+        if (!buildBaseURI()) {
+            Log.e(ConnectionTask.class.getSimpleName(), "Failed to build URL! May case several other issues");
+            throw new ExceptionInInitializerError("Failed to build base URL! This may case several other issues");
+        }
 
-        buildBaseURI();
-
+        ConnectionTask.initialized = true;
         ConnectionTask.objectWriter = new ObjectMapper().writer()
                 .withDefaultPrettyPrinter();
     }
@@ -128,13 +131,16 @@ public abstract class ConnectionTask {
     //    return initializedSession;
     //}
 
-    private static void buildBaseURI() {
+    private static boolean buildBaseURI() {
         try {
             ConnectionTask.baseURI = new URIBuilder().setScheme(ConnectionTask.serverScheme).
                     setHost(ConnectionTask.serverHost).setPort(ConnectionTask.serverPort).build();
+            return true;
         } catch (URISyntaxException e) {
             e.printStackTrace();
+            Log.e(ConnectionTask.class.getSimpleName(), e.getMessage());
         }
+        return false;
     }
 
     /**

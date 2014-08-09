@@ -32,7 +32,7 @@ import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
  */
 // TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach
 // geloescht werden
-public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
+public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
     private List<Message> messages;
     private long lastMessageId;
@@ -47,7 +47,8 @@ public class GetMessageTask extends AsyncTask<String, Void, Boolean> {
     /**
      * @return Returns true if it was successful, otherwise false
      */
-    protected Boolean doInBackground(String... params) {
+    @Override
+    protected Boolean doInBackground(Object... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         lastMessageId = DatabaseManager.INSTANCE.getSharedPreferences().getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
