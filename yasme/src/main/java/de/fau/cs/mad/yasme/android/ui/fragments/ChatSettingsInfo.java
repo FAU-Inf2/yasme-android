@@ -150,7 +150,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                         // Grab the EditText's input
                         String newName = chatName.getText().toString();
                         chat.setName(newName);
-                        new ChangeChatProperties(chat).execute();
+                        new ChangeChatProperties(chat, this.getClass()).execute();
                     }
                 }
         );
@@ -181,9 +181,8 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Grab the EditText's input
                         String inputStatus = chatName.getText().toString();
-                        Chat newChat = chat;
-                        newChat.setStatus(inputStatus);
-                        new ChangeChatProperties(newChat).execute();
+                        chat.setStatus(inputStatus);
+                        new ChangeChatProperties(chat, this.getClass()).execute();
                     }
                 }
         );

@@ -6,20 +6,24 @@ import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.ChatTask;
+import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.ui.fragments.InviteToChatFragment;
 
 /**
  * Created by robert on 29.07.14.
  */
 public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
     private Chat chat;
+    private Class classToNotify;
 
-    public ChangeChatProperties(Chat chat) {
+    public ChangeChatProperties(Chat chat, Class classToNotify) {
         this.chat = chat;
+        this.classToNotify = classToNotify;
     }
 
 
@@ -35,7 +39,7 @@ public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
-        DatabaseManager.INSTANCE.getChatDAO().update(chat);
+        chat = DatabaseManager.INSTANCE.getChatDAO().update(chat);
         return true;
     }
 
@@ -50,5 +54,6 @@ public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
         } else {
             Toaster.getInstance().toast(R.string.change_not_successful, Toast.LENGTH_LONG);
         }
+        ObservableRegistry.getObservable(classToNotify).notifyFragments(chat);
     }
 }
