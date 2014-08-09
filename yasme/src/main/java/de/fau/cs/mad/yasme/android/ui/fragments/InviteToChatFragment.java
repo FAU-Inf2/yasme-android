@@ -25,6 +25,7 @@ import de.fau.cs.mad.yasme.android.asyncTasks.server.CreateChatTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
+import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
@@ -245,6 +246,19 @@ public class InviteToChatFragment
 
         public List<User> getAllUsers() {
             return allUsers;
+        }
+    }
+
+    public static class GetChatParam extends InviteToChatParam {
+        private Chat chat;
+
+        public GetChatParam(Boolean success, Chat chat) {
+            this.success = success;
+            this.chat = chat;
+        }
+
+        public Chat getChat() {
+            return chat;
         }
     }
 }

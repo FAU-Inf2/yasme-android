@@ -52,7 +52,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         // Try to load chat from bundle
-        long chatId = (long) bundle.getSerializable(ChatSettingsActivity.CHAT_ID);
+        long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
         // load chat from database
         if (chatId <= 0) {
             throw new IllegalArgumentException("chatId <= 0");
@@ -65,11 +65,13 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == chat) {
             Bundle bundle = getArguments();
-            chat = (Chat) bundle.getSerializable(ChatSettingsActivity.CHAT_OBJECT);
-            // And if that won't work, directly retrieve the chat from the database
-            if (null == chat) {
-                loadChat(bundle.getLong(ChatSettingsActivity.CHAT_ID));
+            long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
+            // load chat from database
+            if (chatId <= 0) {
+                throw new IllegalArgumentException("chatId <= 0");
             }
+            ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+            new GetTask<>(chatDAO, chatId, this.getClass()).execute();
         }
 
         View rootView = inflater.inflate(R.layout.fragment_chat_settings_info, container, false);
@@ -109,18 +111,6 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         chatInfo = rootView.findViewById(R.id.chat_settings_info);
         return rootView;
     }
-
-
-    private void loadChat(long chatId) {
-        // load chat from database
-        if (chatId <= 0) {
-            throw new IllegalArgumentException("chatId <= 0");
-        }
-        ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        new GetTask<>(chatDAO, chatId, this.getClass()).execute();
-    }
-
-
 
     private void changeName() {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -214,12 +204,8 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     }
 
     @Override
-    public void notifyFragment(Chat chat) {
-        if (null == chat) {
-            Log.e(this.getClass().getSimpleName(), " was waiting for a chat object but turned out it was null");
-        } else {
-            this.chat = chat;
-            fillInfoView();
-        }
+    public void notifyFragment(Chat value) {
+        chat = value;
+        fillInfoView();
     }
 }
