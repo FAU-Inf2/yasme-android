@@ -17,6 +17,7 @@ import java.util.List;
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeUserTask;
+import de.fau.cs.mad.yasme.android.connection.ChatTask;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
@@ -28,7 +29,6 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
  */
 public class ChatSettingsAdd extends InviteToChatFragment {
     private Chat chat;
-    private TextView emptyContactsNotice;
 
     @Override
     public void onResume() {
@@ -44,28 +44,35 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(chat == null) {
             Bundle bundle = getArguments();
-            long chatId = bundle.getLong(ChatSettingsActivity.CHAT_OBJECT);
+            long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
             // load chat from database
             if (chatId <= 0) {
                 throw new IllegalArgumentException("chatId <= 0");
             }
+
+            // TODO Use AsyncTask. Will be complicated as this class extends InviteToChatFragment and thus implements notifiable not with a chat object as parameter
             ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-            new GetTask<>(chatDAO, chatId, this.getClass()).execute();
+            chat = chatDAO.get(chatId);
+            if (null == chat) {
+                Log.e(this.getClass().getSimpleName(), "chat could not be loaded from database");
+                throw new ExceptionInInitializerError("Chat could not be loaded from database");
+            }
         }
 
         View rootView = inflater.inflate(R.layout.fragment_invite_to_chat, container, false);
-        emptyContactsNotice = (TextView) rootView.findViewById(R.id.empty_contacts_notice);
-        startChat.setVisibility(View.INVISIBLE);
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
+        findViewsById();
+        startChat.setVisibility(View.INVISIBLE);    // button
+
         adaptToSettingsFragment();
     }
 

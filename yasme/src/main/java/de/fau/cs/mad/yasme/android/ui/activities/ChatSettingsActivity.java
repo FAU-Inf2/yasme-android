@@ -4,8 +4,10 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -32,7 +34,6 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
      * {@link android.support.v13.app.FragmentStatePagerAdapter}.
      */
     public static final String CHAT_ID = "chatId";
-    public static final String CHAT_OBJECT = "chatObject";
 
     ChatSettingsActivity.SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
@@ -43,7 +44,10 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        chatId = (long) getIntent().getSerializableExtra(CHAT_ID);
+        chatId = getIntent().getLongExtra(CHAT_ID, -1);
+        if (chatId <= 0) {
+            throw new IllegalArgumentException("chatId <= 0");
+        }
 
         setContentView(R.layout.activity_contact);
 
@@ -96,6 +100,8 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
         }
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -109,7 +115,20 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra(AbstractYasmeActivity.CHAT_ID, chatId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     /**

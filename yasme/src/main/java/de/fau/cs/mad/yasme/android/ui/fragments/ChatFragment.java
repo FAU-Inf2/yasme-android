@@ -46,13 +46,17 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     //private List<Message> localMessages = new ArrayList<>();
     private Chat chat;
     private AtomicLong latestMessageOnDisplay;
-    public ChatFragment() {
 
-    }
+
+    public ChatFragment() {  }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Retrain instance variables!
+        // setRetainInstance(true);
+
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
 
         Intent intent = activity.getIntent();

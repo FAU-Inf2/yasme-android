@@ -33,15 +33,13 @@ import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
 /**
  * Created by bene on 22.06.14.
  */
-public class InviteToChatFragment
-        extends Fragment
-        implements View.OnClickListener, NotifiableFragment<InviteToChatFragment.InviteToChatParam> {
+public class InviteToChatFragment extends Fragment implements View.OnClickListener, NotifiableFragment<InviteToChatFragment.InviteToChatParam> {
 
     protected List<User> users;
     protected ListView chatPartners;
     protected Button startChat;
     protected ArrayAdapter<String> adapter;
-    private TextView emptyContactsNotice;
+    protected TextView emptyContactsNotice;
 
     public InviteToChatFragment() {
 
@@ -72,7 +70,7 @@ public class InviteToChatFragment
         return rootView;
     }
 
-    private void findViewsById() {
+    protected void findViewsById() {
 
         if (null == startChat) {
             startChat = (Button) getActivity().findViewById(R.id.inviteToChat_startChat);
