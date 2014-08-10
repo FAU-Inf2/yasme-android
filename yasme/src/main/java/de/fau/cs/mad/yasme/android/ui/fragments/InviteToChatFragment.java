@@ -57,16 +57,20 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
         obs.register(this);
 
         //progress bar on
-        getActivity().setProgressBarIndeterminateVisibility(true);
-
-        //new GetAllUsersTask(this.getClass()).execute(); //TODO: delete GetAllUsersTask, if not needed anymore
-        new GetContactsTask(this.getClass()).execute();
+        //getActivity().setProgressBarIndeterminateVisibility(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_invite_to_chat, container, false);
+
+        // Make sure that this fragment is registered before invoking the GetContactsTask
+        FragmentObservable<InviteToChatFragment, InviteToChatParam> obs =
+                ObservableRegistry.getObservable(InviteToChatFragment.class);
+        obs.register(this);
+
+        new GetContactsTask(this.getClass()).execute();
         return rootView;
     }
 
