@@ -6,6 +6,7 @@ import android.util.Log;
 
 import de.fau.cs.mad.yasme.android.connection.UserTask;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
+import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.encryption.PasswordEncryption;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
@@ -40,6 +41,8 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(String... params) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+
         // TODO: ueberpruefen, ob user schon existiert
         name = params[0];
         email = params[1].toLowerCase();
@@ -76,5 +79,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
 
         ObservableRegistry.getObservable(classToNotify).notifyFragments(
                 new RegisterFragment.RegistrationParam(success, email, password));
+
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
     }
 }

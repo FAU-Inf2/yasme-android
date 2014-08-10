@@ -5,6 +5,7 @@ import android.util.Log;
 
 import de.fau.cs.mad.yasme.android.connection.AuthorizationTask;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
+import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.encryption.PasswordEncryption;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
@@ -37,6 +38,8 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
      * @return
      */
     protected Boolean doInBackground(String... params) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+
         GetInfoTask getInfoTask = new GetInfoTask(0);
         getInfoTask.execute();
 //        try {
@@ -73,6 +76,8 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
         ObservableRegistry.getObservable(classToNotify).notifyFragments(
                     new LoginFragment.LoginProcessParam(success));
+
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
 
     }
 }

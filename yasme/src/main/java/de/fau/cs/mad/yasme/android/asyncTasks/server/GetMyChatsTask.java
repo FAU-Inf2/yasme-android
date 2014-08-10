@@ -118,17 +118,15 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+
         new GetInfoTask().execute();
         if (!success) {
             Log.w(this.getClass().getSimpleName(), "failed");
-            SpinnerObservable.getInstance().removeBackgroundTask(this);
             return;
         }
 
         Log.i(this.getClass().getSimpleName(), "success");
-        if(classToNotify == ChatListFragment.class) {
-            ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(chatsToReturn);
-        }
+        ObservableRegistry.getObservable(classToNotify).notifyFragments(chatsToReturn);
         SpinnerObservable.getInstance().removeBackgroundTask(this);
     }
 

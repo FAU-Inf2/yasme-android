@@ -6,6 +6,7 @@ import android.util.Log;
 
 import de.fau.cs.mad.yasme.android.connection.DeviceTask;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
+import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.encryption.KeyEncryption;
 import de.fau.cs.mad.yasme.android.entities.OwnDevice;
 import de.fau.cs.mad.yasme.android.entities.User;
@@ -36,7 +37,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
     */
     @Override
     protected Boolean doInBackground(String... params) {
-
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         long userId = Long.parseLong(params[0]);
 
         // the product : e.g Google Nexus
@@ -132,5 +133,6 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         // after device registration
         ObservableRegistry.getObservable(classToNotify)
                         .notifyFragments(new LoginFragment.DeviceRegistrationParam(success));
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
     }
 }
