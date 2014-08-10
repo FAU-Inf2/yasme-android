@@ -1,5 +1,6 @@
 package de.fau.cs.mad.yasme.android.ui.activities;
 
+import android.util.Log;
 import android.os.Bundle;
 import android.view.Menu;
 
@@ -47,11 +48,6 @@ public class LoginActivity extends AbstractYasmeActivity {
         return true;
     }
 
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 
 //    @Override
 //    protected void onResume() {
