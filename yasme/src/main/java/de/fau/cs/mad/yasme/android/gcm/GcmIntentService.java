@@ -11,6 +11,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetMessageTask;
+import de.fau.cs.mad.yasme.android.ui.fragments.ChatFragment;
 
 
 /**
@@ -44,7 +45,7 @@ public class GcmIntentService extends IntentService {
 				// If it's a regular GCM message, do some work.
 				Log.d(this.getClass().getSimpleName(), "Received message with type message from GCM");
 				if (extras.containsKey("type") && extras.get("type").equals("msg")) {
-					new GetMessageTask(this.getClass()).execute();
+					new GetMessageTask(ChatFragment.class).execute();
 				}
 			}
 		}
