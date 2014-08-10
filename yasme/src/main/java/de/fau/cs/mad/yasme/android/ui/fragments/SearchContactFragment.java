@@ -102,9 +102,10 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        if(searchText.getText().equals("")){
-
-        }else{
+        CharSequence text = searchText.getText();
+        if(text.toString().equals("")){
+            return;
+        } else {
             contactListContent.clearItems();
             //new SearchUserTask(searchSpinner,searchText,contactListContent,mAdapter).execute();
             //getActivity().setProgressBarIndeterminateVisibility(true);
@@ -112,16 +113,20 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
             new SearchUserTask(
                     SearchUserTask.SearchBy.getSearchBy(
                             searchSpinner.getSelectedItemPosition()),
-                            searchText.getText().toString(), this.getClass())
+                            text.toString(), this.getClass())
                     .execute();
 
             // Hide keyboard
             InputMethodManager inputManager =
                     (InputMethodManager) DatabaseManager.INSTANCE.getContext().
                             getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(
-                    getActivity().getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
+            View currentFocus = getActivity().getCurrentFocus();
+            if (null != currentFocus) {
+                // If keyboard was displayed
+                inputManager.hideSoftInputFromWindow(
+                        currentFocus.getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+            }
         }
     }
 
