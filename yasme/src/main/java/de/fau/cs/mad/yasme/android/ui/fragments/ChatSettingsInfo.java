@@ -108,6 +108,9 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                 }
         );
         chatInfo = rootView.findViewById(R.id.chat_settings_info);
+        if (null != chat){
+            fillInfoView();
+        }
         return rootView;
     }
 
