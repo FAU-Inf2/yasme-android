@@ -15,9 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
-import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
+import de.fau.cs.mad.yasme.android.asyncTasks.database.GetContactsTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeUserTask;
-import de.fau.cs.mad.yasme.android.connection.ChatTask;
+import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
+import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
@@ -54,6 +55,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
             }
 
             // TODO Use AsyncTask. Will be complicated as this class extends InviteToChatFragment and thus implements notifiable not with a chat object as parameter
+            // maybe we can only copy the code from InviteToChatFragment?
             ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
             chat = chatDAO.get(chatId);
             if (null == chat) {
@@ -61,6 +63,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                 throw new ExceptionInInitializerError("Chat could not be loaded from database");
             }
         }
+        new GetContactsTask(this.getClass()).execute();
 
         View rootView = inflater.inflate(R.layout.fragment_invite_to_chat, container, false);
         return rootView;
@@ -69,11 +72,27 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     @Override
     public void onStart() {
         super.onStart();
+        //Register at observer
+        Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
+        FragmentObservable<ChatSettingsAdd, InviteToChatParam> obs =
+                ObservableRegistry.getObservable(ChatSettingsAdd.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+        obs.register(this);
 
         findViewsById();
         startChat.setVisibility(View.INVISIBLE);    // button
 
         adaptToSettingsFragment();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //De-Register at observer
+        FragmentObservable<ChatSettingsAdd, InviteToChatParam> obs =
+                ObservableRegistry.getObservable(ChatSettingsAdd.class);
+        Log.d(this.getClass().getSimpleName(), "Remove from observer");
+        obs.remove(this);
     }
 
     private void adaptToSettingsFragment() {
@@ -153,11 +172,16 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
     @Override
     public void notifyFragment(InviteToChatParam inviteToChatParam) {
-        super.notifyFragment(inviteToChatParam);
+        if(inviteToChatParam instanceof AllUsersFetchedParam) {
+            updateChatPartnersList(((AllUsersFetchedParam) inviteToChatParam).getAllUsers());
+            return;
+        }
         if(inviteToChatParam instanceof GetChatParam) {
             chat = ((GetChatParam) inviteToChatParam).getChat();
             startChat.setVisibility(View.VISIBLE);
+            return;
         }
+        super.notifyFragment(inviteToChatParam);
     }
 
     public static class GetChatParam extends InviteToChatParam {
