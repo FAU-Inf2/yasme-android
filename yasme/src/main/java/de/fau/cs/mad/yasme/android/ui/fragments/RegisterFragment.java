@@ -23,7 +23,7 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 /**
  * Created by robert on 06.07.14.
  */
-public class RegisterFragment extends Fragment implements NotifiableFragment<RegisterFragment.RegParam> {
+public class RegisterFragment extends Fragment implements NotifiableFragment<RegisterFragment.RegistrationParam> {
 
 
     @Override
@@ -127,7 +127,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     public void onStart() {
         super.onStart();
         Log.d(this.getClass().getSimpleName(), "Try to get LoginObservableInstance");
-        FragmentObservable<RegisterFragment, RegParam> obs =
+        FragmentObservable<RegisterFragment, RegistrationParam> obs =
                 ObservableRegistry.getObservable(RegisterFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
 
@@ -137,68 +137,40 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     @Override
     public void onStop() {
         super.onStop();
-        FragmentObservable<RegisterFragment, RegParam> obs =
+        FragmentObservable<RegisterFragment, RegistrationParam> obs =
                 ObservableRegistry.getObservable(RegisterFragment.class);
         Log.d(this.getClass().getSimpleName(), "Remove from observer");
         obs.remove(this);
     }
 
     @Override
-    public void notifyFragment(RegParam param) {
-        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        if (param instanceof RegLoginParam)
-            notifyFragment((RegLoginParam) param);
-        else if (param instanceof RegistrationParam)
-            notifyFragment((RegistrationParam) param);
-    }
-
-    public void notifyFragment(RegLoginParam regParam) {
-
-        //TODO: activity starten, wird eventuell auch schon von LoginFragment erledigt
-    }
-
     public void notifyFragment(RegistrationParam regParam) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         onPostRegisterExecute(regParam.getSuccess(), regParam.getEmail(), regParam.getPassword());
     }
 
-    public static class RegParam {
+
+    public static class RegistrationParam {
         protected Boolean success;
-
-        public Boolean getSuccess() {
-            return success;
-        }
-    }
-
-    public static class RegLoginParam extends RegParam{
-        private long userId;
-
-        public RegLoginParam(Boolean success) {
-            this.success = success;
-            this.userId = DatabaseManager.INSTANCE.getUserId();
-        }
-
-        public long getUserId() {
-            return userId;
-        }
-    }
-
-    public static class RegistrationParam extends RegParam{
         private String email;
         private String password;
 
-        public RegistrationParam(Boolean success, String email, String password) {
+        public RegistrationParam(boolean success, String email, String password) {
             this.success = success;
             this.email = email;
             this.password = password;
         }
 
-        public String getPassword() {
-            return password;
+        public Boolean getSuccess() {
+            return success;
         }
 
         public String getEmail() {
             return email;
+        }
+
+        public String getPassword() {
+            return password;
         }
     }
 }

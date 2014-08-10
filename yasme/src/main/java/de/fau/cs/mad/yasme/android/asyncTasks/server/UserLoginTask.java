@@ -71,12 +71,8 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
             DatabaseManager.INSTANCE.setUserEmail(email);
         }
 
-        if(classToNotify == LoginFragment.class) {
-            ObservableRegistry.getObservable(LoginFragment.class).notifyFragments(
+        ObservableRegistry.getObservable(classToNotify).notifyFragments(
                     new LoginFragment.LoginProcessParam(success));
-        } else if(classToNotify == RegisterFragment.class) {
-            ObservableRegistry.getObservable(RegisterFragment.class).notifyFragments(
-                    new RegisterFragment.RegLoginParam(success));
-        }
+
     }
 }
