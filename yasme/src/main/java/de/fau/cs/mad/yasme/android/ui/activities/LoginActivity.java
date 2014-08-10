@@ -13,6 +13,7 @@ import de.fau.cs.mad.yasme.android.ui.fragments.LoginFragment;
  */
 public class LoginActivity extends AbstractYasmeActivity {
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_with_single_fragment);
@@ -44,6 +45,12 @@ public class LoginActivity extends AbstractYasmeActivity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.login, menu);
         return true;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
 //    @Override
