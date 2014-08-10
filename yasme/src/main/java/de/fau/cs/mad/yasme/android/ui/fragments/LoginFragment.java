@@ -37,6 +37,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     protected String accessToken;
     //Keep track of the login task to ensure we can cancel it if requested.
     private UserLoginTask authTask = null;
+
     // UI references.
     private EditText emailView;
     private EditText passwordView;
@@ -64,27 +65,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         accessToken = activity.getAccessToken();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).register(this);
-        Log.d(this.getClass().getSimpleName(), "Try to get LoginObservableInstance");
-        FragmentObservable<LoginFragment, LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
-        Log.d(this.getClass().getSimpleName(), "... successful");
-
-        obs.register(this);
-        mProgressView = getActivity().findViewById(R.id.login_status);
-        mLoginFormView = getActivity().findViewById(R.id.login);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        FragmentObservable<LoginFragment, LoginParam> obs =
-                ObservableRegistry.getObservable(LoginFragment.class);
-        Log.d(this.getClass().getSimpleName(), "Remove from observer");
-        obs.remove(this);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -136,6 +116,29 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         );
 
         return rootView;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).register(this);
+        Log.d(this.getClass().getSimpleName(), "Try to get LoginObservableInstance");
+        FragmentObservable<LoginFragment, LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+
+        obs.register(this);
+        mProgressView = getActivity().findViewById(R.id.login_status);
+        mLoginFormView = getActivity().findViewById(R.id.login);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        FragmentObservable<LoginFragment, LoginParam> obs =
+                ObservableRegistry.getObservable(LoginFragment.class);
+        Log.d(this.getClass().getSimpleName(), "Remove from observer");
+        obs.remove(this);
     }
 
     private void registerDialog() {

@@ -16,6 +16,7 @@ import de.fau.cs.mad.yasme.android.asyncTasks.server.UserRegistrationTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
+import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 
@@ -74,7 +75,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                         String inputPasswordCheck = password_check.getText()
                                 .toString();
 
-                        new UserRegistrationTask(this.getClass())
+                        new UserRegistrationTask(RegisterFragment.class)
                                 .execute(inputName, inputMail, inputPassword, inputPasswordCheck,
                                         this.getClass().getName());
                     }
@@ -96,22 +97,29 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
 
         if (success) {
             //Login after registration was successfull
-            Toast.makeText(
-                    getActivity().getApplicationContext(),
-                    getResources().getString(
-                            R.string.registration_successful),
-                    Toast.LENGTH_SHORT
-            ).show();
-            UserLoginTask authTask = new UserLoginTask(false, this.getClass());
+            Toaster.getInstance().toast(getResources().getString(
+                    R.string.registration_successful), Toast.LENGTH_SHORT);
+
+//            Toast.makeText(
+//                    getActivity().getApplicationContext(),
+//                    getResources().getString(
+//                            R.string.registration_successful),
+//                    Toast.LENGTH_SHORT
+//            ).show();
+            UserLoginTask authTask = new UserLoginTask(false, LoginFragment.class);
             authTask.execute(email, password, this.getClass().getName());
             ((AbstractYasmeActivity)getActivity()).getSelfUser().setEmail(email);
-        } else {
-            Toast.makeText(
-                    DatabaseManager.INSTANCE.getContext(),
-                    getResources().getString(
-                            R.string.registration_not_successful),
-                    Toast.LENGTH_SHORT
-            ).show();
+        }
+        else {
+            Toaster.getInstance().toast(getResources().getString(
+                    R.string.registration_not_successful), Toast.LENGTH_SHORT);
+
+//            Toast.makeText(
+//                    DatabaseManager.INSTANCE.getContext(),
+//                    getResources().getString(
+//                            R.string.registration_not_successful),
+//                    Toast.LENGTH_SHORT
+//            ).show();
         }
     }
 
@@ -145,6 +153,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     }
 
     public void notifyFragment(RegLoginParam regParam) {
+
         //TODO: activity starten, wird eventuell auch schon von LoginFragment erledigt
     }
 

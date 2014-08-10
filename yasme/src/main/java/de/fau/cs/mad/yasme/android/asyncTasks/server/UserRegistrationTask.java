@@ -62,7 +62,9 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        // Ask server for news, i.e. new version of app
         new GetInfoTask().execute();
+
         if(success) {
             SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
             // Will be done by login task
@@ -71,9 +73,8 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
             editor.commit();
         }
-        if(classToNotify == RegisterFragment.class) {
-            ObservableRegistry.getObservable(RegisterFragment.class).notifyFragments(
-                    new RegisterFragment.RegistrationParam(success, email, password));
-        }
+
+        ObservableRegistry.getObservable(classToNotify).notifyFragments(
+                new RegisterFragment.RegistrationParam(success, email, password));
     }
 }
