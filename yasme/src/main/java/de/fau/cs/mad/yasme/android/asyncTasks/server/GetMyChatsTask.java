@@ -61,9 +61,9 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
 
-        Log.e(this.getClass().getSimpleName(), "Something to refresh?");
+        Log.d(this.getClass().getSimpleName(), "Something to refresh?");
         refresh(serverChats);
-        Log.e(this.getClass().getSimpleName(), "Something to refresh finished!");
+        Log.d(this.getClass().getSimpleName(), "Something to refresh finished!");
 
         // Debug
         if (serverChats.size() > 0) {
@@ -154,7 +154,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
             }
         }
         if (refreshUserIds.size() > 0 ) {
-            Log.e(this.getClass().getSimpleName(), refreshUserIds.size() + " users are not up-to-date");
+            Log.d(this.getClass().getSimpleName(), refreshUserIds.size() + " users are not up-to-date");
             RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER, refreshUserIds, true);
             refreshTask.execute();
         }

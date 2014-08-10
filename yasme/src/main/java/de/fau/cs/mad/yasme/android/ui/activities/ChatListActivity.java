@@ -13,6 +13,7 @@ import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.AuthorizationTask;
 import de.fau.cs.mad.yasme.android.connection.ssl.HttpClient;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
 
@@ -33,16 +34,22 @@ public class ChatListActivity extends AbstractYasmeActivity {
         }
 
         SharedPreferences devicePrefs = getSharedPreferences(DEVICE_PREFS, MODE_PRIVATE);
-        long deviceId = devicePrefs.getLong(AbstractYasmeActivity.DEVICE_ID, -1);
 
         if (!getSignedInFlag()) {
             Log.i(this.getClass().getSimpleName(), "Not logged in, starting login activity");
             Intent intent = new Intent(this, LoginActivity.class);
 //						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-						finish();
+			finish();
             return;
         }
+
+        // Make sure that the device has been registered. Otherwise several other tasks will fail
+        long deviceId = DatabaseManager.INSTANCE.getDeviceId();
+        if (deviceId <= 0) {
+            Log.e(this.getClass().getSimpleName(), "Device id should not be <= 0 after login. Looks like the device registration failed but no one was notified about that");
+        }
+
         //else {
             //Initialize database (once in application)
         //    if (!DatabaseManager.INSTANCE.isDBInitialized()) {

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.BuildConfig;
 import de.fau.cs.mad.yasme.android.R;
@@ -25,6 +26,7 @@ import de.fau.cs.mad.yasme.android.asyncTasks.server.UserLoginTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
+import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.ServerInfo;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.DebugManager;
@@ -262,7 +264,10 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     }
 
     public void onPostYasmeDeviceRegExecute(Boolean success, long deviceId) {
-        if (success) {
+        if (!success) {
+            Toaster.getInstance().toast(getResources().getString(R.string.device_registration_failed), Toast.LENGTH_LONG);
+        }
+        else {
             AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
             // Initialize the session a second time because the deviceId was missing
             SharedPreferences devicePrefs = activity.getSharedPreferences(

@@ -130,11 +130,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         // after device registration
-        if(success){
-            if(classToNotify == LoginFragment.class) {
-                ObservableRegistry.getObservable(LoginFragment.class)
+        ObservableRegistry.getObservable(classToNotify)
                         .notifyFragments(new LoginFragment.DeviceRegistrationParam(success));
-            }
-        }
     }
 }
