@@ -3,6 +3,8 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -112,7 +114,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         editMessage = (EditText) rootView.findViewById(R.id.text_message);
         list = (ListView) rootView.findViewById(R.id.chat_messageList);
 
-        Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
+        final Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,6 +198,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         String msgText = editMessage.getText().toString();
         if (msgText.isEmpty()) {
             Log.d(this.getClass().getSimpleName(), "Nichts eingegeben");
+            return;
+        }
+        if (msgText.length() > 10000) {
+            Toaster.getInstance().toast(R.string.text_to_long,Toast.LENGTH_LONG);
             return;
         }
 

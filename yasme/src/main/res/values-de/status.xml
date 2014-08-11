@@ -8,4 +8,5 @@
     <string name="decryption_failed">Nachricht(en) konnten nicht entschlüsselt werden. Falls dieses Gerät erst kürzlich registriert wurde, können ältere Nachrichten nicht entschlüsselt werden.</string>
     <string name="key_decryption_failed">Schlüssel konnte nicht entschlüsselt werden. Das ist ein Fehler!</string>
     <string name="unknown_message_error">Ein unbekannter Fehler ist aufgetreten! Inhalt der Nachricht:</string>
+    <string name="text_to_long">Text ist zu lang. Maximal 10.000 Zeichen.</string>
 </resources>
