@@ -46,6 +46,9 @@ public class Message implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.ERROR_ID)
     private int errorId = MessageEncryption.ErrorType.OK;
 
+    @DatabaseField(columnName = DatabaseConstants.READ)
+    private boolean read = false;
+
     private MessageKey messageKey;
 
     /**
@@ -140,6 +143,11 @@ public class Message implements Serializable {
         return errorId;
     }
 
+    @JsonIgnore
+    public boolean isRead() {
+        return read;
+    }
+
     /**
      * Setters
      */
@@ -193,6 +201,11 @@ public class Message implements Serializable {
     @JsonIgnore
     public void setErrorId(int id) {
         this.errorId = id;
+    }
+
+    @JsonIgnore
+    public void setRead(boolean read) {
+        this.read = read;
     }
 }
 
