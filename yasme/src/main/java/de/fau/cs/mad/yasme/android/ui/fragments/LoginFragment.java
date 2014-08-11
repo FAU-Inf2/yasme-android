@@ -252,7 +252,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         } else {
             Log.d(getClass().getSimpleName(), "Login failed");
             ServerInfo serverInfo = DatabaseManager.INSTANCE.getServerInfo();
-            if (serverInfo != null && serverInfo.hasMessage()) {
+            if (serverInfo != null && !serverInfo.getLoginAllowed() && serverInfo.hasMessage()) {
                 passwordView.setError(DatabaseManager.INSTANCE.getServerInfo().getMessage());
             } else {
                 passwordView.setError(getString(R.string.error_incorrect_user_or_password));

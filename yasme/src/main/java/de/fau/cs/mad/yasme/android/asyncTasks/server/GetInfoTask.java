@@ -57,6 +57,7 @@ public class GetInfoTask extends AsyncTask<Void, Void, Boolean> {
 
         if (serverInfo != null && serverInfo.hasMessage()) {
             Log.d(getClass().getSimpleName(),"has Message:" + serverInfo.getMessage());
+            Log.d(getClass().getSimpleName(),"Login:" + serverInfo.getLoginAllowed());
             Toaster.getInstance().toast(serverInfo.getMessage(), Toast.LENGTH_LONG);
         }
     }

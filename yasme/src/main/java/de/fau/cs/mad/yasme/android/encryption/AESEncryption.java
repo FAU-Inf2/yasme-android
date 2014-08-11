@@ -23,9 +23,10 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 	private IvParameterSpec iv = null;
 
 	public AESEncryption() {
-		key = generateKey();
-		iv = generateIV();
+        this("Y45M3");
 	}
+
+
 
 
 	public AESEncryption(String password) {

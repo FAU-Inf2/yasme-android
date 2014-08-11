@@ -214,8 +214,8 @@ public abstract class ConnectionTask {
 
         if (contentValue != null) {
             try {
-                StringEntity entity = new StringEntity(objectToJsonMapper(contentValue));
-                entity.setContentEncoding("UTF-8");
+                StringEntity entity = new StringEntity(objectToJsonMapper(contentValue),"UTF-8");
+                //entity.setContentEncoding("UTF-8");
                 entity.setContentType("application/json");
                 requestBase.setEntity(entity);
             } catch (UnsupportedEncodingException e) {
