@@ -9,4 +9,6 @@
     <string name="key_decryption_failed">Key could not be decrypted. This is a bug!</string>
     <string name="unknown_message_error">An unknown error occurred! Content of message:</string>
     <string name="text_to_long">Text too long. Limit: 10,000 chars.</string>
+    <string name="passwords_do_not_match">Passwords don\'t match.</string>
+    <string name="password_too_short">Password too short. 8 chars required.</string>
 </resources>

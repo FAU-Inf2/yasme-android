@@ -25,6 +25,10 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
  */
 public class RegisterFragment extends Fragment implements NotifiableFragment<RegisterFragment.RegistrationParam> {
 
+    public static String inputName = "";
+    public static String inputMail = "";
+    public static String inputPass1 = "";
+    public static String inputPass2 = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,18 +47,22 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                 LinearLayout.LayoutParams.MATCH_PARENT);
         final EditText name = new EditText(getActivity());
         name.setHint(R.string.registration_name);
+        name.setText(inputName);
 
         final EditText mail = new EditText(getActivity());
         mail.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mail.setHint(R.string.registration_email);
+        mail.setText(inputMail);
 
         final EditText password = new EditText(getActivity());
         password.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
         password.setHint(R.string.registration_password);
+        password.setText(inputPass1);
 
         final EditText password_check = new EditText(getActivity());
         password_check.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
         password_check.setHint(R.string.registration_repeat_password);
+        password_check.setText(inputPass2);
 
         list.addView(name, layoutParams);
         list.addView(mail, layoutParams);
@@ -74,6 +82,23 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                         String inputPassword = password.getText().toString();
                         String inputPasswordCheck = password_check.getText()
                                 .toString();
+
+                        RegisterFragment.inputName = inputName;
+                        RegisterFragment.inputMail = inputMail;
+                        RegisterFragment.inputPass1 = inputPassword;
+                        RegisterFragment.inputPass2 = inputPasswordCheck;
+
+                        if (password.getText().length() < 8) {
+                            Toaster.getInstance().toast(R.string.password_too_short,Toast.LENGTH_LONG);
+                            return;
+                        }
+                        if (!inputPassword.equals(inputPasswordCheck)) {
+                            Log.d(getClass().getSimpleName(), "Password1##" + inputPassword + "##");
+                            Log.d(getClass().getSimpleName(), "Password2##" + inputPasswordCheck + "##");
+                            Toaster.getInstance().toast(R.string.passwords_do_not_match,Toast.LENGTH_LONG);
+                            return;
+                        }
+
 
                         new UserRegistrationTask(RegisterFragment.class)
                                 .execute(inputName, inputMail, inputPassword, inputPasswordCheck,

@@ -101,6 +101,7 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     public void onStart() {
         super.onStart();
         Toaster.getInstance().register(this);
+        stopSpinning();
         SpinnerObservable.getInstance().registerActivity(this);
     }
 

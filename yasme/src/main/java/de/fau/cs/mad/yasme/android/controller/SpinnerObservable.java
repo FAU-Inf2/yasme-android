@@ -34,7 +34,10 @@ public class SpinnerObservable {
         Log.d(getClass().getSimpleName(), "Register activity");
         activities.add(activity);
         if (spinning) {
+            Log.d(getClass().getSimpleName(), "Start spinning");
             activity.startSpinning();
+        } else {
+            Log.d(getClass().getSimpleName(), "No spinning");
         }
     }
 
