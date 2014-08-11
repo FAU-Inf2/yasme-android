@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
     private List<Chat> chatRooms = new ArrayList<Chat>();
     private ChatListAdapter adapter;
+    private TextView emptyChatListNotice;
 
     public ChatListFragment() {
 
@@ -55,14 +57,12 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         //holt vor allem den Namen des Users ab
         new GetProfileDataTask().execute();
-
-        //wird schon in GetMyChatsTask erledigt
-        //new GetAllTask(chatDAO, ChatListFragment.class).execute();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
         //Register at observer
         Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
         FragmentObservable<ChatListFragment, List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
@@ -77,7 +77,13 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     public void onResume() {
         super.onResume();
 
-        //ab hier ist alles aus der onCreateMethode
+        /*TextView emptyChatListNotice = new TextView(getActivity());
+        emptyChatListNotice.setText(getString(R.string.empty_chat_list));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        this.getListView().addView(emptyChatListNotice, params);*/
 
         // At first, retrieve the chats from the database
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
@@ -85,7 +91,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
         // Aktualisiert die Datenbank auf den aktuellen Stand des Servers
-
         new GetMyChatsTask(this.getClass()).execute();
         new GetMessageTask(this.getClass()).execute();
     }
@@ -149,39 +154,23 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     @Override
     public void notifyFragment(List<Chat> chatRooms) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
+
         if(chatRooms == null) {
             adapter.notifyDataSetChanged();
             return;
         }
         ChatListAdapter adapter = (ChatListAdapter) this.getListAdapter();
         this.chatRooms = chatRooms;
+        //showHintIfListIsEmpty();
         adapter.updateChats(chatRooms);
         adapter.notifyDataSetChanged();
     }
 
-//    private void startAlarm() {
-//        Timer timer = new Timer("outdatedServerCall");
-//        final String outdatedMessage;
-//
-//        TimerTask task = new TimerTask() {
-//            @Override
-//            public void run() {
-//                TextView server = (TextView) getActivity().findViewById(R.id.server_messages);
-//                String outdatedMessage;
-//                try {
-//                    outdatedMessage = AuthorizationTask.getInstance().outdated();
-//                } catch (RestServiceException e) {
-//                    Log.e(this.getClass().getSimpleName(), e.getMessage());
-//                    outdatedMessage = "";
-//                }
-//                if(outdatedMessage.isEmpty()) {
-//                    server.setVisibility(View.GONE);
-//                    return;
-//                }
-//                server.setText(outdatedMessage);
-//                server.setVisibility(View.VISIBLE);
-//            }
-//        };
-//        timer.scheduleAtFixedRate(task, 0, 86400000);
-//    }
+    private void showHintIfListIsEmpty() {
+        if(chatRooms.isEmpty()) {
+            emptyChatListNotice.setVisibility(View.VISIBLE);
+        } else {
+            emptyChatListNotice.setVisibility(View.GONE);
+        }
+    }
 }

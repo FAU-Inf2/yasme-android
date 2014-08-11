@@ -20,6 +20,7 @@
     <string name="title_activity_home">Yasme</string>
     <string name="button_showChat">TestChat</string>
     <string name="usr_name_hint">Benutzername</string>
+    <string name="empty_chat_list">Um einen Chat zu starten, drücke auf das Kontakte-Symbol in der ActionBar</string>
 
     <!-- Chat -->
     <string name="title_activity_chat">Yasme</string>

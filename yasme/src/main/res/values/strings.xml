@@ -20,6 +20,7 @@
     <string name="title_activity_home">Yasme Home</string>
     <string name="button_showChat">TestChat</string>
     <string name="usr_name_hint">Username</string>
+    <string name="empty_chat_list">To start a new chat, tap on the contact symbol in the action bar</string>
 
     <!-- Chat -->
     <string name="title_activity_chat">Yasme</string>
@@ -34,6 +35,7 @@
     <string name="title_section3">Own Profile</string>
     <string name="hello_world">Hello world!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <!-- Invite to chat -->
     <string name="button_start_chat">Chat!</string>
     <string name="toast_no_selection">Mark the users with whom you want to chat</string>
