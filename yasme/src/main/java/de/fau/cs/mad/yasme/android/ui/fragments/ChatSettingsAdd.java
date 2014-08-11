@@ -80,7 +80,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         obs.register(this);
 
         findViewsById();
-        startChat.setVisibility(View.INVISIBLE);    // button
+        //startChat.setVisibility(View.INVISIBLE);    // button
 
         adaptToSettingsFragment();
     }
@@ -172,13 +172,13 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
     @Override
     public void notifyFragment(InviteToChatParam inviteToChatParam) {
+        //startChat.setVisibility(View.VISIBLE);
         if(inviteToChatParam instanceof AllUsersFetchedParam) {
             updateChatPartnersList(((AllUsersFetchedParam) inviteToChatParam).getAllUsers());
             return;
         }
         if(inviteToChatParam instanceof GetChatParam) {
             chat = ((GetChatParam) inviteToChatParam).getChat();
-            startChat.setVisibility(View.VISIBLE);
             return;
         }
         super.notifyFragment(inviteToChatParam);

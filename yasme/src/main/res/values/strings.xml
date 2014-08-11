@@ -39,6 +39,7 @@
     <string name="toast_no_selection">Mark the users with whom you want to chat</string>
 
     <!-- Contacts -->
+    <string name="contact_title">Contacts</string>
     <string name="button_search">Search</string>
     <string name="contact_header"
         translatable="false">Contact</string>

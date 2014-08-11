@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
+import java.util.Locale;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
@@ -21,8 +23,6 @@ import de.fau.cs.mad.yasme.android.ui.fragments.ContactListFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.OwnProfileFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.SearchContactFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.UserDetailsFragment;
-
-import java.util.Locale;
 
 public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener, SearchContactFragment.OnSearchFragmentInteractionListener, OwnProfileFragment.OnOwnProfileFragmentInteractionListener {
 
@@ -46,6 +46,8 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setTitle(R.string.contact_title);
 
         //progress bar in actionbar
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
