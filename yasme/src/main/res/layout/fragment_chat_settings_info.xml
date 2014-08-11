@@ -22,6 +22,7 @@
 
     <Button
             android:id="@+id/leave_chat"
+            android:visibility="invisible"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

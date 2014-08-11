@@ -22,8 +22,8 @@ public class GetInfoTask extends AsyncTask<Void, Void, Boolean> {
         interval = INTERVAL;
     }
 
-    //private static final long INTERVAL = 86400 * 1000;
-    private static final long INTERVAL = 600 * 1000;
+    private static final long INTERVAL = 86400 * 1000;
+    //private static final long INTERVAL = 600 * 1000;
     private long interval;
     private ServerInfo serverInfo = null;
 
