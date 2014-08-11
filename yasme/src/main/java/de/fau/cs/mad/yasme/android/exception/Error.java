@@ -24,6 +24,8 @@ public enum Error implements ErrorCode {
 
     INCOMPLETE_REQUEST(420),
 
+    BAD_EMAIL(460),
+
     STORE_USER_FAILED(500),
 
     CONNECTION_ERROR(500),

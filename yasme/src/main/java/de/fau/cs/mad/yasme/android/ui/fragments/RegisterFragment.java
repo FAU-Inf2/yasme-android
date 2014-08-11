@@ -118,12 +118,12 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         alert.show();
     }
 
-    public void onPostRegisterExecute(Boolean success, String email, String password) {
+    public void onPostRegisterExecute(Boolean success, String email, String password, int message) {
 
         if (success) {
             //Login after registration was successfull
             Toaster.getInstance().toast(getResources().getString(
-                    R.string.registration_successful), Toast.LENGTH_SHORT);
+                    message), Toast.LENGTH_SHORT);
 
 //            Toast.makeText(
 //                    getActivity().getApplicationContext(),
@@ -136,8 +136,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
             ((AbstractYasmeActivity)getActivity()).getSelfUser().setEmail(email);
         }
         else {
-            Toaster.getInstance().toast(getResources().getString(
-                    R.string.registration_not_successful), Toast.LENGTH_SHORT);
+            Toaster.getInstance().toast(getResources().getString(message), Toast.LENGTH_LONG);
 
 //            Toast.makeText(
 //                    DatabaseManager.INSTANCE.getContext(),
@@ -171,7 +170,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     @Override
     public void notifyFragment(RegistrationParam regParam) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        onPostRegisterExecute(regParam.getSuccess(), regParam.getEmail(), regParam.getPassword());
+        onPostRegisterExecute(regParam.getSuccess(), regParam.getEmail(), regParam.getPassword(), regParam.getMessage());
     }
 
 
@@ -179,11 +178,13 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         protected Boolean success;
         private String email;
         private String password;
+        private int message;
 
-        public RegistrationParam(boolean success, String email, String password) {
+        public RegistrationParam(boolean success, String email, String password, int message) {
             this.success = success;
             this.email = email;
             this.password = password;
+            this.message = message;
         }
 
         public Boolean getSuccess() {
@@ -196,6 +197,10 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
 
         public String getPassword() {
             return password;
+        }
+
+        public int getMessage() {
+            return message;
         }
     }
 }

@@ -3,12 +3,16 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.UserTask;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
+import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.encryption.PasswordEncryption;
 import de.fau.cs.mad.yasme.android.entities.User;
+import de.fau.cs.mad.yasme.android.exception.Error;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
@@ -27,6 +31,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
     private String password;
     private Class classToNotify;
     private long userId;
+    private int message = R.string.registration_successful;
 
     public UserRegistrationTask(Class classToNotify) {
         this.classToNotify  = classToNotify;
@@ -57,6 +62,13 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
             password = pwEnc.getSecurePassword();
             userId = UserTask.getInstance().registerUser(new User(password, name, email));
         } catch (RestServiceException e) {
+            message = R.string.registration_not_successful;
+            if (e.getCode() == Error.BAD_EMAIL.getNumber()) {
+                message = R.string.email_invalid;
+            }
+            if (e.getCode() == Error.FORBIDDEN.getNumber()) {
+                message = R.string.email_exists;
+            }
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
@@ -78,7 +90,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
         }
 
         ObservableRegistry.getObservable(classToNotify).notifyFragments(
-                new RegisterFragment.RegistrationParam(success, email, password));
+                new RegisterFragment.RegistrationParam(success, email, password, message));
 
         SpinnerObservable.getInstance().removeBackgroundTask(this);
     }
