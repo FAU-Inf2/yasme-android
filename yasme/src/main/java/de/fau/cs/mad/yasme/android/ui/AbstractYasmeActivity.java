@@ -119,6 +119,10 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         mSignedIn = newSignedIn;
     }
 
+    public void setActionBarTitle(String title){
+        getActionBar().setTitle(title);
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long

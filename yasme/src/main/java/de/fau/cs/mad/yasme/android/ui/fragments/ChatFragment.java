@@ -3,8 +3,6 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -33,6 +31,7 @@ import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
+import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 
 /**
@@ -128,6 +127,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         list.setAdapter(mAdapter);
         mAdapter.setNotifyOnChange(true);
         notifyFragment(chat.getMessages());
+
+        ((ChatActivity) getActivity()).setActionBarTitle(chat.getName());
 
         return rootView;
     }
