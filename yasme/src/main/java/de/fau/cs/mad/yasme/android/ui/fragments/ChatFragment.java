@@ -128,7 +128,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         mAdapter.setNotifyOnChange(true);
         notifyFragment(chat.getMessages());
 
-        ((ChatActivity) getActivity()).setActionBarTitle(chat.getName());
+        ((ChatActivity) getActivity()).setActionBarTitle(chat.getName(), chat.getStatus());
 
         return rootView;
     }
