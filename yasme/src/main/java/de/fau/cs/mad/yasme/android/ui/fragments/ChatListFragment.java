@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,7 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatListAdapter;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
+import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
 
 /**
  * Created by martin on 21.06.2014.
@@ -41,7 +41,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
     private List<Chat> chatRooms = new ArrayList<Chat>();
     private ChatListAdapter adapter;
-    private TextView emptyChatListNotice;
 
     public ChatListFragment() {
 
@@ -86,21 +85,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     public void onResume() {
         super.onResume();
 
-        /*TextView emptyChatListNotice = new TextView(getActivity());
-        emptyChatListNotice.setText(getString(R.string.empty_chat_list));
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        emptyChatListNotice.setText(R.string.empty_chat_list);
-        //this.getListView().addHeaderView(emptyChatListNotice);
-        showHintIfListIsEmpty();*/
-
-        /*ListView list = (ListView) getActivity().findViewById(android.R.id.list);
-        TextView emptyText = (TextView) getActivity().findViewById(android.R.id.empty);
-        //emptyText.setText(R.string.empty_chat_list);
-        list.setEmptyView(emptyText);*/
-
         // At first, retrieve the chats from the database
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
         new GetAllTask(chatDAO, ChatListFragment.class).execute();
@@ -119,6 +103,12 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         FragmentObservable<ChatListFragment, List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
         Log.d(this.getClass().getSimpleName(), "Remove from observer");
         obs.remove(this);
+    }
+
+    public void onEmptyNoticeClick(View v) {
+        Intent intent = new Intent(getActivity(), ContactActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
     }
 
     @Override
@@ -177,16 +167,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         }
         ChatListAdapter adapter = (ChatListAdapter) this.getListAdapter();
         this.chatRooms = chatRooms;
-        //showHintIfListIsEmpty();
         adapter.updateChats(chatRooms);
         adapter.notifyDataSetChanged();
-    }
-
-    private void showHintIfListIsEmpty() {
-        if(chatRooms.isEmpty() && this.getListView().getHeaderViewsCount() == 0) {
-            this.getListView().addHeaderView(emptyChatListNotice);
-        } else if(!chatRooms.isEmpty() && this.getListView().getHeaderViewsCount() == 1) {
-            this.getListView().removeHeaderView(emptyChatListNotice);
-        }
     }
 }

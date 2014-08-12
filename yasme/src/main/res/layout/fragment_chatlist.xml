@@ -48,10 +48,11 @@
             android:layout_height="match_parent"
             android:drawSelectorOnTop="false"/>
 
-        <TextView android:id="@id/android:empty"
+        <de.fau.cs.mad.yasme.android.TextViewWithImages android:id="@id/android:empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:onClick="onEmptyNoticeClick"
             android:text="@string/empty_chat_list"
             android:textStyle="bold" />
 

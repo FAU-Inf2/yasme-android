@@ -20,7 +20,8 @@
     <string name="title_activity_home">Yasme Home</string>
     <string name="button_showChat">TestChat</string>
     <string name="usr_name_hint">Username</string>
-    <string name="empty_chat_list">To start a new chat, tap on the contact symbol in the action bar</string>
+    <string name="empty_chat_list">To start a new chat, tap here or on the contact symbol
+        ([img src=ic_action_cc_bcc_light/]) in the action bar</string>
 
     <!-- Chat -->
     <string name="title_activity_chat">Yasme</string>
