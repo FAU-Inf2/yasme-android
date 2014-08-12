@@ -49,6 +49,12 @@ public class Message implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.READ)
     private boolean read = false;
 
+    @DatabaseField(columnName = DatabaseConstants.SENT)
+    private boolean sent = false;
+
+    @DatabaseField(columnName = DatabaseConstants.RECEIVED)
+    private boolean received = false;
+
     private MessageKey messageKey;
 
     /**
@@ -144,8 +150,18 @@ public class Message implements Serializable {
     }
 
     @JsonIgnore
-    public boolean isRead() {
+    public boolean wasRead() {
         return read;
+    }
+
+    @JsonIgnore
+    public boolean wasSent() {
+        return sent;
+    }
+
+    @JsonIgnore
+    public boolean wasReceived() {
+        return received;
     }
 
     /**
@@ -203,9 +219,16 @@ public class Message implements Serializable {
         this.errorId = id;
     }
 
-    @JsonIgnore
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
+    }
+
+    public void setReceived(boolean received) {
+        this.received = received;
     }
 }
 

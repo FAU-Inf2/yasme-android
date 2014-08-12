@@ -27,6 +27,8 @@ public class DatabaseConstants {
     public static final String AUTHENTICATED= "authenticated";
     public static final String ERROR_ID = "errorId";
     public static final String READ = "read";
+    public static final String SENT = "sent";
+    public static final String RECEIVED = "received";
 
     //User
     public static final String USER_TABLE = "users";
