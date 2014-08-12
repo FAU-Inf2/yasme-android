@@ -56,6 +56,16 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         //adapter.setNotifyOnChange(true);
         setListAdapter(adapter);
 
+        String name = null;
+        try {
+            name = activity.getSelfUser().getName();
+        } catch (NullPointerException npe) {
+
+        }
+        if(name != null) {
+            getActivity().setTitle(activity.getSelfUser().getName());
+        }
+
         //holt vor allem den Namen des Users ab
         new GetProfileDataTask().execute();
     }
