@@ -11,16 +11,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * Created by martin on 18.06.2014.
@@ -117,7 +117,7 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
             img.setImageResource(R.drawable.chatlist_default_icon);
             img.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) users.get(i).getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
             TextView text = (TextView) chatpartner.findViewById(R.id.chatpartner_picture_text);
-            text.setText(users.get(i).getName().substring(0, 1));
+            text.setText(users.get(i).getName().substring(0, 1).toUpperCase());
             holder.chatpartnerList.addView(chatpartner);
         }
         if (users.size() > CHATPARTNER_VISIBLE_CNT) {
