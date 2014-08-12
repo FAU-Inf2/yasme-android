@@ -1,6 +1,9 @@
 package de.fau.cs.mad.yasme.android.ui.fragments;
 
+import android.app.AlertDialog;
 import android.app.ListFragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -141,7 +144,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     public boolean onContextItemSelected(MenuItem item) {
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Chat chat = (Chat) getListAdapter().getItem(info.position);
+        final Chat chat = (Chat) getListAdapter().getItem(info.position);
         switch (item.getItemId()) {
             case R.id.context_settings:
                 Intent intent = new Intent(getActivity(), ChatSettingsActivity.class);
@@ -149,8 +152,32 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
                 startActivity(intent);
                 return true;
             case R.id.context_leave:
-                LeaveChatTask task = new LeaveChatTask(chat);
-                LeaveChatTask.preExecute(getActivity(), task);
+                //LeaveChatTask task = new LeaveChatTask(chat);
+                //LeaveChatTask.preExecute(getActivity(), task);
+
+                Context mContext = DatabaseManager.INSTANCE.getContext();
+                AlertDialog alert = new AlertDialog.Builder(mContext).create();
+                alert.setTitle(mContext.getString(R.string.alert_leave));
+                alert.setMessage(mContext.getString(R.string.alert_leave_message));
+
+                alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
+                                new LeaveChatTask(chat).execute();
+                                dialog.dismiss();
+                            }
+                        });
+
+                alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                alert.show();
                 return true;
             default:
                 return super.onContextItemSelected(item);

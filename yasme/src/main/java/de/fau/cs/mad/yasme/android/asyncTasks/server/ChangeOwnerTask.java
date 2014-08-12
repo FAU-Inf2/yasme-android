@@ -5,22 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.ChatTask;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.Chat;
-import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
@@ -35,7 +26,7 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
         this.chat = chat;
     }
 
-    public static void preExecute(Context mContext, final ChangeOwnerTask task, final Chat chat) {
+    /*public static void preExecute(Context mContext, final ChangeOwnerTask task, final Chat chat) {
         AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
         alert.setTitle(mContext.getString(R.string.alert_owner));
 
@@ -88,7 +79,7 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
                 }
         );
         alert.show();
-    }
+    }*/
 
     /**
      * @return Returns true if it was successful, otherwise false
@@ -112,8 +103,31 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if(success) {
             Toaster.getInstance().toast(R.string.change_successful, Toast.LENGTH_LONG);
-            LeaveChatTask task = new LeaveChatTask(chat);
-            LeaveChatTask.preExecute(mContext, task);
+            //LeaveChatTask task = new LeaveChatTask(chat);
+            //LeaveChatTask.preExecute(mContext, task);
+
+            AlertDialog alert = new AlertDialog.Builder(mContext).create();
+            alert.setTitle(mContext.getString(R.string.alert_leave));
+            alert.setMessage(mContext.getString(R.string.alert_leave_message));
+
+            alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
+                            new LeaveChatTask(chat).execute();
+                            dialog.dismiss();
+                        }
+                    });
+
+            alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+            alert.show();
         } else {
             Toaster.getInstance().toast(R.string.change_not_successful, Toast.LENGTH_LONG);
         }

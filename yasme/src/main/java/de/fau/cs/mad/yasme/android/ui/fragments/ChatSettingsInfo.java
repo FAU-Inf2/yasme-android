@@ -2,6 +2,7 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
@@ -15,8 +16,6 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import java.util.List;
-
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeChatProperties;
@@ -26,7 +25,6 @@ import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.Chat;
-import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
@@ -102,8 +100,32 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                     @Override
                     public void onClick(View view) {
                         Log.d(this.getClass().getSimpleName(), "leaveChat-Button pushed");
-                        LeaveChatTask task = new LeaveChatTask(chat);
-                        LeaveChatTask.preExecute(getActivity(), task);
+                        //LeaveChatTask task = new LeaveChatTask(chat);
+                        //LeaveChatTask.preExecute(getActivity(), task);
+
+                        Context mContext = DatabaseManager.INSTANCE.getContext();
+                        AlertDialog alert = new AlertDialog.Builder(mContext).create();
+                        alert.setTitle(mContext.getString(R.string.alert_leave));
+                        alert.setMessage(mContext.getString(R.string.alert_leave_message));
+
+                        alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
+                                        new LeaveChatTask(chat).execute();
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                        alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        alert.show();
                     }
                 }
         );
