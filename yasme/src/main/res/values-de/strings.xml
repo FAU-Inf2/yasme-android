@@ -21,7 +21,7 @@
     <string name="button_showChat">TestChat</string>
     <string name="usr_name_hint">Benutzername</string>
     <string name="empty_chat_list">Um einen Chat zu starten, drücke hier oder auf das Kontakte-Symbol
-        ([img src=ic_action_cc_bcc_light/])in der ActionBar</string>
+        ([img src=ic_action_cc_bcc_light/]) in der ActionBar</string>
 
     <!-- Chat -->
     <string name="title_activity_chat">Yasme</string>

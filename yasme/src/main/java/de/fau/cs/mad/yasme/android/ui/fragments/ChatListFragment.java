@@ -63,6 +63,14 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chatlist, container, false);
+        rootView.findViewById(android.R.id.empty).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ContactActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }
@@ -103,12 +111,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         FragmentObservable<ChatListFragment, List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
         Log.d(this.getClass().getSimpleName(), "Remove from observer");
         obs.remove(this);
-    }
-
-    public void onEmptyNoticeClick(View v) {
-        Intent intent = new Intent(getActivity(), ContactActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        startActivity(intent);
     }
 
     @Override
