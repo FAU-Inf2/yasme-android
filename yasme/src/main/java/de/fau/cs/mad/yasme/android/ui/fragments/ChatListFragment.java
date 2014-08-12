@@ -1,9 +1,6 @@
 package de.fau.cs.mad.yasme.android.ui.fragments;
 
-import android.app.AlertDialog;
 import android.app.ListFragment;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,11 +21,11 @@ import de.fau.cs.mad.yasme.android.asyncTasks.database.GetAllTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetMessageTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetMyChatsTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetProfileDataTask;
-import de.fau.cs.mad.yasme.android.asyncTasks.server.LeaveChatTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.Chat;
+import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
@@ -58,10 +55,11 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
         //adapter.setNotifyOnChange(true);
         setListAdapter(adapter);
+        User self = activity.getSelfUser();
 
         String name = null;
         try {
-            name = activity.getSelfUser().getName();
+            name = self.getName();
         } catch (NullPointerException npe) {
 
         }
@@ -151,7 +149,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
                 intent.putExtra(ChatSettingsActivity.CHAT_ID, chat.getId());
                 startActivity(intent);
                 return true;
-            case R.id.context_leave:
+            /*case R.id.context_leave:
                 //LeaveChatTask task = new LeaveChatTask(chat);
                 //LeaveChatTask.preExecute(getActivity(), task);
 
@@ -178,7 +176,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
                         });
 
                 alert.show();
-                return true;
+                return true;*/
             default:
                 return super.onContextItemSelected(item);
         }
