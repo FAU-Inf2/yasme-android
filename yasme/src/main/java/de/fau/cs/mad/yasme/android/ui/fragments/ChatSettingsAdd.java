@@ -8,6 +8,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -149,7 +150,13 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         TextView text = new TextView(getActivity());
         text.setText(message);
 
-        alert.setView(text);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        LinearLayout layout = new LinearLayout(getActivity());
+        layout.addView(text, params);
+        alert.setView(layout);
 
         // "OK" button to save the values
         alert.setPositiveButton(R.string.OK,

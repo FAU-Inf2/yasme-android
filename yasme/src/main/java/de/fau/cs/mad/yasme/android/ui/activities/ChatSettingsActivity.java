@@ -7,7 +7,6 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -97,7 +96,7 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
             }
         };
 
-        // Add 3 tabs, specifying the tab's text and TabListener
+        // Add tabs, specifying the tab's text and TabListener
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
             actionBar.addTab(actionBar.newTab().setText(mSectionsPagerAdapter.getPageTitle(i))
                     .setTabListener(tabListener));

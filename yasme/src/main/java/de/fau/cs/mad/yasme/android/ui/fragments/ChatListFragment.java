@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -60,6 +62,13 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_chatlist, container, false);
+
+        return rootView;
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -83,7 +92,14 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        this.getListView().addView(emptyChatListNotice, params);*/
+        emptyChatListNotice.setText(R.string.empty_chat_list);
+        //this.getListView().addHeaderView(emptyChatListNotice);
+        showHintIfListIsEmpty();*/
+
+        /*ListView list = (ListView) getActivity().findViewById(android.R.id.list);
+        TextView emptyText = (TextView) getActivity().findViewById(android.R.id.empty);
+        //emptyText.setText(R.string.empty_chat_list);
+        list.setEmptyView(emptyText);*/
 
         // At first, retrieve the chats from the database
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
@@ -167,10 +183,10 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     }
 
     private void showHintIfListIsEmpty() {
-        if(chatRooms.isEmpty()) {
-            emptyChatListNotice.setVisibility(View.VISIBLE);
-        } else {
-            emptyChatListNotice.setVisibility(View.GONE);
+        if(chatRooms.isEmpty() && this.getListView().getHeaderViewsCount() == 0) {
+            this.getListView().addHeaderView(emptyChatListNotice);
+        } else if(!chatRooms.isEmpty() && this.getListView().getHeaderViewsCount() == 1) {
+            this.getListView().removeHeaderView(emptyChatListNotice);
         }
     }
 }

@@ -8,30 +8,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.fau.cs.mad.yasme.android.ui.activities.ChatListActivity">
 
-    <ListView
-        android:id="@+id/chatroom_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/server_messages"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/profile"> </ListView>
-
-    <TextView
-        android:id="@+id/server_messages"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="false"
-        android:layout_centerHorizontal="true"
-        android:enabled="false"
-        android:focusable="false"
-        android:text="diverse Meldungen vom Server" />
-
-
+    <!--
     <LinearLayout
         android:id="@+id/profile"
         android:layout_width="fill_parent"
@@ -57,13 +34,28 @@
             android:layout_height="match_parent" />
 
     </LinearLayout>
+    -->
 
-    <TextView
-        android:id="@+id/empty_chat_list_notice"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/empty_chat_list"
-        android:textStyle="bold" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <ListView android:id="@id/android:list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawSelectorOnTop="false"/>
+
+        <TextView android:id="@id/android:empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/empty_chat_list"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>
