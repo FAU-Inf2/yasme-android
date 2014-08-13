@@ -150,7 +150,7 @@ public class Chat implements Serializable {
 
     public String getStatus() {
         if(status == null || status.isEmpty()) {
-            return (getNumberOfParticipants() + " Teilnehmer");
+            return (getNumberOfParticipants() + " YASMEs");
         }
         return status;
     }
