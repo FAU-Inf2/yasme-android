@@ -4,11 +4,11 @@ package de.fau.cs.mad.yasme.android.controller;
  * Created by martin on 13.08.2014.
  */
 public class Log {
-    static final boolean LOG_I = true;
-    static final boolean LOG_E = true;
-    static final boolean LOG_D = true;
-    static final boolean LOG_V = true;
-    static final boolean LOG_W = true;
+    static final boolean LOG_I = false;
+    static final boolean LOG_E = false;
+    static final boolean LOG_D = false;
+    static final boolean LOG_V = false;
+    static final boolean LOG_W = false;
 
     public static void i(String tag, String string) {
         if (LOG_I) android.util.Log.i(tag, string);
