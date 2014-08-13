@@ -3,7 +3,7 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,6 +1,6 @@
 package de.fau.cs.mad.yasme.android.entities;
 
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

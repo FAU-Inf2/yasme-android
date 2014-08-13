@@ -5,7 +5,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;

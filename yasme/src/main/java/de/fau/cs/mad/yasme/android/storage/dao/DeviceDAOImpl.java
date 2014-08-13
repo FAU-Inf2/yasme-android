@@ -1,6 +1,6 @@
 package de.fau.cs.mad.yasme.android.storage.dao;
 
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 
 import de.fau.cs.mad.yasme.android.entities.Device;
 import de.fau.cs.mad.yasme.android.entities.User;

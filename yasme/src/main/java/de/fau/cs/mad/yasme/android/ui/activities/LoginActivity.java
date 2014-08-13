@@ -1,6 +1,6 @@
 package de.fau.cs.mad.yasme.android.ui.activities;
 
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.Window;

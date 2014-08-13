@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;

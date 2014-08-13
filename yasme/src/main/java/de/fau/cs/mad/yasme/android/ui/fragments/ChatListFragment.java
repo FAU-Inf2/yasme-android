@@ -3,7 +3,7 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;

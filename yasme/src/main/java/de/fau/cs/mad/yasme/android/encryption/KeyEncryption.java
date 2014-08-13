@@ -6,7 +6,7 @@ package de.fau.cs.mad.yasme.android.encryption;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 
 import de.fau.cs.mad.yasme.android.entities.MessageKey;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;

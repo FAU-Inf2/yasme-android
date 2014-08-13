@@ -2,7 +2,7 @@ package de.fau.cs.mad.yasme.android.connection.ssl;
 
 
 import android.content.Context;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 
 import de.fau.cs.mad.yasme.android.R;
 

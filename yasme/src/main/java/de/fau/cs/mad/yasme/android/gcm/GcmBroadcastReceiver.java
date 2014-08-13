@@ -5,7 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 
 /**
  * Created by florianwinklmeier on 19.06.14.

@@ -3,7 +3,7 @@ package de.fau.cs.mad.yasme.android.storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

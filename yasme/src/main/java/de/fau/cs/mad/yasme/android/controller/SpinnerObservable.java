@@ -1,7 +1,7 @@
 package de.fau.cs.mad.yasme.android.controller;
 
 import android.os.AsyncTask;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 

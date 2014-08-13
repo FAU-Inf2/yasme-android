@@ -1,7 +1,7 @@
 package de.fau.cs.mad.yasme.android.asyncTasks.database;
 
 import android.os.AsyncTask;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;

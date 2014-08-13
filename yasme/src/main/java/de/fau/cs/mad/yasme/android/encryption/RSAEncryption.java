@@ -13,7 +13,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
 
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.R;

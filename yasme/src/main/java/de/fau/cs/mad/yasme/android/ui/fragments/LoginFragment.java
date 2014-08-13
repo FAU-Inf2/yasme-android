@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;

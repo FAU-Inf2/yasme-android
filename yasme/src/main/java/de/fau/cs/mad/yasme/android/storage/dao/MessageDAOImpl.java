@@ -1,6 +1,6 @@
 package de.fau.cs.mad.yasme.android.storage.dao;
 
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;

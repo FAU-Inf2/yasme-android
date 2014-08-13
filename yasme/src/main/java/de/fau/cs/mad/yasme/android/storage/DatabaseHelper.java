@@ -3,7 +3,7 @@ package de.fau.cs.mad.yasme.android.storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;

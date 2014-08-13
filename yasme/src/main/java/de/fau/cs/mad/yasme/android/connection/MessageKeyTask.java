@@ -1,6 +1,6 @@
 package de.fau.cs.mad.yasme.android.connection;
 
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 
 import de.fau.cs.mad.yasme.android.entities.MessageKey;
 import de.fau.cs.mad.yasme.android.exception.IncompleteKeyException;

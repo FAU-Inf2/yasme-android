@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
