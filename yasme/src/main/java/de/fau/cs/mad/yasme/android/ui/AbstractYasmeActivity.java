@@ -94,6 +94,16 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         if(!DatabaseManager.INSTANCE.isInitialized()) {
             DatabaseManager.INSTANCE.init(this, storage, userId);
         }
+
+        String accessToken = DatabaseManager.INSTANCE.getAccessToken();
+        if ((accessToken == null || accessToken.length() <= 0) && !this.getClass().equals(LoginActivity.class)) {
+            Log.i(this.getClass().getSimpleName(), "Not logged in, starting login activity");
+            Intent intent = new Intent(this, LoginActivity.class);
+//						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
     }
 
     @Override
