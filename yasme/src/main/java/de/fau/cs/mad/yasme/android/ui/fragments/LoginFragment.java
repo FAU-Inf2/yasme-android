@@ -36,7 +36,6 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatListActivity;
 
 public class LoginFragment extends Fragment implements NotifiableFragment<LoginFragment.LoginParam> {
 
-    protected String accessToken;
     //Keep track of the login task to ensure we can cancel it if requested.
     private UserLoginTask authTask = null;
 
@@ -64,7 +63,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
         // Restore preferences
         emailTmp = DatabaseManager.INSTANCE.getSharedPreferences().getString(AbstractYasmeActivity.USER_MAIL, defaultEmail);
-        accessToken = activity.getAccessToken();
     }
 
 
@@ -211,8 +209,8 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         activity.getSelfUser().setId(userId);
         SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
         //showProgress(false);
-        activity.setSignedInFlag(success);
-        editor.putBoolean(AbstractYasmeActivity.SIGN_IN, activity.getSignedInFlag());
+        //activity.setSignedInFlag(success);
+        //editor.putBoolean(AbstractYasmeActivity.SIGN_IN, activity.getSignedInFlag());
 
         if (success) {
             //Initialize database (once in application)

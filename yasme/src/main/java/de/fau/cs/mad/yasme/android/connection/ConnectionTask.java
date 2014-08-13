@@ -316,6 +316,10 @@ public abstract class ConnectionTask {
             if (statusCode == 200 || statusCode == 201 || statusCode == 204)
                 return httpResponse;
             else{
+                if (statusCode == Error.UNAUTHORIZED.getNumber()) {
+                    DatabaseManager.INSTANCE.setAccessToken(null);
+                    Log.d(getClass().getSimpleName(),"Removed AccessToken");
+                }
                 JSONObject json = new JSONObject(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
                         .getContent())).readLine());
                 throw new RestServiceException((String)json.get("message"),Integer.parseInt(json.getString("code")));

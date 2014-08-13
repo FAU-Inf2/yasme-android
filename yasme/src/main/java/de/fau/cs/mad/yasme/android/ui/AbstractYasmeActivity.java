@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatListActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.InviteToChatActivity;
+import de.fau.cs.mad.yasme.android.ui.activities.LoginActivity;
 
 
 /**
@@ -54,8 +56,6 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     public static final String TAG = "YasmeGCM";
 
     protected User selfUser;
-    protected String accessToken;
-    protected boolean mSignedIn;
 
 
 
@@ -81,9 +81,8 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         String userName = storage.getString(USER_NAME, "dummy"); //TODO: evtl. anderen dummy namen
         String userMail = storage.getString(USER_MAIL, "@yasme.net");
         String userPw = storage.getString(USER_PW, "password");
-        mSignedIn = storage.getBoolean(SIGN_IN, false);
 
-        accessToken = storage.getString(ACCESSTOKEN, null);
+        //accessToken = storage.getString(ACCESSTOKEN, null);
 
         selfUser = new User();
         selfUser.setId(userId);
@@ -106,18 +105,24 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        String accessToken = DatabaseManager.INSTANCE.getAccessToken();
+        if ((accessToken == null || accessToken.length() <= 0) && !this.getClass().equals(LoginActivity.class)) {
+            Log.i(this.getClass().getSimpleName(), "Not logged in, starting login activity");
+            Intent intent = new Intent(this, LoginActivity.class);
+//						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         Toaster.getInstance().remove(this);
         SpinnerObservable.getInstance().removeActivity(this);
-    }
-
-    public boolean getSignedInFlag() {
-        return mSignedIn;
-    }
-
-    public void setSignedInFlag(boolean newSignedIn) {
-        mSignedIn = newSignedIn;
     }
 
     public void setActionBarTitle(String title){
@@ -177,7 +182,7 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     }
 
     public String getAccessToken() {
-        return accessToken;
+        return DatabaseManager.INSTANCE.getAccessToken();
     }
 
     public void toast(final int messageId, final int duration) {
