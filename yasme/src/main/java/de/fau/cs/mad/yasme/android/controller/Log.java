@@ -5,7 +5,7 @@ package de.fau.cs.mad.yasme.android.controller;
  */
 public class Log {
     static final boolean LOG_I = false;
-    static final boolean LOG_E = false;
+    static final boolean LOG_E = true;
     static final boolean LOG_D = false;
     static final boolean LOG_V = false;
     static final boolean LOG_W = false;

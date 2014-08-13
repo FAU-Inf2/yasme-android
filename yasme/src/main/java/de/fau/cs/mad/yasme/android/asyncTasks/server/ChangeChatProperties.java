@@ -36,7 +36,7 @@ public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
         try {
             ChatTask.getInstance().updateChat(chat);
         } catch (RestServiceException e) {
-            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            Log.d(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
         chat = DatabaseManager.INSTANCE.getChatDAO().update(chat);
