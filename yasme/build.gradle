@@ -108,6 +108,9 @@ sonarRunner {
         property "sonar.login", "unknown"
         property "sonar.password", "unknown"
 
+        properties["sonar.sources"] += 'src/main/java' 
+        properties["sonar.binaries"] += 'build/intermediates/classes/debug'
+
 
         if (file('sonar.properties').exists()) {
             print 'sonar.properties found, replacing with real values'
