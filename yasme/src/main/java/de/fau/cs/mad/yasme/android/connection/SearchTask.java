@@ -15,7 +15,9 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -84,13 +86,13 @@ public class SearchTask extends ConnectionTask {
             JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine());
 
-            for(int i = 0; i<jsonArray.length(); i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 users.add(new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
                         toString(), User.class));
             }
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
-        } catch(JSONException je){
+        } catch (JSONException je) {
 
         }
         return users;

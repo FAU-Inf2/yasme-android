@@ -10,7 +10,9 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +29,7 @@ public class DeviceTask extends ConnectionTask {
 
     public static DeviceTask getInstance() {
         if (instance == null) {
-            synchronized(DeviceTask.class) {
+            synchronized (DeviceTask.class) {
                 if (null == instance) {
                     instance = new DeviceTask();
                 }
@@ -49,7 +51,7 @@ public class DeviceTask extends ConnectionTask {
         try {
             HttpResponse httpResponse = executeRequest(Request.POST, "", device);
 
-            Log.d(this.getClass().getSimpleName(),"Device registration was successful");
+            Log.d(this.getClass().getSimpleName(), "Device registration was successful");
 
             long deviceId = (new JSONObject((new BufferedReader(
                     new InputStreamReader(httpResponse.getEntity()
@@ -98,12 +100,12 @@ public class DeviceTask extends ConnectionTask {
             e.printStackTrace();
         }
 
-        Log.d(this.getClass().getSimpleName(),"No.Devices: " + devices.size());
+        Log.d(this.getClass().getSimpleName(), "No.Devices: " + devices.size());
         return devices;
     }
 
     public void deleteDevice(long deviceId) throws RestServiceException {
         executeRequest(Request.DELETE, Long.toString(deviceId));
-        Log.d(this.getClass().getSimpleName(),"Device removed!");
+        Log.d(this.getClass().getSimpleName(), "Device removed!");
     }
 }

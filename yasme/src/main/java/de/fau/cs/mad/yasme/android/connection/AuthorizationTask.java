@@ -30,7 +30,7 @@ public class AuthorizationTask extends ConnectionTask {
 
     public static AuthorizationTask getInstance() {
         if (instance == null) {
-            synchronized(AuthorizationTask.class) {
+            synchronized (AuthorizationTask.class) {
                 if (null == instance) {
                     instance = new AuthorizationTask();
                 }
@@ -40,7 +40,7 @@ public class AuthorizationTask extends ConnectionTask {
     }
 
     public String[] loginUser(User user) throws RestServiceException {
-				Log.d(this.getClass().getSimpleName(),"Logging in..."); //TODO RM
+        Log.d(this.getClass().getSimpleName(), "Logging in..."); //TODO RM
         HttpResponse httpResponse = executeRequest(Request.POST, "in", user);
 
         Header userID = httpResponse.getFirstHeader("userId");
@@ -49,13 +49,13 @@ public class AuthorizationTask extends ConnectionTask {
         DatabaseManager.INSTANCE.setUserId(Long.parseLong(userID.getValue()));
         DatabaseManager.INSTANCE.setAccessToken(token.getValue());
 
-        Log.d(this.getClass().getSimpleName(),"Login successful!");
+        Log.d(this.getClass().getSimpleName(), "Login successful!");
         return new String[]{userID.getValue(), token.getValue()};
     }
 
     public void logoutUser() throws RestServiceException {
         executeRequest(Request.POST, "out");
-        Log.d(this.getClass().getSimpleName(),"Signed out successful");
+        Log.d(this.getClass().getSimpleName(), "Signed out successful");
     }
 
 //    public String outdated() throws RestServiceException {

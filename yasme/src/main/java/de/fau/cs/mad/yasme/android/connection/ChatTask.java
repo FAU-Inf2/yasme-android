@@ -41,7 +41,7 @@ public class ChatTask extends ConnectionTask {
 
     public static ChatTask getInstance() {
         if (instance == null) {
-            synchronized(ChatTask.class) {
+            synchronized (ChatTask.class) {
                 if (null == instance) {
                     instance = new ChatTask();
                 }
@@ -101,7 +101,7 @@ public class ChatTask extends ConnectionTask {
 
         // remember: only the owner can delete the chat
         executeRequest(Request.DELETE, Long.toString(chatId));
-        Log.d(this.getClass().getSimpleName(),"Chat deleted");
+        Log.d(this.getClass().getSimpleName(), "Chat deleted");
     }
 
     public Long createChatWithPar(Chat chat) throws RestServiceException {
@@ -128,7 +128,7 @@ public class ChatTask extends ConnectionTask {
         try {
             String path = chatId + "/info";
             HttpResponse httpResponse = executeRequest(Request.GET, path);
-            return  new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
+            return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
                     .getContent())).readLine(), Chat.class);
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
@@ -139,27 +139,27 @@ public class ChatTask extends ConnectionTask {
             throws RestServiceException {
         String path = "par/" + participantId + "/" + chatId;
         executeRequest(Request.PUT, path);
-        Log.d(this.getClass().getSimpleName(),"User added to Chat!");
+        Log.d(this.getClass().getSimpleName(), "User added to Chat!");
     }
 
     public void changeOwnerOfChat(long chatId, long newOwnerId) throws RestServiceException {
         String path = chatId + "/owner/" + newOwnerId;
         executeRequest(Request.PUT, path);
-        Log.d(this.getClass().getSimpleName(),"Owner changed");
+        Log.d(this.getClass().getSimpleName(), "Owner changed");
     }
 
     public void removeParticipantFromChat(long participantId, long chatId)
             throws RestServiceException {
         String path = "par/" + participantId + "/" + chatId;
         executeRequest(Request.DELETE, path);
-        Log.d(this.getClass().getSimpleName(),"User removed from Chat!");
+        Log.d(this.getClass().getSimpleName(), "User removed from Chat!");
     }
 
     public void removeOneSelfFromChat(long chatId)
             throws RestServiceException {
         String path = chatId + "/par/self";
         executeRequest(Request.DELETE, path);
-        Log.d(this.getClass().getSimpleName(),"I´m out of Chat No. " + chatId);
+        Log.d(this.getClass().getSimpleName(), "I´m out of Chat No. " + chatId);
     }
 
     public void updateChat(Chat chat) throws RestServiceException {
@@ -173,6 +173,6 @@ public class ChatTask extends ConnectionTask {
         String path = clone.getId() + "/properties";
         clone.setId(-1); // Tell the server not to overwrite the properties with server data
         executeRequest(Request.PUT, path, clone);
-        Log.d(this.getClass().getSimpleName(),"Chat updated");
+        Log.d(this.getClass().getSimpleName(), "Chat updated");
     }
 }

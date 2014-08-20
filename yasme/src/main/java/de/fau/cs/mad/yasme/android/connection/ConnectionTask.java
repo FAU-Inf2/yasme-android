@@ -1,6 +1,7 @@
 package de.fau.cs.mad.yasme.android.connection;
 
 import de.fau.cs.mad.yasme.android.controller.Log;
+
 import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.R;
@@ -18,8 +19,10 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -105,9 +108,10 @@ public abstract class ConnectionTask {
 
     /**
      * Builds a request to upload an image given as HttpEntity. Uses specific implementation of adding headers
-     * @param request to be executed
-     * @param path last component of the URI
-     * @param image to be uploaded
+     *
+     * @param request           to be executed
+     * @param path              last component of the URI
+     * @param image             to be uploaded
      * @param additionalHeaders as key-value-pairs
      * @return response from server
      * @throws RestServiceException
@@ -123,7 +127,7 @@ public abstract class ConnectionTask {
                 requestBase = new HttpPut();
                 break;
             default:
-                Log.d(this.getClass().getSimpleName(),"Request not supported!");
+                Log.d(this.getClass().getSimpleName(), "Request not supported!");
                 return null;
         }
 
@@ -165,7 +169,7 @@ public abstract class ConnectionTask {
                 requestBase = new HttpPut();
                 break;
             default:
-                Log.d(this.getClass().getSimpleName(),"Request not supported!");
+                Log.d(this.getClass().getSimpleName(), "Request not supported!");
                 return null;
         }
 
@@ -174,7 +178,7 @@ public abstract class ConnectionTask {
 
         if (contentValue != null) {
             try {
-                StringEntity entity = new StringEntity(objectToJsonMapper(contentValue),"UTF-8");
+                StringEntity entity = new StringEntity(objectToJsonMapper(contentValue), "UTF-8");
                 entity.setContentType("application/json");
                 requestBase.setEntity(entity);
             } catch (UnsupportedEncodingException e) {
@@ -206,7 +210,7 @@ public abstract class ConnectionTask {
                 requestBase = new HttpGet();
                 break;
             default:
-                Log.d(this.getClass().getSimpleName(),"Request not supported!");
+                Log.d(this.getClass().getSimpleName(), "Request not supported!");
                 return null;
         }
 
@@ -223,7 +227,7 @@ public abstract class ConnectionTask {
         String result = null;
         try {
             result = objectWriter.writeValueAsString(object);
-            Log.d(getClass().getSimpleName(),"Generated JSON: " + result);
+            Log.d(getClass().getSimpleName(), "Generated JSON: " + result);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -231,7 +235,7 @@ public abstract class ConnectionTask {
     }
 
     private URI buildRequestURI(String path) {
-				Log.i(this.getClass().getSimpleName(),"PATH IS: "+path); //TODO RM
+        Log.i(this.getClass().getSimpleName(), "PATH IS: " + path); //TODO RM
         if (path.equals(""))
             return uri;
 
@@ -271,17 +275,17 @@ public abstract class ConnectionTask {
         try {
             HttpResponse httpResponse = HttpClient.createSSLClient().execute(requestBase);
             int statusCode = httpResponse.getStatusLine().getStatusCode();
-            Log.d(this.getClass().getSimpleName(),"StatusCode: " + statusCode);
+            Log.d(this.getClass().getSimpleName(), "StatusCode: " + statusCode);
             if (statusCode == 200 || statusCode == 201 || statusCode == 204)
                 return httpResponse;
-            else{
+            else {
                 if (statusCode == Error.UNAUTHORIZED.getNumber()) {
                     DatabaseManager.INSTANCE.setAccessToken(null);
-                    Log.d(getClass().getSimpleName(),"Removed AccessToken");
+                    Log.d(getClass().getSimpleName(), "Removed AccessToken");
                 }
                 JSONObject json = new JSONObject(new BufferedReader(new InputStreamReader(httpResponse.getEntity()
                         .getContent())).readLine());
-                throw new RestServiceException((String)json.get("message"),Integer.parseInt(json.getString("code")));
+                throw new RestServiceException((String) json.get("message"), Integer.parseInt(json.getString("code")));
             }
         } catch (IOException e) {
             Toaster.getInstance().toast(R.string.connection_error, Toast.LENGTH_LONG);

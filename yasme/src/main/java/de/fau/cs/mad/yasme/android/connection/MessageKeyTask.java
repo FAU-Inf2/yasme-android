@@ -9,6 +9,7 @@ import de.fau.cs.mad.yasme.android.exception.Error;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
@@ -44,10 +45,10 @@ public class MessageKeyTask extends ConnectionTask {
 
     public MessageKey saveKeys(ArrayList<MessageKey> messageKeys) throws IncompleteKeyException {
         try {
-            Log.d(this.getClass().getSimpleName(),"[???] Keys werden gesendet");
+            Log.d(this.getClass().getSimpleName(), "[???] Keys werden gesendet");
             HttpResponse httpResponse = executeRequest(Request.POST, "", messageKeys);
 
-            Log.d(this.getClass().getSimpleName(),"[???] Antwort auswerten");
+            Log.d(this.getClass().getSimpleName(), "[???] Antwort auswerten");
             MessageKey messageKey = new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine(), MessageKey.class);
 

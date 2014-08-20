@@ -8,6 +8,7 @@ import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
@@ -43,7 +44,7 @@ public class DiffieHellmanPartTask extends ConnectionTask {
 
     public void storeDHPart(DiffieHellmanPart dh) throws RestServiceException {
         executeRequest(Request.POST, "", dh);
-        Log.d(this.getClass().getSimpleName(),"DH received");
+        Log.d(this.getClass().getSimpleName(), "DH received");
     }
 
     public DiffieHellmanPart getNextKey(long devId) throws RestServiceException {

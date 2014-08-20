@@ -3,6 +3,7 @@ package de.fau.cs.mad.yasme.android.connection;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+
 import de.fau.cs.mad.yasme.android.controller.Log;
 
 import de.fau.cs.mad.yasme.android.entities.User;
@@ -14,7 +15,9 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +36,7 @@ public class UserTask extends ConnectionTask {
 
     public static synchronized UserTask getInstance() {
         if (instance == null) {
-            synchronized(UserTask.class) {
+            synchronized (UserTask.class) {
                 if (null == instance) {
                     instance = new UserTask();
                 }
@@ -69,7 +72,7 @@ public class UserTask extends ConnectionTask {
 
     public void changeUserData(User user) throws RestServiceException {
         executeRequest(Request.PUT, "", user);
-        Log.d(this.getClass().getSimpleName(),"User data changed");
+        Log.d(this.getClass().getSimpleName(), "User data changed");
     }
 
     public User getUserData() throws RestServiceException {
@@ -94,7 +97,7 @@ public class UserTask extends ConnectionTask {
 
 
     private byte[] drawableToByteArray(Drawable drawable) {
-        Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return stream.toByteArray();

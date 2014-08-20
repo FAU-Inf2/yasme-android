@@ -30,7 +30,7 @@ public class InfoTask extends ConnectionTask {
 
     public static InfoTask getInstance() {
         if (instance == null) {
-            synchronized(AuthorizationTask.class) {
+            synchronized (AuthorizationTask.class) {
                 if (null == instance) {
                     instance = new InfoTask();
                 }

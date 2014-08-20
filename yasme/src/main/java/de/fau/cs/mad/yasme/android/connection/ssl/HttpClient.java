@@ -2,6 +2,7 @@ package de.fau.cs.mad.yasme.android.connection.ssl;
 
 
 import android.content.Context;
+
 import de.fau.cs.mad.yasme.android.controller.Log;
 
 import de.fau.cs.mad.yasme.android.R;
@@ -45,7 +46,7 @@ public class HttpClient {
 
             Certificate ca = cf.generateCertificate(caInput);
 
-            Log.d("HttpClient","ca=" + ((X509Certificate) ca).getSubjectDN());
+            Log.d("HttpClient", "ca=" + ((X509Certificate) ca).getSubjectDN());
             caInput.close();
 
             trustStore.load(null, null);
