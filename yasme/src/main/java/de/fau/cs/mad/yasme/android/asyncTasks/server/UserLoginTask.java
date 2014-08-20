@@ -51,7 +51,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
         password = params[1];
         try {
             // DEBUG:
-            Log.d(this.getClass().getSimpleName(),"e-Mail: " + email + " " + "Passwort: "
+            Log.d(this.getClass().getSimpleName(),"email: " + email + " " + "password: "
                     + password);
 
             if (plainPassword) {

@@ -32,25 +32,25 @@ public class MessageEncryption {
 
     public MessageKey getCurrentKey() {
         try {
-            Log.d(this.getClass().getSimpleName(),"[???] Try to use a local Key");
+            Log.d(this.getClass().getSimpleName(),"Try to use a local Key");
             MessageKey key = db.getMessageKeyDAO().getCurrentKeyByChat(chat.getId());
             if (key != null) {
-                Log.d(this.getClass().getSimpleName(),"[???] ... success");
+                Log.d(this.getClass().getSimpleName(),"... success");
                 return key;
             } else {
-                Log.d(this.getClass().getSimpleName(),"[???] ... failed");
+                Log.d(this.getClass().getSimpleName(),"... failed");
                 return generateKey();
             }
         }
         catch (Exception e){
-            Log.d(this.getClass().getSimpleName(),"[???] ... failed with exception");
+            Log.d(this.getClass().getSimpleName(),"... failed with exception");
             e.printStackTrace();
             return null;
         }
     }
 
     public MessageKey generateKey() {
-        Log.d(this.getClass().getSimpleName(),"[???] Generate Key");
+        Log.d(this.getClass().getSimpleName(),"Generate Key");
         Toaster.getInstance().toast(R.string.generate_key, Toast.LENGTH_LONG);
 
         // Generate key
@@ -109,18 +109,18 @@ public class MessageEncryption {
 
     private List<Device> getRecipientDevices(boolean local) {
         if (local) {
-            Log.d(this.getClass().getSimpleName(),"[???] Get local stored devices");
+            Log.d(this.getClass().getSimpleName(),"Get local stored devices");
             List<Device> devices = new ArrayList<>();
             for (User user : chat.getParticipants()) {
                 for (Device device : DatabaseManager.INSTANCE.getDeviceDAO().getAll(user)) {
-                    Log.d(this.getClass().getSimpleName(),"[???] Local-device: " + device.getId());
+                    Log.d(this.getClass().getSimpleName(),"Local-device: " + device.getId());
                     devices.add(device);
                 }
             }
             return devices;
         } else {
             try {
-                Log.d(this.getClass().getSimpleName(),"[???] Get devices from Server");
+                Log.d(this.getClass().getSimpleName(),"Get devices from Server");
                 return ChatTask.getInstance().getAllDevicesForChat(chat.getId());
             } catch (Exception e) {
                 return new ArrayList<>();
@@ -142,7 +142,7 @@ public class MessageEncryption {
 
             //TODO: Try with local data first
             for (Device recipientDevice : getRecipientDevices(local)) {
-                Log.d(this.getClass().getSimpleName(),"[???] Send Key for Device" + recipientDevice.getId() + " with pubKey: " + recipientDevice.getPublicKey());
+                Log.d(this.getClass().getSimpleName(),"Send Key for Device" + recipientDevice.getId() + " with pubKey: " + recipientDevice.getPublicKey());
 
 
                 // Do not store the key on the server for the creating device
@@ -150,30 +150,30 @@ public class MessageEncryption {
                     continue;
                 }
 
-                Log.d(this.getClass().getSimpleName(),"[????] Generate Key for Device" + recipientDevice.getId());
+                Log.d(this.getClass().getSimpleName(),"Generate Key for Device" + recipientDevice.getId());
 
                 MessageKey messageKey = new MessageKey(0, sender, recipientDevice, chat, key, iv);
                 KeyEncryption keyEncryption = new KeyEncryption();
                 MessageKey messageKeyEncrypted = keyEncryption.encrypt(messageKey);
-                Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been encrypted.");
+                Log.d(this.getClass().getSimpleName(), "MessageKey has successfully been encrypted.");
                 MessageKey messageKeySigned = keyEncryption.sign(messageKeyEncrypted);
-                Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been signed.");
+                Log.d(this.getClass().getSimpleName(), "MessageKey has successfully been signed.");
 
                 messageKeys.add(messageKeySigned);
-                Log.d(this.getClass().getSimpleName(),"[???] Key von " + deviceId + " für Device " + recipientDevice.getId() + " generiert");
+                Log.d(this.getClass().getSimpleName(),"Key from " + deviceId + " for device " + recipientDevice.getId() + "created");
             }
 
             MessageKey result = MessageKeyTask.getInstance().saveKeys(messageKeys);
 
             if (result == null) {
-                Log.d(this.getClass().getSimpleName(),"[???] Fehler beim Senden des Keys an den Server");
+                Log.d(this.getClass().getSimpleName(),"Error sending key to server");
                 return null;
             }
 
             MessageKey messageKey = new MessageKey(result.getId(),sender,sender,chat,key,iv);
             messageKey.setCreated(result.getCreated());
 
-            Log.d(this.getClass().getSimpleName(),"[???] Key wurde an Server gesendet, ID: "+ messageKey.getId());
+            Log.d(this.getClass().getSimpleName(),"Key was send to server, id is: "+ messageKey.getId());
             // If you can trust yourself
             messageKey.setAuthenticity(true);
             db.getMessageKeyDAO().addIfNotExists(messageKey);
@@ -181,14 +181,14 @@ public class MessageEncryption {
 
         } catch (IncompleteKeyException e) {
             if (local) {
-                Log.e(this.getClass().getSimpleName(),"[???] Keyerzeugung");
+                Log.e(this.getClass().getSimpleName(),"Create key");
                 return sendKey(key,iv,false);
             } else {
-                Log.e(this.getClass().getSimpleName(),"[???] Key wurde nicht an den Server gesendet");
+                Log.e(this.getClass().getSimpleName(),"Key was not sent to server");
                 return null;
             }
         } catch (Exception e) {
-            Log.d(this.getClass().getSimpleName(),"Fail to send key: "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"Failed to send key: "+e.getMessage());
             return null;
         }
     }

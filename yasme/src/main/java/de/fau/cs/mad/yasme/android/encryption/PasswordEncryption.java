@@ -40,8 +40,8 @@ public class PasswordEncryption{
            return new String(base64.base64Encode(hash));
        }
        catch (Exception e){
-           Log.d(this.getClass().getSimpleName(), "[???] Hashing Password failed");
-           Log.d(this.getClass().getSimpleName(), "[???] Error: " + e.getMessage());
+           Log.d(this.getClass().getSimpleName(), "Hashing Password failed");
+           Log.d(this.getClass().getSimpleName(), "Error: " + e.getMessage());
        }
        return null;
     }

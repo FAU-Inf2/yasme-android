@@ -28,7 +28,7 @@ public class Device {
     private String publicKey;
 
     @DatabaseField(columnName = DatabaseConstants.DEVICE_PRODUCT)
-    private String product; // product name e.g. Google Nexux 5
+    private String product; // product name e.g. Google Nexus 5
 
     @DatabaseField(columnName = DatabaseConstants.DEVICE_LAST_MODIFIED, dataType = DataType.DATE)
     private Date lastModified;

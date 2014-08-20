@@ -57,7 +57,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
         }
 
         if(serverChats == null) {
-            Log.e(this.getClass().getSimpleName(), "serverChats sind null");
+            Log.e(this.getClass().getSimpleName(), "serverChats are null");
             return false;
         }
 

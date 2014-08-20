@@ -30,8 +30,8 @@ import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
 /**
  * Created by robert on 19.06.14.
  */
-// TODO: erweitere Methode, sodass auch Keys abgeholt werden und danach
-// geloescht werden
+
+/* TODO: extend Method so keys can be fetched and deleted */
 public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
     private List<Message> messages;
@@ -208,9 +208,9 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
         //verify the signature of the key and save authenticity-status in messageKeyEncrypted
         if(messageKeyEncrypted.setAuthenticity(keyEncryption.verify(messageKeyEncrypted))){
-            Log.d(this.getClass().getSimpleName(), "[???] MessageKey has successfully been verified");
+            Log.d(this.getClass().getSimpleName(), "MessageKey has successfully been verified");
         }else{
-            Log.d(this.getClass().getSimpleName(), "[???] MessageKey could not be verified");
+            Log.d(this.getClass().getSimpleName(), "MessageKey could not be verified");
         }
 
         //decrypt the key with RSA
@@ -229,6 +229,6 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
                 DebugManager.INSTANCE.storeMessageKeyToExternalStorage(messageKey);
             }
         }
-        Log.d(this.getClass().getSimpleName(), "[???] Key " + messageKey.getId() + " aus den Nachrichten extrahiert und gespeichert");
+        Log.d(this.getClass().getSimpleName(), "Key " + messageKey.getId() + " extracted from Message and saved");
     }
 }

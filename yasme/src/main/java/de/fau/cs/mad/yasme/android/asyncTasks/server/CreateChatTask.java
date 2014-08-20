@@ -101,7 +101,6 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
                 return false;
             }
         }
-
         return true;
     }
 

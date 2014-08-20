@@ -48,7 +48,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
     protected Boolean doInBackground(String... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
 
-        // TODO: ueberpruefen, ob user schon existiert
+        // TODO: check of user exists
         name = params[0];
         email = params[1].toLowerCase();
         password = params[2];

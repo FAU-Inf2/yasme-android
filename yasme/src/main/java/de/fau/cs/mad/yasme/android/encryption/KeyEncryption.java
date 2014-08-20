@@ -63,13 +63,13 @@ public class KeyEncryption {
                 DebugManager.INSTANCE.storePrivatePublicKeyToExternalStorage(rsa.getPrivKeyinBase64(),rsa.getPubKeyinBase64());
             }
 
-            Log.d(this.getClass().getSimpleName(), "[???] RSA Keys generated and saved");
+            Log.d(this.getClass().getSimpleName(), "RSA Keys generated and saved");
 
 
             return true;
         } catch (Exception e){
-            Log.d(this.getClass().getSimpleName(), "[???] saving rsa keys failed");
-            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(), "saving rsa keys failed");
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
     }

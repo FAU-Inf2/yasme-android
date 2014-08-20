@@ -44,8 +44,8 @@ public class RSAEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
             return keys;
 
         }catch(Exception e){
-            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
-            Log.d(this.getClass().getSimpleName(),"[???] RSA Keys could not be generated.");
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"RSA Keys could not be generated.");
             return null;
         }
 
@@ -68,7 +68,7 @@ public class RSAEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
             return keys;
 
         }catch(Exception e){
-            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
             return null;
         }
 
@@ -101,8 +101,8 @@ public class RSAEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 
             return base64Encode(signatured);
         } catch (Exception e){
-            Log.d(this.getClass().getSimpleName(),"[???] sign failed");
-            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"sign failed");
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
             return null;
         }
 
@@ -121,8 +121,8 @@ public class RSAEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
             return sig.verify(signature);
 
         } catch (Exception e){
-            Log.d(this.getClass().getSimpleName(),"[???] verify failed");
-            Log.d(this.getClass().getSimpleName(),"[???]"+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"verification failed");
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
 
@@ -138,12 +138,12 @@ public class RSAEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
             encrypted = cipher.doFinal(text.getBytes());
             //encrypted = cipher.doFinal(text.getBytes("UTF-8")); //--> wenn normaler Text (kein Schluessel) encrypted wird
 
-            Log.d(this.getClass().getSimpleName(),"[???] RSA Encryption successful.");
+            Log.d(this.getClass().getSimpleName(),"RSA Encryption successful.");
 
             return base64Encode(encrypted);
         } catch (Exception e){
-            Log.d(this.getClass().getSimpleName(),"[???] encrypt failed");
-            Log.d(this.getClass().getSimpleName(),"[???]" + e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"encrypt failed");
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
             return "Couldn't be encrypted: "+ text;
         }
 
@@ -156,11 +156,11 @@ public class RSAEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
             Cipher cipher = Cipher.getInstance(MODE);
             cipher.init(Cipher.DECRYPT_MODE, privKey);
             byte[] decrypted = cipher.doFinal(encrypted_decode);
-            Log.d(this.getClass().getSimpleName(),"[???] RSA Decryption successful.");
+            Log.d(this.getClass().getSimpleName(),"RSA Decryption successful.");
             return new String(decrypted);
         } catch (Exception e){
-            Log.d(this.getClass().getSimpleName(),"[???] Key-decryption failed: " + encrypted + " PrivKey: " + privKey.toString());
-            Log.d(this.getClass().getSimpleName(),"[???] " + e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"Key decryption failed: " + encrypted + " PrivKey: " + privKey.toString());
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
             Toaster.getInstance().toast(R.string.key_decryption_failed, Toast.LENGTH_LONG);
             return null;
         }
@@ -176,8 +176,8 @@ public class RSAEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
             return pubKey;
 
         } catch (Exception e){
-            Log.d(this.getClass().getSimpleName(),"[???] Converting Base64 to PublicKey failed");
-            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"Converting Base64 to PublicKey failed");
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
             return null;
         }
 
@@ -194,8 +194,8 @@ public class RSAEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
             return privKey;
 
         } catch (Exception e){
-            Log.d(this.getClass().getSimpleName(),"[???] Converting Base64 to PrivateKey failed");
-            Log.d(this.getClass().getSimpleName(),"[???] "+e.getMessage());
+            Log.d(this.getClass().getSimpleName(),"Converting Base64 to PrivateKey failed");
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
             return null;
         }
     }

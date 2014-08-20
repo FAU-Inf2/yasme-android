@@ -85,19 +85,18 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         User user = new User("user", userId);
 
         // indicates if its a smartphone or a tablet
-        String type = "smartphone";
+        // currently unused
+        String type = "device";
 
-        // TODO the phone number
-        String number = "00000000";
-
-        Log.d(this.getClass().getSimpleName(),"product name: " + product);
+        // phone number, currently unused
+        String number = null;
 
         KeyEncryption rsa = new KeyEncryption();
         //generate private and public Key
         rsa.generateRSAKeys();
-        String pubKeyinBase64 = rsa.getGeneratedPubKeyInBase64();
+        String pubKeyInBase64 = rsa.getGeneratedPubKeyInBase64();
 
-        OwnDevice deviceToBeRegistered = new OwnDevice(user, OwnDevice.Platform.ANDROID, pubKeyinBase64, type, number, product, regId);
+        OwnDevice deviceToBeRegistered = new OwnDevice(user, OwnDevice.Platform.ANDROID, pubKeyInBase64, type, number, product, regId);
 
         // make the REST-Call
         try{
@@ -117,7 +116,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         //SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
         //editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
         //editor.commit();
-        Log.d(this.getClass().getSimpleName(),"Device stored to SharedPreferences");
+        //Log.d(this.getClass().getSimpleName(),"Device stored to SharedPreferences");
 
         // For Developer-Devices only
         if (DebugManager.INSTANCE.isDebugMode()) {
