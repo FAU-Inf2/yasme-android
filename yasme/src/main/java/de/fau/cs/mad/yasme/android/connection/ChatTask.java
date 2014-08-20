@@ -61,15 +61,10 @@ public class ChatTask extends ConnectionTask {
             JSONArray jsonArray = new JSONArray(json);
             Log.d(this.getClass().getSimpleName(), json);
 
-            //for (int i = 0; i < jsonArray.length(); i++) {
-            //    Log.d(this.getClass().getSimpleName(), jsonArray.optString(i));
-            //}
-            //Log.e(this.getClass().getSimpleName(), "arraylength " + jsonArray.length());
             for (int i = 0; i < jsonArray.length(); i++) {
                 Chat chat = new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
                         toString(), Chat.class);
                 chats.add(chat);
-                //Log.e(this.getClass().getSimpleName(), "chat " + i + " " + chat.toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -130,7 +125,6 @@ public class ChatTask extends ConnectionTask {
     public Chat getInfoOfChat(long chatId) throws RestServiceException {
 
         // note: only a participant of the chat shall get the chat object
-
         try {
             String path = chatId + "/info";
             HttpResponse httpResponse = executeRequest(Request.GET, path);
@@ -181,6 +175,4 @@ public class ChatTask extends ConnectionTask {
         executeRequest(Request.PUT, path, clone);
         Log.d(this.getClass().getSimpleName(),"Chat updated");
     }
-
-    //TODO: implement lastSeen Rest Call
 }

@@ -34,7 +34,6 @@ public class SearchTask extends ConnectionTask {
                     instance = new SearchTask();
                 }
             }
-
         }
         return instance;
     }
@@ -82,8 +81,6 @@ public class SearchTask extends ConnectionTask {
         HttpResponse httpResponse = executeRequest(Request.GET, path);
 
         try {
-            HttpResponse httpResponse1 = executeRequest(Request.GET,"userByLike/"+term);
-
             JSONArray jsonArray = new JSONArray(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine());
 
@@ -91,19 +88,12 @@ public class SearchTask extends ConnectionTask {
                 users.add(new ObjectMapper().readValue((jsonArray.getJSONObject(i)).
                         toString(), User.class));
             }
-
-
-
-            //return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
-            //        httpResponse.getEntity().getContent())).readLine(), User.class);
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch(JSONException je){
 
         }
-
         return users;
-
     }
 
 

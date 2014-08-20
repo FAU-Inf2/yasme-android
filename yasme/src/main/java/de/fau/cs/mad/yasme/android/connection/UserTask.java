@@ -83,7 +83,6 @@ public class UserTask extends ConnectionTask {
         }
     }
 
-    //TODO: implement method
     public void uploadProfilePicture(Drawable drawable) throws RestServiceException {
 
         HttpEntity multipartEntity = MultipartEntityBuilder.create()
@@ -100,17 +99,6 @@ public class UserTask extends ConnectionTask {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return stream.toByteArray();
     }
-
-    //public Drawable getOwnProfilePicture() throws RestServiceException {
-//
-  //      try {
-    //        InputStream stream = (executeRequest(Request.GET, "profile")).getEntity().getContent();
-      //      return Drawable.createFromStream(stream, null);
-//
-  //      } catch (IOException e) {
-    //        throw new RestServiceException(Error.CONNECTION_ERROR);
-      //  }
-    //}
 
     public Drawable getProfilePicture(long userId) throws RestServiceException {
         try {

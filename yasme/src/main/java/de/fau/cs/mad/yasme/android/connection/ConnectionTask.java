@@ -58,15 +58,6 @@ public abstract class ConnectionTask {
 
     protected static boolean initialized = false;
 
-//    /*
-//     * Session Params
-//     */
-//    protected static String userId;
-//    protected static String deviceId;
-//    protected static String accessToken;
-
-//    protected static boolean initializedSession = false;
-
     /*
      * Connection Objects
      */
@@ -86,8 +77,6 @@ public abstract class ConnectionTask {
         ConnectionTask.language = language;
         ConnectionTask.versionCode = versionCode;
 
-
-        //ConnectionTask.initializedSession = false;
         if (!buildBaseURI()) {
             Log.e(ConnectionTask.class.getSimpleName(), "Failed to build URL! May case several other issues");
             throw new ExceptionInInitializerError("Failed to build base URL! This may case several other issues");
@@ -98,38 +87,9 @@ public abstract class ConnectionTask {
                 .withDefaultPrettyPrinter();
     }
 
-//    public static void initSession(long userId, String accessToken) {
-//
-//        if (!initialized) {
-//            Log.e(ConnectionTask.class.getSimpleName(), "Server Params not initialized");
-//        }
-//        ConnectionTask.userId = Long.toString(userId);
-//        ConnectionTask.accessToken = accessToken;
-//        ConnectionTask.deviceId = "-1";
-//        Log.i(ConnectionTask.class.getSimpleName(), "Bear in mind that deviceId has not been set yet.");
-//        initializedSession = true;
-//    }
-//
-//    public static void initSession(long userId, long deviceId, String accessToken) {
-//        if (!initialized) {
-//            Log.e(ConnectionTask.class.getSimpleName(), "Server Params not initialized");
-//        }
-//
-//        ConnectionTask.userId = Long.toString(userId);
-//        ConnectionTask.deviceId = Long.toString(deviceId);
-//        ConnectionTask.accessToken = accessToken;
-//        ConnectionTask.initializedSession = true;
-//    }
-
-
-
     public static boolean isInitialized() {
         return initialized;
     }
-
-    //public static boolean isInitializedSession() {
-    //    return initializedSession;
-    //}
 
     private static boolean buildBaseURI() {
         try {
@@ -215,7 +175,6 @@ public abstract class ConnectionTask {
         if (contentValue != null) {
             try {
                 StringEntity entity = new StringEntity(objectToJsonMapper(contentValue),"UTF-8");
-                //entity.setContentEncoding("UTF-8");
                 entity.setContentType("application/json");
                 requestBase.setEntity(entity);
             } catch (UnsupportedEncodingException e) {

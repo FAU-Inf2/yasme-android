@@ -29,7 +29,6 @@ public class DiffieHellmanPartTask extends ConnectionTask {
                     instance = new DiffieHellmanPartTask();
                 }
             }
-
         }
         return instance;
     }

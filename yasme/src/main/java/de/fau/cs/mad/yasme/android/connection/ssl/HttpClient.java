@@ -41,10 +41,6 @@ public class HttpClient {
             KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
-            //TODO: testen, ob das so funktioniert
-            //String yasme_ca = "raw/yasme_ca.pem";
-            //InputStream caInput = ClassLoader.getSystemResourceAsStream(yasme_ca);
-
             InputStream caInput = context.getResources().openRawResource(R.raw.yasme_ca);
 
             Certificate ca = cf.generateCertificate(caInput);
