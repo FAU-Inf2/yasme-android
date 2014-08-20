@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+
 import de.fau.cs.mad.yasme.android.controller.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -100,7 +101,6 @@ public class CloudMessaging {
                 gcm = GoogleCloudMessaging.getInstance(context);
             }
             regid = gcm.register(AbstractYasmeActivity.SENDER_ID);
-            //msg = "Device registered, registration ID=" + regid;
 
             Log.d(this.getClass().getSimpleName(), "Device registered, registration ID=" + regid);
 
