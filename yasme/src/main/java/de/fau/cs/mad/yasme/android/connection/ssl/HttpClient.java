@@ -68,15 +68,15 @@ public class HttpClient {
             );
 
         } catch (KeyStoreException e) {
-            e.printStackTrace();
+            Log.e(HttpClient.class.getSimpleName(),e.getMessage());
         } catch (CertificateException e) {
-            e.printStackTrace();
+            Log.e(HttpClient.class.getSimpleName(),e.getMessage());
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.e(HttpClient.class.getSimpleName(),e.getMessage());
         } catch (KeyManagementException e) {
-            e.printStackTrace();
+            Log.e(HttpClient.class.getSimpleName(),e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(HttpClient.class.getSimpleName(),e.getMessage());
         }
         return HttpClients.custom().setSSLSocketFactory(sslsf).build();
     }

@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.entities.Device;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.*;
@@ -93,7 +94,7 @@ public class SearchTask extends ConnectionTask {
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (JSONException je) {
-
+            Log.e(this.getClass().getSimpleName(),je.getMessage());
         }
         return users;
     }
@@ -115,7 +116,7 @@ public class SearchTask extends ConnectionTask {
                         toString(), User.class));
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         }
@@ -140,7 +141,7 @@ public class SearchTask extends ConnectionTask {
                         toString(), Device.class));
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         }

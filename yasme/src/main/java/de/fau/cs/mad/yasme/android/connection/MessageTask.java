@@ -48,7 +48,7 @@ public class MessageTask extends ConnectionTask {
         try {
             this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/msg").build();
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
         }
     }
 
@@ -102,7 +102,7 @@ public class MessageTask extends ConnectionTask {
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
         }
 
         Log.d(this.getClass().getSimpleName(), "Number new Messages: " + messages.size());

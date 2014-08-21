@@ -24,7 +24,7 @@ public class InfoTask extends ConnectionTask {
         try {
             this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/info").build();
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public class InfoTask extends ConnectionTask {
             return serverInfo;
 
         } catch (Exception e) {
-            Log.d(this.getClass().getSimpleName(), e.getMessage());
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;
         }
     }

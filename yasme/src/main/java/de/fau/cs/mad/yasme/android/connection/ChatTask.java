@@ -35,7 +35,7 @@ public class ChatTask extends ConnectionTask {
         try {
             this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/chat").build();
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
         }
     }
 
@@ -67,7 +67,7 @@ public class ChatTask extends ConnectionTask {
                 chats.add(chat);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         }
@@ -89,7 +89,7 @@ public class ChatTask extends ConnectionTask {
                 devices.add(device);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         }

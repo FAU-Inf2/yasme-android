@@ -24,7 +24,7 @@ public class AuthorizationTask extends ConnectionTask {
         try {
             this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/sign").build();
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
         }
     }
 

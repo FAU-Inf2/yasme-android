@@ -38,7 +38,7 @@ public class DiffieHellmanPartTask extends ConnectionTask {
         try {
             this.uri = new URIBuilder(baseURI).setPath(ConnectionTask.APIVERSION + "/dh").build();
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
         }
     }
 
