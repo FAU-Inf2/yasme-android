@@ -188,7 +188,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         Log.d(this.getClass().getSimpleName(), "Received " + messages.size() + " messages");
 
         //progress bar off
-        //getActivity().setProgressBarIndeterminateVisibility(false);
     }
 
     public Chat getChat() {
@@ -231,7 +230,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 // Ignore messages which were not meant for this chat
                 if (msg.getChat().getId() == chat.getId() && msg.getId() > latestMessageOnDisplay.get()) {
                     newMessages.add(msg);
-                    //localMessages.add(msg);
                     newLatestMessageOnDisplay = Math.max(newLatestMessageOnDisplay, msg.getId());
                 }
             }

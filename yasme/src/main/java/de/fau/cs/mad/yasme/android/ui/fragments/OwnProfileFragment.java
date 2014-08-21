@@ -64,9 +64,6 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         name = (TextView) layout.findViewById(R.id.own_profile_header);
         email = (TextView) layout.findViewById(R.id.own_profile_email);
         profilePicture = (ImageView) layout.findViewById(R.id.own_profile_picture);
-        //number = (TextView) layout.findViewById(R.id.own_numberViewText);
-
-        //imageButton = (ImageButton) layout.findViewById(R.id.own_imageButton);
 
         User self = activity.getSelfUser();
 
@@ -77,23 +74,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         profilePicture.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
         TextView initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
         initial.setText(self.getName().substring(0,1).toUpperCase());
-        // number.setText("");
 
-        //imageButton.setOnClickListener(this);
-
-        // TODO Load profile image into imageButton area as AsyncTask
-       //Drawable profilePicture = null;
-       /*
-        try {
-            profilePicture = UserTask.getInstance().getProfilePicture(u.getId());
-            // profilePicture will be null if no one has been uploaded yet
-            if (null != profilePicture) {
-                imageButton.setImageDrawable(profilePicture);
-            }
-        } catch (RestServiceException e) {
-            Log.e("Error", e.getMessage());
-        }
-*/
         return layout;
     }
 
@@ -122,48 +103,11 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        // TODO profile picture
-//        switch (v.getId()){
-//            case R.id.own_imageButton:
-//                Intent i = new Intent(
-//                        Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(i, RESULT_LOAD_IMAGE);
-//                break;
-//        }
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        // TODO profile picture
-//        if (requestCode == RESULT_LOAD_IMAGE && null != data) {
-//            Uri selectedImage = data.getData();
-//            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-//
-//            Cursor cursor = activity.getContentResolver().query(selectedImage,
-//                    filePathColumn, null, null, null);
-//            cursor.moveToFirst();
-//
-//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//            String picturePath = cursor.getString(columnIndex);
-//            cursor.close();
-//
-//            ImageButton imgB = (ImageButton) activity.findViewById(R.id.own_imageButton);
-//
-//            BitmapFactory factory = new BitmapFactory();
-//            Bitmap newProfilePicture = factory.decodeFile(picturePath);
-//            imgB.setImageBitmap(newProfilePicture);
-//
-//            // TODO Upload picture as AsyncTask
-//            Drawable d = Drawable.createFromPath(picturePath);
-//            try {
-//                UserTask.getInstance().uploadProfilePicture(d);
-//            } catch (RestServiceException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     @Override

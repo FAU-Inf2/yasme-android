@@ -43,9 +43,6 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO register in onStart method
-        //FragmentObservable<SearchContactFragment, ArrayList<User>> obs = ObservableRegistry.getObservable(SearchContactFragment.class);
-        //obs.register(this);
     }
 
     @Override
@@ -107,9 +104,6 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
             return;
         } else {
             contactListContent.clearItems();
-            //new SearchUserTask(searchSpinner,searchText,contactListContent,mAdapter).execute();
-            //getActivity().setProgressBarIndeterminateVisibility(true);
-            //bgTasksRunning.incrementAndGet();
             new SearchUserTask(
                     SearchUserTask.SearchBy.getSearchBy(
                             searchSpinner.getSelectedItemPosition()),
@@ -140,9 +134,6 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     @Override
     public void notifyFragment(ArrayList<User> userList) {
         Log.d(getClass().getSimpleName(),"SearchContactFragment has been notified!");
-        //if (0 == bgTasksRunning.decrementAndGet()) {
-        //    getActivity().setProgressBarIndeterminateVisibility(false);
-        //}
 
         if (userList != null && userList.size() != 0) {
             for (User u : userList) {
@@ -155,37 +146,6 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
             mAdapter.notifyDataSetChanged();
         }
     }
-
-    /*
-    public void notifyFragment(SearchContactParam param) {
-        Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-    }
-
-
-    public static class SearchContactParam {
-        private Boolean success;
-        private Long userId;
-        private String accessToken;
-
-        public SearchContactParam(Boolean success, Long userId, String accessToken) {
-            this.success = success;
-            this.userId = userId;
-            this.accessToken = accessToken;
-        }
-
-        public Long getUserId() {
-            return userId;
-        }
-
-        public String getAccessToken() {
-            return accessToken;
-        }
-
-        public Boolean getSuccess() {
-            return success;
-        }
-    }
-    */
 
     public interface OnSearchFragmentInteractionListener {
         public void onSearchFragmentInteraction(User user);

@@ -53,7 +53,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
 
         adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
-        //adapter.setNotifyOnChange(true);
         setListAdapter(adapter);
         User self = activity.getSelfUser();
 
@@ -118,7 +117,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     public void onStop() {
         super.onStop();
         //De-Register at observer
-        //ObserverRegistry.getRegistry(ObserverRegistry.Observers.CHATLISTFRAGMENT).remove(this);
         FragmentObservable<ChatListFragment, List<Chat>> obs = ObservableRegistry.getObservable(ChatListFragment.class);
         Log.d(this.getClass().getSimpleName(), "Remove from observer");
         obs.remove(this);
@@ -149,34 +147,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
                 intent.putExtra(ChatSettingsActivity.CHAT_ID, chat.getId());
                 startActivity(intent);
                 return true;
-            /*case R.id.context_leave:
-                //LeaveChatTask task = new LeaveChatTask(chat);
-                //LeaveChatTask.preExecute(getActivity(), task);
 
-                Context mContext = DatabaseManager.INSTANCE.getContext();
-                AlertDialog alert = new AlertDialog.Builder(mContext).create();
-                alert.setTitle(mContext.getString(R.string.alert_leave));
-                alert.setMessage(mContext.getString(R.string.alert_leave_message));
-
-                alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
-                                new LeaveChatTask(chat).execute();
-                                dialog.dismiss();
-                            }
-                        });
-
-                alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-
-                alert.show();
-                return true;*/
             default:
                 return super.onContextItemSelected(item);
         }

@@ -45,27 +45,20 @@ public class UserDetailsFragment
         implements View.OnClickListener,
         NotifiableFragment<UserDetailsFragment.UserDetailsFragmentParam> {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_USER = "userparam";
     private static final String ARG_USERNAME = "param1";
     private static final String ARG_USERMAIL = "param2";
     private static final String ARG_USERID = "param3";
     private static final String ARG_CONTACTBUTTON = "param4";
 
-    // TODO: Rename and change types of parameters
 
     private User contact;
     private User selfUser;
 
     private TextView contactName;
     private ImageView profilePicture;
-    // private TextView email;
-    // private TextView number;
     private Button startChat;
     private Button addContact;
-    // private ImageButton mailButton;
-    // private ImageButton numberButton;
     private UserDAO userDAO = DatabaseManager.INSTANCE.getUserDAO();
     private Context context = DatabaseManager.INSTANCE.getContext();
 
@@ -81,7 +74,6 @@ public class UserDetailsFragment
      *
      * @return A new instance of fragment UserDetailsFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static UserDetailsFragment newInstance(User theContact, Boolean addContactButton) {
         UserDetailsFragment fragment = new UserDetailsFragment();
 
@@ -102,9 +94,6 @@ public class UserDetailsFragment
 
         if (getArguments() != null) {
             contact = (User) getArguments().getSerializable(ARG_USER);
-            //contact.setName(getArguments().getString(ARG_USERNAME));
-            //contact.setEmail(getArguments().getString(ARG_USERMAIL));
-            //contact.setId(Long.valueOf(getArguments().getString(ARG_USERID)));
         }
     }
 
@@ -118,16 +107,10 @@ public class UserDetailsFragment
         View layout = inflater.inflate(R.layout.fragment_user_details, container, false);
         contactName = (TextView) layout.findViewById(R.id.contact_header);
         profilePicture = (ImageView) layout.findViewById(R.id.contact_details_profile_picture);
-        // email = (TextView) layout.findViewById(R.id.mailViewText);
-        //number = (TextView) layout.findViewById(R.id.numberViewText);
         startChat = (Button) layout.findViewById(R.id.contact_detail_newchat);
         addContact = (Button) layout.findViewById(R.id.contact_detail_addcontact);
-        // mailButton = (ImageButton) layout.findViewById(R.id.mail_image_button);
-        // numberButton = (ImageButton) layout.findViewById(R.id.number_image_button);
 
         contactName.setText(contact.getName());
-        // email.setText(contact.getEmail());
-        // number.setText("");
 
         // Show first letter of contact name as profile image
         if (profilePicture != null) {
@@ -146,8 +129,6 @@ public class UserDetailsFragment
             addContact.setOnClickListener(this);
         }
 
-        // mailButton.setOnClickListener(this);
-        // numberButton.setOnClickListener(this);
 
         if (!getArguments().getBoolean(ARG_CONTACTBUTTON)) {
             addContact.setVisibility(View.GONE);
@@ -156,11 +137,6 @@ public class UserDetailsFragment
         return layout;
     }
 
-//    public void onButtonPressed(String s) {
-//        if (mListener != null) {
-//            mListener.onDetailsFragmentInteraction(contact, 0);
-//        }
-//    }
 
 
     @Override
@@ -219,12 +195,6 @@ public class UserDetailsFragment
                 addToContacts(contact, true);
                 this.dismiss();
                 break;
-
-            //case R.id.mail_image_button:
-            //    this.sendMail(contact.getEmail());
-            //    break;
-            //case R.id.number_image_button:
-            //    break;
         }
 
     }
@@ -275,7 +245,6 @@ public class UserDetailsFragment
     }
 
     public void startChat(long chatId) {
-        // TODO
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         //Log.d(this.getClass().getSimpleName(), "Start chat: " + chatId);
         Intent intent = new Intent(activity, ChatActivity.class);

@@ -86,7 +86,7 @@ public class ChatListActivity extends AbstractYasmeActivity {
                 AuthorizationTask.getInstance().logoutUser();
             } catch (RestServiceException e) {
                 Log.e(this.getClass().getSimpleName(), e.getMessage());
-                Log.i(this.getClass().getSimpleName(), "SignOut nicht erfolgreich");
+                Log.i(this.getClass().getSimpleName(), "Sign out not succesfull");
                 return false;
             }
             return true;

@@ -55,7 +55,6 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                 throw new IllegalArgumentException("chatId <= 0");
             }
 
-            // TODO Use AsyncTask. Will be complicated as this class extends InviteToChatFragment and thus implements notifiable not with a chat object as parameter
             // maybe we can only copy the code from InviteToChatFragment?
             ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
             chat = chatDAO.get(chatId);
@@ -81,7 +80,6 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         obs.register(this);
 
         findViewsById();
-        //startChat.setVisibility(View.INVISIBLE);    // button
 
         adaptToSettingsFragment();
     }
@@ -179,7 +177,6 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
     @Override
     public void notifyFragment(InviteToChatParam inviteToChatParam) {
-        //startChat.setVisibility(View.VISIBLE);
         if(inviteToChatParam instanceof AllUsersFetchedParam) {
             updateChatPartnersList(((AllUsersFetchedParam) inviteToChatParam).getAllUsers());
             return;

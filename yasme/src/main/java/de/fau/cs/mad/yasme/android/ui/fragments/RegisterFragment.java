@@ -124,26 +124,12 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
             //Login after registration was successfull
             Toaster.getInstance().toast(getResources().getString(
                     message), Toast.LENGTH_SHORT);
-
-//            Toast.makeText(
-//                    getActivity().getApplicationContext(),
-//                    getResources().getString(
-//                            R.string.registration_successful),
-//                    Toast.LENGTH_SHORT
-//            ).show();
             UserLoginTask authTask = new UserLoginTask(false, LoginFragment.class);
             authTask.execute(email, password, this.getClass().getName());
             ((AbstractYasmeActivity)getActivity()).getSelfUser().setEmail(email);
         }
         else {
             Toaster.getInstance().toast(getResources().getString(message), Toast.LENGTH_LONG);
-
-//            Toast.makeText(
-//                    DatabaseManager.INSTANCE.getContext(),
-//                    getResources().getString(
-//                            R.string.registration_not_successful),
-//                    Toast.LENGTH_SHORT
-//            ).show();
         }
     }
 

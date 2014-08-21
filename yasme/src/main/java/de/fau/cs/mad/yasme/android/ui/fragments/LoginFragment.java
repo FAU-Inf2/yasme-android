@@ -122,7 +122,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     @Override
     public void onStart() {
         super.onStart();
-        //ObserverRegistry.getRegistry(ObserverRegistry.Observers.LOGINFRAGMENT).register(this);
         Log.d(this.getClass().getSimpleName(), "Try to get LoginObservableInstance");
         FragmentObservable<LoginFragment, LoginParam> obs = ObservableRegistry.getObservable(LoginFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
@@ -202,15 +201,9 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
     public void onPostLoginExecute(Boolean success, long userId) {
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        //if (!ConnectionTask.isInitializedSession()) {
-        //    ConnectionTask.initSession(userId, accessToken);
-        //}
 
         activity.getSelfUser().setId(userId);
         SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
-        //showProgress(false);
-        //activity.setSignedInFlag(success);
-        //editor.putBoolean(AbstractYasmeActivity.SIGN_IN, activity.getSignedInFlag());
 
         if (success) {
             //Initialize database (once in application)
@@ -278,7 +271,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 return;
             }
 
-            //ConnectionTask.initSession(userId, deviceId, accessToken);
             DatabaseManager.INSTANCE.setDeviceId(deviceId);
 
             Log.d(this.getClass().getSimpleName(), "Login after device registration at yasme server");
