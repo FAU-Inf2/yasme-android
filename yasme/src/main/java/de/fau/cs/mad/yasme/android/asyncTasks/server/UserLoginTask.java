@@ -57,6 +57,7 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
             String loginReturn[] = AuthorizationTask.getInstance().loginUser(new User(email, password));
         } catch (RestServiceException e) {
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
 

@@ -36,7 +36,7 @@ public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
                 try {
                     ChatTask.getInstance().removeParticipantFromChat(params[0], chat.getId());
                 } catch (RestServiceException e) {
-                    Log.w(this.getClass().getSimpleName(), e.getMessage());
+                    Log.e(this.getClass().getSimpleName(), e.getMessage());
                     return false;
                 }
                 break;
@@ -44,7 +44,7 @@ public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
                 try {
                     ChatTask.getInstance().addParticipantToChat(params[0], chat.getId());
                 } catch (RestServiceException e) {
-                    Log.w(this.getClass().getSimpleName(), e.getMessage());
+                    Log.e(this.getClass().getSimpleName(), e.getMessage());
                     return false;
                 }
                 break;

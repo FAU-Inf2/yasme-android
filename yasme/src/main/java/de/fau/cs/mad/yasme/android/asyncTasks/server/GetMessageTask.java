@@ -55,7 +55,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         try {
             messages = MessageTask.getInstance().getMessages(lastMessageId);
         } catch (RestServiceException e) {
-            Log.w(this.getClass().getSimpleName(), e.getMessage());
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
         }
 
         if (messages == null) {
@@ -116,7 +116,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         if (!success) {
-            Log.w(this.getClass().getSimpleName(), "No success");
+            Log.e(this.getClass().getSimpleName(), "No success");
             SpinnerObservable.getInstance().removeBackgroundTask(this);
             return;
         } else {
@@ -135,8 +135,6 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
                     notifier.mNotify(size, messages.get(size - 1).getChatId());
                 }
             }
-            //For notification testing:
-            //notifier.mNotify(messages.size(), 0);
 
             if(classToNotify == ChatFragment.class) {
                 ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
@@ -169,7 +167,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         try {
             creator = DeviceTask.getInstance().getDevice(messageKeyEncrypted.getCreatorDevice().getId());
         } catch (Exception e) {
-            Log.d(getClass().getSimpleName(), "CreatorDevice is null");
+            Log.e(getClass().getSimpleName(), "CreatorDevice is null");
             creator = null;
         }
         messageKeyEncrypted.setCreatorDevice(creator);
@@ -188,12 +186,11 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
         //decrypt the key with RSA
         MessageKey messageKey = keyEncryption.decrypt(messageKeyEncrypted);
-        // TODO: storeKeyToDatabase
         if (messageKey != null && DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(messageKey) != null) {
             try {
                 MessageKeyTask.getInstance().deleteKey(messageKey.getId());
             } catch(Exception e) {
-
+                Log.e(this.getClass().getSimpleName(),e.getMessage());
             }
 
             // For Developer-Devices only

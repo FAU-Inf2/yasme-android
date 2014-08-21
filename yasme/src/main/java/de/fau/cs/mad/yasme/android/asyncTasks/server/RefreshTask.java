@@ -121,6 +121,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
             }
             return true;
         } catch (Exception e) {
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
     }
@@ -132,6 +133,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
             chatDAO.addOrUpdate(chat);
             return true;
         } catch (Exception e) {
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
     }
@@ -148,8 +150,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
             Log.d(this.getClass().getSimpleName(), "... successful" + id);
             return true;
         } catch (Exception e) {
-            Log.d(this.getClass().getSimpleName(), "... failed" + id);
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(), "... failed" + id);
             return false;
         }
     }
@@ -169,7 +170,6 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
             return true;
         } catch (Exception e) {
             Log.e(this.getClass().getSimpleName(), "... failed" + id);
-            e.printStackTrace();
             return false;
         }
     }

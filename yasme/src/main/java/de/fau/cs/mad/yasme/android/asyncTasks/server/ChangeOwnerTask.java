@@ -37,7 +37,7 @@ public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
         try {
             ChatTask.getInstance().changeOwnerOfChat(chat.getId(), params[0]);
         } catch (RestServiceException e) {
-            Log.w(this.getClass().getSimpleName(), e.getMessage());
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
         return true;

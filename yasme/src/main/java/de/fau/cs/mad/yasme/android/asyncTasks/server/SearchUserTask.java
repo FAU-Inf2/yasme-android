@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.connection.SearchTask;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
@@ -50,7 +51,7 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
                     return uList;
             }
         } catch (RestServiceException rse) {
-            rse.getMessage();
+            Log.e(this.getClass().getSimpleName(),rse.getMessage());
         }
 
         return null;

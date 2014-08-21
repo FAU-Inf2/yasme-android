@@ -67,6 +67,7 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
                 // If key is outdated, retry with a generated key
                 return sendMessage(text, true);
             } catch (Exception e) {
+                Log.e(this.getClass().getSimpleName(),e.getMessage());
                 return null;
             }
         }
