@@ -91,7 +91,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         try {
             name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
         } catch (NullPointerException e) {
-            Log.d(this.getClass().getSimpleName(), "User nicht in DB gefunden");
+            Log.e(this.getClass().getSimpleName(), "User nicht in DB gefunden");
             name = "anonym";
         }
 

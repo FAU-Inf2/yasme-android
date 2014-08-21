@@ -29,7 +29,6 @@ public class ChatListActivity extends AbstractYasmeActivity {
         setContentView(R.layout.activity_with_single_fragment);
 
         if (HttpClient.context == null) {
-            //TODO: temporäre Lösung:
             HttpClient.context = this.getApplicationContext();
         }
 

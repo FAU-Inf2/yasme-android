@@ -240,6 +240,7 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         try {
             return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
         } catch (Exception e) {
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
             return 0;
         }
     }

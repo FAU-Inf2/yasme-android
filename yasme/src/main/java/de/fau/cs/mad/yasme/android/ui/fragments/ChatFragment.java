@@ -75,13 +75,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             // Assuming that the messages are sorted by id
             latestMessageOnDisplay = new AtomicLong(0);
 
-            //Log.d(this.getClass().getSimpleName(), "number of messages from DB: " + chat.getMessages().size());
         } catch (NullPointerException e) {
             // Occurs when new chat has been generated, but id hasn't been returned by the server yet
-
-            // TODO Where do you get the chatId from? The chat object won't ever be updated after the server assigned an id to the chat, will it?
             chat = null;
-            Log.w(this.getClass().getSimpleName(), "get chat from DB failed");
+            Log.e(this.getClass().getSimpleName(), "get chat from DB failed");
         }
         if (chat == null) {
             Toaster.getInstance().toast(R.string.unable_open_chat, Toast.LENGTH_SHORT);

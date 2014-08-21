@@ -123,7 +123,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
     public void updateChatPartnersList(List<User> allUsers) {
         if(chat == null) {
-            //TODO: Chat noch nich aus DB geladen - evtl.warten??
+
         }
         List<User> filteredUsers = new ArrayList<>();
         for (User u : allUsers) {

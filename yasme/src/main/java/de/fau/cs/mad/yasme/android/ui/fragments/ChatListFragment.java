@@ -60,6 +60,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         try {
             name = self.getName();
         } catch (NullPointerException npe) {
+            Log.e(this.getClass().getSimpleName(),npe.getMessage());
 
         }
         if(name != null) {

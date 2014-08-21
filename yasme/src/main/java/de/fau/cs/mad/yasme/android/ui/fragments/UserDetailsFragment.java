@@ -246,7 +246,6 @@ public class UserDetailsFragment
 
     public void startChat(long chatId) {
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        //Log.d(this.getClass().getSimpleName(), "Start chat: " + chatId);
         Intent intent = new Intent(activity, ChatActivity.class);
         intent.putExtra(activity.USER_MAIL, activity.getUserMail());
         intent.putExtra(activity.USER_ID, activity.getUserId());
