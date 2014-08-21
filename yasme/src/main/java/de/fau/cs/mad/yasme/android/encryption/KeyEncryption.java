@@ -68,8 +68,8 @@ public class KeyEncryption {
 
             return true;
         } catch (Exception e){
-            Log.d(this.getClass().getSimpleName(), "saving rsa keys failed");
-            Log.d(this.getClass().getSimpleName(),e.getMessage());
+            Log.e(this.getClass().getSimpleName(), "saving rsa keys failed");
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
     }

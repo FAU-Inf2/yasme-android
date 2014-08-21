@@ -43,8 +43,7 @@ public class MessageEncryption {
             }
         }
         catch (Exception e){
-            Log.d(this.getClass().getSimpleName(),"... failed with exception");
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),"... failed with exception");
             return null;
         }
     }
@@ -123,6 +122,7 @@ public class MessageEncryption {
                 Log.d(this.getClass().getSimpleName(),"Get devices from Server");
                 return ChatTask.getInstance().getAllDevicesForChat(chat.getId());
             } catch (Exception e) {
+                Log.e(this.getClass().getSimpleName(),e.getMessage());
                 return new ArrayList<>();
             }
 
@@ -186,7 +186,7 @@ public class MessageEncryption {
                 return null;
             }
         } catch (Exception e) {
-            Log.d(this.getClass().getSimpleName(),"Failed to send key: "+e.getMessage());
+            Log.e(this.getClass().getSimpleName(),"Failed to send key: "+e.getMessage());
             return null;
         }
     }

@@ -75,7 +75,9 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 			sr.nextBytes(key);
 			keySpec = new SecretKeySpec(key, "AES");
 		} catch (Exception e) {
-		}
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
+        }
+
 
 		return keySpec;
 	}
@@ -90,6 +92,7 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 			pw = Arrays.copyOf(pw, KEYSIZE); // use only the first 128Bits
 			keySpec = new SecretKeySpec(pw, "AES");
 		} catch (Exception e) {
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
 		}
 
 		return keySpec;
@@ -169,7 +172,7 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 			
 			return new String(decrypted);
 		} catch (Exception e) {
-			Log.d(this.getClass().getSimpleName(),e.getMessage());
+			Log.e(this.getClass().getSimpleName(),e.getMessage());
 			return "Couldn't be decrypted: " + encrypted;
 		}
 
