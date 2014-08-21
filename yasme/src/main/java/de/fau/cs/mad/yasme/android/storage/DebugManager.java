@@ -98,7 +98,7 @@ public enum DebugManager {
             pw.close();
             f.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
         return true;
@@ -156,7 +156,7 @@ public enum DebugManager {
             keyeditor.putString(PUBLICKEY,device.getPublicKey());
             keyeditor.commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
         return true;
@@ -173,7 +173,7 @@ public enum DebugManager {
             Log.d(getClass().getSimpleName(), "PubKey: " + device.getPublicKey());
             return device;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
             return null;
         }
     }
@@ -202,7 +202,7 @@ public enum DebugManager {
 
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
     }
@@ -230,11 +230,11 @@ public enum DebugManager {
             br.close();
             return sb.toString();
         } catch (FileNotFoundException e) {
-            Log.d(getClass().getSimpleName(), "File " + filename + " not found.");
+            Log.e(getClass().getSimpleName(), "File " + filename + " not found.");
             return "";
         }
         catch (Exception e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
             return null;
         }
     }
