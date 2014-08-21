@@ -33,32 +33,6 @@ public class LeaveChatTask extends AsyncTask<Long, Void, Boolean> {
         this.chat = chat;
     }
 
-
-    /*public static void preExecute(Context mContext, final LeaveChatTask task) {
-        AlertDialog alert = new AlertDialog.Builder(mContext).create();
-        alert.setTitle(mContext.getString(R.string.alert_leave));
-        alert.setMessage(mContext.getString(R.string.alert_leave_message));
-
-        alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
-                        task.execute();
-                        dialog.dismiss();
-                    }
-                });
-
-        alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-        alert.show();
-    }*/
-
     /**
      * @return true an success, otherwise false
      */
@@ -83,9 +57,6 @@ public class LeaveChatTask extends AsyncTask<Long, Void, Boolean> {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (!success) {
             if (isOwner) {
-                //ChangeOwnerTask task = new ChangeOwnerTask(chat);
-                //ChangeOwnerTask.preExecute(DatabaseManager.INSTANCE.getContext(), task, chat);
-
                 Context mContext = DatabaseManager.INSTANCE.getContext();
                 AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                 alert.setTitle(mContext.getString(R.string.alert_owner));

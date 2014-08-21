@@ -106,17 +106,11 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
             rsa.saveRSAKeys(deviceId);
         }catch(RestServiceException e){
             // if error occurs return false
-            Log.d(this.getClass().getSimpleName(),"RestServiceException");
+            Log.e(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
 
         Log.d(this.getClass().getSimpleName(),"Device registered at yasme server");
-        // if device registration was a success
-        // store to SharedPreferences
-        //SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
-        //editor.putLong(AbstractYasmeActivity.DEVICE_ID, deviceId);
-        //editor.commit();
-        //Log.d(this.getClass().getSimpleName(),"Device stored to SharedPreferences");
 
         // For Developer-Devices only
         if (DebugManager.INSTANCE.isDebugMode()) {

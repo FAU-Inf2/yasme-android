@@ -35,30 +35,11 @@ public class ChatListActivity extends AbstractYasmeActivity {
 
         SharedPreferences devicePrefs = getSharedPreferences(DEVICE_PREFS, MODE_PRIVATE);
 
-//        if (!getSignedInFlag()) {
-//            Log.i(this.getClass().getSimpleName(), "Not logged in, starting login activity");
-//            Intent intent = new Intent(this, LoginActivity.class);
-////						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
-//			finish();
-//            return;
-//        }
-
         // Make sure that the device has been registered. Otherwise several other tasks will fail
         long deviceId = DatabaseManager.INSTANCE.getDeviceId();
         if (deviceId <= 0) {
             Log.e(this.getClass().getSimpleName(), "Device id should not be <= 0 after login. Looks like the device registration failed but no one was notified about that");
         }
-
-        //else {
-            //Initialize database (once in application)
-        //    if (!DatabaseManager.INSTANCE.isDBInitialized()) {
-        //        long userId =
-        //                getSharedPreferences(AbstractYasmeActivity.STORAGE_PREFS, MODE_PRIVATE)
-        //                        .getLong(AbstractYasmeActivity.USER_ID, 0);
-        //        DatabaseManager.INSTANCE.initDB(this, userId);
-        //    }
-        //}
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()

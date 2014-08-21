@@ -29,7 +29,7 @@ public class DeleteMessageKeyTask extends AsyncTask<Long, Void, Boolean> {
             keyTask.deleteKey(params[0]);
 
         } catch (Exception e) {
-            Log.d(this.getClass().getSimpleName(), e.getMessage());
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
         }
         return true;
     }

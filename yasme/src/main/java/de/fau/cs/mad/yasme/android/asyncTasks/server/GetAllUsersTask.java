@@ -37,7 +37,7 @@ public class GetAllUsersTask extends AsyncTask<String, Void, Boolean> {
             }
             return true;
         } catch (RestServiceException e) {
-            Log.d(this.getClass().getSimpleName(), e.getMessage());
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
     }

@@ -90,21 +90,6 @@ public enum DeviceDAOImpl implements DeviceDAO {
     }
 
     public boolean deleteAll(User user) {
-        /*
-        List<Device> result = new ArrayList<Device>();
-        List<Device> all = getAll();
-        if (all == null || user == null) {
-            return false;
-        }
-        for (Device device: all) {
-            if (device.getUser().getId() == user.getId()) {
-                if (!delete(device)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-        */
         try {
             return (1 == databaseHelper.getDeviceDao().delete(getAll(user)));
         } catch (SQLException e) {

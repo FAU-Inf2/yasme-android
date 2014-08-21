@@ -78,11 +78,10 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
 
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
         Long userId = storage.getLong(USER_ID, 0);
-        String userName = storage.getString(USER_NAME, "dummy"); //TODO: evtl. anderen dummy namen
+        String userName = storage.getString(USER_NAME, "dummy");
         String userMail = storage.getString(USER_MAIL, "@yasme.net");
         String userPw = storage.getString(USER_PW, "password");
 
-        //accessToken = storage.getString(ACCESSTOKEN, null);
 
         selfUser = new User();
         selfUser.setId(userId);
@@ -99,7 +98,6 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         if ((accessToken == null || accessToken.length() <= 0) && !this.getClass().equals(LoginActivity.class)) {
             Log.i(this.getClass().getSimpleName(), "Not logged in, starting login activity");
             Intent intent = new Intent(this, LoginActivity.class);
-//						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
             return;
@@ -121,7 +119,6 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         if ((accessToken == null || accessToken.length() <= 0) && !this.getClass().equals(LoginActivity.class)) {
             Log.i(this.getClass().getSimpleName(), "Not logged in, starting login activity");
             Intent intent = new Intent(this, LoginActivity.class);
-//						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
             return;
@@ -156,7 +153,6 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
                 }
                 return true;
             case R.id.action_settings:
-                // TODO: Settings
                 return true;
             case R.id.action_chats:
                 intent = new Intent(this, ChatListActivity.class);

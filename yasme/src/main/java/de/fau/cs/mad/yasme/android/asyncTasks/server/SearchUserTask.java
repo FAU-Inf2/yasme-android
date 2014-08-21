@@ -18,23 +18,11 @@ import de.fau.cs.mad.yasme.android.ui.fragments.SearchContactFragment;
 
 public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
 
-    //private Spinner searchSpinner;
-    //private TextView searchText;
-    //private ContactListContent contactListContent;
-    //private SimpleAdapter mAdapter;
+
     private SearchBy searchBy;
     private String searchText;
     private Class classToNotify;
 
-    /*
-    public SearchUserTask(Spinner searchSpinner, TextView searchText,
-                          ContactListContent contactListContent, SimpleAdapter mAdapter) {
-        this.searchSpinner = searchSpinner;
-        this.searchText = searchText;
-        this.contactListContent = contactListContent;
-        this.mAdapter = mAdapter;
-    }
-    */
     public SearchUserTask(SearchBy searchBy, String searchText, Class classToNotify) {
         this.searchBy = searchBy;
         this.searchText = searchText;
@@ -88,8 +76,6 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
                     return LIKE;
                 case 1:
                     return MAIL;
-                //case 2:
-                //    return NUMBER;
             }
             return UNKNOWN;
         }

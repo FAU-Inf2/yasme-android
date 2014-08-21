@@ -98,19 +98,6 @@ public class Chat implements Serializable {
     }
 
     public Chat(Chat origin) throws IllegalAccessException {
-        // Clone constructor
-
-        // This may fail if someone adds a field but forgets to add the new field to this constructor
-//        this.id = origin.id;
-//        this.participants = origin.participants;
-//        this.status = origin.status;
-//        this.name = origin.name;
-//        this.owner = origin.owner;
-//        this.lastModified = origin.lastModified;
-//        this.created = origin.created;
-//        this.profilePicture = origin.profilePicture;
-//        this.messages = origin.messages;
-//        this.lastMessage = origin.lastMessage;
 
         Field[] fields = this.getClass().getDeclaredFields();
         for (Field field : fields) {
@@ -139,7 +126,7 @@ public class Chat implements Serializable {
             User dummy = new User("Dummy", 12);
             participants.add(dummy);
             // Without cast IntelliJ is not happy
-            Log.d(((Object)this).getClass().getSimpleName(), "participants sind null, Dummy-User hinzugefuegt");
+            Log.d(((Object)this).getClass().getSimpleName(), "Participants are null, dummy users are added");
         }
         return new ArrayList<User>(participants);
     }
@@ -168,10 +155,6 @@ public class Chat implements Serializable {
         try {
             int size = getParticipants().size();
             for (int i = 0; i < size; i++) {
-                //long selfId = DatabaseManager.INSTANCE.getUserId();
-                //if(selfId == participants.get(i).getId()) {
-                //    continue;
-                //}
                 returnName += participants.get(i).getName();
                 if(i < size - 1) {
                     returnName += ", ";

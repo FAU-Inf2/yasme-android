@@ -42,10 +42,6 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
         GetInfoTask getInfoTask = new GetInfoTask(0);
         getInfoTask.execute();
-//        try {
-//            getInfoTask.wait();
-//        } catch (Exception e) { }
-
 
         email = params[0].toLowerCase();
         password = params[1];

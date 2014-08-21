@@ -28,22 +28,6 @@ public class LoginActivity extends AbstractYasmeActivity {
             getFragmentManager().beginTransaction()
                     .add(R.id.singleFragmentContainer, new LoginFragment()).commit();
         }
-        //TODO: temporäre Lösung: - moved to onCreate in ChatListActivity
-        //HttpClient.context = this.getApplicationContext();
-
-        //GCM Begin
-//        cloudMessaging = CloudMessaging.getInstance(this);
-//
-//        if (cloudMessaging.checkPlayServices()) {
-//            String regid = cloudMessaging.getRegistrationId();
-//            Log.d(this.getClass().getSimpleName(),"Google reg id is empty? " + regid.isEmpty());
-//            if (regid.isEmpty()) {
-//                registerInBackground();
-//            }
-//        } else {
-//            Log.i(AbstractYasmeActivity.TAG, "No valid Google Play Services APK found.");
-//        }
-        //GCM End
     }
 
     @Override
@@ -52,34 +36,4 @@ public class LoginActivity extends AbstractYasmeActivity {
         getMenuInflater().inflate(R.menu.login, menu);
         return true;
     }
-
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        cloudMessaging.checkPlayServices();
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//    }
-//
-//    public void registerInBackground() {
-//
-//        new AsyncTask<Void, Void, String>() {
-//
-//            protected String doInBackground(Void[] params) {
-//                return cloudMessaging.registerInBackground();
-//            }
-//
-//            protected void onPostExecute(String msg) {
-//                //Zu diesem Zeitpunkt ist die RegId bereits als SharedPref.
-//                // in AbstractYasmeActivity.PROPERTY_REG_ID abgelegt.
-//                Log.d(this.getClass().getSimpleName(),msg);
-//
-//            }
-//
-//        }.execute(null, null, null);
-//    }
 }

@@ -45,10 +45,10 @@ public class MessageKeyTask extends ConnectionTask {
 
     public MessageKey saveKeys(ArrayList<MessageKey> messageKeys) throws IncompleteKeyException {
         try {
-            Log.d(this.getClass().getSimpleName(), "[???] Keys werden gesendet");
+            Log.d(this.getClass().getSimpleName(), "Keys sent");
             HttpResponse httpResponse = executeRequest(Request.POST, "", messageKeys);
 
-            Log.d(this.getClass().getSimpleName(), "[???] Antwort auswerten");
+            Log.d(this.getClass().getSimpleName(), "Analyze Response");
             MessageKey messageKey = new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
                     httpResponse.getEntity().getContent())).readLine(), MessageKey.class);
 

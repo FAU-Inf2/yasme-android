@@ -193,7 +193,6 @@ public class MessageKey implements Serializable {
 			return false;
 		}
 
-        //TODO: bitte überprüfen, ob meine Anpassung stimmt ;)
 		if (recipientDevice == null || creatorDevice.getId() < 0) {
             return false;
 		}

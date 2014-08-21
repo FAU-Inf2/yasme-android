@@ -104,7 +104,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (!success) {
-            Log.w(this.getClass().getSimpleName(), "failed");
+            Log.e(this.getClass().getSimpleName(), "failed");
             return;
         }
 
@@ -168,7 +168,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
             Log.d(this.getClass().getSimpleName(), "... successful" + id);
             return true;
         } catch (Exception e) {
-            Log.d(this.getClass().getSimpleName(), "... failed" + id);
+            Log.e(this.getClass().getSimpleName(), "... failed" + id);
             e.printStackTrace();
             return false;
         }

@@ -108,22 +108,16 @@ public class ChatAdapter extends ArrayAdapter<Message> {
                     text = context.getResources().getString(R.string.unknown_message_error) + msg.getMessage();
                     break;
             }
-            //text = context.getResources().getString(msg.getErrorId()) + msg.getMessage();
-            //text = context.getResources().getString(R.string.decryption_failed) + msg.getMessage();
         } else {
             text = msg.getMessage();
         }
 
         textView.setText(text);
         if (self) {
-            //textView.setText(text);
             dateView.setText(time);
         } else {
-            //textView.setText(/*name + ": " + */text);
             dateView.setText(name + ", " + time);
 
-            // This is a test with speech bubbles
-            //textViews.setBackgroundResource(R.drawable.bubble);
         }
 
         //dateView.setText(time);

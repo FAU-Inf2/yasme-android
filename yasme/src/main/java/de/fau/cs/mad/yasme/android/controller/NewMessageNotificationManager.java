@@ -39,8 +39,6 @@ public class NewMessageNotificationManager {
                         .setContentText(mContext.getString(R.string.notification_message))
                         .setSmallIcon(R.drawable.ic_notify_y)
                         .setPriority(1)
-                        /*.setDefaults(Notification.DEFAULT_VIBRATE)
-                        .setDefaults(Notification.DEFAULT_SOUND)*/
                         .setAutoCancel(true)
                         .setLargeIcon(getIcon(mContext));
         mId = 1;

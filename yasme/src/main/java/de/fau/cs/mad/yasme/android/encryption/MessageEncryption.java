@@ -130,7 +130,6 @@ public class MessageEncryption {
     }
 
     public MessageKey sendKey(String key, String iv, boolean local) {
-        //TODO: If sendkey nicht erfolgreich, dann Devices pro User updaten und nochmal versuchen!!!
         try {
             long deviceId = DatabaseManager.INSTANCE.getDeviceId();
             Device sender = new Device(deviceId);
@@ -140,7 +139,6 @@ public class MessageEncryption {
                 getRecipientDevices(false);
             }
 
-            //TODO: Try with local data first
             for (Device recipientDevice : getRecipientDevices(local)) {
                 Log.d(this.getClass().getSimpleName(),"Send Key for Device" + recipientDevice.getId() + " with pubKey: " + recipientDevice.getPublicKey());
 

@@ -57,17 +57,4 @@ public class AuthorizationTask extends ConnectionTask {
         executeRequest(Request.POST, "out");
         Log.d(this.getClass().getSimpleName(), "Signed out successful");
     }
-
-//    public String outdated() throws RestServiceException {
-//        HttpResponse response = executeRequest(Request.GET, "sendInfoToClient");
-//        String answer = "";
-//        try {
-//            answer = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
-//                    .readLine();
-//        } catch (IOException e) {
-//            Log.d(this.getClass().getSimpleName(), e.getMessage());
-//        }
-//        Log.d(this.getClass().getSimpleName(), "is device outdated");
-//        return answer;
-//    }
 }

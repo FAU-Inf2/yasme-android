@@ -147,22 +147,22 @@ public class KeyEncryption {
         SharedPreferences privKeyStorage = context.getSharedPreferences(RSAKEY_STORAGE_USER, Context.MODE_PRIVATE);
         String privKeyInBase64 = privKeyStorage.getString(PRIVATEKEY, "");
 
-        Log.d(this.getClass().getSimpleName(),"[???] Load private Key from storage: " + RSAKEY_STORAGE_USER);
+        Log.d(this.getClass().getSimpleName(),"Load private Key from storage: " + RSAKEY_STORAGE_USER);
         //if Key is available
         if (privKeyInBase64 != "") {
 
             PrivateKey privKey = rsa.convertBase64toPrivKey(privKeyInBase64);
 
             if (privKey != null){
-                Log.d(this.getClass().getSimpleName(),"[???] Private Key was successfully loaded from storage");
+                Log.d(this.getClass().getSimpleName(),"Private Key was successfully loaded from storage");
                 return privKey;
             }
 
-            Log.d(this.getClass().getSimpleName(), "[???] getting private key from storage failed");
+            Log.d(this.getClass().getSimpleName(), "Getting private key from storage failed");
             return null;
         }
 
-            Log.d(this.getClass().getSimpleName(), "[???] Private Key could not be found.");
+            Log.d(this.getClass().getSimpleName(), "Private Key could not be found.");
             return null;
 
     }
@@ -180,7 +180,7 @@ public class KeyEncryption {
                 pubKeyInBase64 = messageKey.getRecipientDevice().getPublicKey();
         }
         else{
-            Log.d(this.getClass().getSimpleName(), "[???] Wrong use of function: getPubKeyFromUser()");
+            Log.d(this.getClass().getSimpleName(), "Wrong use of function: getPubKeyFromUser()");
             return null;
         }
 
@@ -190,7 +190,7 @@ public class KeyEncryption {
             if (pubKey != null) return pubKey;
         }
 
-        Log.d(this.getClass().getSimpleName(), "[???] getting public key from storage failed");
+        Log.d(this.getClass().getSimpleName(), "Getting public key from storage failed");
         return null;
     }
 

@@ -106,13 +106,6 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//        if (id == R.id.action_add_chat) {
-//            Intent intent = new Intent(this, InviteToChatActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//            startActivity(intent);
-//            return true;
-//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -148,30 +141,8 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
 
     @Override
     public void onOwnProfileFragmentInteraction(String s) {
-        Log.d(this.getClass().getSimpleName(),"-------------------- In der Activity ---------------------");
+        Log.d(this.getClass().getSimpleName(),"-------------------- Within the Activity ---------------------");
     }
-
-//    private void callContact(String number){
-//        Intent callIntent = new Intent(Intent.ACTION_CALL);
-//        callIntent.setData(Uri.parse("tel:"+number));
-//        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(callIntent);
-//    }
-//
-//    private void sendMail(String email){
-//
-//        Intent i = new Intent(Intent.ACTION_SEND);
-//        i.setType("message/rfc822");
-//        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{email});
-//        i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
-//        i.putExtra(Intent.EXTRA_TEXT   , "Message powered by YASME");
-//        try {
-//            startActivity(Intent.createChooser(i, "Send mail..."));
-//        } catch (android.content.ActivityNotFoundException ex) {
-//           ex.printStackTrace();
-//        }
-//    }
-
 
     private void displayDetailsFragment(User user, Boolean showAddContact){
 

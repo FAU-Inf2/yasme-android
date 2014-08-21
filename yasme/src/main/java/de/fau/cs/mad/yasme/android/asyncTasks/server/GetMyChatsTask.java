@@ -53,11 +53,11 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
         try {
             serverChats = ChatTask.getInstance().getAllChatsForUser();
         } catch (RestServiceException e) {
-            Log.w(this.getClass().getSimpleName(), e.getMessage());
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
         }
 
         if(serverChats == null) {
-            Log.e(this.getClass().getSimpleName(), "serverChats are null");
+            Log.e(this.getClass().getSimpleName(), "ServerChats are null");
             return false;
         }
 

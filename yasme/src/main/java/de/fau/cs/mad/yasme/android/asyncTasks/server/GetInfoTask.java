@@ -42,7 +42,7 @@ public class GetInfoTask extends AsyncTask<Void, Void, Boolean> {
             serverInfo = infoTask.getInfo();
             return true;
         } catch (Exception e) {
-            Log.d(getClass().getSimpleName(),"...failed");
+            Log.e(getClass().getSimpleName(),"...failed");
             return false;
         }
     }

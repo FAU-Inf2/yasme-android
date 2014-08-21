@@ -42,9 +42,6 @@ public class User implements Serializable {
     @JsonIgnore
     private String profilePicture;
 
-    //@JsonIgnore
-    //@DatabaseField(columnName = DatabaseConstants.CHAT_ID, foreign = true)
-    //private Chat chat; // only for client Database
 
     @JsonIgnore
     @DatabaseField(columnName = DatabaseConstants.CONTACT)
@@ -85,10 +82,6 @@ public class User implements Serializable {
     /*
      * Getters
      */
-    //@JsonIgnore
-    //public ArrayList<Chat> getChats() {
-    //    return new ArrayList<Chat>(chats);
-    //}
 
     @JsonIgnoreProperties({ "id", "user", "publicKey", "product", "lastModified" })
     public List<Device> getDevices() {
@@ -127,21 +120,6 @@ public class User implements Serializable {
     /*
      * Setters
      */
-    //@JsonIgnore
-    //public void addChat(Chat chat) {
-    //    this.chats.addIfNotExists(chat);
-    //}
-
-    //TODO: Aufruf von setChat in addChat umwandeln
-    //public void setChat(Chat chat) {
-    //    this.chats.addIfNotExists(chat);
-    //}
-
-    //@JsonIgnore
-    //public void setChat(ArrayList<Chat> chats) {
-    //    this.chats = chats;
-    //}
-
 
     public void setDevices(List<Device> devices) {
         this.devices = devices;
@@ -175,11 +153,6 @@ public class User implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    //@JsonIgnore
-    //public void removeChat(Chat chat) {
-    //    chats.remove(chat);
-    //}
-
     @JsonIgnore
     public void addToContacts() {
         contactFlag = 1;
@@ -195,20 +168,5 @@ public class User implements Serializable {
         return contactFlag == 1;
     }
 
-
-    //public Bitmap loadProfilePicture() {
-
-    //}
-
-    //public void storeAndSetProfilePicture(Bitmap picture) {
-    //    // Set the modified date to now since the stored picture's name will contain that date
-    //    setLastModified(new Date());
-    //    String storedPath;
-    //    try {
-    //        PictureManager.INSTANCE.storePicture(this, picture);
-    //    } catch (IOException e) {
-    //
-    //    }
-    //}
 }
 

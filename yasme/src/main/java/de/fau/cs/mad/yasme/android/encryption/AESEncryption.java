@@ -58,7 +58,6 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 		// SecureRandom random = new SecureRandom();
 		// byte INITIAL_IV[] = new byte[KEYSIZE];
 		// generate random 16 byte IV, AES is always 16bytes
-		// random.nextBytes(INITIAL_IV);
 
 		// static IV
 		byte[] INITIAL_IV = { 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 20, 30, 40,
@@ -148,7 +147,7 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 			return base64Encode(encrypted);
 
 		} catch (Exception e) {
-			Log.d(this.getClass().getSimpleName(),e.getMessage());
+			Log.e(this.getClass().getSimpleName(),e.getMessage());
 			return "Couldn't be encrypted: " + text;
 		}
 

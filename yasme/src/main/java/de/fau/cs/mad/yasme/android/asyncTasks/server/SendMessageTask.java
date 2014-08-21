@@ -20,11 +20,6 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
     private Chat chat;
     private User sender;
 
-
-    //public SendMessageTask(MessageEncryption aes) {
-    //    this.aes = aes;
-    //}
-
     public SendMessageTask(Chat chat, User sender, AsyncTask onPostExecute) {
         this.sender = sender;
         this.chat = chat;
@@ -59,7 +54,7 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
                 // onPostExecute async task will call notify the registered fragments
             }
         } else {
-            Log.w(this.getClass().getSimpleName(), "Senden fehlgeschlagen");
+            Log.e(this.getClass().getSimpleName(), "Send failed");
         }
     }
 

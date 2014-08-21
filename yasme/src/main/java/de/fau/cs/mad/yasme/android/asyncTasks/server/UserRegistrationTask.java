@@ -48,7 +48,6 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
     protected Boolean doInBackground(String... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
 
-        // TODO: check of user exists
         name = params[0];
         email = params[1].toLowerCase();
         password = params[2];
@@ -82,8 +81,6 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
 
         if(success) {
             SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
-            // Will be done by login task
-            //editor.putLong(AbstractYasmeActivity.USER_ID, userId);
             editor.putString(AbstractYasmeActivity.USER_NAME, name);
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
             editor.commit();

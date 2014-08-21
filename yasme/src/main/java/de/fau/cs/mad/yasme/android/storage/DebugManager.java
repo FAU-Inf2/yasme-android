@@ -89,7 +89,6 @@ public enum DebugManager {
 
             FileOutputStream f = new FileOutputStream(file,append);
             PrintWriter pw = new PrintWriter(f);
-            //PrintWriter pw2 =  new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
             if (append) {
                 pw.println(json + ",");
             } else {
@@ -144,7 +143,6 @@ public enum DebugManager {
             SharedPreferences prefs = DatabaseManager.INSTANCE.getContext().getSharedPreferences(LoginActivity.class.getSimpleName(), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor2 = prefs.edit();
             editor2.putString(AbstractYasmeActivity.PROPERTY_REG_ID, ownDevice.getPushId());
-            //editor.putInt(AbstractYasmeActivity.PROPERTY_APP_VERSION, appVersion);
             editor2.commit();
 
             // Restore PrivatePublicKey

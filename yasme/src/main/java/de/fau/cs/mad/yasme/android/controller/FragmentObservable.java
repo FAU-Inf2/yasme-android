@@ -23,10 +23,6 @@ public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
         }
     }
 
-    //public boolean isRegistered(T fragment) {
-    //    return fragments.contains(fragment);
-    //}
-
     public void remove(T fragment) {
         fragments.remove(fragment);
     }
@@ -40,14 +36,8 @@ public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
                 fragment.notifyFragment(parameter);
                 buffer = null;
             } catch (Exception e) {
-                Log.d(this.getClass().getSimpleName(), "Notify fragment failed: " + fragment.getClass().getSimpleName());
-//                Log.e(this.getClass().getSimpleName(), e.getMessage());
+                Log.e(this.getClass().getSimpleName(), "Notify fragment failed: " + fragment.getClass().getSimpleName());
             }
         }
     }
-
-    //do not give the list to others, be paranoid! They may modify it. :)
-    //public ArrayList<T> getFragments() {
-    //  return fragments;
-    // }
 }
