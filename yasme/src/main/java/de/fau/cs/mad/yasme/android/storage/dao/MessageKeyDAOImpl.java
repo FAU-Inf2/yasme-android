@@ -107,8 +107,7 @@ public enum MessageKeyDAOImpl implements MessageKeyDAO {
             }
             return result;
         } catch (Exception e) {
-            Log.d(getClass().getSimpleName(), "Exception:");
-            e.printStackTrace();
+            Log.e(getClass().getSimpleName(), "Exception:");
             return null;
         }
     }
