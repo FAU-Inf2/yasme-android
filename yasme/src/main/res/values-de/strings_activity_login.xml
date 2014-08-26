@@ -26,4 +26,12 @@
     <string name="registration_button_ok">Registrieren</string>
     <string name="registration_button_cancel">Abbrechen</string>
 
+    <string name="read_TOS">Hiermit bestätige ich, dass ich die Nutzungsbedingungen
+        gelesen und akzeptiert habe</string>
+    <string name="agree_title"></string>
+    <string name="agree"></string>
+    <string name="privacy_policy_link"></string>
+    <string name="tou_link">&lt;a href="http://www.google.com">Nutzungsbedingungen&lt;/a></string>
+
+
 </resources>
