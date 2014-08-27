@@ -15,8 +15,6 @@ public class PasswordEncryption{
     private static final String SALT = "Y45M3";
     private User user;
 
-    //delay Brute-Force-Attacks
-    //protect against "using same password for several services"
     public PasswordEncryption(User user) {
         this.user = user;
     }

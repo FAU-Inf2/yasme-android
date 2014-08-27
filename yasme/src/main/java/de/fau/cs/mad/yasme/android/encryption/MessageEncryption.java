@@ -24,7 +24,6 @@ public class MessageEncryption {
     User creator;
     private DatabaseManager db = DatabaseManager.INSTANCE;
 
-    // Constructor fuer Chat-Verschluesselung
     public MessageEncryption(Chat chat, User creator) {
         this.chat = chat;
         this.creator = creator;
@@ -172,6 +171,7 @@ public class MessageEncryption {
             messageKey.setCreated(result.getCreated());
 
             Log.d(this.getClass().getSimpleName(),"Key was send to server, id is: "+ messageKey.getId());
+
             // If you can trust yourself
             messageKey.setAuthenticity(true);
             db.getMessageKeyDAO().addIfNotExists(messageKey);

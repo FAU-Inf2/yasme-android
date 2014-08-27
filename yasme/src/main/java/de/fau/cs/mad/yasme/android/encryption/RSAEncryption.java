@@ -136,7 +136,6 @@ public class RSAEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
             Cipher cipher = Cipher.getInstance(MODE);
             cipher.init(Cipher.ENCRYPT_MODE, pubKey);
             encrypted = cipher.doFinal(text.getBytes());
-            //encrypted = cipher.doFinal(text.getBytes("UTF-8")); //--> wenn normaler Text (kein Schluessel) encrypted wird
 
             Log.d(this.getClass().getSimpleName(),"RSA Encryption successful.");
 

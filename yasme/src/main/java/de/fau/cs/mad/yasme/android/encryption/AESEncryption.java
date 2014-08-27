@@ -15,7 +15,7 @@ import de.fau.cs.mad.yasme.android.entities.MessageKey;
 
 public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64 {
 
-    private static final int KEYSIZE = 16; //in Byte --> 128 Bit
+    private static final int KEYSIZE = 16; //128bit
     private static final String HASH_ALG = "SHA-256";
     private static final String MODE = "AES/CBC/PKCS5Padding";
 
@@ -25,9 +25,6 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 	public AESEncryption() {
         this("Y45M3");
 	}
-
-
-
 
 	public AESEncryption(String password) {
 		// generate AES-Key from given password
@@ -54,14 +51,13 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 
 	// generate Initial-Vector
 	public IvParameterSpec generateIV() {
-		// random IV
-		// SecureRandom random = new SecureRandom();
-		// byte INITIAL_IV[] = new byte[KEYSIZE];
-		// generate random 16 byte IV, AES is always 16bytes
+		//random IV
+		SecureRandom random = new SecureRandom();
+		byte INITIAL_IV[] = new byte[KEYSIZE];
+        random.nextBytes(INITIAL_IV);
 
-		// static IV
-		byte[] INITIAL_IV = { 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 20, 30, 40,
-				50, 60, 1 };
+		//static IV
+		//byte[] INITIAL_IV = { 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 20, 30, 40, 50, 60, 1 };
 
 		return new IvParameterSpec(INITIAL_IV);
 	}

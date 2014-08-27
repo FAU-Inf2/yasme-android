@@ -148,6 +148,7 @@ public class KeyEncryption {
         String privKeyInBase64 = privKeyStorage.getString(PRIVATEKEY, "");
 
         Log.d(this.getClass().getSimpleName(),"Load private Key from storage: " + RSAKEY_STORAGE_USER);
+
         //if Key is available
         if (privKeyInBase64 != "") {
 
