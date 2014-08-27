@@ -22,12 +22,14 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
     private SecretKey key = null;
 	private IvParameterSpec iv = null;
 
+    //generate random AES-Key
 	public AESEncryption() {
-        this("Y45M3");
+        key = generateKey();
+        iv = generateIV();
 	}
 
-	public AESEncryption(String password) {
-		// generate AES-Key from given password
+    // generate AES-Key from given password
+    public AESEncryption(String password) {
 		key = generateKey(password);
 		iv = generateIV();
 	}
