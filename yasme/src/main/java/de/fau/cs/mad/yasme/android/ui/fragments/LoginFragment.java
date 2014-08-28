@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +23,7 @@ import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.DeviceRegistrationTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.UserLoginTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
@@ -171,7 +171,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             passwordView.setError(getString(R.string.error_field_required));
             focusView = passwordView;
             cancel = true;
-        } else if (passwordTmp.length() < 4) {
+        } else if (passwordTmp.length() < 8) {
             passwordView.setError(getString(R.string.error_invalid_password));
             focusView = passwordView;
             cancel = true;

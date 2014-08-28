@@ -34,7 +34,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerDialog();
+        registerDialog(false);
     }
 
     private void agreeDialog() {
@@ -61,14 +61,14 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         alert.setPositiveButton(R.string.agree,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        registerDialog();
+                        registerDialog(true);
                     }
                 }
         );
         alert.show();
     }
 
-    private void registerDialog() {
+    private void registerDialog(final boolean acceptedTos) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(getString(R.string.registration_title));
 
@@ -98,6 +98,9 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
 
         final CheckBox checkBox = new CheckBox(getActivity());
         checkBox.setText(R.string.read_TOS);
+        if(acceptedTos) {
+            checkBox.setError(getString(R.string.no_tos_toast));
+        }
 
         list.addView(name, layoutParams);
         list.addView(mail, layoutParams);
@@ -140,9 +143,9 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                                     .execute(inputName, inputMail, inputPassword, inputPasswordCheck,
                                             this.getClass().getName());
                         } else {
-
+                            Toaster.getInstance().toast(R.string.no_tos_toast, Toast.LENGTH_LONG);
+                            registerDialog(true);
                         }
-
                     }
                 }
         );
