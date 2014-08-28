@@ -5,11 +5,15 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.util.Linkify;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.UserLoginTask;
@@ -51,7 +55,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         TextView tou = new TextView(getActivity());
         TextView privacyPolicy = new TextView(getActivity());
 
-        notice.setText(getString(R.string.tou_link));
+        notice.setText(getString(R.string.no_TOU_toast));
 
         list.addView(notice, layoutParams);
 
@@ -96,10 +100,27 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         passwordCheck.setHint(R.string.registration_repeat_password);
         passwordCheck.setText(inputPass2);
 
+        String checkBoxText = getString(R.string.read_TOU_start) + " " +
+                getString(R.string.TOU_link) + " " +
+                getString(R.string.read_TOU_end);
+
         final CheckBox checkBox = new CheckBox(getActivity());
-        checkBox.setText(R.string.read_TOS);
+        //checkBox.setMovementMethod(LinkMovementMethod.getInstance());
+        //checkBox.setClickable(true);
+        //checkBox.setText(Html.fromHtml(checkBoxText));
+        checkBox.setText(checkBoxText);
+
+        Pattern pattern = Pattern.compile("Terms Of Use");
+        Linkify.addLinks(checkBox, pattern, "", null, new Linkify.TransformFilter() {
+            @Override
+            public String transformUrl(Matcher matcher, String s) {
+                return getString(R.string.TOU_url);
+            }
+        });
+
+
         if(acceptedTos) {
-            checkBox.setError(getString(R.string.no_tos_toast));
+            checkBox.setError(getString(R.string.no_TOU_toast) + " " + getString(R.string.TOU_link));
         }
 
         list.addView(name, layoutParams);
@@ -143,7 +164,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                                     .execute(inputName, inputMail, inputPassword, inputPasswordCheck,
                                             this.getClass().getName());
                         } else {
-                            Toaster.getInstance().toast(R.string.no_tos_toast, Toast.LENGTH_LONG);
+                            Toaster.getInstance().toast(R.string.no_TOU_toast, Toast.LENGTH_LONG);
                             registerDialog(true);
                         }
                     }

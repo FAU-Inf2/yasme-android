@@ -26,15 +26,14 @@
     <string name="registration_button_ok">Registrieren</string>
     <string name="registration_button_cancel">Abbrechen</string>
 
-    <string name="read_TOS">Hiermit bestätige ich, dass ich die
-        <a href='http://yasme.net'>Nutzungsbedingungen</a>
-        gelesen und akzeptiert habe</string>
-    <string name="no_tos_toast">Bitte bestätige unsere
-        <a href='http://yasme.net'>Nutzungsbedingungen</a></string>
+    <string name="read_TOU_start">Hiermit bestätige ich, dass ich die</string>
+    <string name="read_TOU_end">gelesen und akzeptiert habe</string>
+    <string name="no_TOU_toast">Bitte bestätige unsere</string>
     <string name="agree_title"></string>
     <string name="agree"></string>
     <string name="privacy_policy_link"></string>
-    <string name="tou_link"></string>
+    <string name="TOU_link"><a href='http://yasme.net'>Nutzungsbedingungen</a></string>
+    <string name="TOU_url">http://yasme.net</string>
 
 
 </resources>
