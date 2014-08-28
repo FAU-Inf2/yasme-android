@@ -3,10 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+		android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     tools:context=".ui.OwnProfileFragment"
     android:scrollbarAlwaysDrawVerticalTrack="true">
 
-    <TextView
+    <EditText
+				android:background="@android:color/transparent"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/own_contact_header"
@@ -14,6 +17,7 @@
         android:textSize="16pt"
         android:id="@+id/own_profile_header"
         android:layout_margin="5pt"
+				android:cursorVisible="true"
         android:layout_span="5" />
 
     <RelativeLayout
