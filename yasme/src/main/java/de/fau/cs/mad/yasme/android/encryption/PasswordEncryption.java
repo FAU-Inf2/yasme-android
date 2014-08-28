@@ -19,16 +19,34 @@ public class PasswordEncryption{
         this.user = user;
     }
 
+    /**
+     * get a secure password (hashed and salted)
+     *
+     * @return user-object containing the secure password
+     */
     public User securePassword(){
         String secure = getSecurePassword();
         user.setPw(secure);
         return user;
     }
 
+
+    /**
+     * get a secure password (hashed and salted)
+     *
+     * @return hashed and salted password as String
+     */
     public String getSecurePassword(){
         return SHA512(salt(SALT,user.getPw()));
     }
 
+
+    /**
+     * hash the password using SHA-512
+     *
+     * @param password password that should be hashed
+     * @return hashed String
+     */
     private String SHA512(String password){
        try {
            MessageDigest md = MessageDigest.getInstance("SHA-512");
@@ -44,6 +62,13 @@ public class PasswordEncryption{
        return null;
     }
 
+    /**
+     * salt the password
+     *
+     * @param salt salt-value that should be used
+     * @param password password that should be secured
+     * @return salted password
+     */
     private String salt(String salt, String password){
         String passwordSalted = salt+password;
         return passwordSalted;

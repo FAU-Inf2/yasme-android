@@ -22,23 +22,25 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
     private SecretKey key = null;
 	private IvParameterSpec iv = null;
 
-    //generate random AES-Key
+    /**
+     * initialize AES-Encryption with random Key and InititalVector
+     */
 	public AESEncryption() {
         key = generateKey();
         iv = generateIV();
 	}
 
-    // generate AES-Key from given password
+    /**
+     * initialize AES-Encryption with a Key generated from given password
+     */
     public AESEncryption(String password) {
 		key = generateKey(password);
 		iv = generateIV();
 	}
 
-	public AESEncryption(byte[] key, byte[] iv) {
-		this.key = new SecretKeySpec(key, "AES");
-		this.iv = new IvParameterSpec(iv);
-	}
-
+    /**
+     * initialize AES-Encryption with a Key/InitalVector extracting from given MessageKey-Object
+     */
     public AESEncryption(MessageKey messageKey) {
         String keyBase64 = messageKey.getMessageKey();
         String ivBase64 = messageKey.getInitVector();
@@ -51,7 +53,12 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
         iv = new IvParameterSpec(ivBytes);
     }
 
-	// generate Initial-Vector
+    /**
+     * generate a random Inital Vector (needed in CBC-Mode)
+     *
+     * @return InitialVector
+     */
+
 	public IvParameterSpec generateIV() {
 		//random IV
 		SecureRandom random = new SecureRandom();
@@ -64,7 +71,11 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 		return new IvParameterSpec(INITIAL_IV);
 	}
 
-	// generate AESKey
+    /**
+     * generate random AES-Key
+     *
+     * @return AES-Key
+     */
 	public SecretKey generateKey() {
 		SecretKey keySpec = null;
 		try {
@@ -80,7 +91,12 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 		return keySpec;
 	}
 
-	// generate AESKey from given password
+    /**
+     * generate a AES-Key from given password (hash the password and use the first 128bits as AES-Key)
+     *
+     * @param password password from user
+     * @return AES-Key
+     */
 	public SecretKey generateKey(String password) {
 		SecretKey keySpec = null;
 		try {
@@ -96,6 +112,12 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 		return keySpec;
 	}
 
+
+    /**
+     * Getter-methods
+     *
+     * @return Key/Iv depending on the type that is needed
+     */
 
     public SecretKey getKey(){
         return key;
@@ -120,20 +142,35 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
     public byte[] getKeyinByte() {
         return key.getEncoded();
     }
-	
-	//convert Base64-String to Type SecretKey
+
+    /**
+     * convert a Base64-decoded Key to AES-Key (Type: SecretKey)
+     *
+     * @param base64 Base64-decoded AES-Key
+     * @return AES-Key
+     */
 	public SecretKey base64toKey(String base64){
 		byte[] keyBytes = base64Decode(base64);
 		return new SecretKeySpec(keyBytes, "AES");
 	}
-	
-	//convert Base64-String to Type IV
+
+    /**
+     * convert a Base64-decoded InitialVector to Initial Vector (Type: IvParameterSpec)
+     *
+     * @param base64 Base64-decoded InitialVector
+     * @return InitialVector
+     */
 	public IvParameterSpec base64toIV(String base64){
 		byte[] IvBytes = base64Decode(base64);
 		return new IvParameterSpec(IvBytes);
 	}
-	
-	// encrypt
+
+    /**
+     * encrypt a string and encode the result to base64
+     *
+     * @param text message that should be encrypted
+     * @return encrypted string, encoded in base64
+     */
 	public String encrypt(String text) {
 		byte[] encrypted = null;
 		try {
@@ -154,7 +191,12 @@ public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
 
 	}
 
-	// decrypt
+    /**
+     * decode a base64-encoded string and decrypt it
+     *
+     * @param encrypted encrypted base64-encoded string
+     * @return decrypted string
+     */
 	public String decrypt(String encrypted) {
 		byte[] decrypted = null;
 

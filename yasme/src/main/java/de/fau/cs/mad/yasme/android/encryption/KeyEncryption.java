@@ -29,11 +29,20 @@ public class KeyEncryption {
         this.rsa = new RSAEncryption();
     }
 
+    /**
+     * generate a random RSA-KeyPair (Private and Public Key)
+     */
     public void generateRSAKeys(){
         rsa.generateKeyPair();
     }
 
-    //save own RSAKeys in SharedPreferences
+    /**
+     * encode generated RSA-KeyPair to base64 and store it to local storage (SharedPreferences)
+     * there is a own SharedPreference for every user on the device
+     *
+     * @param deviceId deviceId from the user logged in currently
+     * @return true/false
+     */
     public boolean saveRSAKeys(long deviceId){
 
         String RSAKEY_STORAGE_USER = RSAKEY_STORAGE + "_" + deviceId;
@@ -74,11 +83,22 @@ public class KeyEncryption {
         }
     }
 
+    /**
+     * get the generated RSA Public Key in Base64
+     * method is needed in registration when the Public Key needs to be sent to the server
+     *
+     * @return base64 encoded string
+     */
     public String getGeneratedPubKeyInBase64(){
         return rsa.getPubKeyinBase64();
     }
 
-    //encrypt
+    /**
+     * encrypt the given messageKey using the RSA PublicKey from the recipient
+     *
+     * @param messageKey messageKey containing the AES-Key that should be encrypted
+     * @return messageKey containing the RSA-encrypted AES-Key
+     */
     public MessageKey encrypt(MessageKey messageKey){
 
         PublicKey pubKey = getPubKeyFromUser(messageKey, RECIPIENT);
@@ -92,7 +112,12 @@ public class KeyEncryption {
         return null;
     }
 
-    //decrypt
+    /**
+     * encrypt the given messageKey using the own RSA Private Key
+     *
+     * @param messageKey messageKey containing the encrypted AES-Key that should be decrypted
+     * @return messageKey containing the decrypted AES-Key
+     */
     public MessageKey decrypt(MessageKey messageKey){
 
         long selfDeviceId = messageKey.getRecipientDevice().getId();
@@ -110,7 +135,12 @@ public class KeyEncryption {
         return null;
     }
 
-    //sign
+    /**
+     * sign an AES-Key using the own RSA Private Key
+     *
+     * @param messageKey messageKey containing the AES-Key that should be signed
+     * @return  messageKey containing the signature
+     */
     public MessageKey sign(MessageKey messageKey){
 
         long selfDeviceId = messageKey.getCreatorDevice().getId();
@@ -125,7 +155,12 @@ public class KeyEncryption {
         return null;
     }
 
-    //verify
+    /**
+     * verify the signature from given messageKey using the RSA Public Key from the creatorDevice
+     *
+     * @param messageKey messageKey containing the signature
+     * @return true/false
+     */
     public boolean verify(MessageKey messageKey){
 
         PublicKey pubKey = getPubKeyFromUser(messageKey, CREATOR);
@@ -138,7 +173,12 @@ public class KeyEncryption {
         return false;
     }
 
-    //get own PrivateKey from LocalStorage
+    /**
+     * load own RSA Private Key from local storage
+     *
+     * @param selfDeviceId deviceId from the user logged in currently
+     * @return PrivateKey
+     */
     public PrivateKey getPrivateRSAKeyFromStorage(long selfDeviceId){
 
         String RSAKEY_STORAGE_USER = RSAKEY_STORAGE + "_" + selfDeviceId;
@@ -168,7 +208,13 @@ public class KeyEncryption {
 
     }
 
-    //get a Public Key for specific user from LocalStorage
+    /**
+     * load the needed RSA Public Key from local storage/Device-Object
+     *
+     * @param messageKey messageKey containing the information about creatorDevice and recipientDevice
+     * @param type define, the RSA Public Key from the recipient or the creator is needed
+     * @return PublicKey
+     */
     public PublicKey getPubKeyFromUser(MessageKey messageKey, byte type) {
 
         String pubKeyInBase64 = null;
@@ -195,6 +241,7 @@ public class KeyEncryption {
         return null;
     }
 
+    /*
     //get own PublicKey in Base64
     public String getPublicRSAKeyInBase64FromStorage(long selfDeviceId){
 
@@ -206,5 +253,6 @@ public class KeyEncryption {
 
         return pubKeyInBase64;
     }
+    */
 
 }
