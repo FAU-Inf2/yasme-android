@@ -5,19 +5,20 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
-import de.fau.cs.mad.yasme.android.controller.Log;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.UserLoginTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.UserRegistrationTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
-import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 
 /**
@@ -33,10 +34,41 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerDialog();
+        registerDialog(false);
     }
 
-    private void registerDialog() {
+    private void agreeDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle(getString(R.string.agree_title));
+
+        LinearLayout list = new LinearLayout(getActivity());
+        list.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+
+        TextView notice = new TextView(getActivity());
+        TextView tou = new TextView(getActivity());
+        TextView privacyPolicy = new TextView(getActivity());
+
+        notice.setText(getString(R.string.tou_link));
+
+        list.addView(notice, layoutParams);
+
+        alert.setView(list);
+
+        // "OK" button to save the values
+        alert.setPositiveButton(R.string.agree,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        registerDialog(true);
+                    }
+                }
+        );
+        alert.show();
+    }
+
+    private void registerDialog(final boolean acceptedTos) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(getString(R.string.registration_title));
 
@@ -50,24 +82,31 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         name.setText(inputName);
 
         final EditText mail = new EditText(getActivity());
-        mail.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        mail.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mail.setHint(R.string.registration_email);
         mail.setText(inputMail);
 
         final EditText password = new EditText(getActivity());
-        password.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         password.setHint(R.string.registration_password);
         password.setText(inputPass1);
 
-        final EditText password_check = new EditText(getActivity());
-        password_check.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        password_check.setHint(R.string.registration_repeat_password);
-        password_check.setText(inputPass2);
+        final EditText passwordCheck = new EditText(getActivity());
+        passwordCheck.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        passwordCheck.setHint(R.string.registration_repeat_password);
+        passwordCheck.setText(inputPass2);
+
+        final CheckBox checkBox = new CheckBox(getActivity());
+        checkBox.setText(R.string.read_TOS);
+        if(acceptedTos) {
+            checkBox.setError(getString(R.string.no_tos_toast));
+        }
 
         list.addView(name, layoutParams);
         list.addView(mail, layoutParams);
         list.addView(password, layoutParams);
-        list.addView(password_check, layoutParams);
+        list.addView(passwordCheck, layoutParams);
+        list.addView(checkBox, layoutParams);
 
         alert.setView(list);
 
@@ -80,7 +119,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                         String inputName = name.getText().toString();
                         String inputMail = mail.getText().toString();
                         String inputPassword = password.getText().toString();
-                        String inputPasswordCheck = password_check.getText()
+                        String inputPasswordCheck = passwordCheck.getText()
                                 .toString();
 
                         RegisterFragment.inputName = inputName;
@@ -89,20 +128,24 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                         RegisterFragment.inputPass2 = inputPasswordCheck;
 
                         if (password.getText().length() < 8) {
-                            Toaster.getInstance().toast(R.string.password_too_short,Toast.LENGTH_LONG);
+                            Toaster.getInstance().toast(R.string.password_too_short, Toast.LENGTH_LONG);
                             return;
                         }
                         if (!inputPassword.equals(inputPasswordCheck)) {
                             Log.d(getClass().getSimpleName(), "Password1##" + inputPassword + "##");
                             Log.d(getClass().getSimpleName(), "Password2##" + inputPasswordCheck + "##");
-                            Toaster.getInstance().toast(R.string.passwords_do_not_match,Toast.LENGTH_LONG);
+                            Toaster.getInstance().toast(R.string.passwords_do_not_match, Toast.LENGTH_LONG);
                             return;
                         }
 
-
-                        new UserRegistrationTask(RegisterFragment.class)
-                                .execute(inputName, inputMail, inputPassword, inputPasswordCheck,
-                                        this.getClass().getName());
+                        if(checkBox.isChecked()) {
+                            new UserRegistrationTask(RegisterFragment.class)
+                                    .execute(inputName, inputMail, inputPassword, inputPasswordCheck,
+                                            this.getClass().getName());
+                        } else {
+                            Toaster.getInstance().toast(R.string.no_tos_toast, Toast.LENGTH_LONG);
+                            registerDialog(true);
+                        }
                     }
                 }
         );
@@ -126,9 +169,8 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                     message), Toast.LENGTH_SHORT);
             UserLoginTask authTask = new UserLoginTask(false, LoginFragment.class);
             authTask.execute(email, password, this.getClass().getName());
-            ((AbstractYasmeActivity)getActivity()).getSelfUser().setEmail(email);
-        }
-        else {
+            ((AbstractYasmeActivity) getActivity()).getSelfUser().setEmail(email);
+        } else {
             Toaster.getInstance().toast(getResources().getString(message), Toast.LENGTH_LONG);
         }
     }
