@@ -235,7 +235,6 @@ public abstract class ConnectionTask {
     }
 
     private URI buildRequestURI(String path) {
-        Log.i(this.getClass().getSimpleName(), "PATH IS: " + path); //TODO RM
         if (path.equals(""))
             return uri;
 
