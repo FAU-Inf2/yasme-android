@@ -87,7 +87,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 				u.setName(name.getText().toString());
 				Log.d(this.getClass().getSimpleName(),"After Name of user is" + u.getName());
 //				for(User i : DatabaseManager.INSTANCE.getUserDAO().getAll()) Log.i("List",i.getName());
-				new SetProfileDataTask(new User()).execute();
+				new SetProfileDataTask(u).execute();
 				return true;
 			}
 		});
