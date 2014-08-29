@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by florianwinklmeier on 03.06.14.
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 03.06.14.
  */
 
 public class ChatTask extends ConnectionTask {

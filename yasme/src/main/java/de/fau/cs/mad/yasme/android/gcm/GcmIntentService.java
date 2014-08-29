@@ -16,7 +16,7 @@ import de.fau.cs.mad.yasme.android.ui.fragments.ChatFragment;
 
 
 /**
- * Created by florianwinklmeier on 19.06.14.
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 19.06.14.
  */
 public class GcmIntentService extends IntentService {
 

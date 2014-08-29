@@ -26,6 +26,10 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 03.06.14.
+ */
+
 public class MessageTask extends ConnectionTask {
 
     private static MessageTask instance;

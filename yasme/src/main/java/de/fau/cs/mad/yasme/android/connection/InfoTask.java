@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
 /**
- * Created by martin on 08.08.2014.
+ * Created by Martin Sturm <***REMOVED***> on 08.08.2014.
  */
 public class InfoTask extends ConnectionTask {
     private static InfoTask instance;

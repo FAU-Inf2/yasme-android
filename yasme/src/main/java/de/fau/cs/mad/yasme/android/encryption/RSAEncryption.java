@@ -19,6 +19,10 @@ import android.widget.Toast;
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
 
+/**
+ * Created by Marco Eberl <mfrankie89@aol.de> on 27.07.2014.
+ */
+
 public class RSAEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64 {
 
     private static final int KEYSIZE = 2048;

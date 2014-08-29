@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by martin on 26.07.2014.
+ * Created by Martin Sturm <***REMOVED***> on 26.07.2014.
  */
 public class RefreshTask extends AsyncTask<String, Void, Boolean> {
 

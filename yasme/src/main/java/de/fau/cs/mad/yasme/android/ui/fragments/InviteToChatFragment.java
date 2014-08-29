@@ -31,7 +31,7 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
 
 /**
- * Created by bene on 22.06.14.
+ * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 22.06.14.
  */
 public class InviteToChatFragment extends Fragment implements View.OnClickListener, NotifiableFragment<InviteToChatFragment.InviteToChatParam> {
 

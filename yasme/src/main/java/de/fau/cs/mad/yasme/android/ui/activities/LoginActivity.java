@@ -10,9 +10,9 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.LoginFragment;
 
 /**
- * Activity which displays a login screen to the user, offering registration as
- * well.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de>
  */
+
 public class LoginActivity extends AbstractYasmeActivity {
 
 

@@ -25,7 +25,7 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 
 /**
- * Created by martin on 04.08.2014.
+ * Created by Martin Sturm <***REMOVED***> on 04.08.2014.
  */
 public enum DebugManager {
     INSTANCE;

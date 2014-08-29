@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by bene on 11.07.14.
+ * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 11.07.14.
  */
 public interface ChatDAO extends DAO<Chat> {
 

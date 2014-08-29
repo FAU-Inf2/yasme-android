@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Created by robert on 19.07.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 19.07.14.
  */
 public enum DeviceDAOImpl implements DeviceDAO {
     INSTANCE;

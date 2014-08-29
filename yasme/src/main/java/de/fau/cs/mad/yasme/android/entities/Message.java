@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by bene on 06.05.14.
+ * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 06.05.14.
  */
 
 @DatabaseTable(tableName = DatabaseConstants.MESSAGE_TABLE)

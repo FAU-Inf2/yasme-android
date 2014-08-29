@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by martin on 26.06.2014.
+ * Created by Martin Sturm <***REMOVED***> on 26.06.2014.
  */
 public class SpinnerObservable {
     private Set<AsyncTask> backgroundTasks;

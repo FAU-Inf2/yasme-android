@@ -5,7 +5,7 @@ import de.fau.cs.mad.yasme.android.controller.Log;
 import java.util.ArrayList;
 
 /**
- * Created by martin on 27.06.14.
+ * Created by Martin Sturm <***REMOVED***> on 27.06.14.
  */
 public class ObservableRegistry {
 

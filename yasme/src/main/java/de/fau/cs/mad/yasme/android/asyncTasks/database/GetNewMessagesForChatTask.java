@@ -13,7 +13,7 @@ import de.fau.cs.mad.yasme.android.storage.dao.MessageDAO;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatFragment;
 
 /**
- * Created by robert on 28.07.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 28.07.14.
  */
 public class GetNewMessagesForChatTask extends AsyncTask<String, Void, Boolean> {
     private List<Message> messages;

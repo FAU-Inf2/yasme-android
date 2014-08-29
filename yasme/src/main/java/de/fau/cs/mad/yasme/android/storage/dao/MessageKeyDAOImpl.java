@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Created by robert on 11.07.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 11.07.14.
  */
 public enum MessageKeyDAOImpl implements MessageKeyDAO {
     INSTANCE;

@@ -10,7 +10,7 @@ import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.storage.dao.DAO;
 
 /**
- * Created by bene on 11.07.14.
+ * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 11.07.14.
  */
 public class GetAllTask<D extends Object, T extends DAO<D>> extends AsyncTask<Object, Void, Boolean> {
 

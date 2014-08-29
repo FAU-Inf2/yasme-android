@@ -23,7 +23,7 @@ import de.fau.cs.mad.yasme.android.ui.fragments.InviteToChatFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.UserDetailsFragment;
 
 /**
- * Created by bene on 22.06.14.
+ * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 22.06.14.
  */
 public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
 

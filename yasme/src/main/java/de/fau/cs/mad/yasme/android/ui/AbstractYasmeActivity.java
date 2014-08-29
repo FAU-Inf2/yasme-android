@@ -25,7 +25,7 @@ import de.fau.cs.mad.yasme.android.ui.activities.LoginActivity;
 
 
 /**
- * Created by robert on 15.06.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 15.06.14.
  */
 public abstract class AbstractYasmeActivity  extends Activity implements Toastable {
     public final static String USER_ID = "de.fau.cs.mad.yasme.android.USER_ID";

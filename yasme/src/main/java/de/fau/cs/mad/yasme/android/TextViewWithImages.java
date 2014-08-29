@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by robert on 12.08.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 12.08.14.
  */
 public class TextViewWithImages extends TextView {
 

@@ -5,7 +5,7 @@ import de.fau.cs.mad.yasme.android.controller.Log;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Created by Marco Eberl on 27.07.2014.
+ * Created by Marco Eberl <mfrankie89@aol.de> on 27.07.2014.
  */
 public class Base64 {
 

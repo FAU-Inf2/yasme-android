@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Stefan on 10.05.14.
+ * Created by Stefan Ettl <stefan.ettl@fau.de> on 10.05.14.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @DatabaseTable(tableName = DatabaseConstants.USER_TABLE)

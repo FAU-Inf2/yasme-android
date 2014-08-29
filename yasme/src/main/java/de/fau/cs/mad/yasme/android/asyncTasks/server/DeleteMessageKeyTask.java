@@ -7,7 +7,7 @@ import de.fau.cs.mad.yasme.android.connection.MessageKeyTask;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 
 /**
- * Created by martin on 06.07.2014.
+ * Created by Martin Sturm <***REMOVED***> on 06.07.2014.
  */
 // Async-Task for sending Key to Server
 public class DeleteMessageKeyTask extends AsyncTask<Long, Void, Boolean> {

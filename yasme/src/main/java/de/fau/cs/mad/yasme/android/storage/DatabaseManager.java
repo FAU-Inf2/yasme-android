@@ -18,7 +18,7 @@ import de.fau.cs.mad.yasme.android.storage.dao.UserDAOImpl;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 
 /**
- * Created by robert on 13.06.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 13.06.14.
  */
 public enum DatabaseManager {
     INSTANCE;

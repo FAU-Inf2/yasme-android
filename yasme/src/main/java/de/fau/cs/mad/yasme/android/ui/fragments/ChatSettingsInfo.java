@@ -31,7 +31,7 @@ import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 
 /**
- * Created by robert on 03.08.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.
  */
 public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Chat> {
 

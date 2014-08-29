@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Stefan on 20.06.14.
+ * Created by Stefan Ettl <stefan.ettl@fau.de> on 20.06.14.
  */
 public class ContactListContent {
 

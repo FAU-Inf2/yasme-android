@@ -5,7 +5,7 @@ import de.fau.cs.mad.yasme.android.entities.MessageKey;
 import java.util.List;
 
 /**
- * Created by robert on 11.07.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 11.07.14.
  */
 public interface MessageKeyDAO extends DAO<MessageKey> {
 

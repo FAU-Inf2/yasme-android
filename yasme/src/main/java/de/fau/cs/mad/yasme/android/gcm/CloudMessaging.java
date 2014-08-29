@@ -20,7 +20,7 @@ import java.io.IOException;
 
 
 /**
- * Created by florianwinklmeier on 21.06.14.
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 21.06.14.
  */
 
 public class CloudMessaging {

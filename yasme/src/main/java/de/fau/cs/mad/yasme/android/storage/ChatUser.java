@@ -9,9 +9,9 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import java.io.Serializable;
 
 /**
- * Created by robert on 23.06.14.
- * Chat-User-Mapping
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 23.06.14.
  */
+
 @DatabaseTable(tableName = DatabaseConstants.CHAT_USER_TABLE)
 public class ChatUser implements Serializable{
 

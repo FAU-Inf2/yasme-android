@@ -14,7 +14,7 @@ import de.fau.cs.mad.yasme.android.ui.fragments.LoginFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.RegisterFragment;
 
 /**
- * Created by robert on 19.06.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 19.06.14.
  */
 /**
  * Represents an asynchronous login task used to authenticate the user.

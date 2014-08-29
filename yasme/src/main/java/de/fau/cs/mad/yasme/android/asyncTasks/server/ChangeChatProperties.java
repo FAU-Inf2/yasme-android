@@ -15,7 +15,7 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.fragments.InviteToChatFragment;
 
 /**
- * Created by robert on 29.07.14.
+ * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 29.07.14.
  */
 public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
     private Chat chat;

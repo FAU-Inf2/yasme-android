@@ -19,6 +19,10 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by Marco Eberl <mfrankie89@aol.de> on 22.07.2014.
+ */
+
 public class MessageEncryption {
     Chat chat;
     User creator;

@@ -23,6 +23,10 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+/**
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 03.06.14.
+ */
+
 public class DeviceTask extends ConnectionTask {
 
     private static DeviceTask instance;

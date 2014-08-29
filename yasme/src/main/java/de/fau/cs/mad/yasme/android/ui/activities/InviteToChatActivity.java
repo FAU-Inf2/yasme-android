@@ -9,6 +9,10 @@ import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.InviteToChatFragment;
 
+/**
+ * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de>
+ */
+
 public class InviteToChatActivity extends AbstractYasmeActivity { // implements OnClickListener{
 
     @Override

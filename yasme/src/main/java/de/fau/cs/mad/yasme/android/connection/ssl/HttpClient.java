@@ -26,7 +26,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 /**
- * Created by florianwinklmeier on 10.06.14.
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 10.06.14.
  */
 
 public class HttpClient {

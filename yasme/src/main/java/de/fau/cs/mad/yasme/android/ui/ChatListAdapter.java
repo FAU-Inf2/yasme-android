@@ -23,7 +23,7 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 /**
- * Created by martin on 18.06.2014.
+ * Created by Martin Sturm <***REMOVED***> on 18.06.2014.
  */
 public class ChatListAdapter extends ArrayAdapter<Chat> {
 

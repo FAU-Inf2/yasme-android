@@ -17,7 +17,7 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.LoginFragment;
 
 /**
- * Created by cuong on 21/06/14.
+ * Created by Cuong Bui <cuong.bui@fau.de> on 21/06/14.
  */
 public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
 

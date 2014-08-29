@@ -21,14 +21,10 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OwnProfileFragment.OnOwnProfileFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the OwnProfileFragment#newInstance factory method to
- * create an instance of this fragment.
- *
+ * Created by Stefan Ettl <stefan.ettl@fau.de>
  */
+
+
 public class OwnProfileFragment extends Fragment implements View.OnClickListener, NotifiableFragment<Drawable> {
 
     private TextView name;
