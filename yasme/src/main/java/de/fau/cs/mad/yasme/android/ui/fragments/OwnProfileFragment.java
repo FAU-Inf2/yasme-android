@@ -27,7 +27,6 @@ import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.R;
-import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 
@@ -81,14 +80,11 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 				// Set Focus away from edittext
 				name.setFocusable(false);
 				name.setFocusableInTouchMode(true);
+
 				// Save name in android device
 				User u = activity.getSelfUser();
-				Log.d(this.getClass().getSimpleName(),"Before Name of user is" + u.getName());
 				u.setName(name.getText().toString());
-				Log.d(this.getClass().getSimpleName(),"After Name of user is" + u.getName());
-//				for(User i : DatabaseManager.INSTANCE.getUserDAO().getAll()) Log.i("List",i.getName());
-				new SetProfileDataTask(u).execute();
-				return true;
+				return new SetProfileDataTask(u).execute();
 			}
 		});
 
