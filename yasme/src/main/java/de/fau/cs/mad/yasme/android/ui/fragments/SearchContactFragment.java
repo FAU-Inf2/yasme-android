@@ -28,6 +28,10 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
 
+/**
+ * Created by Stefan Ettl <stefan.ettl@fau.de>
+ */
+
 public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<ArrayList<User>> {
 
     ContactListContent contactListContent;

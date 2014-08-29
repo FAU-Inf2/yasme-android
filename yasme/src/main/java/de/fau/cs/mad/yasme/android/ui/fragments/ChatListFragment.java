@@ -35,7 +35,7 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
 
 /**
- * Created by martin on 21.06.2014.
+ * Created by Martin Sturm <martin@sturms.name> on 21.06.2014.
  */
 public class ChatListFragment extends ListFragment implements NotifiableFragment<List<Chat>> {
 

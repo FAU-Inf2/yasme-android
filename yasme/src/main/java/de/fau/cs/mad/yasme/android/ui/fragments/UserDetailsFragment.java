@@ -33,13 +33,9 @@ import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link UserDetailsFragment.OnDetailsFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link UserDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Created by Stefan Ettl <stefan.ettl@fau.de>
  */
+
 public class UserDetailsFragment
         extends DialogFragment
         implements View.OnClickListener,

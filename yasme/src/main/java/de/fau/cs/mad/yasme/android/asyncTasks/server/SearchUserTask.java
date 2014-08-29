@@ -14,7 +14,7 @@ import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.ui.fragments.SearchContactFragment;
 
 /**
- * Created by florianwinklmeier on 07.07.14.
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 07.07.14.
  */
 
 public class SearchUserTask extends AsyncTask<String, Void, List<User>> {

@@ -17,6 +17,10 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
 
+/**
+ * Created by Robert Meissner <robert.meissner@studium.fau.de>
+ */
+
 public class ChatListActivity extends AbstractYasmeActivity {
 
     @Override

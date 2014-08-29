@@ -1,7 +1,7 @@
 package de.fau.cs.mad.yasme.android.storage;
 
 /**
- * Created by robert on 15.06.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 15.06.14.
  */
 public class DatabaseConstants {
 

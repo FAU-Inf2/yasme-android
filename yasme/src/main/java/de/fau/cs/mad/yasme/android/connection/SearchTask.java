@@ -23,7 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 /**
- * Created by florianwinklmeier on 16.06.14.
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 16.06.14.
  */
 
 public class SearchTask extends ConnectionTask {

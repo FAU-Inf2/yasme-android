@@ -28,7 +28,7 @@ import de.fau.cs.mad.yasme.android.ui.fragments.ChatFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
 
 /**
- * Created by robert on 19.06.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 19.06.14.
  */
 
 /* TODO: extend Method so keys can be fetched and deleted */

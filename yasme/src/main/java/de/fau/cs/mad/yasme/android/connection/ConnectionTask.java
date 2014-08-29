@@ -37,6 +37,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+/**
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 03.06.14.
+ */
+
 public abstract class ConnectionTask {
 
     public enum Request {

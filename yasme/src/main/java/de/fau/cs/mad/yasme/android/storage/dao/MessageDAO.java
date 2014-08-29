@@ -5,7 +5,7 @@ import de.fau.cs.mad.yasme.android.entities.Message;
 import java.util.List;
 
 /**
- * Created by robert on 11.07.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 11.07.14.
  */
 public interface MessageDAO extends DAO<Message> {
     /**

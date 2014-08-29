@@ -12,7 +12,7 @@ import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 
 /**
- * Created by robert on 30.07.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 30.07.14.
  */
 public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
     private Chat chat;

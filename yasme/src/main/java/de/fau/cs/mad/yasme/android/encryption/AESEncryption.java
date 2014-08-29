@@ -13,6 +13,10 @@ import javax.crypto.spec.SecretKeySpec;
 
 import de.fau.cs.mad.yasme.android.entities.MessageKey;
 
+/**
+ * Created by Marco Eberl <mfrankie89@aol.de> on 27.07.2014.
+ */
+
 public class AESEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64 {
 
     private static final int KEYSIZE = 16; //128bit

@@ -35,7 +35,7 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 
 /**
- * Created by martin on 21.06.2014.
+ * Created by Martin Sturm <martin@sturms.name> on 21.06.2014.
  */
 public class ChatFragment extends Fragment implements NotifiableFragment<List<Message>> {
     public static final String RESTORE_LATEST_MESSAGE_ON_DISPLAY = "LATEST_MESSAGE_ON_DISPLAY";

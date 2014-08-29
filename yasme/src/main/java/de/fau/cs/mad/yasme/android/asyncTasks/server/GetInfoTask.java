@@ -10,7 +10,7 @@ import de.fau.cs.mad.yasme.android.entities.ServerInfo;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 /**
- * Created by martin on 08.08.2014.
+ * Created by Martin Sturm <martin@sturms.name> on 08.08.2014.
  */
 public class GetInfoTask extends AsyncTask<Void, Void, Boolean> {
 

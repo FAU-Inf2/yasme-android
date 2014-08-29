@@ -11,7 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * Created by bene on 02.07.14.
+ * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 02.07.14.
  */
 public enum PictureManager {
     INSTANCE;

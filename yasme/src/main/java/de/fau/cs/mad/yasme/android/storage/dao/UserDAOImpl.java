@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Created by bene on 10.07.14.
+ * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 10.07.14.
  */
 public enum UserDAOImpl implements UserDAO {
     INSTANCE;

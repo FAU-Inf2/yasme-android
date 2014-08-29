@@ -33,6 +33,9 @@ import de.fau.cs.mad.yasme.android.storage.DebugManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatListActivity;
 
+/**
+ * Created by Robert Meissner <robert.meissner@studium.fau.de>
+ */
 
 public class LoginFragment extends Fragment implements NotifiableFragment<LoginFragment.LoginParam> {
 

@@ -1,6 +1,10 @@
 package de.fau.cs.mad.yasme.android.entities;
 
-//creator --> de
+
+/**
+ * Created by Marco Eberl <mfrankie89@aol.de> on 16.06.14.
+ * Created by Martin Sturm <martin@sturms.name>
+ */
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.j256.ormlite.field.DatabaseField;

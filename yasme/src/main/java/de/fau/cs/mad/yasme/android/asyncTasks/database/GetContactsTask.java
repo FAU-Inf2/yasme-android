@@ -15,7 +15,7 @@ import de.fau.cs.mad.yasme.android.ui.fragments.ContactListFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.InviteToChatFragment;
 
 /**
- * Created by robert on 29.07.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 29.07.14.
  */
 public class GetContactsTask extends AsyncTask<String, Void, Boolean> {
     private List<User> contacts;

@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by martin on 18.07.2014.
+ * Created by Martin Sturm <martin@sturms.name> on 18.07.2014.
  */
 public class Toaster {
     private static Toaster instance;

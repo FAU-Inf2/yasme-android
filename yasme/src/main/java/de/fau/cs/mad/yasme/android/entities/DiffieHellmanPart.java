@@ -1,7 +1,8 @@
 package de.fau.cs.mad.yasme.android.entities;
 
 /**
- * Created by florianwinklmeier on 16.06.14.
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 16.06.14.
+ * Created by Martin Sturm <martin@sturms.name>
  */
 public class DiffieHellmanPart {
 

@@ -13,7 +13,7 @@ import org.apache.http.client.utils.URIBuilder;
 import java.net.URISyntaxException;
 
 /**
- * Created by florianwinklmeier on 04.06.14.
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 04.06.14.
  */
 
 public class AuthorizationTask extends ConnectionTask {

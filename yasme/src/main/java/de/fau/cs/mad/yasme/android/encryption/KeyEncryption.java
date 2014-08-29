@@ -1,7 +1,7 @@
 package de.fau.cs.mad.yasme.android.encryption;
 
 /**
- * Created by Marco Eberl on 22.07.2014.
+ * Created by Marco Eberl <mfrankie89@aol.de> on 22.07.2014.
  */
 
 import android.content.Context;

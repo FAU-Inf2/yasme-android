@@ -16,7 +16,7 @@ import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 /**
- * Created by robert on 03.08.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.
  */
 public class ChangeOwnerTask extends AsyncTask<Long, Void, Boolean> {
     private Chat chat;

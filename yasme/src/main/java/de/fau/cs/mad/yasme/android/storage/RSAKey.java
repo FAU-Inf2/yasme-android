@@ -6,7 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import de.fau.cs.mad.yasme.android.entities.User;
 
 /**
- * Created by robert on 19.07.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 19.07.14.
  */
 @DatabaseTable(tableName = DatabaseConstants.RSA_KEY_TABLE)
 public class RSAKey {

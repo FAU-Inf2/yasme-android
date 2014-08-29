@@ -30,6 +30,10 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 16.06.14.
+ */
+
 public class UserTask extends ConnectionTask {
 
     private static UserTask instance;

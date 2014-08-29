@@ -9,7 +9,7 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import de.fau.cs.mad.yasme.android.controller.Log;
 
 /**
- * Created by florianwinklmeier on 19.06.14.
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 19.06.14.
  */
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 

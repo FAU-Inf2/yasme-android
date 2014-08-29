@@ -1,7 +1,7 @@
 package de.fau.cs.mad.yasme.android.entities;
 
 /**
- * Created by martin on 08.08.2014.
+ * Created by Martin Sturm <martin@sturms.name> on 08.08.2014.
  */
 public class ServerInfo {
     String message;

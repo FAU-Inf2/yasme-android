@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- * Created by robert on 12.07.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 12.07.14.
  */
 public class ChatAdapter extends ArrayAdapter<Message> {
     private final Context context;

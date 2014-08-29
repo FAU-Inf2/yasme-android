@@ -19,7 +19,7 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.RegisterFragment;
 
 /**
- * Created by robert on 19.06.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 19.06.14.
  */
 /**
  * Represents an asynchronous task used to register the user.

@@ -21,6 +21,9 @@ import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.ui.fragments.InviteToChatFragment.AllUsersFetchedParam;
 
+/**
+ * Created by Stefan Ettl <stefan.ettl@fau.de>
+ */
 
 public class ContactListFragment extends Fragment implements AbsListView.OnItemClickListener, NotifiableFragment<AllUsersFetchedParam> {
 

@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 
 /**
- * Created by Stefan on 15.05.14.
+ * Created by Stefan Ettl <stefan.ettl@fau.de> on 15.05.14.
+ * Created by Cuong Bui <cuong.bui@fau.de>
  */
 
 public class OwnDevice {

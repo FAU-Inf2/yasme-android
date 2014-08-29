@@ -20,7 +20,7 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseHelper;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 /**
- * Created by bene on 11.07.14.
+ * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 11.07.14.
  */
 public enum ChatDAOImpl implements ChatDAO {
     INSTANCE;

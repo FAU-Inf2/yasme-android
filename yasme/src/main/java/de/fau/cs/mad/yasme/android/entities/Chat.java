@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by robert on 28.05.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 28.05.14.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @DatabaseTable(tableName = DatabaseConstants.CHAT_TABLE)

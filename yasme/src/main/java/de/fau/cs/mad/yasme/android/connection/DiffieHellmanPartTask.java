@@ -17,7 +17,9 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
 /**
- * Created by florianwinklmeier on 16.06.14.
+ * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 16.06.14.
+ * Created by Marco Eberl <mfrankie89@aol.de>
+ * Created by Martin Sturm <martin@sturms.name>
  */
 public class DiffieHellmanPartTask extends ConnectionTask {
 

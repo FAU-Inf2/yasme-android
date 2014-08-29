@@ -5,7 +5,7 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import java.util.List;
 
 /**
- * Created by bene on 10.07.14.
+ * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 10.07.14.
  */
 public interface UserDAO extends DAO<User> {
 

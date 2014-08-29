@@ -20,7 +20,7 @@ import de.fau.cs.mad.yasme.android.storage.dao.UserDAO;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
 
 /**
- * Created by robert on 07.07.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 07.07.14.
  */
 public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
 

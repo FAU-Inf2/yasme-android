@@ -12,7 +12,7 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 
 /**
- * Created by robert on 19.06.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 19.06.14.
  */
 public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
 

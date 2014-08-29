@@ -11,6 +11,10 @@ import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatFragment;
 
+/**
+ * Created by Robert Meissner <robert.meissner@studium.fau.de>
+ */
+
 public class ChatActivity extends AbstractYasmeActivity {
 
 	@Override

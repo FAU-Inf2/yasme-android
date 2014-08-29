@@ -22,7 +22,7 @@ import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsInfo;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsRemove;
 
 /**
- * Created by robert on 28.07.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 28.07.14.
  */
 public class ChatSettingsActivity extends AbstractYasmeActivity {
     /**

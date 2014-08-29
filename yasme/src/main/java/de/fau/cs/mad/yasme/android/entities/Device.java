@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 
 /**
- * Created by Martin on 24.07.14.
+ * Created by Martin Sturm <martin@sturms.name> on 24.07.14.
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)

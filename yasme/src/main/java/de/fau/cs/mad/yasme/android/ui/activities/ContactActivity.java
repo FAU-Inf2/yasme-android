@@ -24,6 +24,10 @@ import de.fau.cs.mad.yasme.android.ui.fragments.OwnProfileFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.SearchContactFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.UserDetailsFragment;
 
+/**
+ * Created by Stefan Ettl <stefan.ettl@fau.de>
+ */
+
 public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener, SearchContactFragment.OnSearchFragmentInteractionListener, OwnProfileFragment.OnOwnProfileFragmentInteractionListener {
 
     public static final String SEARCH_FOR_CONTACTS = "search_for_new_contacts";

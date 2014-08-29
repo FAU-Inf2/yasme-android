@@ -18,6 +18,11 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+/**
+ * Created by Martin Sturm <martin@sturms.name> on 08.08.2014.
+ * Created by Marco Eberl <mfrankie89@aol.de>
+ */
+
 public class MessageKeyTask extends ConnectionTask {
 
     private static MessageKeyTask instance;

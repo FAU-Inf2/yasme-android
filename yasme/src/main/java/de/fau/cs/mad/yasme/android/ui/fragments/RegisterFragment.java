@@ -26,7 +26,7 @@ import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 
 /**
- * Created by robert on 06.07.14.
+ * Created by Robert Meissner <robert.meissner@studium.fau.de> on 06.07.14.
  */
 public class RegisterFragment extends Fragment implements NotifiableFragment<RegisterFragment.RegistrationParam> {
 
