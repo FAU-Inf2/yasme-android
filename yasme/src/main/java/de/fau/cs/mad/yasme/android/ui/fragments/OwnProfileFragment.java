@@ -18,11 +18,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import de.fau.cs.mad.yasme.android.asyncTasks.server.SetProfileDataTask;
+import de.fau.cs.mad.yasme.android.connection.UserTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
+import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
@@ -80,9 +83,11 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 				name.setFocusableInTouchMode(true);
 				// Save name in android device
 				User u = activity.getSelfUser();
+				Log.d(this.getClass().getSimpleName(),"Before Name of user is" + u.getName());
 				u.setName(name.getText().toString());
-				Log.d(this.getClass().getSimpleName(),"Name of user is" + u.getName());
-				for(User i : DatabaseManager.INSTANCE.getUserDAO().getAll()) Log.i("List",i.getName());
+				Log.d(this.getClass().getSimpleName(),"After Name of user is" + u.getName());
+//				for(User i : DatabaseManager.INSTANCE.getUserDAO().getAll()) Log.i("List",i.getName());
+				new SetProfileDataTask(new User()).execute();
 				return true;
 			}
 		});
