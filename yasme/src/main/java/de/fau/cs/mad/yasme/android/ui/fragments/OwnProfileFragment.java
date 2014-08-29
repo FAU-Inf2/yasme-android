@@ -16,12 +16,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 
@@ -68,18 +71,23 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				// If the event isn't a key-down event on the "enter" button, skip this.
 				if (!((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER))) return false;
+				AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
 				// Hide virtual keyboard
-				InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+				InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(name.getWindowToken(), 0);
 				// Set Focus away from edittext
 				name.setFocusable(false);
 				name.setFocusableInTouchMode(true);
+				// Save name in android device
+				User u = activity.getSelfUser();
+				u.setName(name.getText().toString());
+				Log.d(this.getClass().getSimpleName(),"Name of user is" + u.getName());
+				for(User i : DatabaseManager.INSTANCE.getUserDAO().getAll()) Log.i("List",i.getName());
 				return true;
 			}
 		});
 
 		User self = activity.getSelfUser();
-
 		name.setText(self.getName());
 		email.setText(self.getEmail());
 
