@@ -84,6 +84,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 				// Save name in android device
 				User u = activity.getSelfUser();
 				u.setName(name.getText().toString());
+				long t = -1;
+				u.setId(t);
 				new SetProfileDataTask(u).execute();
 				return true;
 			}
