@@ -2,4 +2,7 @@
 <resources>
     <string name="title_settings">Settings</string>
 
+    <string name="notification_settings">Notifications</string>
+    <string name="notification_sound">Sound</string>
+    <string name="notification_vibration">Vibration</string>
 </resources>
