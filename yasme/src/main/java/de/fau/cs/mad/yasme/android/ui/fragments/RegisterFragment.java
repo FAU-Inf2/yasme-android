@@ -165,18 +165,30 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
 
                         if(checkBox.isChecked()) {
 														AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-														View focus = activity.getCurrentFocus();
 														Log.e("OOOOOOOO",name+" "+mail+" "+password+" "+passwordCheck+" "+checkBox);
 														IBinder ib = null;
-														if(null==ib && null!=focus) ib=focus.getWindowToken();
-														if(null==ib && null!=checkBox) ib=checkBox.getWindowToken();
-														if(null==ib && null!=passwordCheck) ib=passwordCheck.getWindowToken();
-														if(null==ib && null!=password) ib=password.getWindowToken();
-														if(null==ib && null!=mail) ib=mail.getWindowToken();
-														if(null==ib && null!=name) ib=name.getWindowToken();
-														Log.e("OOOOOOOO",ib+"");
 														InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-														if(null!=imm && null!=ib) imm.hideSoftInputFromWindow(ib, 0);
+														boolean flag=false;
+														View focus = activity.getCurrentFocus();
+														if(null!=focus) ib=focus.getWindowToken();
+														if(null!=imm && null!=ib) flag=imm.hideSoftInputFromWindow(ib, 0);
+														Log.e("O","focus: "+flag);
+														if(null!=checkBox) ib=checkBox.getWindowToken();
+														if(null!=imm && null!=ib) flag=imm.hideSoftInputFromWindow(ib, 0);
+														Log.e("O","checkBox: "+flag);
+														if(null!=passwordCheck) ib=passwordCheck.getWindowToken();
+														if(null!=imm && null!=ib) flag=imm.hideSoftInputFromWindow(ib, 0);
+														Log.e("O","passwordCheck: "+flag);
+														if(null!=password) ib=password.getWindowToken();
+														if(null!=imm && null!=ib) flag=imm.hideSoftInputFromWindow(ib, 0);
+														Log.e("O","password: "+flag);
+														if(null!=mail) ib=mail.getWindowToken();
+														if(null!=imm && null!=ib) flag=imm.hideSoftInputFromWindow(ib, 0);
+														Log.e("O","mail: "+flag);
+														if(null!=name) ib=name.getWindowToken();
+														if(null!=imm && null!=ib) flag=imm.hideSoftInputFromWindow(ib, 0);
+														Log.e("O","name: "+flag);
+														Log.e("OOOOOOOO",ib+"");
                             new UserRegistrationTask(RegisterFragment.class)
                                     .execute(inputName, inputMail, inputPassword, inputPasswordCheck,
                                             this.getClass().getName());
