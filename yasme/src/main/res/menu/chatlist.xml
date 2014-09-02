@@ -4,32 +4,31 @@
 
     <item
         android:id="@+id/action_add_chat"
+        android:icon="@drawable/ic_action_add_group"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:title="@string/action_add_chat"
-        android:icon="@drawable/ic_action_add_group"/>
+        android:title="@string/action_add_chat"/>
 
     <item
         android:id="@+id/action_contacts"
+        android:icon="@drawable/ic_action_cc_bcc"
         android:orderInCategory="200"
         android:showAsAction="ifRoom"
-        android:title="@string/action_contacts"
-        android:icon="@drawable/ic_action_cc_bcc"/>
+        android:title="@string/action_contacts"/>
 
     <item
-        android:visible="false"
         android:id="@+id/action_settings"
+        android:icon="@drawable/ic_action_settings"
         android:orderInCategory="300"
         android:showAsAction="never"
-        android:title="@string/action_settings"
-        android:icon="@drawable/ic_action_settings"/>
+        android:title="@string/action_settings"/>
 
     <item
-        android:visible="false"
         android:id="@+id/sign_out"
+        android:icon="@drawable/ic_action_chat"
         android:orderInCategory="400"
         android:showAsAction="never"
         android:title="Sign out"
-        android:icon="@drawable/ic_action_chat"/>
+        android:visible="false"/>
 
 </menu>
