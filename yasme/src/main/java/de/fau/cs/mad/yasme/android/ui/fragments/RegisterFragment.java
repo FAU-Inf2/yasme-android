@@ -144,8 +144,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                         String inputName = name.getText().toString();
                         String inputMail = mail.getText().toString();
                         String inputPassword = password.getText().toString();
-                        String inputPasswordCheck = passwordCheck.getText()
-                                .toString();
+                        String inputPasswordCheck = passwordCheck.getText().toString();
 
                         RegisterFragment.inputName = inputName;
                         RegisterFragment.inputMail = inputMail;
