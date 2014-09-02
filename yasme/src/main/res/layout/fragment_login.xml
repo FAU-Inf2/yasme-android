@@ -104,9 +104,7 @@
                 android:layout_height="fill_parent"
                 android:layout_margin="@dimen/activity_vertical_margin"
                 android:layout_weight="2"
-                android:background="@color/yasme_brombeer"
-                android:text="@string/action_register"
-                android:textColor="@android:color/white" />
+                android:text="@string/action_register" />
 
             <Button
                 android:id="@+id/sign_in_button"
@@ -114,10 +112,8 @@
                 android:layout_height="fill_parent"
                 android:layout_margin="@dimen/activity_vertical_margin"
                 android:layout_weight="2"
-                android:background="@color/yasme_brombeer"
                 android:enabled="true"
-                android:text="@string/action_sign_in"
-                android:textColor="@android:color/white" />
+                android:text="@string/action_sign_in" />
 
         </LinearLayout>
 
