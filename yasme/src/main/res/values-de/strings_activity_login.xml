@@ -28,7 +28,7 @@
 
     <string name="read_TOU_start">Hiermit bestätige ich, dass ich die</string>
     <string name="read_TOU_end">gelesen und akzeptiert habe</string>
-    <string name="no_TOU_toast">Bitte bestätige unsere</string>
+    <string name="no_TOU_toast">Bitte bestätige unsere Nutzungsbedingungen</string>
     <string name="agree_title"></string>
     <string name="agree"></string>
     <string name="privacy_policy_link"></string>

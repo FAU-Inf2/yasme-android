@@ -144,8 +144,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                         String inputName = name.getText().toString();
                         String inputMail = mail.getText().toString();
                         String inputPassword = password.getText().toString();
-                        String inputPasswordCheck = passwordCheck.getText()
-                                .toString();
+                        String inputPasswordCheck = passwordCheck.getText().toString();
 
                         RegisterFragment.inputName = inputName;
                         RegisterFragment.inputMail = inputMail;
@@ -165,17 +164,9 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
 
                         if(checkBox.isChecked()) {
 														AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-														View focus = activity.getCurrentFocus();
-														Log.e("OOOOOOOO",name+" "+mail+" "+password+" "+passwordCheck+" "+checkBox);
 														IBinder ib = null;
-														if(null==ib && null!=focus) ib=focus.getWindowToken();
-														if(null==ib && null!=checkBox) ib=checkBox.getWindowToken();
-														if(null==ib && null!=passwordCheck) ib=passwordCheck.getWindowToken();
-														if(null==ib && null!=password) ib=password.getWindowToken();
-														if(null==ib && null!=mail) ib=mail.getWindowToken();
-														if(null==ib && null!=name) ib=name.getWindowToken();
-														Log.e("OOOOOOOO",ib+"");
 														InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+														if(null!=checkBox) ib=checkBox.getWindowToken();
 														if(null!=imm && null!=ib) imm.hideSoftInputFromWindow(ib, 0);
                             new UserRegistrationTask(RegisterFragment.class)
                                     .execute(inputName, inputMail, inputPassword, inputPasswordCheck,
