@@ -6,10 +6,9 @@
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/context_show_settings" />
 
-    <!--
+
     <item android:id="@+id/context_leave"
         android:icon="@android:drawable/ic_delete"
         android:title="@string/context_leave" />
-    -->
 
 </menu>
