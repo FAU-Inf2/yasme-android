@@ -32,7 +32,7 @@ public enum DatabaseManager {
     private String mAccessToken = null;
     private long serverInfoUpdateTime = -1;
     private ServerInfo serverInfo = null;
-    private SharedPreferences mSharedPreferences;
+    private SharedPreferences mSharedPreferences, mSettings;
     private String mUserEmail;
     private NewMessageNotificationManager notifier = null;
 
@@ -43,9 +43,11 @@ public enum DatabaseManager {
     private DeviceDAO deviceDAO;
 
 
-    public void init(Context context, SharedPreferences sharedPreferences, long userId) {
+    public void init(Context context, SharedPreferences sharedPreferences,
+                     SharedPreferences settings, long userId) {
         mContext = context;
         mSharedPreferences = sharedPreferences;
+        mSettings = settings;
         mUserId = userId;
         initDB(context, userId);
         initializeDAOs();
@@ -71,6 +73,10 @@ public enum DatabaseManager {
 
     public SharedPreferences getSharedPreferences() {
         return mSharedPreferences;
+    }
+
+    public SharedPreferences getSettings() {
+        return mSettings;
     }
 
     public Context getContext() {

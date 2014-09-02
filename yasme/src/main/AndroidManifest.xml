@@ -79,8 +79,17 @@
             android:name="de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity"
             android:label="@string/title_chat_settings"
             android:parentActivityName="de.fau.cs.mad.yasme.android.ui.activities.ChatActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.fau.cs.mad.yasme.android.ui.activities.ChatActivity"/>
+        </activity>
+        <activity
+            android:name="de.fau.cs.mad.yasme.android.ui.activities.SettingsActivity"
+            android:label="@string/title_settings"
+            android:parentActivityName="de.fau.cs.mad.yasme.android.ui.activities.ChatListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.fau.cs.mad.yasme.android.ui.activities.ChatListActivity"/>
         </activity>
     </application>
 </manifest>

@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="de.fau.cs.mad.yasme.android.ui.activities.LoginActivity" >
 
     <!-- Login progress -->
@@ -13,10 +13,10 @@
         android:id="@+id/login_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
         android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ProgressBar
             android:id="@+id/login_progress"
@@ -39,27 +39,28 @@
     <RelativeLayout
         android:id="@+id/login"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true">
 
         <ScrollView
             android:id="@+id/login_form"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerVertical="true">
+            android:layout_above="@+id/linearLayout">
 
             <LinearLayout
                 style="@style/LoginFormContainer"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <EditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
+                    android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:singleLine="true"
-                    android:inputType="textEmailAddress" />
+                    android:singleLine="true" />
 
                 <EditText
                     android:id="@+id/password"
@@ -74,42 +75,49 @@
                     android:singleLine="true" />
 
                 <CheckBox
+                    android:id="@+id/checkBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/save_values"
-                    android:id="@+id/checkBox"
-                    android:layout_gravity="right"
                     android:layout_alignBottom="@+id/login_form"
-                    android:layout_alignParentRight="true" />
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
+                    android:text="@string/save_values" />
 
             </LinearLayout>
         </ScrollView>
 
+        <!-- Buttons -->
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/linearLayout"
-            android:orientation="horizontal"
-            android:measureWithLargestChild="false"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:measureWithLargestChild="false"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/register_button"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:layout_weight="2"
+                android:background="@color/yasme_brombeer"
                 android:text="@string/action_register"
-                android:layout_weight="2" />
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/sign_in_button"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="@string/action_sign_in"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:layout_weight="2"
+                android:background="@color/yasme_brombeer"
                 android:enabled="true"
-                android:layout_weight="2" />
+                android:text="@string/action_sign_in"
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
 
