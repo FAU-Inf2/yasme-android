@@ -253,7 +253,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
             layout.addView(list, layoutParams);
             alert.setView(layout);
 
-            alert.setPositiveButton(R.string.OK,
+            alert.setPositiveButton(R.string.change_and_leave_chat,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             int position = list.getCheckedItemPosition();
