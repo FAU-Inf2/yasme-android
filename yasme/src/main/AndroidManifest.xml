@@ -6,17 +6,18 @@
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="19"/>
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
 
     <permission
-        android:name=".gcm.permission.C2D_MESSAGE"
+        android:name="de.fau.cs.mad.yasme.android.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name=".gcm.permission.C2D_MESSAGE" />
+    <uses-permission
+				android:name="de.fau.cs.mad.yasme.android.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
@@ -29,7 +30,7 @@
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name=".gcm" />
+                <category android:name="de.fau.cs.mad.yasme.android" />
             </intent-filter>
         </receiver>
 

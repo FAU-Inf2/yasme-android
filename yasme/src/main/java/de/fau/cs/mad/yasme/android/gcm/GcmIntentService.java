@@ -48,7 +48,10 @@ public class GcmIntentService extends IntentService {
                 Log.d(this.getClass().getSimpleName(), "Received message with type message from GCM");
                 if (extras.containsKey("type") && extras.get("type").equals("msg")) {
                     new GetMessageTask(ChatFragment.class).execute();
-                }
+                } else if (extras.containsKey("type") && extras.get("type").equals("usr")) {
+										Log.d("OOOOOOOOOOOOOOOOOOO","GOT TO UPDATE MY USR DB");
+//										new GetUserTask(ChatFragment.class).execute();
+								}
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
