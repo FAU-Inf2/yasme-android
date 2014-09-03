@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
@@ -29,7 +29,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
     private TextView name;
     private ImageView profilePicture;
-    private TextView email;
+    private TextView email, id;
     //private TextView number;
 
     //private ImageButton imageButton;
@@ -59,12 +59,14 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
         name = (TextView) layout.findViewById(R.id.own_profile_header);
         email = (TextView) layout.findViewById(R.id.own_profile_email);
+        id = (TextView) layout.findViewById(R.id.own_profile_id);
         profilePicture = (ImageView) layout.findViewById(R.id.own_profile_picture);
 
         User self = activity.getSelfUser();
 
         name.setText(self.getName());
         email.setText(self.getEmail());
+        id.setText("" + self.getId());
 
         // Show nice profile picture
         profilePicture.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);

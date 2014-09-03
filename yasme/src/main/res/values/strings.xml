@@ -71,6 +71,7 @@
 
     <!-- Own profile -->
     <string name="own_profile_email">Email</string>
+    <string name="own_profile_id">YD</string>
 
     <!-- Settings -->
     <string name="action_settings">Settings</string>
