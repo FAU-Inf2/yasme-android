@@ -12,6 +12,7 @@ import de.fau.cs.mad.yasme.android.controller.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetMessageTask;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.GetUserTask;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatFragment;
 
 
@@ -49,14 +50,15 @@ public class GcmIntentService extends IntentService {
                 if (extras.containsKey("type") && extras.get("type").equals("msg")) {
                     new GetMessageTask(ChatFragment.class).execute();
                 } else if (extras.containsKey("type") && extras.get("type").equals("usr")) {
-										String userId = (String) extras.get("extra");
-										if(!(extras.containsKey("extra") && userId.matches("[0-9]+"))) {
+										String userIdS = (String) extras.get("extra");
+										if(!(extras.containsKey("extra") && userIdS.matches("[0-9]+"))) {
 											Log.e(this.getClass().getSimpleName(), "User id in extra message from GCM was not a numeral.");
         							GcmBroadcastReceiver.completeWakefulIntent(intent);
 											return;
 										}
-										Log.d("OOOOOOOOOOOOOOOOOOO","GOT TO UPDATE MY USR DB for id " + userId);
-//										new GetUserTask(ChatFragment.class).execute();
+										Long userId = Long.parseLong(userIdS);
+										Log.d("OOOOOOOOOOOOOOOOOOO","GOT TO UPDATE MY USR DB for id " + userId.toString());
+										new GetUserTask(ChatFragment.class,userId).execute();
 								}
             }
         }
