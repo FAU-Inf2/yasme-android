@@ -71,6 +71,12 @@ Copyright 2014 Yasme.
 
 Licensed under the [MIT license][ml].
 
+
+Legal
+-----
+You can find our [Terms Of Service][tos] and our [Privacy Policy][pp] in the legal folder
+
+
 Libraries used for YASME
 ------------------------
 * [**ORMLite**][orm] "Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that this permission notice appear in all copies." http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite_9.html#License 
@@ -111,5 +117,7 @@ Feel free to contact us: <yasme@i2.cs.fau.de>
 [ans]:http://developer.android.com/reference/android/support/v4/app/package-summary.html
 [apl]:http://hc.apache.org/httpcomponents-client-4.3.x/license.html
 [apl2]:http://www.apache.org/licenses/LICENSE-2.0.txt
-[fxml]:https://github.com/FasterXML/jackson-core/wiki 
+[fxml]:https://github.com/FasterXML/jackson-core/wiki
+[tos]:https://github.com/FAU-Inf2/yasme-android/blob/master/legal/termsOfService
+[pp]: https://github.com/FAU-Inf2/yasme-android/blob/master/legal/privacyPolicy
 
