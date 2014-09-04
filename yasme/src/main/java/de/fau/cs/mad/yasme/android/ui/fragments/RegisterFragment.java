@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.text.InputType;
 import android.text.util.Linkify;
 import android.view.inputmethod.InputMethodManager;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -123,7 +122,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         });
 
 
-        if(acceptedTos) {
+        if (acceptedTos) {
             checkBox.setError(getString(R.string.no_TOU_toast) + " " + getString(R.string.TOU_link));
         }
 
@@ -162,12 +161,12 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                             return;
                         }
 
-                        if(checkBox.isChecked()) {
-														AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-														IBinder ib = null;
-														InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-														if(null!=checkBox) ib=checkBox.getWindowToken();
-														if(null!=imm && null!=ib) imm.hideSoftInputFromWindow(ib, 0);
+                        if (checkBox.isChecked()) {
+                            AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+                            IBinder ib = null;
+                            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                            if (null != checkBox) ib = checkBox.getWindowToken();
+                            if (null != imm && null != ib) imm.hideSoftInputFromWindow(ib, 0);
                             new UserRegistrationTask(RegisterFragment.class)
                                     .execute(inputName, inputMail, inputPassword, inputPasswordCheck,
                                             this.getClass().getName());

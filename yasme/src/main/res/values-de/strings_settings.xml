@@ -6,4 +6,6 @@
     <string name="notification_sound">Sound</string>
     <string name="notification_vibration">Vibration</string>
 
+    <string name="legal">Legal</string>
+    <string name="about">About</string>
 </resources>

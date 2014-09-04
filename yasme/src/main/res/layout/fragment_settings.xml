@@ -45,117 +45,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/linearLayout"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:baselineAligned="false">
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text" />
+            android:text="@string/about"
+            android:id="@+id/about"
+            android:layout_gravity="right" />
 
-        <Switch
-            android:id="@+id/switch3"
-            android:layout_width="match_parent"
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Switch" />
-
-        <Switch
-            android:id="@+id/switch4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Switch" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/linearLayout"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Text" />
-
-        <Switch
-            android:id="@+id/switch5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Switch" />
-
-        <Switch
-            android:id="@+id/switch6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Switch" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/linearLayout"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Text" />
-
-        <Switch
-            android:id="@+id/switch7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Switch" />
-
-        <Switch
-            android:id="@+id/switch8"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Switch" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/linearLayout"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Text" />
-
-        <Switch
-            android:id="@+id/switch9"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Switch" />
-
-        <Switch
-            android:id="@+id/switch10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Switch" />
+            android:text="@string/legal"
+            android:id="@+id/legal"
+            android:layout_gravity="right" />
     </LinearLayout>
 
 </LinearLayout>
