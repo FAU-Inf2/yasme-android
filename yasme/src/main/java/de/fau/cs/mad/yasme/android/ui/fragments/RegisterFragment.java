@@ -9,7 +9,6 @@ import android.text.util.Linkify;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.regex.Matcher;
@@ -38,38 +37,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerDialog(false);
-    }
-
-    private void agreeDialog() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setTitle(getString(R.string.agree_title));
-
-        LinearLayout list = new LinearLayout(getActivity());
-        list.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-
-        TextView notice = new TextView(getActivity());
-        TextView tou = new TextView(getActivity());
-        TextView privacyPolicy = new TextView(getActivity());
-
-        notice.setText(getString(R.string.no_TOU_toast));
-
-        list.addView(notice, layoutParams);
-
-        alert.setView(list);
-
-        // "OK" button to save the values
-        alert.setPositiveButton(R.string.agree,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        registerDialog(true);
-                    }
-                }
-        );
-        alert.show();
+        registerDialog(true);
     }
 
     private void registerDialog(final boolean acceptedTos) {
@@ -100,27 +68,35 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         passwordCheck.setHint(R.string.registration_repeat_password);
         passwordCheck.setText(inputPass2);
 
-        String checkBoxText = getString(R.string.read_TOU_start) + " " +
-                getString(R.string.TOU_link) + " " +
-                getString(R.string.read_TOU_end);
+        String checkBoxText = getString(R.string.read_TOS_start) + " " +
+                getString(R.string.TOS) + " " +
+                getString(R.string.read_TOS_middle) + " " +
+                getString(R.string.privacy_policy) + " " +
+                getString(R.string.read_TOS_end);
 
         final CheckBox checkBox = new CheckBox(getActivity());
-        //checkBox.setMovementMethod(LinkMovementMethod.getInstance());
-        //checkBox.setClickable(true);
-        //checkBox.setText(Html.fromHtml(checkBoxText));
         checkBox.setText(checkBoxText);
 
-        Pattern pattern = Pattern.compile("Terms Of Use");
+        Pattern pattern = Pattern.compile(getString(R.string.TOS));
         Linkify.addLinks(checkBox, pattern, "", null, new Linkify.TransformFilter() {
             @Override
             public String transformUrl(Matcher matcher, String s) {
-                return getString(R.string.TOU_url);
+                return getString(R.string.TOS_url);
+            }
+        });
+        pattern = Pattern.compile(getString(R.string.privacy_policy));
+        Linkify.addLinks(checkBox, pattern, "", null, new Linkify.TransformFilter() {
+            @Override
+            public String transformUrl(Matcher matcher, String s) {
+                return getString(R.string.privacy_policy_url);
             }
         });
 
-
-        if(acceptedTos) {
-            checkBox.setError(getString(R.string.no_TOU_toast) + " " + getString(R.string.TOU_link));
+        if(!acceptedTos) {
+            checkBox.setError(getString(R.string.no_TOS_toast) + " " +
+                    getString(R.string.TOS) + " " +
+                    getString(R.string.read_TOS_middle) + " " +
+                    getString(R.string.privacy_policy));
         }
 
         list.addView(name, layoutParams);
@@ -164,8 +140,12 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                                     .execute(inputName, inputMail, inputPassword, inputPasswordCheck,
                                             this.getClass().getName());
                         } else {
-                            Toaster.getInstance().toast(R.string.no_TOU_toast, Toast.LENGTH_LONG);
-                            registerDialog(true);
+                            Toaster.getInstance().toast(
+                                    getString(R.string.no_TOS_toast) + " " +
+                                    getString(R.string.TOS) + " " +
+                                    getString(R.string.read_TOS_middle) + " " +
+                                    getString(R.string.privacy_policy), Toast.LENGTH_LONG);
+                            registerDialog(false);
                         }
                     }
                 }
