@@ -67,14 +67,15 @@ To contribute to our project:
 License
 -------
 
-Copyright 2014 Yasme.
+Copyright 2014 Yasme. 
+The license can be found [here][li].
 
 Licensed under the [MIT license][ml].
 
 
 Legal
 -----
-You can find our [Terms Of Service][tos] and our [Privacy Policy][pp] in the legal folder
+You can find our [Terms Of Service][tos] and our [Privacy Policy][pp] in the legal folder.
 
 
 Libraries used for YASME
@@ -120,4 +121,5 @@ Feel free to contact us: <yasme@i2.cs.fau.de>
 [fxml]:https://github.com/FasterXML/jackson-core/wiki
 [tos]:https://github.com/FAU-Inf2/yasme-android/blob/master/legal/termsOfService
 [pp]: https://github.com/FAU-Inf2/yasme-android/blob/master/legal/privacyPolicy
+[li]: https://github.com/FAU-Inf2/yasme-android/blob/master/LICENSE
 
