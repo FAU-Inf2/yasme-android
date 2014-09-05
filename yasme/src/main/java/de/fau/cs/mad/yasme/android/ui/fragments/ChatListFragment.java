@@ -1,9 +1,10 @@
 package de.fau.cs.mad.yasme.android.ui.fragments;
 
+import android.app.AlertDialog;
 import android.app.ListFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -11,17 +12,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetAllTask;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeOwnerAndLeaveTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetMessageTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetMyChatsTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetProfileDataTask;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.LeaveChatTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.Chat;
@@ -148,12 +155,88 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
                 intent.putExtra(ChatSettingsActivity.CHAT_ID, chat.getId());
                 startActivity(intent);
                 return true;
-
+            case R.id.context_leave:
+                handleLeaveChat(chat);
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }
     }
 
+    private void handleLeaveChat(final Chat chat) {
+        boolean isOwner = (chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId());
+        if (isOwner) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setTitle(getActivity().getString(R.string.alert_owner));
+
+            LinearLayout layout = new LinearLayout(getActivity());
+            layout.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+
+            TextView text = new TextView(getActivity());
+            text.setText(getActivity().getString(R.string.alert_owner_message));
+
+            final ListView list = new ListView(getActivity());
+            list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            List<String> participantNames = new ArrayList<>();
+            for(User u : chat.getParticipants()) {
+                if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
+                    continue;
+                }
+                participantNames.add(u.getName());
+            }
+            final ArrayAdapter<List<User>> adapter = new ArrayAdapter<List<User>>(getActivity(),
+                    android.R.layout.simple_list_item_single_choice, (List) participantNames);
+            list.setAdapter(adapter);
+
+            layout.addView(text, layoutParams);
+            layout.addView(list, layoutParams);
+            alert.setView(layout);
+
+            alert.setPositiveButton(R.string.change_and_leave_chat,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            int position = list.getCheckedItemPosition();
+                            if(position != AdapterView.INVALID_POSITION) {
+                                Long newUserId = chat.getParticipants().get(position).getId();
+                                new ChangeOwnerAndLeaveTask(chat).execute(newUserId);
+                            }
+                        }
+                    }
+            );
+            alert.setNegativeButton(R.string.cancel,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.cancel();
+                        }
+                    }
+            );
+            alert.show();
+        } else {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setTitle(getActivity().getString(R.string.alert_leave));
+            alert.setMessage(getActivity().getString(R.string.alert_leave_message));
+
+            alert.setPositiveButton(R.string.leave_chat,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
+                            new  LeaveChatTask(chat).execute();
+                            dialog.dismiss();
+                        }
+                    });
+            alert.setNegativeButton(R.string.cancel,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+            alert.show();
+        }
+    }
 
     public void showChat(long chatId) {
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();

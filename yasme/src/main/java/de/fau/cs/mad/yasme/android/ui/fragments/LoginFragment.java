@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -197,6 +199,23 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             loginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
 
+            // Hide the virtual keyboard
+            AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+            View focus = activity.getCurrentFocus();
+            if (null == focus) {
+                focus = focusView;
+            }
+            if (null == focus) {
+                focus = passwordView;
+            }
+            if (null == focus) {
+                focus = emailView;
+            }
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (null != imm && null != focus)
+                imm.hideSoftInputFromWindow(focus.getWindowToken(), 0);
+
+            // Start the asynctask
             authTask.execute(emailTmp, passwordTmp);
             authTask = null;
         }
@@ -206,7 +225,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
 
         activity.getSelfUser().setId(userId);
-        SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
 
         if (success) {
             //Initialize database (once in application)
@@ -234,7 +252,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 startActivity(intent);
                 getActivity().finish();
             } else {
-                // TODO register device
+                // register device
                 Log.d(this.getClass().getSimpleName(), "Device does not exist in Database");
                 Log.d(this.getClass().getSimpleName(), "Starting task to register device at yasme server");
 
@@ -242,7 +260,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                         .execute(Long.toString(userId), this.deviceProduct, this.getClass().getName());
 
             }
-            editor.commit();
         } else {
             Log.d(getClass().getSimpleName(), "Login failed");
             ServerInfo serverInfo = DatabaseManager.INSTANCE.getServerInfo();
@@ -252,7 +269,6 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 passwordView.setError(getString(R.string.error_incorrect_user_or_password));
             }
             passwordView.requestFocus();
-            editor.commit();
             showProgress(false);
         }
     }
@@ -260,19 +276,20 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
     public void onPostYasmeDeviceRegExecute(Boolean success, long deviceId) {
         if (!success) {
             Toaster.getInstance().toast(getResources().getString(R.string.device_registration_failed), Toast.LENGTH_LONG);
-        }
-        else {
+        } else {
             AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
             // Initialize the session a second time because the deviceId was missing
-            SharedPreferences devicePrefs = activity.getSharedPreferences(
+            /*SharedPreferences devicePrefs = activity.getSharedPreferences(
                     AbstractYasmeActivity.DEVICE_PREFS,
                     AbstractYasmeActivity.MODE_PRIVATE);
             long userId = devicePrefs.getLong(AbstractYasmeActivity.USER_ID, -1);
             if (userId < 0) {
                 // Error ocurred
                 Log.e(this.getClass().getSimpleName(), "Did not find user id in shared prefs");
+                Toaster.getInstance().toast(getResources().getString(R.string.device_registration_failed), Toast.LENGTH_LONG);
+                showProgress(false);
                 return;
-            }
+            }*/
 
             DatabaseManager.INSTANCE.setDeviceId(deviceId);
 

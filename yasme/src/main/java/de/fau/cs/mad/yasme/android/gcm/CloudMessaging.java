@@ -64,6 +64,7 @@ public class CloudMessaging {
     public String getRegistrationId() {
         final SharedPreferences prefs = getGCMPreferences(context);
         String registrationId = prefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID, "");
+        Log.i(AbstractYasmeActivity.TAG+"WOOOOOLOOOLOOOO", "this is my id: [" + AbstractYasmeActivity.PROPERTY_REG_ID + "]");
         if (registrationId.isEmpty()) {
             Log.i(AbstractYasmeActivity.TAG, "Registration not found.");
             return "";

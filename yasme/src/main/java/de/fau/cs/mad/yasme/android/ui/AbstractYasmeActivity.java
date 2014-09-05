@@ -4,15 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.NavUtils;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.BuildConfig;
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.ConnectionTask;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.controller.Toastable;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
@@ -22,6 +21,7 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatListActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.InviteToChatActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.LoginActivity;
+import de.fau.cs.mad.yasme.android.ui.activities.SettingsActivity;
 
 
 /**
@@ -44,8 +44,12 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     public final static String SERVERMESSAGE = "de.fau.cs.mad.yasme.android.SERVERMESSAGE";
 
     public final static String STORAGE_PREFS = "de.fau.cs.mad.yasme.android.STORAGE_PREFS";
-    public final static String DEVICE_PREFS = "de.fau.cs.mad.yasme.android.STORAGE_PREFS";
-    public final static String PUSH_PREFS = "de.fau.cs.mad.yasme.android.STORAGE_PREFS";
+    public final static String SETTINGS_PREFS = "de.fau.cs.mad.yasme.android.SETTINGS_PREFS";
+    public final static String DEVICE_PREFS = "de.fau.cs.mad.yasme.android.DEVICE_PREFS";
+    public final static String PUSH_PREFS = "de.fau.cs.mad.yasme.android.PUSH_PREFS";
+
+    public final static String NOTIFICATION_VIBRATE = "de.fau.cs.mad.yasme.android.NOTIFICATION_VIBRATE";
+    public final static String NOTIFICATION_SOUND = "de.fau.cs.mad.yasme.android.NOTIFICATION_SOUND";
 
 
     //GCM Properties
@@ -77,6 +81,7 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         }
 
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
+        SharedPreferences settings = getSharedPreferences(SETTINGS_PREFS, MODE_PRIVATE);
         Long userId = storage.getLong(USER_ID, 0);
         String userName = storage.getString(USER_NAME, "dummy");
         String userMail = storage.getString(USER_MAIL, "@yasme.net");
@@ -91,7 +96,7 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
 
         //Initialize databaseManager (once in application)
         if(!DatabaseManager.INSTANCE.isInitialized()) {
-            DatabaseManager.INSTANCE.init(this, storage, userId);
+            DatabaseManager.INSTANCE.init(this, storage, settings, userId);
         }
 
         String accessToken = DatabaseManager.INSTANCE.getAccessToken();
@@ -153,6 +158,9 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
                 }
                 return true;
             case R.id.action_settings:
+                intent = new Intent(this, SettingsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 return true;
             case R.id.action_chats:
                 intent = new Intent(this, ChatListActivity.class);

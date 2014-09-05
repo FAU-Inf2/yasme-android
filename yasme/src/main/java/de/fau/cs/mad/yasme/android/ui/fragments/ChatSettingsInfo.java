@@ -2,26 +2,32 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeChatProperties;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeOwnerAndLeaveTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.LeaveChatTask;
 import de.fau.cs.mad.yasme.android.contacts.ContactListContent;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.Chat;
@@ -39,6 +45,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     protected SimpleAdapter mAdapter = null;
     private View chatInfo;
     private Chat chat;
+    private Button changeName, changeStatus, leaveChat;
 
     public ChatSettingsInfo() {}
 
@@ -65,68 +72,16 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                 throw new IllegalArgumentException("chatId <= 0");
             }
 
-
-
             ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
             new GetTask<>(chatDAO, chatId, this.getClass()).execute();
         }
 
         View rootView = inflater.inflate(R.layout.fragment_chat_settings_info, container, false);
 
-        Button changeName = (Button) rootView.findViewById(R.id.change_name);
-        Button changeStatus = (Button) rootView.findViewById(R.id.change_status);
-        Button leaveChat = (Button) rootView.findViewById(R.id.leave_chat);
+        changeName = (Button) rootView.findViewById(R.id.change_name);
+        changeStatus = (Button) rootView.findViewById(R.id.change_status);
+        leaveChat = (Button) rootView.findViewById(R.id.leave_chat);
 
-        changeName.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d(this.getClass().getSimpleName(), "changeName-Button pushed");
-                        changeName();
-                    }
-                }
-        );
-        changeStatus.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d(this.getClass().getSimpleName(), "changeStatus-Button pushed");
-                        changeStatus();
-                    }
-                }
-        );
-        leaveChat.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d(this.getClass().getSimpleName(), "leaveChat-Button pushed");
-
-                        Context mContext = DatabaseManager.INSTANCE.getContext();
-                        AlertDialog alert = new AlertDialog.Builder(mContext).create();
-                        alert.setTitle(mContext.getString(R.string.alert_leave));
-                        alert.setMessage(mContext.getString(R.string.alert_leave_message));
-
-                        alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
-                                        new LeaveChatTask(chat).execute();
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                        alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
-
-                        alert.show();
-                    }
-                }
-        );
         chatInfo = rootView.findViewById(R.id.chat_settings_info);
         if (null != chat){
             fillInfoView();
@@ -221,6 +176,32 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         TextView status = (TextView) chatInfo.findViewById(R.id.chat_info_status);
         TextView number = (TextView) chatInfo.findViewById(R.id.chat_info_number_participants);
         ListView participants = (ListView) chatInfo.findViewById(R.id.chat_info_participants);
+        changeName.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d(this.getClass().getSimpleName(), "changeName-Button pushed");
+                        changeName();
+                    }
+                }
+        );
+        changeStatus.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d(this.getClass().getSimpleName(), "changeStatus-Button pushed");
+                        changeStatus();
+                    }
+                }
+        );
+        leaveChat.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        handleLeaveChat(chat);
+                    }
+                }
+        );
 
         name.setText(chat.getName());
         status.setText(chat.getStatus());
@@ -238,6 +219,81 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                     ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
         }
         mAdapter.notifyDataSetChanged();
+    }
+
+    private void handleLeaveChat(final Chat chat) {
+        boolean isOwner = (chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId());
+        if (isOwner) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setTitle(getActivity().getString(R.string.alert_owner));
+
+            LinearLayout layout = new LinearLayout(getActivity());
+            layout.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+
+            TextView text = new TextView(getActivity());
+            text.setText(getActivity().getString(R.string.alert_owner_message));
+
+            final ListView list = new ListView(getActivity());
+            list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            List<String> participantNames = new ArrayList<>();
+            for(User u : chat.getParticipants()) {
+                if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
+                    continue;
+                }
+                participantNames.add(u.getName());
+            }
+            final ArrayAdapter<List<User>> adapter = new ArrayAdapter<List<User>>(getActivity(),
+                    android.R.layout.simple_list_item_single_choice, (List) participantNames);
+            list.setAdapter(adapter);
+
+            layout.addView(text, layoutParams);
+            layout.addView(list, layoutParams);
+            alert.setView(layout);
+
+            alert.setPositiveButton(R.string.change_and_leave_chat,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            int position = list.getCheckedItemPosition();
+                            if(position != AdapterView.INVALID_POSITION) {
+                                Long newUserId = chat.getParticipants().get(position).getId();
+                                new ChangeOwnerAndLeaveTask(chat).execute(newUserId);
+                            }
+                        }
+                    }
+            );
+            alert.setNegativeButton(R.string.cancel,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.cancel();
+                        }
+                    }
+            );
+            alert.show();
+        } else {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setTitle(getActivity().getString(R.string.alert_leave));
+            alert.setMessage(getActivity().getString(R.string.alert_leave_message));
+
+            alert.setPositiveButton(R.string.leave_chat,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
+                            new  LeaveChatTask(chat).execute();
+                            dialog.dismiss();
+                        }
+                    });
+            alert.setNegativeButton(R.string.cancel,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+            alert.show();
+        }
     }
 
     @Override

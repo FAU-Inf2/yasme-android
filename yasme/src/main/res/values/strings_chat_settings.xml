@@ -12,6 +12,7 @@
     <string name="chat_info_name">Name</string>
     <string name="chat_info_status">Status</string>
     <string name="leave_chat">Leave Chat</string>
+    <string name="change_and_leave_chat">Change owner and leave Chat</string>
     <string name="change">Change</string>
 
     <string name="change_name">Change name</string>

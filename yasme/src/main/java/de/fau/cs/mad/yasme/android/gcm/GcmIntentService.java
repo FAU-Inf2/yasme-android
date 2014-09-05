@@ -12,6 +12,7 @@ import de.fau.cs.mad.yasme.android.controller.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetMessageTask;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.GetUserTask;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatFragment;
 
 
@@ -48,7 +49,17 @@ public class GcmIntentService extends IntentService {
                 Log.d(this.getClass().getSimpleName(), "Received message with type message from GCM");
                 if (extras.containsKey("type") && extras.get("type").equals("msg")) {
                     new GetMessageTask(ChatFragment.class).execute();
-                }
+                } else if (extras.containsKey("type") && extras.get("type").equals("usr")) {
+										String userIdS = (String) extras.get("extra");
+										if(!(extras.containsKey("extra") && userIdS.matches("[0-9]+"))) {
+											Log.e(this.getClass().getSimpleName(), "User id in extra message from GCM was not a numeral.");
+        							GcmBroadcastReceiver.completeWakefulIntent(intent);
+											return;
+										}
+										Long userId = Long.parseLong(userIdS);
+										Log.d("OOOOOOOOOOOOOOOOOOO","GOT TO UPDATE MY USR DB for id " + userId.toString());
+										new GetUserTask(ChatFragment.class,userId).execute();
+								}
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.

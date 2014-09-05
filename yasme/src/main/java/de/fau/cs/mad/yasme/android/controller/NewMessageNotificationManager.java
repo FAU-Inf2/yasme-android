@@ -6,17 +6,17 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
-import de.fau.cs.mad.yasme.android.controller.Log;
+
+import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
-
-import java.util.List;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 02.08.14.
@@ -26,12 +26,15 @@ public class NewMessageNotificationManager {
     private Context mContext;
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
+    private SharedPreferences mSettings;
     // mId allows you to update the notification later on.
     private int mId;
 
     public NewMessageNotificationManager() {
         mContext = DatabaseManager.INSTANCE.getContext();
         numberOfMessages = 0;
+        SharedPreferences mSettings = DatabaseManager.INSTANCE.getSettings();
+
         mNotificationManager = (NotificationManager) mContext
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(mContext)
@@ -81,7 +84,12 @@ public class NewMessageNotificationManager {
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0,
                 resultIntent, 0);
-
+        if(mSettings.getBoolean(AbstractYasmeActivity.NOTIFICATION_VIBRATE, false)) {
+            mBuilder.setDefaults(NotificationCompat.DEFAULT_VIBRATE);
+        }
+        if(mSettings.getBoolean(AbstractYasmeActivity.NOTIFICATION_SOUND, false)) {
+            mBuilder.setDefaults(NotificationCompat.DEFAULT_SOUND);
+        }
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setContentInfo("" + numberOfMessages);
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_settings">Einstellungen</string>
+
+    <string name="notification_settings">Benachrichtigungen</string>
+    <string name="notification_sound">Sound</string>
+    <string name="notification_vibration">Vibration</string>
+
+    <string name="legal">Legal</string>
+    <string name="about">About</string>
+</resources>

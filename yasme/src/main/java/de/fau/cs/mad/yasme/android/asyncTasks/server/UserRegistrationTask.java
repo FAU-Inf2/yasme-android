@@ -2,14 +2,12 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import de.fau.cs.mad.yasme.android.controller.Log;
-import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.UserTask;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
-import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.encryption.PasswordEncryption;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.Error;
@@ -21,6 +19,7 @@ import de.fau.cs.mad.yasme.android.ui.fragments.RegisterFragment;
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 19.06.14.
  */
+
 /**
  * Represents an asynchronous task used to register the user.
  */
@@ -34,7 +33,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
     private int message = R.string.registration_successful;
 
     public UserRegistrationTask(Class classToNotify) {
-        this.classToNotify  = classToNotify;
+        this.classToNotify = classToNotify;
     }
 
 
@@ -57,7 +56,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
         try {
-            PasswordEncryption pwEnc = new PasswordEncryption(new User(email,password));
+            PasswordEncryption pwEnc = new PasswordEncryption(new User(email, password));
             password = pwEnc.getSecurePassword();
             userId = UserTask.getInstance().registerUser(new User(password, name, email));
         } catch (RestServiceException e) {
@@ -79,10 +78,11 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
         // Ask server for news, i.e. new version of app
         new GetInfoTask().execute();
 
-        if(success) {
+        if (success) {
             SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
             editor.putString(AbstractYasmeActivity.USER_NAME, name);
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
+            editor.putLong(AbstractYasmeActivity.USER_ID, 0L);
             editor.commit();
         }
 
