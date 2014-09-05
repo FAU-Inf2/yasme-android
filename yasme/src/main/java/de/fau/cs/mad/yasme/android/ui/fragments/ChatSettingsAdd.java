@@ -33,7 +33,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(adapter != null) {
+        if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
     }
@@ -45,7 +45,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(chat == null) {
+        if (chat == null) {
             Bundle bundle = getArguments();
             long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
             // load chat from database
@@ -120,18 +120,18 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     }
 
     public void updateChatPartnersList(List<User> allUsers) {
-        if(chat == null) {
+        if (chat == null) {
 
         }
         List<User> filteredUsers = new ArrayList<>();
         for (User u : allUsers) {
             boolean isParticipant = false;
-            for(User p : chat.getParticipants()) {
-                if(u.getId() == p.getId()) {
+            for (User p : chat.getParticipants()) {
+                if (u.getId() == p.getId()) {
                     isParticipant = true;
                 }
             }
-            if(!isParticipant) {
+            if (!isParticipant) {
                 filteredUsers.add(u);
             }
         }
@@ -164,11 +164,11 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
     @Override
     public void notifyFragment(InviteToChatParam inviteToChatParam) {
-        if(inviteToChatParam instanceof AllUsersFetchedParam) {
+        if (inviteToChatParam instanceof AllUsersFetchedParam) {
             updateChatPartnersList(((AllUsersFetchedParam) inviteToChatParam).getAllUsers());
             return;
         }
-        if(inviteToChatParam instanceof GetChatParam) {
+        if (inviteToChatParam instanceof GetChatParam) {
             chat = ((GetChatParam) inviteToChatParam).getChat();
             return;
         }

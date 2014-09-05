@@ -67,10 +67,10 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         try {
             name = self.getName();
         } catch (NullPointerException npe) {
-            Log.e(this.getClass().getSimpleName(),npe.getMessage());
+            Log.e(this.getClass().getSimpleName(), npe.getMessage());
 
         }
-        if(name != null) {
+        if (name != null) {
             getActivity().setTitle(activity.getSelfUser().getName());
         }
 
@@ -181,8 +181,8 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
             final ListView list = new ListView(getActivity());
             list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             List<String> participantNames = new ArrayList<>();
-            for(User u : chat.getParticipants()) {
-                if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
+            for (User u : chat.getParticipants()) {
+                if (u.getId() == DatabaseManager.INSTANCE.getUserId()) {
                     continue;
                 }
                 participantNames.add(u.getName());
@@ -199,7 +199,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             int position = list.getCheckedItemPosition();
-                            if(position != AdapterView.INVALID_POSITION) {
+                            if (position != AdapterView.INVALID_POSITION) {
                                 Long newUserId = chat.getParticipants().get(position).getId();
                                 new ChangeOwnerAndLeaveTask(chat).execute(newUserId);
                             }
@@ -224,7 +224,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
-                            new  LeaveChatTask(chat).execute();
+                            new LeaveChatTask(chat).execute();
                             dialog.dismiss();
                         }
                     });
@@ -253,7 +253,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     public void notifyFragment(List<Chat> chatRooms) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
 
-        if(chatRooms == null) {
+        if (chatRooms == null) {
             adapter.notifyDataSetChanged();
             return;
         }

@@ -81,7 +81,6 @@ public class SettingsFragment extends Fragment {
         });
 
 
-
         return rootView;
     }
 
@@ -94,7 +93,7 @@ public class SettingsFragment extends Fragment {
         Linkify.addLinks(textMessage, pattern, "", null, new Linkify.TransformFilter() {
             @Override
             public String transformUrl(Matcher matcher, String s) {
-                return getString(R.string.TOU_url);
+                return getString(R.string.TOS_url);
             }
         });
 
@@ -125,7 +124,7 @@ public class SettingsFragment extends Fragment {
         Linkify.addLinks(textMessage, pattern, "", null, new Linkify.TransformFilter() {
             @Override
             public String transformUrl(Matcher matcher, String s) {
-                return getString(R.string.TOU_url);
+                return getString(R.string.TOS_url);
             }
         });
 

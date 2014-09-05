@@ -104,7 +104,9 @@ public enum DatabaseManager {
         return userDAO;
     }
 
-    public ChatDAO getChatDAO() { return chatDAO; }
+    public ChatDAO getChatDAO() {
+        return chatDAO;
+    }
 
     public MessageDAO getMessageDAO() {
         return messageDAO;
@@ -197,7 +199,7 @@ public enum DatabaseManager {
     }
 
     public NewMessageNotificationManager getNotifier() {
-        if(notifier == null) {
+        if (notifier == null) {
             return new NewMessageNotificationManager();
         }
         return notifier;

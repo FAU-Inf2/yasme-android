@@ -27,7 +27,7 @@ import de.fau.cs.mad.yasme.android.ui.activities.SettingsActivity;
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 15.06.14.
  */
-public abstract class AbstractYasmeActivity  extends Activity implements Toastable {
+public abstract class AbstractYasmeActivity extends Activity implements Toastable {
     public final static String USER_ID = "de.fau.cs.mad.yasme.android.USER_ID";
     public final static String USER_NAME = "de.fau.cs.mad.yasme.android.USER_NAME";
     public final static String USER_MAIL = "de.fau.cs.mad.yasme.android.USER_MAIL";
@@ -56,14 +56,13 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     public static final String PROPERTY_REG_ID = "registration_id";
     public static final String PROPERTY_APP_VERSION = "appVersion";
     public static final String SENDER_ID = "688782154540"; //"104759172131";
-    public static final  int   PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public static final String TAG = "YasmeGCM";
 
     protected User selfUser;
 
 
-
-   // protected SharedPreferences storage;
+    // protected SharedPreferences storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +74,9 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
                 server = getResources().getString(R.string.server_host_debug);
             }
             Log.d(getClass().getSimpleName(), "YASME-Server: " + server);
-                ConnectionTask.initParams(getResources().getString(R.string.server_scheme),
-                        server,
-                        getResources().getString(R.string.server_port),getResources().getString(R.string.language),getVersion());
+            ConnectionTask.initParams(getResources().getString(R.string.server_scheme),
+                    server,
+                    getResources().getString(R.string.server_port), getResources().getString(R.string.language), getVersion());
         }
 
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
@@ -95,7 +94,7 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         selfUser.setPw(userPw);
 
         //Initialize databaseManager (once in application)
-        if(!DatabaseManager.INSTANCE.isInitialized()) {
+        if (!DatabaseManager.INSTANCE.isInitialized()) {
             DatabaseManager.INSTANCE.init(this, storage, settings, userId);
         }
 
@@ -137,7 +136,7 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         SpinnerObservable.getInstance().removeActivity(this);
     }
 
-    public void setActionBarTitle(String title){
+    public void setActionBarTitle(String title) {
         getActionBar().setTitle(title);
     }
 
@@ -145,6 +144,7 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         getActionBar().setTitle(title);
         getActionBar().setSubtitle(subtitle);
     }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -209,10 +209,8 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     }
 
     public void toast(final String text, final int duration, final int gravity) {
-        runOnUiThread(new Runnable()
-        {
-            public void run()
-            {
+        runOnUiThread(new Runnable() {
+            public void run() {
                 Toast toast = Toast.makeText(getApplicationContext(), text, duration);
                 if (-1 != gravity) {
                     toast.setGravity(gravity, 0, 0);
@@ -225,20 +223,16 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
     }
 
     public void startSpinning() {
-        runOnUiThread(new Runnable()
-        {
-            public void run()
-            {
+        runOnUiThread(new Runnable() {
+            public void run() {
                 setProgressBarIndeterminateVisibility(true);
             }
         });
     }
 
     public void stopSpinning() {
-        runOnUiThread(new Runnable()
-        {
-            public void run()
-            {
+        runOnUiThread(new Runnable() {
+            public void run() {
                 setProgressBarIndeterminateVisibility(false);
             }
         });
@@ -248,7 +242,7 @@ public abstract class AbstractYasmeActivity  extends Activity implements Toastab
         try {
             return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
         } catch (Exception e) {
-            Log.e(this.getClass().getSimpleName(),e.getMessage());
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
             return 0;
         }
     }

@@ -26,9 +26,8 @@ public class ChangeOwnerAndLeaveTask extends AsyncTask<Long, Void, Boolean> {
     }
 
     /**
+     * @param params 0 is id of new owner
      * @return Returns true if it was successful, otherwise false
-     * @param params
-     *              0 is id of new owner
      */
     @Override
     protected Boolean doInBackground(Long... params) {
@@ -51,7 +50,7 @@ public class ChangeOwnerAndLeaveTask extends AsyncTask<Long, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
-        if(success) {
+        if (success) {
             Toaster.getInstance().toast(R.string.change_successful, Toast.LENGTH_LONG);
             new GetMyChatsTask(ChatListFragment.class).execute();
         } else {

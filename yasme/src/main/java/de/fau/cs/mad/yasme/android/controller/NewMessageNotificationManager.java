@@ -38,16 +38,16 @@ public class NewMessageNotificationManager {
         mNotificationManager = (NotificationManager) mContext
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(mContext)
-                        .setContentTitle("Yasme")
-                        .setContentText(mContext.getString(R.string.notification_message))
-                        .setSmallIcon(R.drawable.ic_notify_y)
-                        .setPriority(1)
-                        .setAutoCancel(true)
-                        .setLargeIcon(getIcon(mContext));
+                .setContentTitle("Yasme")
+                .setContentText(mContext.getString(R.string.notification_message))
+                .setSmallIcon(R.drawable.ic_notify_y)
+                .setPriority(1)
+                .setAutoCancel(true)
+                .setLargeIcon(getIcon(mContext));
         mId = 1;
     }
 
-    private boolean isForeground(){
+    private boolean isForeground() {
         //get Context
         Context mContext = DatabaseManager.INSTANCE.getContext();
 
@@ -63,14 +63,14 @@ public class NewMessageNotificationManager {
         ComponentName componentInfo = task.get(0).topActivity;
 
         // Check if it matches our package name.
-        if(componentInfo.getPackageName().equals(mContext.getPackageName())) return true;
+        if (componentInfo.getPackageName().equals(mContext.getPackageName())) return true;
 
         // If not then our app is not on the foreground.
         return false;
     }
 
     public void mNotify(final int numberOfNewMessages, final long newestMessageId) {
-        if(isForeground()) {
+        if (isForeground()) {
             Log.i(this.getClass().getSimpleName(), "App in foreground");
             return;
         }
@@ -84,10 +84,10 @@ public class NewMessageNotificationManager {
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0,
                 resultIntent, 0);
-        if(mSettings.getBoolean(AbstractYasmeActivity.NOTIFICATION_VIBRATE, false)) {
+        if (mSettings.getBoolean(AbstractYasmeActivity.NOTIFICATION_VIBRATE, false)) {
             mBuilder.setDefaults(NotificationCompat.DEFAULT_VIBRATE);
         }
-        if(mSettings.getBoolean(AbstractYasmeActivity.NOTIFICATION_SOUND, false)) {
+        if (mSettings.getBoolean(AbstractYasmeActivity.NOTIFICATION_SOUND, false)) {
             mBuilder.setDefaults(NotificationCompat.DEFAULT_SOUND);
         }
         mBuilder.setContentIntent(resultPendingIntent);

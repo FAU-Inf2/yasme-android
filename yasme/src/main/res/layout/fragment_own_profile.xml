@@ -2,20 +2,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-		android:descendantFocusability="beforeDescendants"
+    android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    tools:context=".ui.OwnProfileFragment">
 
     <EditText
-				android:background="@android:color/transparent"
+        android:id="@+id/own_profile_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5pt"
         android:layout_span="5"
+        android:background="@android:color/transparent"
+        android:cursorVisible="true"
         android:text="@string/own_contact_header"
         android:textSize="16pt"
         android:textStyle="bold" />
-				android:cursorVisible="true"
+
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -55,7 +59,7 @@
         android:layout_marginRight="2mm"
         android:layout_marginTop="4mm"
         android:text="@string/own_profile_email"
-        android:textColor="#ff6e37d2"
+        android:textColor="@color/yasme_brombeer"
         android:textSize="8pt" />
 
     <TextView
@@ -78,7 +82,7 @@
         android:layout_marginRight="2mm"
         android:layout_marginTop="4mm"
         android:text="@string/own_profile_id"
-        android:textColor="#ff6e37d2"
+        android:textColor="@color/yasme_brombeer"
         android:textSize="8pt" />
 
     <TextView
@@ -91,6 +95,4 @@
         android:layout_marginTop="0.5mm"
         android:text=""
         android:textSize="10pt" />
-
-
 </LinearLayout>

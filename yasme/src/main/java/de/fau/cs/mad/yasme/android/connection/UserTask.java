@@ -4,20 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
-import de.fau.cs.mad.yasme.android.controller.Log;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.fau.cs.mad.yasme.android.entities.User;
-import de.fau.cs.mad.yasme.android.exception.RestServiceException;
-import de.fau.cs.mad.yasme.android.exception.Error;
-
-import org.apache.http.entity.ContentType;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +22,11 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+
+import de.fau.cs.mad.yasme.android.controller.Log;
+import de.fau.cs.mad.yasme.android.entities.User;
+import de.fau.cs.mad.yasme.android.exception.Error;
+import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 
 /**
  * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 16.06.14.
@@ -76,7 +74,7 @@ public class UserTask extends ConnectionTask {
 
     public void changeUserData(User user) throws RestServiceException {
         executeRequest(Request.PUT, "", user);
-				Log.d(this.getClass().getSimpleName(),"User name was: "+user.getName());
+        Log.d(this.getClass().getSimpleName(), "User name was: " + user.getName());
         Log.d(this.getClass().getSimpleName(), "User data changed");
     }
 

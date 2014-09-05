@@ -47,12 +47,13 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     private Chat chat;
     private Button changeName, changeStatus, leaveChat;
 
-    public ChatSettingsInfo() {}
+    public ChatSettingsInfo() {
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(mAdapter != null) {
+        if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -83,7 +84,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         leaveChat = (Button) rootView.findViewById(R.id.leave_chat);
 
         chatInfo = rootView.findViewById(R.id.chat_settings_info);
-        if (null != chat){
+        if (null != chat) {
             fillInfoView();
         }
         return rootView;
@@ -104,7 +105,6 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         obs.remove(this);
     }
 
-       
 
     private void changeName() {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -239,8 +239,8 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
             final ListView list = new ListView(getActivity());
             list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             List<String> participantNames = new ArrayList<>();
-            for(User u : chat.getParticipants()) {
-                if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
+            for (User u : chat.getParticipants()) {
+                if (u.getId() == DatabaseManager.INSTANCE.getUserId()) {
                     continue;
                 }
                 participantNames.add(u.getName());
@@ -257,7 +257,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             int position = list.getCheckedItemPosition();
-                            if(position != AdapterView.INVALID_POSITION) {
+                            if (position != AdapterView.INVALID_POSITION) {
                                 Long newUserId = chat.getParticipants().get(position).getId();
                                 new ChangeOwnerAndLeaveTask(chat).execute(newUserId);
                             }
@@ -282,7 +282,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
-                            new  LeaveChatTask(chat).execute();
+                            new LeaveChatTask(chat).execute();
                             dialog.dismiss();
                         }
                     });

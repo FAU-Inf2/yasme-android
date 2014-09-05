@@ -1,13 +1,9 @@
 package de.fau.cs.mad.yasme.android.connection;
 
-import de.fau.cs.mad.yasme.android.controller.Log;
-
 import android.widget.Toast;
 
-import de.fau.cs.mad.yasme.android.R;
-import de.fau.cs.mad.yasme.android.connection.ssl.HttpClient;
-import de.fau.cs.mad.yasme.android.controller.Toaster;
-import de.fau.cs.mad.yasme.android.exception.RestServiceException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,15 +15,8 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import de.fau.cs.mad.yasme.android.exception.Error;
-import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,6 +25,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+
+import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.connection.ssl.HttpClient;
+import de.fau.cs.mad.yasme.android.controller.Log;
+import de.fau.cs.mad.yasme.android.controller.Toaster;
+import de.fau.cs.mad.yasme.android.exception.Error;
+import de.fau.cs.mad.yasme.android.exception.RestServiceException;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 /**
  * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 03.06.14.

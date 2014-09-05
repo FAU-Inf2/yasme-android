@@ -95,7 +95,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
             }
         });
 
-        if(!acceptedTos) {
+        if (!acceptedTos) {
             checkBox.setError(getString(R.string.no_TOS_toast) + " " +
                     getString(R.string.TOS) + " " +
                     getString(R.string.read_TOS_middle) + " " +
@@ -150,9 +150,9 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                         } else {
                             Toaster.getInstance().toast(
                                     getString(R.string.no_TOS_toast) + " " +
-                                    getString(R.string.TOS) + " " +
-                                    getString(R.string.read_TOS_middle) + " " +
-                                    getString(R.string.privacy_policy), Toast.LENGTH_LONG);
+                                            getString(R.string.TOS) + " " +
+                                            getString(R.string.read_TOS_middle) + " " +
+                                            getString(R.string.privacy_policy), Toast.LENGTH_LONG);
                             registerDialog(false);
                         }
                     }

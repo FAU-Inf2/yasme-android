@@ -15,7 +15,7 @@ import de.fau.cs.mad.yasme.android.controller.Log;
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
-				intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         Log.d(this.getClass().getSimpleName(), "Received GCM message!");
         ComponentName comp = new ComponentName(context.getPackageName(), GcmIntentService.class.getName());
 

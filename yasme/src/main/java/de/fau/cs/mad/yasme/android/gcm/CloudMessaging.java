@@ -6,17 +6,16 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import de.fau.cs.mad.yasme.android.controller.Log;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.io.IOException;
+
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.storage.DebugManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.LoginActivity;
-
-import java.io.IOException;
 
 
 /**
@@ -64,7 +63,7 @@ public class CloudMessaging {
     public String getRegistrationId() {
         final SharedPreferences prefs = getGCMPreferences(context);
         String registrationId = prefs.getString(AbstractYasmeActivity.PROPERTY_REG_ID, "");
-        Log.i(AbstractYasmeActivity.TAG+"WOOOOOLOOOLOOOO", "this is my id: [" + AbstractYasmeActivity.PROPERTY_REG_ID + "]");
+        Log.i(AbstractYasmeActivity.TAG + "WOOOOOLOOOLOOOO", "this is my id: [" + AbstractYasmeActivity.PROPERTY_REG_ID + "]");
         if (registrationId.isEmpty()) {
             Log.i(AbstractYasmeActivity.TAG, "Registration not found.");
             return "";

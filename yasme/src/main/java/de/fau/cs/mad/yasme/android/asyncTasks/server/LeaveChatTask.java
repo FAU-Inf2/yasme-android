@@ -40,7 +40,7 @@ public class LeaveChatTask extends AsyncTask<Long, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
-        if(success) {
+        if (success) {
             Toaster.getInstance().toast(R.string.change_successful, Toast.LENGTH_SHORT);
             new GetMyChatsTask(ChatListFragment.class).execute();
         } else {

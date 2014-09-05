@@ -11,7 +11,7 @@ import de.fau.cs.mad.yasme.android.ui.fragments.SettingsFragment;
 /**
  * Created by robert on 01.09.14.
  */
-public class SettingsActivity extends AbstractYasmeActivity{
+public class SettingsActivity extends AbstractYasmeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
