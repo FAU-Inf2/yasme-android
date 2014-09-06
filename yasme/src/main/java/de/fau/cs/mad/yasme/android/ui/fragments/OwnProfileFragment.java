@@ -79,8 +79,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 User u = activity.getSelfUser();
                 u.setName(name.getText().toString());
                 long t = -1;
-                u.setId(t);
-                new SetProfileDataTask(u).execute();
+								User newUser = new User(u.getName(),u.getEmail(),t);
+                new SetProfileDataTask(newUser).execute();
                 return true;
             }
         });
@@ -91,9 +91,11 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         id.setText("" + self.getId());
 
         // Show nice profile picture
-        profilePicture.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
-        TextView initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
-        initial.setText(self.getName().substring(0, 1).toUpperCase());
+				if(self.getId()>0) {
+	        profilePicture.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
+	        TextView initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
+	        initial.setText(self.getName().substring(0, 1).toUpperCase());
+				}
 
         return layout;
     }
