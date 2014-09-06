@@ -119,7 +119,7 @@ Feel free to contact us: <yasme@i2.cs.fau.de>
 [apl]:http://hc.apache.org/httpcomponents-client-4.3.x/license.html
 [apl2]:http://www.apache.org/licenses/LICENSE-2.0.txt
 [fxml]:https://github.com/FasterXML/jackson-core/wiki
-[tos]:https://github.com/FAU-Inf2/yasme-android/blob/master/legal/termsOfService
-[pp]: https://github.com/FAU-Inf2/yasme-android/blob/master/legal/privacyPolicy
+[tos]:https://raw.githubusercontent.com/FAU-Inf2/yasme-android/master/legal/termsOfService
+[pp]: https://raw.githubusercontent.com/FAU-Inf2/yasme-android/master/legal/privacyPolicy
 [li]: https://github.com/FAU-Inf2/yasme-android/blob/master/LICENSE
 

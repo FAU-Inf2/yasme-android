@@ -32,8 +32,8 @@
     <string name="no_TOS_toast">Please accept our</string>
     <string name="TOS">Terms Of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
-    <string name="privacy_policy_url">https://github.com/FAU-Inf2/yasme-android/blob/master/legal/privacyPolicy</string>
-    <string name="TOS_url">https://github.com/FAU-Inf2/yasme-android/blob/master/legal/termsOfService</string>
+    <string name="privacy_policy_url">https://raw.githubusercontent.com/FAU-Inf2/yasme-android/master/legal/privacyPolicy</string>
+    <string name="TOS_url">https://raw.githubusercontent.com/FAU-Inf2/yasme-android/master/legal/termsOfService</string>
 
 
 </resources>
