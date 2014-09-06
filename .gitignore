@@ -1,0 +1,7 @@
+.gradle
+local.properties
+build/
+*.swp
+
+# Ignore Gradle GUI config
+gradle-app.setting
