@@ -1,7 +1,28 @@
+# Generated files
+bin/
+gen/
+
+# Gradle files
 .gradle
-local.properties
+.gradle/
 build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
 *.swp
 
 # Ignore Gradle GUI config
 gradle-app.setting
+
+# other ignores from hg
+.metadata
+.project
+.classpath
+.settings
+.idea
+*.iml
+.properties
+.gitignore
+.orig
+.DS_Store
