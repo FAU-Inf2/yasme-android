@@ -18,41 +18,40 @@ import de.fau.cs.mad.yasme.android.ui.fragments.InviteToChatFragment;
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 29.07.14.
  */
 public class GetContactsTask extends AsyncTask<String, Void, Boolean> {
-    private List<User> contacts;
-    private UserDAO userDao = DatabaseManager.INSTANCE.getUserDAO();
-    private Class classToNotify;
+	private List<User> contacts;
+	private UserDAO userDao = DatabaseManager.INSTANCE.getUserDAO();
+	private Class classToNotify;
 
-    public GetContactsTask(Class classToNotify) {
-        this.classToNotify = classToNotify;
-    }
+	public GetContactsTask(Class classToNotify) {
+		this.classToNotify = classToNotify;
+	}
 
-    @Override
-    protected Boolean doInBackground(String... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
-        contacts = userDao.getContacts();
-        if(contacts == null) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	protected Boolean doInBackground(String... params) {
+		SpinnerObservable.getInstance().registerBackgroundTask(this);
+		contacts = userDao.getContacts();
+		if(contacts == null) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    protected void onPostExecute(Boolean success) {
-        SpinnerObservable.getInstance().removeBackgroundTask(this);
-        if (success) {
-            // Notify
-            if(classToNotify == InviteToChatFragment.class) {
-                ObservableRegistry.getObservable(InviteToChatFragment.class).
-                        notifyFragments(new InviteToChatFragment.AllUsersFetchedParam(success, contacts));
-            } else if(classToNotify == ContactListFragment.class) {
-                ObservableRegistry.getObservable(ContactListFragment.class).
-                        notifyFragments(new InviteToChatFragment.AllUsersFetchedParam(success, contacts));
-            } else if(classToNotify == ChatSettingsAdd.class) {
-                ObservableRegistry.getObservable(ChatSettingsAdd.class).
-                        notifyFragments(new InviteToChatFragment.AllUsersFetchedParam(success, contacts));
-            }
-        } else {
-            Log.w(this.getClass().getSimpleName(), "Get contacts not successful");
-        }
-    }
+	@Override
+	protected void onPostExecute(Boolean success) {
+		Log.d(this.getClass().getSimpleName(), "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+		SpinnerObservable.getInstance().removeBackgroundTask(this);
+		if (!success) {
+			Log.w(this.getClass().getSimpleName(), "Get contacts not successful");
+			return;
+		}
+
+		// Notify
+		if(classToNotify != InviteToChatFragment.class && classToNotify != ContactListFragment.class && classToNotify != ChatSettingsAdd.class) {
+			Log.e(this.getClass().getSimpleName(), "classToNotify was not any listed known class.");
+			return;
+		}
+
+		ObservableRegistry.getObservable(classToNotify).
+			notifyFragments(new InviteToChatFragment.AllUsersFetchedParam(success, contacts));
+	}
 }
