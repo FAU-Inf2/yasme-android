@@ -72,12 +72,13 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
 	}
 
 	protected void findViewsById() {
+		AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
 		if (null == startChat) {
-			startChat = (Button) getActivity().findViewById(R.id.inviteToChat_startChat);
+			startChat = (Button) activity.findViewById(R.id.inviteToChat_startChat);
 		}
 
 		if (null == emptyContactsNotice) {
-			emptyContactsNotice = (TextView) getActivity().findViewById(R.id.empty_contacts_notice);
+			emptyContactsNotice = (TextView) activity.findViewById(R.id.empty_contacts_notice);
 			emptyContactsNotice.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -90,7 +91,7 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
 		}
 
 		if (null == chatPartners) {
-			chatPartners = (ListView) getActivity().findViewById(R.id.inviteToChat_usersList);
+			chatPartners = (ListView) activity.findViewById(R.id.inviteToChat_usersList);
 			// Only show the notice when the list view is empty
 			chatPartners.setEmptyView(emptyContactsNotice);
 		}
@@ -170,7 +171,7 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
 		intent.putExtra(activity.CHAT_ID, chatId);
 		intent.putExtra(activity.USER_NAME, activity.getSelfUser().getName());
 		startActivity(intent);
-		getActivity().finish();
+		activity.finish();
 	}
 
 	@Override
