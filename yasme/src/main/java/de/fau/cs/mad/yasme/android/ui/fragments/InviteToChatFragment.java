@@ -122,7 +122,7 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
 				continue;
 			}
 
-			userNames.add(user.getId() + " " + user.getName());
+			userNames.add("[" + user.getId() + "] " + user.getName());
 		}
 
 		String[] userNamesArr = userNames.toArray(new String[userNames.size()]);

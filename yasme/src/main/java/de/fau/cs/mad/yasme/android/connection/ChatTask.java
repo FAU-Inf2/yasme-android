@@ -135,11 +135,10 @@ public class ChatTask extends ConnectionTask {
         }
     }
 
-    public void addParticipantToChat(long participantId, long chatId)
-            throws RestServiceException {
+    public void addParticipantToChat(long participantId, long chatId) throws RestServiceException {
         String path = "par/" + participantId + "/" + chatId;
         executeRequest(Request.PUT, path);
-        Log.d(this.getClass().getSimpleName(), "User added to Chat!");
+        Log.d(this.getClass().getSimpleName(), "User " + participantId + " added to Chat!");
     }
 
     public void changeOwnerOfChat(long chatId, long newOwnerId) throws RestServiceException {

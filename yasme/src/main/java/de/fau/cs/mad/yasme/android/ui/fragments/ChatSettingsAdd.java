@@ -24,6 +24,7 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
+import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsInfo;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.
@@ -72,10 +73,8 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 	public void onStart() {
 		super.onStart();
 		//Register at observer
-		Log.d(this.getClass().getSimpleName(), "Try to get ChatListObservableInstance");
 		FragmentObservable<ChatSettingsAdd, InviteToChatParam> obs =
 			ObservableRegistry.getObservable(this.getClass());
-		Log.d(this.getClass().getSimpleName(), "... successful");
 		obs.register(this);
 
 		findViewsById();
@@ -89,7 +88,6 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 		//De-Register at observer
 		FragmentObservable<ChatSettingsAdd, InviteToChatParam> obs =
 			ObservableRegistry.getObservable(this.getClass());
-		Log.d(this.getClass().getSimpleName(), "Remove from observer");
 		obs.remove(this);
 	}
 
@@ -110,21 +108,24 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 		}
 
 		for (int i = 0; i < checked.size(); i++) {
-			// Item position in adapter
-			if (checked.valueAt(i)) {
-				index=checked.keyAt(i);
-				Log.d("XXXXXXXXXXX",i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName() );
-				showAlertDialog(
-					getString(R.string.alert_add_user),
-					users.get(index).getName() + " " + getString(R.string.alert_add_user_message),
-					chat, users.get(index).getId(), 1L
-				);
-			}
+			// If the box is not set/checked (true), just skip
+			if(!checked.valueAt(i)) continue;
+			// Get the item position (index) in adapter and show an alert dialog box
+			index=checked.keyAt(i);
+			Log.d("XXXXXXXXXXX",i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName() );
+			showAlertDialog(
+				getString(R.string.alert_add_user),
+				users.get(index).getName() + " " + getString(R.string.alert_add_user_message),
+				chat, users.get(index).getId(), 1L
+			);
 		}
 	}
 
 	public void updateChatPartnersList(List<User> allUsers) {
-		if (chat == null) {}
+		if (chat == null) {
+			Log.e(this.getClass().getSimpleName(), "Chat in updateChatPartnersList was null");
+			throw new IllegalArgumentException("chat is null");
+		}
 		List<User> filteredUsers = new ArrayList<>();
 		for (User u : allUsers) {
 			boolean isParticipant = false;
@@ -152,7 +153,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 						users.remove(index);
 						updateChatPartnersList(users);
 					}
-					new ChangeUserTask(chat).execute(userId, rest);
+					new ChangeUserTask(chat,ChatSettingsInfo.class).execute(userId, rest);
 				}
 			}
 		);

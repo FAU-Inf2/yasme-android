@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.ChatTask;
+import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.Chat;
@@ -17,8 +18,9 @@ import de.fau.cs.mad.yasme.android.exception.RestServiceException;
  */
 public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
 	private Chat chat;
+	private Class classToNotify;
 
-	public ChangeUserTask(Chat chat) {
+	public ChangeUserTask(Chat chat, Class classToNotify) {
 		this.chat = chat;
 	}
 
@@ -67,5 +69,6 @@ public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
 		} else {
 			Toaster.getInstance().toast(R.string.change_not_successful, Toast.LENGTH_LONG);
 		}
+		ObservableRegistry.getObservable(classToNotify).notifyFragments(chat);
 	}
 }

@@ -26,6 +26,7 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
+import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsInfo;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.
@@ -111,7 +112,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
         alert.setPositiveButton(R.string.OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        new ChangeUserTask(chat).execute(userId, rest);
+                        new ChangeUserTask(chat,ChatSettingsInfo.class).execute(userId, rest);
                     }
                 }
         );

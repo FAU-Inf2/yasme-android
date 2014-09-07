@@ -298,6 +298,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
 
     @Override
     public void notifyFragment(Chat chat) {
+			Log.e("XXXXXXXXXXXXXXXX","I, ChatSettingsInfo, got notifed. I will now try to fill the info view!!");
         if (null == chat) {
             Log.e(this.getClass().getSimpleName(), " was waiting for a chat object but turned out it was null");
         } else {
