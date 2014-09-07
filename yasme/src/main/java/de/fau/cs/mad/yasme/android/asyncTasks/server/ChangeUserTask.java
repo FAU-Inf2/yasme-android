@@ -22,6 +22,7 @@ public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
 
 	public ChangeUserTask(Chat chat, Class classToNotify) {
 		this.chat = chat;
+		this.classToNotify=classToNotify;
 	}
 
 

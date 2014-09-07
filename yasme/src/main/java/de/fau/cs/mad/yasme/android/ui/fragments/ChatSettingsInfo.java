@@ -35,275 +35,280 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
+import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.
  */
 public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Chat> {
 
-    protected final ContactListContent participantsContent = new ContactListContent();
-    protected SimpleAdapter mAdapter = null;
-    private View chatInfo;
-    private Chat chat;
-    private Button changeName, changeStatus, leaveChat;
+	protected final ContactListContent participantsContent = new ContactListContent();
+	protected SimpleAdapter mAdapter=null;
+	private View chatInfo;
+	private Chat chat;
+	private Button changeName, changeStatus, leaveChat;
 
-    public ChatSettingsInfo() {
-    }
+	public ChatSettingsInfo() {
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (null == chat) {
-            Bundle bundle = getArguments();
-            long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
-            // Make sure that fragment is registered. Registering twice won't cause any issues
-            FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
-            obs.register(this);
-
-            // load chat from database
-            if (chatId <= 0) {
-                throw new IllegalArgumentException("chatId <= 0");
-            }
-
-            ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-            new GetTask<>(chatDAO, chatId, this.getClass()).execute();
-        }
-
-        View rootView = inflater.inflate(R.layout.fragment_chat_settings_info, container, false);
-
-        changeName = (Button) rootView.findViewById(R.id.change_name);
-        changeStatus = (Button) rootView.findViewById(R.id.change_status);
-        leaveChat = (Button) rootView.findViewById(R.id.leave_chat);
-
-        chatInfo = rootView.findViewById(R.id.chat_settings_info);
-        if (null != chat) {
-            fillInfoView();
-        }
-        return rootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        //Register at observer
-        FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
-        obs.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
-        obs.remove(this);
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mAdapter != null) {
+			mAdapter.notifyDataSetChanged();
+		}
+	}
 
 
-    private void changeName() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setTitle(getString(R.string.change_name));
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		if (null == chat) {
+			Bundle bundle = getArguments();
+			long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
+			// Make sure that fragment is registered. Registering twice won't cause any issues
+			FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
+			obs.register(this);
 
-        final EditText chatName = new EditText(getActivity());
-        chatName.setInputType(InputType.TYPE_CLASS_TEXT);
-        chatName.setHint(R.string.change_name_hint);
+			// load chat from database
+			if (chatId <= 0) {
+				throw new IllegalArgumentException("chatId <= 0");
+			}
 
-        alert.setView(chatName);
+			ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
+			new GetTask<>(chatDAO, chatId, this.getClass()).execute();
+		}
 
-        // "OK" button
-        alert.setPositiveButton(R.string.OK,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Grab the EditText's input
-                        String newName = chatName.getText().toString();
-                        chat.setName(newName);
-                        new ChangeChatProperties(chat, ChatSettingsInfo.class).execute();
-                    }
-                }
-        );
-        // "Cancel" button
-        alert.setNegativeButton(R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.cancel();
-                    }
-                }
-        );
-        alert.show();
-    }
+		View rootView = inflater.inflate(R.layout.fragment_chat_settings_info, container, false);
 
-    private void changeStatus() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setTitle(getString(R.string.change_status));
+		changeName = (Button) rootView.findViewById(R.id.change_name);
+		changeStatus = (Button) rootView.findViewById(R.id.change_status);
+		leaveChat = (Button) rootView.findViewById(R.id.leave_chat);
+		chatInfo = rootView.findViewById(R.id.chat_settings_info);
 
-        final EditText chatName = new EditText(getActivity());
-        chatName.setInputType(InputType.TYPE_CLASS_TEXT);
-        chatName.setHint(R.string.change_status_hint);
+		if (null != chat) fillInfoView();
+		return rootView;
+	}
 
-        alert.setView(chatName);
+	@Override
+	public void onStart() {
+		super.onStart();
+		//Register at observer
+		FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
+		obs.register(this);
+	}
 
-        // "OK" button
-        alert.setPositiveButton(R.string.OK,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Grab the EditText's input
-                        String inputStatus = chatName.getText().toString();
-                        chat.setStatus(inputStatus);
-                        new ChangeChatProperties(chat, ChatSettingsInfo.class).execute();
-                    }
-                }
-        );
+	@Override
+	public void onStop() {
+		super.onStop();
+		FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
+		obs.remove(this);
+	}
 
-        // "Cancel" button
-        alert.setNegativeButton(R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.cancel();
-                    }
-                }
-        );
-        alert.show();
-    }
 
-    public void fillInfoView() {
-        TextView name = (TextView) chatInfo.findViewById(R.id.chat_info_name);
-        TextView status = (TextView) chatInfo.findViewById(R.id.chat_info_status);
-        TextView number = (TextView) chatInfo.findViewById(R.id.chat_info_number_participants);
-        ListView participants = (ListView) chatInfo.findViewById(R.id.chat_info_participants);
-        changeName.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d(this.getClass().getSimpleName(), "changeName-Button pushed");
-                        changeName();
-                    }
-                }
-        );
-        changeStatus.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d(this.getClass().getSimpleName(), "changeStatus-Button pushed");
-                        changeStatus();
-                    }
-                }
-        );
-        leaveChat.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        handleLeaveChat(chat);
-                    }
-                }
-        );
+	private void changeName() {
+		AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+		AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+		alert.setTitle(getString(R.string.change_name));
 
-        name.setText(chat.getName());
-        status.setText(chat.getStatus());
-        number.setText(" " + chat.getNumberOfParticipants());
+		final EditText chatName = new EditText(activity);
+		chatName.setInputType(InputType.TYPE_CLASS_TEXT);
+		chatName.setHint(R.string.change_name_hint);
 
-        mAdapter = new SimpleAdapter(getActivity(), participantsContent.getMap(),
-                android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
-                new int[]{android.R.id.text1, android.R.id.text2});
-        participants.setAdapter(mAdapter);
+		alert.setView(chatName);
 
-        participantsContent.clearItems();
+		// "OK" button
+		alert.setPositiveButton(R.string.OK,
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					// Grab the EditText's input
+					String newName = chatName.getText().toString();
+					chat.setName(newName);
+					new ChangeChatProperties(chat, ChatSettingsInfo.class).execute();
+				}
+			}
+		);
+		// "Cancel" button
+		alert.setNegativeButton(R.string.cancel,
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					dialog.cancel();
+				}
+			}
+		);
+		alert.show();
+	}
 
-        for (User u : chat.getParticipants()) {
-            participantsContent.addItem(new ContactListContent.
-                    ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
-        }
-        mAdapter.notifyDataSetChanged();
-    }
+	private void changeStatus() {
+		AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+		AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+		alert.setTitle(getString(R.string.change_status));
 
-    private void handleLeaveChat(final Chat chat) {
-        boolean isOwner = (chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId());
-        if (isOwner) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-            alert.setTitle(getActivity().getString(R.string.alert_owner));
+		final EditText chatName = new EditText(activity);
+		chatName.setInputType(InputType.TYPE_CLASS_TEXT);
+		chatName.setHint(R.string.change_status_hint);
 
-            LinearLayout layout = new LinearLayout(getActivity());
-            layout.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT);
+		alert.setView(chatName);
 
-            TextView text = new TextView(getActivity());
-            text.setText(getActivity().getString(R.string.alert_owner_message));
+		// "OK" button
+		alert.setPositiveButton(R.string.OK,
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					// Grab the EditText's input
+					String inputStatus = chatName.getText().toString();
+					chat.setStatus(inputStatus);
+					new ChangeChatProperties(chat, ChatSettingsInfo.class).execute();
+				}
+			}
+		);
 
-            final ListView list = new ListView(getActivity());
-            list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            List<String> participantNames = new ArrayList<>();
-            for (User u : chat.getParticipants()) {
-                if (u.getId() == DatabaseManager.INSTANCE.getUserId()) {
-                    continue;
-                }
-                participantNames.add(u.getName());
-            }
-            final ArrayAdapter<List<User>> adapter = new ArrayAdapter<List<User>>(getActivity(),
-                    android.R.layout.simple_list_item_single_choice, (List) participantNames);
-            list.setAdapter(adapter);
+		// "Cancel" button
+		alert.setNegativeButton(R.string.cancel,
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					dialog.cancel();
+				}
+			}
+		);
+		alert.show();
+	}
 
-            layout.addView(text, layoutParams);
-            layout.addView(list, layoutParams);
-            alert.setView(layout);
+	public void fillInfoView() {
+			TextView name = (TextView) chatInfo.findViewById(R.id.chat_info_name);
+			TextView status = (TextView) chatInfo.findViewById(R.id.chat_info_status);
+			TextView number = (TextView) chatInfo.findViewById(R.id.chat_info_number_participants);
+			ListView participants = (ListView) chatInfo.findViewById(R.id.chat_info_participants);
+			changeName.setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						changeName();
+					}
+				}
+			);
+			changeStatus.setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						changeStatus();
+					}
+				}
+			);
+			leaveChat.setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						handleLeaveChat(chat);
+					}
+				}
+			);
 
-            alert.setPositiveButton(R.string.change_and_leave_chat,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            int position = list.getCheckedItemPosition();
-                            if (position != AdapterView.INVALID_POSITION) {
-                                Long newUserId = chat.getParticipants().get(position).getId();
-                                new ChangeOwnerAndLeaveTask(chat).execute(newUserId);
-                            }
-                        }
-                    }
-            );
-            alert.setNegativeButton(R.string.cancel,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            dialog.cancel();
-                        }
-                    }
-            );
-            alert.show();
-        } else {
-            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-            alert.setTitle(getActivity().getString(R.string.alert_leave));
-            alert.setMessage(getActivity().getString(R.string.alert_leave_message));
+			name.setText(chat.getName());
+			status.setText(chat.getStatus());
+			number.setText(" " + chat.getNumberOfParticipants());
 
-            alert.setPositiveButton(R.string.leave_chat,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
-                            new LeaveChatTask(chat).execute();
-                            dialog.dismiss();
-                        }
-                    });
-            alert.setNegativeButton(R.string.cancel,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-            alert.show();
-        }
-    }
+			mAdapter = new SimpleAdapter(
+				getActivity(),
+				participantsContent.getMap(),
+				android.R.layout.simple_list_item_2,
+				new String[]{"name", "mail"},
+				new int[]{android.R.id.text1, android.R.id.text2}
+			);
+			participants.setAdapter(mAdapter);
+			participantsContent.clearItems();
 
-    @Override
-    public void notifyFragment(Chat chat) {
-			Log.e("XXXXXXXXXXXXXXXX","I, ChatSettingsInfo, got notifed. I will now try to fill the info view!!");
-        if (null == chat) {
-            Log.e(this.getClass().getSimpleName(), " was waiting for a chat object but turned out it was null");
-        } else {
-            this.chat = chat;
-            fillInfoView();
-        }
-    }
+			for (User u : chat.getParticipants()) {
+				participantsContent.addItem(new ContactListContent.
+					ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
+			}
+			mAdapter.notifyDataSetChanged();
+	}
+
+	private void handleLeaveChat(final Chat chat) {
+		boolean isOwner = (chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId());
+		AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+		if (isOwner) {
+			AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+			alert.setTitle(activity.getString(R.string.alert_owner));
+
+			LinearLayout layout = new LinearLayout(activity);
+			layout.setOrientation(LinearLayout.VERTICAL);
+			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.MATCH_PARENT
+			);
+
+			TextView text = new TextView(activity);
+			text.setText(activity.getString(R.string.alert_owner_message));
+
+			final ListView list = new ListView(activity);
+			list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			List<String> participantNames = new ArrayList<>();
+			for (User u : chat.getParticipants()) {
+				if (u.getId() == DatabaseManager.INSTANCE.getUserId()) continue;
+				participantNames.add(u.getName());
+			}
+			final ArrayAdapter<List<User>> adapter = new ArrayAdapter<List<User>>(
+				activity,
+				android.R.layout.simple_list_item_single_choice,
+				(List) participantNames
+			);
+			list.setAdapter(adapter);
+
+			layout.addView(text, layoutParams);
+			layout.addView(list, layoutParams);
+			alert.setView(layout);
+
+			alert.setPositiveButton(R.string.change_and_leave_chat,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						int position = list.getCheckedItemPosition();
+						if (position != AdapterView.INVALID_POSITION) {
+							Long newUserId = chat.getParticipants().get(position).getId();
+							new ChangeOwnerAndLeaveTask(chat).execute(newUserId);
+						}
+					}
+				}
+			);
+			alert.setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.cancel();
+					}
+				}
+			);
+			alert.show();
+		} else {
+			AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+			alert.setTitle(activity.getString(R.string.alert_leave));
+			alert.setMessage(activity.getString(R.string.alert_leave_message));
+
+			alert.setPositiveButton(R.string.leave_chat,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						// This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
+						new LeaveChatTask(chat).execute();
+						dialog.dismiss();
+					}
+				});
+			alert.setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+			alert.show();
+		}
+	}
+
+	@Override
+	public void notifyFragment(Chat chat) {
+		Log.e("XXXXXXXXXXXXXXXX","I, ChatSettingsInfo, got notifed. I will now try to fill the info view!!");
+		if (null == chat) {
+			throw new IllegalArgumentException("chat is null");
+		}
+
+		this.chat = chat;
+		fillInfoView();
+	}
 }
