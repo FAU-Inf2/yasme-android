@@ -84,8 +84,8 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
 
         activity = (AbstractYasmeActivity) getActivity();
         adapter = new UserAdapter(activity, R.layout.user_item_checkbox, new ArrayList<User>());
+		adapter.setNotifyOnChange(true);
         chatPartners.setAdapter(adapter);
-        adapter.setNotifyOnChange(true);
 
         new GetContactsTask(this.getClass()).execute();
         return rootView;
@@ -115,12 +115,11 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
         }
 
         for (int i = 0; i < checked.size(); i++) {
+            if(!checked.valueAt(i)) continue;
             // Item position in adapter
-            if (checked.valueAt(i)) {
-                int position = checked.keyAt(i);
-                selectedUsers.add(users.get(position));
-                //selectedUserNames.add(users.get(position).getName());
-            }
+            int position = checked.keyAt(i);
+            selectedUsers.add(users.get(position));
+            //selectedUserNames.add(users.get(position).getName());
         }
         new CreateChatTask(activity.getSelfUser(), selectedUsers, this.getClass()).execute();
     }
