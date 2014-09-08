@@ -7,14 +7,12 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
-import de.fau.cs.mad.yasme.android.asyncTasks.database.GetContactsTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeUserTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
@@ -24,7 +22,6 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
-import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsInfo;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.
@@ -64,13 +61,14 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 			}
 		}
 
-		View rootView = inflater.inflate(R.layout.fragment_invite_to_chat, container, false);
+        return super.onCreateView(inflater, container, savedInstanceState);
+        /*View rootView = inflater.inflate(R.layout.fragment_invite_to_chat, container, false);
         findViewsById(rootView);
 
         new GetContactsTask(this.getClass()).execute();
 
-		return rootView;
-	}
+		return rootView;*/
+    }
 
 	@Override
 	public void onStart() {
@@ -99,7 +97,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
 	@Override
 	public void onClick(View view) {
-		SparseBooleanArray checked = chatPartners.getCheckedItemPositions();
+        SparseBooleanArray checked = adapter.getSelectedContacts();
 
 		if (checked.size() == 0) {
 			Toast.makeText(getActivity(), getString(R.string.toast_no_selection),Toast.LENGTH_LONG).show();
@@ -108,10 +106,12 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
 		for (int i = 0; i < checked.size(); i++) {
 			// If the box is not set/checked (true), just skip
-			if(!checked.valueAt(i)) continue;
-			// Get the item position (index) in adapter and show an alert dialog box
-			index=checked.keyAt(i);
-			Log.d("XXXXXXXXXXX",i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName() );
+            if (!checked.valueAt(i)) {
+                continue;
+            }
+            // Get the item position (index) in adapter and show an alert dialog box
+            index = checked.keyAt(i);
+            Log.d("XXXXXXXXXXX",i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName() );
 			showAlertDialog(
 				getString(R.string.alert_add_user),
 				users.get(index).getName() + " " + getString(R.string.alert_add_user_message),
@@ -137,7 +137,8 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 			}
 		}
 		super.updateChatPartnersList(filteredUsers);
-	}
+        startChat.setOnClickListener(this);
+    }
 
 	private void showAlertDialog(String title, String message, final Long userId, final Long type) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());

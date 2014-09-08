@@ -91,32 +91,6 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
         return rootView;
     }
 
-    protected void findViewsById(View rootView) {
-        if (null == startChat) {
-            startChat = (Button) rootView.findViewById(R.id.inviteToChat_startChat);
-        }
-
-        if (null == emptyContactsNotice) {
-            emptyContactsNotice = (TextView) rootView.findViewById(R.id.empty_contacts_notice);
-            emptyContactsNotice.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), ContactActivity.class);
-                    // Message is immaterial
-                    intent.putExtra(ContactActivity.SEARCH_FOR_CONTACTS, "let me search for contacts");
-                    startActivity(intent);
-                }
-            });
-        }
-
-        if (null == chatPartners) {
-            chatPartners = (ListView) rootView.findViewById(R.id.inviteToChat_usersList);
-            // Only show the notice when the list view is empty
-            chatPartners.setEmptyView(emptyContactsNotice);
-        }
-    }
-
-
     /**
      * Will be called by the GetAllUsersTask after the list of users has been retrieved
      *
@@ -133,7 +107,6 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         SparseBooleanArray checked = adapter.getSelectedContacts();
         Set<User> selectedUsers = new HashSet<>();
 

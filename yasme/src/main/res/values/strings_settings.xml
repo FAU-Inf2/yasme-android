@@ -8,4 +8,9 @@
 
     <string name="legal">Legal</string>
     <string name="about">About</string>
+    <string name="link_text_legal">Here you can find a link to our
+        Terms Of Service and our Privacy Policy</string>
+    <string name="link_text_about">Here you can find YASME on GitHub</string>
+    <string name="contact">You can contact us via Mail to yasme@i2.cs.fau.de</string>
+    <string name="link_readme">https://github.com/FAU-Inf2/yasme-android</string>
 </resources>

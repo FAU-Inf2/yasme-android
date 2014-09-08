@@ -51,8 +51,8 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
         LinearLayout list = new LinearLayout(activity);
         list.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
         final EditText name = new EditText(activity);
         name.setHint(R.string.registration_name);
         name.setText(inputName);

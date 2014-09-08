@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -86,27 +87,29 @@ public class SettingsFragment extends Fragment {
 
     public void showAbout() {
         TextView textMessage = new TextView(getActivity());
-        String aboutMessage = "";
-        textMessage.setText(aboutMessage);
+        TextView contactView = new TextView(getActivity());
+        LinearLayout content = new LinearLayout(getActivity());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
 
-        Pattern pattern = Pattern.compile("Terms Of Use");
+        textMessage.setText(R.string.link_text_about);
+        contactView.setText(R.string.contact);
+
+        Pattern pattern = Pattern.compile("YASME");
         Linkify.addLinks(textMessage, pattern, "", null, new Linkify.TransformFilter() {
             @Override
             public String transformUrl(Matcher matcher, String s) {
-                return getString(R.string.TOS_url);
+                return getString(R.string.link_text_about);
             }
         });
 
+        content.addView(textMessage, layoutParams);
+        content.addView(contactView, layoutParams);
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(getString(R.string.about));
-        alert.setMessage("");
-        alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int whichButton) {
-
-            }
-        });
-        alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        alert.setView(content);
+        alert.setNeutralButton(R.string.OK, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int whichButton) {
 
@@ -117,27 +120,28 @@ public class SettingsFragment extends Fragment {
 
     public void showLegal() {
         TextView textMessage = new TextView(getActivity());
-        String legalMessage = "";
+        String legalMessage = getString(R.string.link_text_legal);
         textMessage.setText(legalMessage);
 
-        Pattern pattern = Pattern.compile("Terms Of Use");
+        Pattern pattern = Pattern.compile(getString(R.string.TOS));
         Linkify.addLinks(textMessage, pattern, "", null, new Linkify.TransformFilter() {
             @Override
             public String transformUrl(Matcher matcher, String s) {
                 return getString(R.string.TOS_url);
             }
         });
+        pattern = Pattern.compile(getString(R.string.privacy_policy));
+        Linkify.addLinks(textMessage, pattern, "", null, new Linkify.TransformFilter() {
+            @Override
+            public String transformUrl(Matcher matcher, String s) {
+                return getString(R.string.privacy_policy_url);
+            }
+        });
 
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(getString(R.string.legal));
         alert.setView(textMessage);
-        alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int whichButton) {
-
-            }
-        });
-        alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        alert.setNeutralButton(R.string.OK, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int whichButton) {
 
