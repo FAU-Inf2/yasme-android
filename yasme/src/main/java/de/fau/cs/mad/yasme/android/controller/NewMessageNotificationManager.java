@@ -34,9 +34,13 @@ public class NewMessageNotificationManager {
         mContext = DatabaseManager.INSTANCE.getContext();
         numberOfMessages = 0;
         mSettings = DatabaseManager.INSTANCE.getSettings();
-
-        mNotificationManager = (NotificationManager) mContext
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+        try {
+            mNotificationManager = (NotificationManager) mContext
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+        } catch (NullPointerException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return;
+        }
         mBuilder = new NotificationCompat.Builder(mContext)
                 .setContentTitle("Yasme")
                 .setContentText(mContext.getString(R.string.notification_message))
