@@ -3,7 +3,6 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +21,7 @@ import de.fau.cs.mad.yasme.android.asyncTasks.database.GetNewMessagesForChatTask
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetMessageTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SendMessageTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
@@ -49,7 +49,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     private AtomicLong latestMessageOnDisplay;
 
 
-    public ChatFragment() {  }
+    public ChatFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -171,7 +172,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     @Override
     public void notifyFragment(List<Message> messages) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-        if(messages == null) {
+        if (messages == null) {
             //Notified from GetMessageTask, new Messages are stored in the DB
             // Note that retrieved messages will be ordered ascending by id
             new GetNewMessagesForChatTask(latestMessageOnDisplay.get(), chat.getId(), this.getClass())
@@ -198,13 +199,14 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             return;
         }
         if (msgText.length() > 10000) {
-            Toaster.getInstance().toast(R.string.text_to_long,Toast.LENGTH_LONG);
+            Toaster.getInstance().toast(R.string.text_to_long, Toast.LENGTH_LONG);
             return;
         }
 
         // Send message and get new messages afterwards
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask(this.getClass())).execute(msgText);
+        new SendMessageTask(chat, activity.getSelfUser(),
+                new GetMessageTask(this.getClass())).execute(msgText);
 
         Log.d(this.getClass().getSimpleName(), "Send message in bg");
         // Empty the input field after send button was pressed
@@ -221,7 +223,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         // Even if this fragment will be notified with same messages several times, it should not display them more than once
         // Synchronize the write access on latestMessageOnDisplay in case the fragment can be notified by more than one thread
-        synchronized(this) {
+        synchronized (this) {
             long newLatestMessageOnDisplay = latestMessageOnDisplay.get();
             for (Message msg : messages) {
                 // Ignore messages which were not meant for this chat
@@ -239,7 +241,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             Message msg = newMessages.get(i);
             if (msg.getErrorId() == MessageEncryption.ErrorType.DECRYPTION_FAILED) {
                 count++;
-                if (i >= newMessages.size() - 1 || newMessages.get(i+1).getErrorId() != MessageEncryption.ErrorType.DECRYPTION_FAILED) {
+                if (i >= newMessages.size() - 1 || newMessages.get(i + 1).getErrorId() != MessageEncryption.ErrorType.DECRYPTION_FAILED) {
                     msg.setMessage(String.valueOf(count) + " " + getResources().getString(R.string.decryption_failed));
                     msg.setErrorId(0);
                     newNewMessages.add(msg);

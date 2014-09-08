@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false">
+
+    <RelativeLayout
+        android:layout_width="25dip"
+        android:layout_height="25dip"
+        android:gravity="center_vertical|center_horizontal"
+        android:measureWithLargestChild="true"
+        android:layout_gravity="center"
+        android:layout_margin="2dip">
+
+        <ImageView
+            android:id="@+id/user_picture"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentStart="false"
+            android:layout_alignRight="@+id/user_picture_text"
+            android:layout_alignBottom="@+id/user_picture_text"
+            android:layout_alignTop="@+id/user_picture_text"
+            android:layout_alignLeft="@+id/user_picture_text" />
+
+        <TextView
+            android:id="@+id/user_picture_text"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:text="Y"
+            android:textColor="#FFFFFF"
+            android:layout_alignParentTop="false"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentEnd="false"
+            android:layout_centerInParent="true"
+            android:singleLine="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout"
+        android:layout_weight="1"
+        android:layout_margin="2dip">
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/user_id"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox"
+        android:singleLine="false" />
+
+</LinearLayout>
