@@ -11,11 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SearchUserTask;
@@ -24,15 +25,17 @@ import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
+import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.ui.UserAdapter;
 
 /**
  * Created by Stefan Ettl <stefan.ettl@fau.de>
  */
 
 public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<ArrayList<User>> {
-
+    private List<User> users;
     ContactListContent contactListContent;
     private Spinner searchSpinner;
     private Button searchButton;
@@ -40,7 +43,7 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     private TextView searchText;
 
     //private AtomicInteger bgTasksRunning = new AtomicInteger(0);
-    private SimpleAdapter mAdapter;
+    private UserAdapter mAdapter;
     private OnSearchFragmentInteractionListener mListener;
 
     @Override
@@ -76,10 +79,12 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
         this.loadSearchSpinner();
 
         contactListContent = new ContactListContent();
+        users = new ArrayList<>();
 
-        mAdapter = new SimpleAdapter(getActivity(), contactListContent.getMap(),
+        mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
+                /*new SimpleAdapter(getActivity(), contactListContent.getMap(),
                 android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
-                new int[]{android.R.id.text1, android.R.id.text2});
+                new int[]{android.R.id.text1, android.R.id.text2});*/
 
         searchResultView.setAdapter(mAdapter);
         searchResultView.setOnItemClickListener(this);
@@ -90,7 +95,7 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     }
 
 
-    private void loadSearchSpinner(){
+    private void loadSearchSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.search_spinner_content, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -101,14 +106,14 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         CharSequence text = searchText.getText();
-        if(text.toString().equals("")){
+        if (text.toString().equals("")) {
             return;
         } else {
             contactListContent.clearItems();
             new SearchUserTask(
                     SearchUserTask.SearchBy.getSearchBy(
                             searchSpinner.getSelectedItemPosition()),
-                            text.toString(), this.getClass())
+                    text.toString(), this.getClass())
                     .execute();
 
             // Hide keyboard
@@ -134,16 +139,20 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void notifyFragment(ArrayList<User> userList) {
-        Log.d(getClass().getSimpleName(),"SearchContactFragment has been notified!");
+        Log.d(getClass().getSimpleName(), "SearchContactFragment has been notified!");
 
         if (userList != null && userList.size() != 0) {
-            for (User u : userList) {
+            /*for (User u : userList) {
                 contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
-            }
+            }*/
+            mAdapter.clear();
+            mAdapter.addAll(userList);
             mAdapter.notifyDataSetChanged();
         } else {
-            String noResults = DatabaseManager.INSTANCE.getContext().getResources().getString(R.string.search_no_results);
-            contactListContent.addItem(new ContactListContent.ContactListItem("null", noResults, ""));
+            //String noResults = DatabaseManager.INSTANCE.getContext().getResources().getString(R.string.search_no_results);
+            //contactListContent.addItem(new ContactListContent.ContactListItem("null", noResults, ""));
+            Toaster.getInstance().toast(R.string.search_no_results, Toast.LENGTH_SHORT);
+            mAdapter.clear();
             mAdapter.notifyDataSetChanged();
         }
     }

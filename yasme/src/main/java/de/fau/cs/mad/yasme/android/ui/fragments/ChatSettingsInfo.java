@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeChatProperties;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeOwnerAndLeaveTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.LeaveChatTask;
-import de.fau.cs.mad.yasme.android.contacts.ContactListContent;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
@@ -34,16 +32,16 @@ import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
-import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
+import de.fau.cs.mad.yasme.android.ui.UserAdapter;
+import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.
  */
 public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Chat> {
-
-    protected final ContactListContent participantsContent = new ContactListContent();
-    protected SimpleAdapter mAdapter=null;
+    private List<User> users;
+    protected UserAdapter mAdapter = null;
     private View chatInfo;
     private Chat chat;
     private Button changeName, changeStatus, leaveChat;
@@ -85,7 +83,10 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         leaveChat = (Button) rootView.findViewById(R.id.leave_chat);
         chatInfo = rootView.findViewById(R.id.chat_settings_info);
 
-        if (null != chat) fillInfoView();
+        if (null != chat) {
+            fillInfoView();
+        }
+        users = new ArrayList<>();
         return rootView;
     }
 
@@ -206,21 +207,10 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
             status.setText(chat.getStatus());
             number.setText(" " + chat.getNumberOfParticipants());
 
-            mAdapter = new SimpleAdapter(
-                getActivity(),
-                participantsContent.getMap(),
-                android.R.layout.simple_list_item_2,
-                new String[]{"name", "mail"},
-                new int[]{android.R.id.text1, android.R.id.text2}
-            );
+        mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
             participants.setAdapter(mAdapter);
-            participantsContent.clearItems();
-
-            for (User u : chat.getParticipants()) {
-                Log.d("XXXXXXXXXXXXXXXXXX","Userfor adapter: "+u.getName());
-                participantsContent.addItem(new ContactListContent.
-                    ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
-            }
+        mAdapter.clear();
+        mAdapter.addAll(chat.getParticipants());
             mAdapter.notifyDataSetChanged();
     }
 
@@ -245,7 +235,9 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
             list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             List<String> participantNames = new ArrayList<>();
             for (User u : chat.getParticipants()) {
-                if (u.getId() == DatabaseManager.INSTANCE.getUserId()) continue;
+                if (u.getId() == DatabaseManager.INSTANCE.getUserId()) {
+                    continue;
+                }
                 participantNames.add(u.getName());
             }
             final ArrayAdapter<List<User>> adapter = new ArrayAdapter<List<User>>(
@@ -284,14 +276,13 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
             alert.setMessage(activity.getString(R.string.alert_leave_message));
 
             alert.setPositiveButton(R.string.leave_chat,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
-                        new LeaveChatTask(chat).execute();
-                        dialog.dismiss();
-                    }
-                });
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // This can fail with IllegalStateException: the task has already been executed (a task can be executed only once)
+                            new LeaveChatTask(chat).execute();
+                            dialog.dismiss();
+                        }
+                    });
             alert.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -308,9 +299,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         if (null == chat) {
             throw new IllegalArgumentException("chat is null");
         }
-
-//      this.chat = DatabaseManager.INSTANCE.getChatDAO().get(chat.getId());
-        this.chat=chat;
+        this.chat = chat;
         fillInfoView();
     }
 }

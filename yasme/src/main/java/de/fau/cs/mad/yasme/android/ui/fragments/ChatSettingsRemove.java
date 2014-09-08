@@ -9,14 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeUserTask;
-import de.fau.cs.mad.yasme.android.contacts.ContactListContent;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
@@ -25,16 +26,15 @@ import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
+import de.fau.cs.mad.yasme.android.ui.UserAdapter;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
-import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsInfo;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.
  */
 public class ChatSettingsRemove extends Fragment implements NotifiableFragment<Chat> {
-
-    final ContactListContent participantsContent = new ContactListContent();
-    SimpleAdapter mDelAdapter;
+    List<User> users;
+    UserAdapter mDelAdapter;
     private View participants;
     private AbsListView list;
     private Chat chat;
@@ -66,13 +66,12 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
             ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
             new GetTask<>(chatDAO, chatId, this.getClass()).execute();
         }
+        users = new ArrayList<>();
         View rootView = inflater.inflate(R.layout.fragment_chat_settings_remove, container, false);
 
         participants = rootView.findViewById(R.id.chat_settings_participants);
 
-        mDelAdapter = new SimpleAdapter(getActivity(), participantsContent.getMap(),
-                android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
-                new int[]{android.R.id.text1, android.R.id.text2});
+        mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
 
         // Set the adapter
         list = (AbsListView) participants.findViewById(android.R.id.list);
@@ -83,7 +82,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                        User user = participantsContent.items.get(position).user;
+                        User user = users.get(position);
                         if (chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId()) {
                             showAlertDialog(getString(R.string.alert_delete_user),
                                     user.getName() + " " + getString(R.string.alert_delete_user_message),
@@ -94,7 +93,6 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
                     }
                 }
         );
-
         return rootView;
     }
 
@@ -130,15 +128,15 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
     @Override
     public void notifyFragment(Chat value) {
         chat = value;
-        participantsContent.clearItems();
-
+        mDelAdapter.clear();
+        List<User> filteredUsers = new ArrayList<>();
         for (User u : chat.getParticipants()) {
             if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
                 continue;
             }
-            participantsContent.addItem(new ContactListContent.
-                    ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
+            filteredUsers.add(u);
         }
+        mDelAdapter.addAll(filteredUsers);
         mDelAdapter.notifyDataSetChanged();
     }
 }
