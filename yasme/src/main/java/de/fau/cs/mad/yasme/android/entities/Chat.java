@@ -153,19 +153,18 @@ public class Chat implements Serializable {
             Log.e(((Object)this).getClass().getSimpleName(), "Participants are null, sry.");
             return false;
         }
-        Log.d("XX","User to delete: " + delUser.getName() + " " + delUser.toString());
+//        Log.d("XX","User to delete: " + delUser.getName() + " " + delUser.toString());
         boolean ret=false;
         for(User u : participants) {
             if(u.getId()!=delUser.getId()) {
                 continue;
             }
-            Log.d("XXXXXXXXXXXXXXXXXXXXXXXXX","WUB");
+//            Log.d("XXXXXXXXXXXXXXXXXXXXXXXXX","WUB");
             ret=participants.remove(u);
             break;
         }
-//        boolean ret = participants.remove(delUser);
-        Log.d("XX","User deleted:");
-        for(User u : participants) Log.d("XX",u.getName() + " "+u.toString()+" did happen: " + ret);
+//        Log.d("XX","User deleted:");
+//        for(User u : participants) Log.d("XX",u.getName() + " "+u.toString()+" did happen: " + ret);
         return true;
     }
 
