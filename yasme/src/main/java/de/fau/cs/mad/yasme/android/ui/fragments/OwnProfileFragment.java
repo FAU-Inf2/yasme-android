@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -16,6 +17,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SetProfileDataTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
@@ -23,6 +26,7 @@ import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
+import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 
@@ -56,13 +60,24 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-		View layout = inflater.inflate(R.layout.fragment_own_profile, container, false);
+        final AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+        View layout = inflater.inflate(R.layout.fragment_own_profile, container, false);
 
 		email = (TextView) layout.findViewById(R.id.own_profile_email);
 		id = (TextView) layout.findViewById(R.id.own_profile_id);
 		profilePicture = (ImageView) layout.findViewById(R.id.own_profile_picture);
-		name = (EditText) layout.findViewById(R.id.own_profile_header);
+        profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bitmap btmp = null;
+                try {
+                    PictureManager.INSTANCE.storePicture(activity.getSelfUser(), btmp);
+                } catch (IOException e) {
+                    Log.e(this.getClass().getSimpleName(), e.getMessage());
+                }
+            }
+        });
+        name = (EditText) layout.findViewById(R.id.own_profile_header);
 		name.setOnKeyListener(new OnKeyListener() {
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				// If the event isn't a key-down event on the "enter" button, skip this.
@@ -92,8 +107,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 		id.setText("" + self.getId());
 
 		// Show nice profile picture
-		if(self.getId()>0) {
-			profilePicture.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
+        if (self.getId() > 0) {
+            profilePicture.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
 			TextView initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
 			initial.setText(self.getName().substring(0, 1).toUpperCase());
 		}

@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 
-import de.fau.cs.mad.yasme.android.entities.User;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import de.fau.cs.mad.yasme.android.entities.User;
 
 /**
  * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 02.07.14.
@@ -16,7 +16,7 @@ import java.io.IOException;
 public enum PictureManager {
     INSTANCE;
 
-    private Context applicationContext;
+    private Context mContext = DatabaseManager.INSTANCE.getContext();
 
     /**
      * Stores a given bitmap on internal storage
@@ -30,7 +30,7 @@ public enum PictureManager {
         // Generate file name
         String filename = user.getId() + "_profilePicture_" + user.getLastModified().getTime();
 
-        ContextWrapper cw = new ContextWrapper(applicationContext);
+        ContextWrapper cw = new ContextWrapper(mContext);
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("userProfiles", Context.MODE_PRIVATE);
         // Create imageDir

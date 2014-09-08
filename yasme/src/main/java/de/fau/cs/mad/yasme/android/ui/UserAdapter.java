@@ -15,7 +15,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.entities.User;
 
 /**
@@ -67,15 +66,20 @@ public class UserAdapter extends ArrayAdapter<User> {
         TextView initial = (TextView) rowView.findViewById(R.id.user_picture_text);
         TextView profileName = (TextView) rowView.findViewById(R.id.user_name);
         TextView profileId = (TextView) rowView.findViewById(R.id.user_id);
-        CheckBox checkBox = null;
+        CheckBox checkBox;
         try {
             checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
         } catch (NullPointerException e) {
             checkBox = null;
         }
 
-        profileImage.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB[(int) user.getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
-        initial.setText(user.getName().substring(0, 1).toUpperCase());
+        if (false) {
+            //TODO: add picture
+        } else {
+            profileImage.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB
+                    [(int) user.getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
+            initial.setText(user.getName().substring(0, 1).toUpperCase());
+        }
         profileName.setText(user.getName());
         profileId.setText("YD " + user.getId());
         if (checkBox != null) {

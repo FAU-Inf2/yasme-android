@@ -1,16 +1,15 @@
 package de.fau.cs.mad.yasme.android.entities;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-import de.fau.cs.mad.yasme.android.storage.DatabaseConstants;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+import de.fau.cs.mad.yasme.android.storage.DatabaseConstants;
 
 /**
  * Created by Stefan Ettl <stefan.ettl@fau.de> on 10.05.14.
@@ -59,7 +58,6 @@ public class User implements Serializable {
         this.pw = pw;
     }
 
-    //TODO: changeOrder
     public User(String name, long id) {
         this.name = name;
         this.id = id;
@@ -83,11 +81,10 @@ public class User implements Serializable {
      * Getters
      */
 
-    @JsonIgnoreProperties({ "id", "user", "publicKey", "product", "lastModified" })
+    @JsonIgnoreProperties({"id", "user", "publicKey", "product", "lastModified"})
     public List<Device> getDevices() {
         return devices;
     }
-
 
     public String getEmail() {
         return email;
