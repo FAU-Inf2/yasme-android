@@ -34,8 +34,8 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.
  */
 public class ChatSettingsRemove extends Fragment implements NotifiableFragment<Chat> {
-    List<User> users;
-    UserAdapter mDelAdapter;
+    private List<User> users;
+    private UserAdapter mDelAdapter;
     private View participants;
     private AbsListView list;
     private Chat chat;
