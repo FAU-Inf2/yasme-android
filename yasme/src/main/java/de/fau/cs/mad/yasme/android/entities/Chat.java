@@ -139,14 +139,35 @@ public class Chat implements Serializable {
         this.participants = participants;
     }
 
-		public boolean addParticipant(User newUser) {
-			if(participants==null) {
-				Log.e(((Object)this).getClass().getSimpleName(), "Participants are null, sry.");
-				return false;
-			}
-			participants.add(newUser);
-			return true;
-		}
+    public boolean addParticipant(User newUser) {
+        if(participants==null) {
+            Log.e(((Object)this).getClass().getSimpleName(), "Participants are null, sry.");
+            return false;
+        }
+        participants.add(newUser);
+        return true;
+    }
+
+    public boolean removeParticipant(User delUser) {
+        if(participants==null) {
+            Log.e(((Object)this).getClass().getSimpleName(), "Participants are null, sry.");
+            return false;
+        }
+        Log.d("XX","User to delete: " + delUser.getName() + " " + delUser.toString());
+        boolean ret=false;
+        for(User u : participants) {
+            if(u.getId()!=delUser.getId()) {
+                continue;
+            }
+            Log.d("XXXXXXXXXXXXXXXXXXXXXXXXX","WUB");
+            ret=participants.remove(u);
+            break;
+        }
+//        boolean ret = participants.remove(delUser);
+        Log.d("XX","User deleted:");
+        for(User u : participants) Log.d("XX",u.getName() + " "+u.toString()+" did happen: " + ret);
+        return true;
+    }
 
     public String getStatus() {
         if(this.statusChanged==false || this.status == null || this.status.isEmpty()) {

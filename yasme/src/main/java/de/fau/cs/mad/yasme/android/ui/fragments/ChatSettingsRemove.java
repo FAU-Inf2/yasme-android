@@ -67,7 +67,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
             ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
             new GetTask<>(chatDAO, chatId, this.getClass()).execute();
         }
-        users = new ArrayList<>();
+        users = new ArrayList<User>();
         View rootView = inflater.inflate(R.layout.fragment_chat_settings_remove, container, false);
 
         participants = rootView.findViewById(R.id.chat_settings_participants);
@@ -92,7 +92,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
                         showAlertDialog(
                             getString(R.string.alert_delete_user),
                             user.getName() + " " + getString(R.string.alert_delete_user_message),
-                            user.getId(), 0L
+                            user.getId(), 0L, position
                         );
                     }
                 }
@@ -100,7 +100,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
         return rootView;
     }
 
-    public void showAlertDialog(String title, String message, final Long userId, final Long rest) {
+    public void showAlertDialog(String title, String message, final Long userId, final Long rest, final int pos) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(title);
 
@@ -113,6 +113,8 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
         alert.setPositiveButton(R.string.OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        users.remove(pos);
+                        chat.removeParticipant(DatabaseManager.INSTANCE.getUserDAO().get(userId));
                         new ChangeUserTask(chat).execute(userId, rest);
                     }
                 }
@@ -130,10 +132,13 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
 
     @Override
     public void notifyFragment(Chat value) {
+        mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
+        mDelAdapter.setNotifyOnChange(true);
         chat = value;
         mDelAdapter.clear();
-        List<User> filteredUsers = new ArrayList<>();
+        List<User> filteredUsers = new ArrayList<User>();
         for (User u : chat.getParticipants()) {
+            Log.e("UUUUUUUUUUUUUUUU","User: "+u.getName());
             if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
                 continue;
             }
@@ -141,5 +146,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
         }
         mDelAdapter.addAll(filteredUsers);
         mDelAdapter.notifyDataSetChanged();
+        list = (AbsListView) participants.findViewById(android.R.id.list);
+        list.setAdapter(mDelAdapter);
     }
 }
