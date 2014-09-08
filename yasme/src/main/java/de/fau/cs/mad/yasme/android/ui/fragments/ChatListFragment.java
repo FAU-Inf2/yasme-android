@@ -71,7 +71,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         }
         if (name != null) {
-            getActivity().setTitle(activity.getSelfUser().getName());
+            activity.setTitle(activity.getSelfUser().getName());
         }
 
         //holt vor allem den Namen des Users ab
@@ -164,21 +164,22 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     }
 
     private void handleLeaveChat(final Chat chat) {
+				AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         boolean isOwner = (chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId());
         if (isOwner) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-            alert.setTitle(getActivity().getString(R.string.alert_owner));
+            AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+            alert.setTitle(activity.getString(R.string.alert_owner));
 
-            LinearLayout layout = new LinearLayout(getActivity());
+            LinearLayout layout = new LinearLayout(activity);
             layout.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT);
 
-            TextView text = new TextView(getActivity());
-            text.setText(getActivity().getString(R.string.alert_owner_message));
+            TextView text = new TextView(activity);
+            text.setText(activity.getString(R.string.alert_owner_message));
 
-            final ListView list = new ListView(getActivity());
+            final ListView list = new ListView(activity);
             list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             List<String> participantNames = new ArrayList<>();
             for (User u : chat.getParticipants()) {
@@ -187,7 +188,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
                 }
                 participantNames.add(u.getName());
             }
-            final ArrayAdapter<List<User>> adapter = new ArrayAdapter<List<User>>(getActivity(),
+            final ArrayAdapter<List<User>> adapter = new ArrayAdapter<List<User>>(activity,
                     android.R.layout.simple_list_item_single_choice, (List) participantNames);
             list.setAdapter(adapter);
 
@@ -215,9 +216,9 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
             );
             alert.show();
         } else {
-            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-            alert.setTitle(getActivity().getString(R.string.alert_leave));
-            alert.setMessage(getActivity().getString(R.string.alert_leave_message));
+            AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+            alert.setTitle(activity.getString(R.string.alert_leave));
+            alert.setMessage(activity.getString(R.string.alert_leave_message));
 
             alert.setPositiveButton(R.string.leave_chat,
                     new DialogInterface.OnClickListener() {

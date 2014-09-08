@@ -26,6 +26,7 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
+import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsInfo;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.

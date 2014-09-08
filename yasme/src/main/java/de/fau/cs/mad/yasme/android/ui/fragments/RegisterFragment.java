@@ -44,29 +44,30 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     }
 
     private void registerDialog(final boolean acceptedTos) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+				AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
         alert.setTitle(getString(R.string.registration_title));
 
-        LinearLayout list = new LinearLayout(getActivity());
+        LinearLayout list = new LinearLayout(activity);
         list.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
-        final EditText name = new EditText(getActivity());
+        final EditText name = new EditText(activity);
         name.setHint(R.string.registration_name);
         name.setText(inputName);
 
-        final EditText mail = new EditText(getActivity());
+        final EditText mail = new EditText(activity);
         mail.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mail.setHint(R.string.registration_email);
         mail.setText(inputMail);
 
-        final EditText password = new EditText(getActivity());
+        final EditText password = new EditText(activity);
         password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         password.setHint(R.string.registration_password);
         password.setText(inputPass1);
 
-        final EditText passwordCheck = new EditText(getActivity());
+        final EditText passwordCheck = new EditText(activity);
         passwordCheck.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         passwordCheck.setHint(R.string.registration_repeat_password);
         passwordCheck.setText(inputPass2);
@@ -77,7 +78,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                 getString(R.string.privacy_policy) + " " +
                 getString(R.string.read_TOS_end);
 
-        final CheckBox checkBox = new CheckBox(getActivity());
+        final CheckBox checkBox = new CheckBox(activity);
         checkBox.setText(checkBoxText);
 
         Pattern pattern = Pattern.compile(getString(R.string.TOS));

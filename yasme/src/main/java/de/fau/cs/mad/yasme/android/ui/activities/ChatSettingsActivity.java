@@ -175,7 +175,7 @@ public class ChatSettingsActivity extends AbstractYasmeActivity {
 
         @Override
         public int getCount() {
-            return 1;
+            return 3;
         }
 
         @Override
