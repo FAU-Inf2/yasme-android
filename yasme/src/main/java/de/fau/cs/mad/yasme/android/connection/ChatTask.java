@@ -6,8 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Device;
+import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.Error;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
@@ -137,7 +140,18 @@ public class ChatTask extends ConnectionTask {
 
     public void addParticipantToChat(long participantId, long chatId) throws RestServiceException {
         String path = "par/" + participantId + "/" + chatId;
-        executeRequest(Request.PUT, path);
+        HttpResponse httpResponse = executeRequest(Request.PUT, path);
+				int statusCode = httpResponse.getStatusLine().getStatusCode();
+				if(statusCode != 200) {
+					Log.e(this.getClass().getSimpleName(), "User " + participantId + "could not be added!");
+					return;
+				}
+				ChatDAO cDao = DatabaseManager.INSTANCE.getChatDAO();
+				Chat chat = cDao.get(chatId);
+				for(User u : chat.getParticipants()) Log.d("XXXXXXXXXXXXXXXXXXX","User: " + u.getName());
+				Log.d("XXXXXXXXXXXXXX","Now adding " + participantId);
+				//chat.addParticipant(DatabaseManager.INSTANCE.getUserDAO().get(participantId));
+				for(User u : chat.getParticipants()) Log.d("XXXXXXXXXXXXXXXXXXX","User: " + u.getName());
         Log.d(this.getClass().getSimpleName(), "User " + participantId + " added to Chat!");
     }
 

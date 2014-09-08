@@ -112,7 +112,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
         alert.setPositiveButton(R.string.OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        new ChangeUserTask(chat,ChatSettingsInfo.class).execute(userId, rest);
+                        new ChangeUserTask(chat).execute(userId, rest);
                     }
                 }
         );

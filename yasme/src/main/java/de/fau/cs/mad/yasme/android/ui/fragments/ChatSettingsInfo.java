@@ -217,6 +217,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
 			participantsContent.clearItems();
 
 			for (User u : chat.getParticipants()) {
+				Log.d("XXXXXXXXXXXXXXXXXX","Userfor adapter: "+u.getName());
 				participantsContent.addItem(new ContactListContent.
 					ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
 			}
@@ -308,7 +309,8 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
 			throw new IllegalArgumentException("chat is null");
 		}
 
-		this.chat = chat;
+//		this.chat = DatabaseManager.INSTANCE.getChatDAO().get(chat.getId());
+		this.chat=chat;
 		fillInfoView();
 	}
 }

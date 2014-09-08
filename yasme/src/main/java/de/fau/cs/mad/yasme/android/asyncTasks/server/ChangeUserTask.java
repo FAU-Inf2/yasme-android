@@ -11,6 +11,8 @@ import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
+import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsInfo;
+import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsRemove;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 30.07.14.
@@ -18,11 +20,9 @@ import de.fau.cs.mad.yasme.android.exception.RestServiceException;
  */
 public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
 	private Chat chat;
-	private Class classToNotify;
 
-	public ChangeUserTask(Chat chat, Class classToNotify) {
+	public ChangeUserTask(Chat chat) {
 		this.chat = chat;
-		this.classToNotify=classToNotify;
 	}
 
 
@@ -70,6 +70,7 @@ public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
 		} else {
 			Toaster.getInstance().toast(R.string.change_not_successful, Toast.LENGTH_LONG);
 		}
-		ObservableRegistry.getObservable(classToNotify).notifyFragments(chat);
+		ObservableRegistry.getObservable(ChatSettingsInfo.class).notifyFragments(chat);
+		ObservableRegistry.getObservable(ChatSettingsRemove.class).notifyFragments(chat);
 	}
 }

@@ -99,7 +99,6 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
 	@Override
 	public void onClick(View view) {
-		Log.d(this.getClass().getSimpleName(), "addUser-Button pushed");
 		SparseBooleanArray checked = chatPartners.getCheckedItemPositions();
 
 		if (checked.size() == 0) {
@@ -116,15 +115,14 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 			showAlertDialog(
 				getString(R.string.alert_add_user),
 				users.get(index).getName() + " " + getString(R.string.alert_add_user_message),
-				chat, users.get(index).getId(), 1L
+				users.get(index).getId(), 1L
 			);
 		}
 	}
 
 	public void updateChatPartnersList(List<User> allUsers) {
 		if (chat == null) {
-			Log.e(this.getClass().getSimpleName(), "Chat in updateChatPartnersList was null");
-			throw new IllegalArgumentException("chat is null");
+			throw new IllegalArgumentException("Chat in updateChatPartnersList was null");
 		}
 		List<User> filteredUsers = new ArrayList<>();
 		for (User u : allUsers) {
@@ -141,24 +139,25 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 		super.updateChatPartnersList(filteredUsers);
 	}
 
-	public void showAlertDialog(String title, String message,
-			final Chat chat, final Long userId, final Long rest) {
+	private void showAlertDialog(String title, String message, final Long userId, final Long type) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		alert.setTitle(title);
 		alert.setMessage(message);
-		alert.setPositiveButton(R.string.OK,
+		alert.setPositiveButton(
+			R.string.OK,
 			new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					if(index>=0) {
 						users.remove(index);
+						chat.addParticipant(DatabaseManager.INSTANCE.getUserDAO().get(userId));
 						updateChatPartnersList(users);
 					}
-					new ChangeUserTask(chat,ChatSettingsInfo.class).execute(userId, rest);
+					new ChangeUserTask(chat).execute(userId, type);
 				}
 			}
 		);
-
-		alert.setNegativeButton(R.string.cancel,
+		alert.setNegativeButton(
+			R.string.cancel,
 			new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					dialog.cancel();

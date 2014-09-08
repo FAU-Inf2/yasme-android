@@ -135,6 +135,15 @@ public class Chat implements Serializable {
         this.participants = participants;
     }
 
+		public boolean addParticipant(User newUser) {
+			if(participants==null) {
+				Log.e(((Object)this).getClass().getSimpleName(), "Participants are null, sry.");
+				return false;
+			}
+			participants.add(newUser);
+			return true;
+		}
+
     public String getStatus() {
         if(status == null || status.isEmpty()) {
             return (getNumberOfParticipants() + " YASMEs");
