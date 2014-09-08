@@ -112,14 +112,14 @@ Feel free to contact us: <yasme@i2.cs.fau.de>
 [gs]: https://developer.android.com/tools/support-library/setup.html
 [ie]: https://github.com/FAU-Inf2/yasme-android/issues
 [ml]: http://opensource.org/licenses/MIT
-[orm]:http://ormlite.com/
-[apache]:http://www.apache.org/
-[js]:https://github.com/FasterXML/jackson
-[ans]:http://developer.android.com/reference/android/support/v4/app/package-summary.html
-[apl]:http://hc.apache.org/httpcomponents-client-4.3.x/license.html
-[apl2]:http://www.apache.org/licenses/LICENSE-2.0.txt
-[fxml]:https://github.com/FasterXML/jackson-core/wiki
-[tos]:https://raw.githubusercontent.com/FAU-Inf2/yasme-android/master/legal/termsOfService
-[pp]: https://raw.githubusercontent.com/FAU-Inf2/yasme-android/master/legal/privacyPolicy
+[orm]: http://ormlite.com/
+[apache]: http://www.apache.org/
+[js]: https://github.com/FasterXML/jackson
+[ans]: http://developer.android.com/reference/android/support/v4/app/package-summary.html
+[apl]: http://hc.apache.org/httpcomponents-client-4.3.x/license.html
+[apl2]: http://www.apache.org/licenses/LICENSE-2.0.txt
+[fxml]: https://github.com/FasterXML/jackson-core/wiki
+[tos]: https://github.com/FAU-Inf2/yasme-android/blob/master/legal/termsOfService
+[pp]: https://github.com/FAU-Inf2/yasme-android/blob/master/legal/privacyPolicy
 [li]: https://github.com/FAU-Inf2/yasme-android/blob/master/LICENSE
 
