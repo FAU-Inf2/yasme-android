@@ -22,6 +22,7 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
+import de.fau.cs.mad.yasme.android.ui.UserAdapter;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.
@@ -98,6 +99,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     @Override
     public void onClick(View view) {
         SparseBooleanArray checked = adapter.getSelectedContacts();
+        Log.d("FFFFFFFFFFFFFFFFF",checked.size()+" HALLELUJA");
 
         if (checked.size() == 0) {
             Toast.makeText(getActivity(), getString(R.string.toast_no_selection),Toast.LENGTH_LONG).show();
@@ -106,9 +108,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
         for (int i = 0; i < checked.size(); i++) {
             // If the box is not set/checked (true), just skip
-            if (!checked.valueAt(i)) {
-                continue;
-            }
+            if (!checked.valueAt(i)) continue;
             // Get the item position (index) in adapter and show an alert dialog box
             index = checked.keyAt(i);
             Log.d("XXXXXXXXXXX",i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName() );
@@ -118,6 +118,9 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                 users.get(index).getId(), 1L
             );
         }
+        adapter = new UserAdapter(getActivity(),R.layout.user_item, users);
+        adapter.setNotifyOnChange(true);
+        chatPartners.setAdapter(adapter);
     }
 
     public void updateChatPartnersList(List<User> contacts) {
@@ -155,6 +158,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                         if(!chat.getStatusChanged()) chat.setStatus(chat.getStatus(),false);
                         if(!chat.getNameChanged()) chat.setName(chat.getName(),false);
                         updateChatPartnersList(users);
+                        index=-1;
                     }
                     new ChangeUserTask(chat).execute(userId, type);
                 }

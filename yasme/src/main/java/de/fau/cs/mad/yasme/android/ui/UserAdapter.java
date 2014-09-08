@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.entities.User;
 
 /**
@@ -73,7 +74,8 @@ public class UserAdapter extends ArrayAdapter<User> {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                selectedContacts.append(position, b);
+                if(b) selectedContacts.append(position, b);
+                else selectedContacts.delete(position);
             }
         });
 
