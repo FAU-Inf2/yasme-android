@@ -200,7 +200,7 @@ public enum DatabaseManager {
 
     public NewMessageNotificationManager getNotifier() {
         if (notifier == null) {
-            return new NewMessageNotificationManager();
+            notifier = new NewMessageNotificationManager();
         }
         return notifier;
     }

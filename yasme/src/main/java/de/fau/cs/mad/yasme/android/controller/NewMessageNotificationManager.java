@@ -33,7 +33,7 @@ public class NewMessageNotificationManager {
     public NewMessageNotificationManager() {
         mContext = DatabaseManager.INSTANCE.getContext();
         numberOfMessages = 0;
-        SharedPreferences mSettings = DatabaseManager.INSTANCE.getSettings();
+        mSettings = DatabaseManager.INSTANCE.getSettings();
 
         mNotificationManager = (NotificationManager) mContext
                 .getSystemService(Context.NOTIFICATION_SERVICE);
