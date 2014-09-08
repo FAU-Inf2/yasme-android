@@ -151,6 +151,9 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                     if(index>=0) {
                         users.remove(index);
                         chat.addParticipant(DatabaseManager.INSTANCE.getUserDAO().get(userId));
+                        Log.d("EEEEEEEEEEEEEEEEEEEEE","Status Name : ["+chat.getStatusChanged()+"] ["+chat.getNameChanged()+"]");
+                        if(!chat.getStatusChanged()) chat.setStatus(chat.getStatus(),false);
+                        if(!chat.getNameChanged()) chat.setName(chat.getName(),false);
                         updateChatPartnersList(users);
                     }
                     new ChangeUserTask(chat).execute(userId, type);

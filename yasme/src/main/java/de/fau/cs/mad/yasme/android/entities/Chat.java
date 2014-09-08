@@ -31,6 +31,10 @@ public class Chat implements Serializable {
     private long id;
 
     private List<User> participants;
+    @JsonIgnore
+    private boolean nameChanged=false;
+    @JsonIgnore
+    private boolean statusChanged=false;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_STATUS)
     private String status;
@@ -145,21 +149,30 @@ public class Chat implements Serializable {
 		}
 
     public String getStatus() {
-        if(status == null || status.isEmpty()) {
+        if(this.statusChanged==false || this.status == null || this.status.isEmpty()) {
             return (getNumberOfParticipants() + " YASMEs");
         }
-        return status;
+        return this.status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(String status, boolean isNotDefault) {
+        this.statusChanged=isNotDefault;
         this.status = status;
+    }
+
+    public boolean getStatusChanged() {
+        return this.statusChanged;
+    }
+    public boolean getNameChanged() {
+        return this.nameChanged;
     }
 
     @JsonProperty("name")
     public String getName() {
-        if (name != null && name.length() > 0) {
+        if (this.nameChanged==true && this.name != null && this.name.length() > 0) {
             return name;
         }
+        // Create a new name
         String returnName = "";
         try {
             int size = getParticipants().size();
@@ -175,7 +188,8 @@ public class Chat implements Serializable {
         return returnName;
     }
 
-    public void setName(String name) {
+    public void setName(String name, boolean isNotDefault) {
+        this.nameChanged=isNotDefault;
         this.name = name;
     }
 
