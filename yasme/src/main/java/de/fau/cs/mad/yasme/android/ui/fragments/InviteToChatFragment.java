@@ -83,8 +83,8 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
         chatPartners.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
         activity = (AbstractYasmeActivity) getActivity();
-        adapter = new UserAdapter(activity, R.layout.user_item, new ArrayList<User>());
-        adapter.setNotifyOnChange(true);
+        adapter = new UserAdapter(activity, R.layout.user_item_checkbox, new ArrayList<User>());
+		adapter.setNotifyOnChange(true);
         chatPartners.setAdapter(adapter);
 
         new GetContactsTask(this.getClass()).execute();
@@ -93,7 +93,6 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
 
     /**
      * Will be called by the GetAllUsersTask after the list of users has been retrieved
-     *
      * @param contacts list
      */
     public void updateChatPartnersList(List<User> contacts) {

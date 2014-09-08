@@ -76,7 +76,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         super.onStart();
         //Register at observer
         FragmentObservable<ChatSettingsAdd, InviteToChatParam> obs =
-            ObservableRegistry.getObservable(this.getClass());
+                ObservableRegistry.getObservable(this.getClass());
         obs.register(this);
         adaptToSettingsFragment();
     }
@@ -86,7 +86,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         super.onStop();
         //De-Register at observer
         FragmentObservable<ChatSettingsAdd, InviteToChatParam> obs =
-            ObservableRegistry.getObservable(this.getClass());
+                ObservableRegistry.getObservable(this.getClass());
         obs.remove(this);
     }
 
@@ -102,13 +102,15 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         Log.d("FFFFFFFFFFFFFFFFF",checked.size()+" HALLELUJA");
 
         if (checked.size() == 0) {
-            Toast.makeText(getActivity(), getString(R.string.toast_no_selection),Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getString(R.string.toast_no_selection), Toast.LENGTH_LONG).show();
             return;
         }
 
         for (int i = 0; i < checked.size(); i++) {
             // If the box is not set/checked (true), just skip
-            if (!checked.valueAt(i)) continue;
+            if (!checked.valueAt(i)) {
+                continue;
+            }
             // Get the item position (index) in adapter and show an alert dialog box
             index = checked.keyAt(i);
             Log.d("XXXXXXXXXXX",i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName() );
@@ -148,29 +150,32 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         alert.setTitle(title);
         alert.setMessage(message);
         alert.setPositiveButton(
-            R.string.OK,
-            new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    if(index>=0) {
-                        users.remove(index);
-                        chat.addParticipant(DatabaseManager.INSTANCE.getUserDAO().get(userId));
-                        Log.d("EEEEEEEEEEEEEEEEEEEEE","Status Name : ["+chat.getStatusChanged()+"] ["+chat.getNameChanged()+"]");
-                        if(!chat.getStatusChanged()) chat.setStatus(chat.getStatus(),false);
-                        if(!chat.getNameChanged()) chat.setName(chat.getName(),false);
-                        updateChatPartnersList(users);
-                        index=-1;
+                R.string.OK,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if (index >= 0) {
+                            users.remove(index);
+                            chat.addParticipant(DatabaseManager.INSTANCE.getUserDAO().get(userId));
+                            Log.d("EEEEEEEEEEEEEEEEEEEEE", "Status Name : [" + chat.getStatusChanged() + "] [" + chat.getNameChanged() + "]");
+                            if (!chat.getStatusChanged()) {
+                                chat.setStatus(chat.getStatus(), false);
+                            }
+                            if (!chat.getNameChanged()) {
+                                chat.setName(chat.getName(), false);
+                            }
+                            updateChatPartnersList(users);
+                        }
+                        new ChangeUserTask(chat).execute(userId, type);
                     }
-                    new ChangeUserTask(chat).execute(userId, type);
                 }
-            }
         );
         alert.setNegativeButton(
-            R.string.cancel,
-            new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    dialog.cancel();
+                R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
                 }
-            }
         );
         alert.show();
     }

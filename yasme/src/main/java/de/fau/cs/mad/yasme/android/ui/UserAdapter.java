@@ -25,6 +25,7 @@ public class UserAdapter extends ArrayAdapter<User> {
     private List<User> users;
     private final Context context;
     private SparseBooleanArray selectedContacts = new SparseBooleanArray();
+    private int layout = R.layout.user_item;
 
     public SparseBooleanArray getSelectedContacts() {
         return selectedContacts;
@@ -51,6 +52,7 @@ public class UserAdapter extends ArrayAdapter<User> {
         super(context, resource, users);
         this.users = users;
         this.context = context;
+        this.layout = resource;
     }
 
     @Override
@@ -59,25 +61,31 @@ public class UserAdapter extends ArrayAdapter<User> {
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 
-        View rowView = inflater.inflate(R.layout.user_item, parent, false);
+        View rowView = inflater.inflate(layout, parent, false);
 
         ImageView profileImage = (ImageView) rowView.findViewById(R.id.user_picture);
         TextView initial = (TextView) rowView.findViewById(R.id.user_picture_text);
         TextView profileName = (TextView) rowView.findViewById(R.id.user_name);
         TextView profileId = (TextView) rowView.findViewById(R.id.user_id);
-        CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
+        CheckBox checkBox = null;
+        try {
+            checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
+        } catch (NullPointerException e) {
+            checkBox = null;
+        }
 
         profileImage.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB[(int) user.getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
         initial.setText(user.getName().substring(0, 1).toUpperCase());
         profileName.setText(user.getName());
         profileId.setText("YD " + user.getId());
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b) selectedContacts.append(position, b);
-                else selectedContacts.delete(position);
-            }
-        });
+        if (checkBox != null) {
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    selectedContacts.append(position, b);
+                }
+            });
+        }
 
         rowView.requestFocus();
         return rowView;

@@ -3,7 +3,6 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +21,11 @@ import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SearchUserTask;
 import de.fau.cs.mad.yasme.android.contacts.ContactListContent;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
-import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
 
 /**
  * Created by Stefan Ettl <stefan.ettl@fau.de>
@@ -65,7 +64,6 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View layout = inflater.inflate(R.layout.fragment_search_contact, null);
 
         mListener = (OnSearchFragmentInteractionListener) getActivity();
@@ -79,8 +77,9 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
         contactListContent = new ContactListContent();
 
-        mAdapter = new SimpleAdapter((ContactActivity)getActivity() ,
-                contactListContent.getMap(), android.R.layout.simple_list_item_2, new String[] {"name","mail"}, new int[]{android.R.id.text1,android.R.id.text2});
+        mAdapter = new SimpleAdapter(getActivity(), contactListContent.getMap(),
+                android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
+                new int[]{android.R.id.text1, android.R.id.text2});
 
         searchResultView.setAdapter(mAdapter);
         searchResultView.setOnItemClickListener(this);
@@ -92,7 +91,6 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
 
     private void loadSearchSpinner(){
-
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.search_spinner_content, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -102,7 +100,6 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-
         CharSequence text = searchText.getText();
         if(text.toString().equals("")){
             return;
