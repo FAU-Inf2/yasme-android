@@ -15,9 +15,8 @@
         android:orientation="vertical"
         android:gravity="right"
         android:layout_gravity="right"
-	android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="false"
-        >
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="false">
 
         <TextView
             android:id="@+id/chat_item_message"

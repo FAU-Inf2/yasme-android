@@ -3,12 +3,10 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,10 +21,12 @@ import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetContactsTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.CreateChatTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
+import de.fau.cs.mad.yasme.android.ui.UserAdapter;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
 
@@ -34,11 +34,11 @@ import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
  * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 22.06.14.
  */
 public class InviteToChatFragment extends Fragment implements View.OnClickListener, NotifiableFragment<InviteToChatFragment.InviteToChatParam> {
-
+    protected AbstractYasmeActivity activity;
     protected List<User> users;
     protected ListView chatPartners;
     protected Button startChat;
-    protected ArrayAdapter<String> adapter;
+    protected UserAdapter adapter;
     protected TextView emptyContactsNotice;
 
     public InviteToChatFragment() {
@@ -55,9 +55,6 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
                 ObservableRegistry.getObservable(InviteToChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
-
-        //progress bar on
-        //getActivity().setProgressBarIndeterminateVisibility(true);
     }
 
     @Override
@@ -70,18 +67,41 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
                 ObservableRegistry.getObservable(InviteToChatFragment.class);
         obs.register(this);
 
+        //findViewsById(rootView);
+        startChat = (Button) rootView.findViewById(R.id.inviteToChat_startChat);
+
+        emptyContactsNotice = (TextView) rootView.findViewById(R.id.empty_contacts_notice);
+        emptyContactsNotice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ContactActivity.class);
+                // Message is immaterial
+                intent.putExtra(ContactActivity.SEARCH_FOR_CONTACTS, "let me search for contacts");
+                startActivity(intent);
+            }
+        });
+
+        chatPartners = (ListView) rootView.findViewById(R.id.inviteToChat_usersList);
+        // Only show the notice when the list view is empty
+        chatPartners.setEmptyView(emptyContactsNotice);
+        chatPartners.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+        activity = (AbstractYasmeActivity) getActivity();
+        adapter = new UserAdapter(activity, R.layout.user_item, new ArrayList<User>());
+        chatPartners.setAdapter(adapter);
+        adapter.setNotifyOnChange(true);
+
         new GetContactsTask(this.getClass()).execute();
         return rootView;
     }
 
-    protected void findViewsById() {
-
+    protected void findViewsById(View rootView) {
         if (null == startChat) {
-            startChat = (Button) getActivity().findViewById(R.id.inviteToChat_startChat);
+            startChat = (Button) rootView.findViewById(R.id.inviteToChat_startChat);
         }
 
         if (null == emptyContactsNotice) {
-            emptyContactsNotice = (TextView) getActivity().findViewById(R.id.empty_contacts_notice);
+            emptyContactsNotice = (TextView) rootView.findViewById(R.id.empty_contacts_notice);
             emptyContactsNotice.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -94,7 +114,7 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
         }
 
         if (null == chatPartners) {
-            chatPartners = (ListView) getActivity().findViewById(R.id.inviteToChat_usersList);
+            chatPartners = (ListView) rootView.findViewById(R.id.inviteToChat_usersList);
             // Only show the notice when the list view is empty
             chatPartners.setEmptyView(emptyContactsNotice);
         }
@@ -103,41 +123,13 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
 
     /**
      * Will be called by the GetAllUsersTask after the list of users has been retrieved
-     *
-     * @param allUsers list
+     * @param contacts list
      */
-    public void updateChatPartnersList(List<User> allUsers) {
-        if (null == chatPartners || null == startChat) {
-            findViewsById();
-        }
-
-        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        User self = activity.getSelfUser();
-
-        // Exclude self
-        User myself = null;
-        List<String> userNames = new ArrayList<>();
-        for (int cur = 0; cur < allUsers.size(); cur++) {
-            User user = allUsers.get(cur);
-
-            // Skip self
-            if (user.getId() == self.getId()) {
-                myself = user;
-                continue;
-            }
-
-            userNames.add(user.getName());
-        }
-
-        String[] userNamesArr = userNames.toArray(new String[userNames.size()]);
-        if (myself != null) {
-            allUsers.remove(myself);
-        }
-        this.users = allUsers;  // without myself
-
-        adapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_multiple_choice, userNamesArr);
-        chatPartners.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        chatPartners.setAdapter(adapter);
+    public void updateChatPartnersList(List<User> contacts) {
+        users = contacts;
+        adapter.clear();
+        adapter.addAll(contacts);
+        adapter.notifyDataSetChanged();
 
         startChat.setOnClickListener(this);
     }
@@ -145,9 +137,8 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        SparseBooleanArray checked = chatPartners.getCheckedItemPositions();
+        SparseBooleanArray checked = adapter.getSelectedContacts();
         Set<User> selectedUsers = new HashSet<>();
-        ArrayList<String> selectedUserNames = new ArrayList<>();
 
         if (checked.size() == 0) {
             Toast.makeText(activity, getString(R.string.toast_no_selection), Toast.LENGTH_LONG).show();
@@ -159,7 +150,7 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
             int position = checked.keyAt(i);
             if (checked.valueAt(i)) {
                 selectedUsers.add(users.get(position));
-                selectedUserNames.add(users.get(position).getName());
+                //selectedUserNames.add(users.get(position).getName());
             }
         }
         new CreateChatTask(activity.getSelfUser(), selectedUsers, this.getClass()).execute();
@@ -201,7 +192,6 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
                 ObservableRegistry.getObservable(InviteToChatFragment.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
-        findViewsById();
     }
 
     @Override

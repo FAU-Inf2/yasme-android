@@ -61,9 +61,12 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                 throw new ExceptionInInitializerError("Chat could not be loaded from database");
             }
         }
-        new GetContactsTask(this.getClass()).execute();
 
         View rootView = inflater.inflate(R.layout.fragment_invite_to_chat, container, false);
+        findViewsById(rootView);
+
+        new GetContactsTask(this.getClass()).execute();
+
         return rootView;
     }
 
@@ -76,9 +79,6 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                 ObservableRegistry.getObservable(ChatSettingsAdd.class);
         Log.d(this.getClass().getSimpleName(), "... successful");
         obs.register(this);
-
-        findViewsById();
-
         adaptToSettingsFragment();
     }
 
@@ -119,12 +119,12 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         }
     }
 
-    public void updateChatPartnersList(List<User> allUsers) {
+    public void updateChatPartnersList(List<User> contacts) {
         if (chat == null) {
 
         }
         List<User> filteredUsers = new ArrayList<>();
-        for (User u : allUsers) {
+        for (User u : contacts) {
             boolean isParticipant = false;
             for (User p : chat.getParticipants()) {
                 if (u.getId() == p.getId()) {

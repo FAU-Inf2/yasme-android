@@ -2,7 +2,8 @@ package de.fau.cs.mad.yasme.android.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import de.fau.cs.mad.yasme.android.controller.Log;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
-
-import de.fau.cs.mad.yasme.android.R;
-import de.fau.cs.mad.yasme.android.encryption.MessageEncryption;
-import de.fau.cs.mad.yasme.android.entities.Message;
-import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,6 +18,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
+
+import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.controller.Log;
+import de.fau.cs.mad.yasme.android.encryption.MessageEncryption;
+import de.fau.cs.mad.yasme.android.entities.Message;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 12.07.14.
@@ -34,20 +34,20 @@ public class ChatAdapter extends ArrayAdapter<Message> {
     private long selfId;
 
     /**
-     *  @see <a href="http://developer.android.com/design/style/color.html">Color palette used</a>
-     *  from K9 Mail
+     * @see <a href="http://developer.android.com/design/style/color.html">Color palette used</a>
+     * from K9 Mail
      */
     public final static int CONTACT_DUMMY_COLORS_ARGB[] = {
-	    0xff33B5E5,
-	    0xffAA66CC,
-	    0xff99CC00,
-	    0xffFFBB33,
-	    0xffFF4444,
-	    0xff0099CC,
-	    0xff9933CC,
-	    0xff669900,
-	    0xffFF8800,
-	    0xffCC0000
+            0xff33B5E5,
+            0xffAA66CC,
+            0xff99CC00,
+            0xffFFBB33,
+            0xffFF4444,
+            0xff0099CC,
+            0xff9933CC,
+            0xff669900,
+            0xffFF8800,
+            0xffCC0000
     };
 
     public ChatAdapter(Context context, int resource, long selfId, List<Message> messages) {
@@ -68,10 +68,10 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         LinearLayout textViews;
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-        if(msg == null) {
+        if (msg == null) {
             Log.e(this.getClass().getSimpleName(), "msg == null");
         }
-        if(msg.getSender() == null) {
+        if (msg.getSender() == null) {
             Log.e(this.getClass().getSimpleName(), "sender == null");
         }
 
@@ -122,15 +122,15 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
         //dateView.setText(time);
         Log.d(this.getClass().getSimpleName(), name + ": " + msg.getMessage());
-	if (imageView != null && !self) {
-		imageView.setImageResource(R.drawable.chat_default_icon); //TODO
-		imageView.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB[(int)msg.getSender().getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
-		TextView initial = (TextView) rowView.findViewById(R.id.chat_item_picture_text);
-		initial.setText(name.substring(0,1).toUpperCase());
-		LayerDrawable d = (LayerDrawable) textViews.getBackground();	
-		GradientDrawable bgShape = (GradientDrawable) d.findDrawableByLayerId (R.id.chat_item_line);
-		bgShape.setColor(CONTACT_DUMMY_COLORS_ARGB[(int)msg.getSender().getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
-	}
+        if (imageView != null && !self) {
+            imageView.setImageResource(R.drawable.chat_default_icon); //TODO
+            imageView.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB[(int) msg.getSender().getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
+            TextView initial = (TextView) rowView.findViewById(R.id.chat_item_picture_text);
+            initial.setText(name.substring(0, 1).toUpperCase());
+            LayerDrawable d = (LayerDrawable) textViews.getBackground();
+            GradientDrawable bgShape = (GradientDrawable) d.findDrawableByLayerId(R.id.chat_item_line);
+            bgShape.setColor(CONTACT_DUMMY_COLORS_ARGB[(int) msg.getSender().getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
+        }
 
         rowView.requestFocus();
         return rowView;
@@ -140,7 +140,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         String returnDate = "";
 
         Date dateSent = message.getDateSent();
-        Date currentDate =  new Date(System.currentTimeMillis());
+        Date currentDate = new Date(System.currentTimeMillis());
 
         Calendar sent = new GregorianCalendar();
         sent.setTimeInMillis(dateSent.getTime());
@@ -148,9 +148,9 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         Calendar current = new GregorianCalendar();
         current.setTimeInMillis(currentDate.getTime());
 
-        boolean today = dateEquals(sent,current);
+        boolean today = dateEquals(sent, current);
 
-        if(today) {
+        if (today) {
             returnDate = formatTime(dateSent) + " Uhr";
         } else {
             returnDate = formatDate(sent, current, dateSent) + " Uhr";
@@ -167,11 +167,11 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
     public String formatDate(Calendar calendar, Calendar current, Date date) {
         Calendar tmp = new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        tmp.add(Calendar.DATE,1);
-        if (dateEquals(tmp,current)) {
+        tmp.add(Calendar.DATE, 1);
+        if (dateEquals(tmp, current)) {
             return context.getResources().getString(R.string.yesterday) + ", " + formatTime(date);
         }
-        tmp.add(Calendar.DATE,6);
+        tmp.add(Calendar.DATE, 6);
         if (tmp.compareTo(current) > 0) {
             int dayNumber = calendar.get(Calendar.DAY_OF_WEEK) % 7;
 

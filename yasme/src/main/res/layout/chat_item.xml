@@ -2,15 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="6dip" >
+    android:padding="6dip">
 
     <ImageView
         android:id="@+id/chat_item_picture_other"
         android:layout_width="180dip"
         android:layout_height="180dip"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="6dip"
-        />
+        android:layout_marginRight="6dip" />
 
     <TextView
         android:id="@+id/chat_item_date_other"
