@@ -44,15 +44,15 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
     }
 
     private void registerDialog(final boolean acceptedTos) {
-				AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
         alert.setTitle(getString(R.string.registration_title));
 
         LinearLayout list = new LinearLayout(activity);
         list.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
         final EditText name = new EditText(activity);
         name.setHint(R.string.registration_name);
         name.setText(inputName);

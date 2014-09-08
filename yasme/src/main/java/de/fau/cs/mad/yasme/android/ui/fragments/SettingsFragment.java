@@ -89,9 +89,10 @@ public class SettingsFragment extends Fragment {
         TextView textMessage = new TextView(getActivity());
         TextView contactView = new TextView(getActivity());
         LinearLayout content = new LinearLayout(getActivity());
+        content.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
 
         textMessage.setText(R.string.link_text_about);
         contactView.setText(R.string.contact);
