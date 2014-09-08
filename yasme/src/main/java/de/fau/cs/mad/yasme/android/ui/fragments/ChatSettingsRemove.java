@@ -19,6 +19,7 @@ import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeUserTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
@@ -83,21 +84,23 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         User user = users.get(position);
-                        if (chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId()) {
-                            showAlertDialog(getString(R.string.alert_delete_user),
-                                    user.getName() + " " + getString(R.string.alert_delete_user_message),
-                                    chat, user.getId(), 0L);
-                        } else {
+                        Log.d("DDDDDDDDDDDDDDDDDD","Owner: " + chat.getOwner().getId() + " OwnId: " + DatabaseManager.INSTANCE.getUserId());
+                        if (chat.getOwner().getId() != DatabaseManager.INSTANCE.getUserId()) {
                             Toaster.getInstance().toast(R.string.alert_not_owner, Toast.LENGTH_LONG);
+                            return;
                         }
+                        showAlertDialog(
+                            getString(R.string.alert_delete_user),
+                            user.getName() + " " + getString(R.string.alert_delete_user_message),
+                            user.getId(), 0L
+                        );
                     }
                 }
         );
         return rootView;
     }
 
-    public void showAlertDialog(String title, String message, final Chat chat,
-                                final Long userId, final Long rest) {
+    public void showAlertDialog(String title, String message, final Long userId, final Long rest) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(title);
 

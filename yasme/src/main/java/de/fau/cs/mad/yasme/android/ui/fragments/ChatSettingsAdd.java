@@ -26,6 +26,7 @@ import de.fau.cs.mad.yasme.android.ui.UserAdapter;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.
+ * Modified by Tim Nisslbeck <hu78sapy@stud.cs.fau.de>
  */
 public class ChatSettingsAdd extends InviteToChatFragment {
     private Chat chat;

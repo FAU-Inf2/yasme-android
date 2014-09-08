@@ -141,17 +141,17 @@ public class ChatTask extends ConnectionTask {
     public void addParticipantToChat(long participantId, long chatId) throws RestServiceException {
         String path = "par/" + participantId + "/" + chatId;
         HttpResponse httpResponse = executeRequest(Request.PUT, path);
-				int statusCode = httpResponse.getStatusLine().getStatusCode();
-				if(statusCode != 200) {
-					Log.e(this.getClass().getSimpleName(), "User " + participantId + "could not be added!");
-					return;
-				}
-				ChatDAO cDao = DatabaseManager.INSTANCE.getChatDAO();
-				Chat chat = cDao.get(chatId);
-				for(User u : chat.getParticipants()) Log.d("XXXXXXXXXXXXXXXXXXX","User: " + u.getName());
-				Log.d("XXXXXXXXXXXXXX","Now adding " + participantId);
-				//chat.addParticipant(DatabaseManager.INSTANCE.getUserDAO().get(participantId));
-				for(User u : chat.getParticipants()) Log.d("XXXXXXXXXXXXXXXXXXX","User: " + u.getName());
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        if(statusCode != 200) {
+            Log.e(this.getClass().getSimpleName(), "User " + participantId + " could not be added to chat " + chatId + " !");
+            return;
+        }
+        //ChatDAO cDao = DatabaseManager.INSTANCE.getChatDAO();
+        //Chat chat = cDao.get(chatId);
+        //for(User u : chat.getParticipants()) Log.d("XXXXXXXXXXXXXXXXXXX","User: " + u.getName());
+        //Log.d("XXXXXXXXXXXXXX","Now adding " + participantId);
+        //chat.addParticipant(DatabaseManager.INSTANCE.getUserDAO().get(participantId));
+        //for(User u : chat.getParticipants()) Log.d("XXXXXXXXXXXXXXXXXXX","User: " + u.getName());
         Log.d(this.getClass().getSimpleName(), "User " + participantId + " added to Chat!");
     }
 
@@ -161,10 +161,14 @@ public class ChatTask extends ConnectionTask {
         Log.d(this.getClass().getSimpleName(), "Owner changed");
     }
 
-    public void removeParticipantFromChat(long participantId, long chatId)
-            throws RestServiceException {
+    public void removeParticipantFromChat(long participantId, long chatId) throws RestServiceException {
         String path = "par/" + participantId + "/" + chatId;
-        executeRequest(Request.DELETE, path);
+        HttpResponse httpResponse = executeRequest(Request.DELETE, path);
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        if(statusCode != 200) {
+            Log.e(this.getClass().getSimpleName(), "User " + participantId + " could not be removed from chat " + chatId + " !");
+            return;
+        }
         Log.d(this.getClass().getSimpleName(), "User removed from Chat!");
     }
 
