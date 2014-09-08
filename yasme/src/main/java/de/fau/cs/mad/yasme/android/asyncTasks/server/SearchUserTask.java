@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.connection.SearchTask;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.entities.User;
@@ -47,11 +47,14 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
                 case NUMBER:
                     uList.add(searchTask.userByNumber(String.valueOf(searchText)));
                     return uList;
+                case ID:
+                    uList.add(searchTask.userById(String.valueOf(searchText)));
+                    return uList;
                 default:
                     return uList;
             }
         } catch (RestServiceException rse) {
-            Log.e(this.getClass().getSimpleName(),rse.getMessage());
+            Log.e(this.getClass().getSimpleName(), rse.getMessage());
         }
 
         return null;
@@ -60,7 +63,7 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
 
     protected void onPostExecute(List<User> userList) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
-        if(classToNotify == SearchContactFragment.class) {
+        if (classToNotify == SearchContactFragment.class) {
             ObservableRegistry.getObservable(SearchContactFragment.class).notifyFragments(userList);
         }
     }
@@ -69,7 +72,8 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
         LIKE,
         MAIL,
         NUMBER,
-        UNKNOWN;
+        UNKNOWN,
+        ID;
 
         public static SearchBy getSearchBy(int searchBy) {
             switch (searchBy) {
@@ -77,6 +81,8 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
                     return LIKE;
                 case 1:
                     return MAIL;
+                case 2:
+                    return ID;
             }
             return UNKNOWN;
         }

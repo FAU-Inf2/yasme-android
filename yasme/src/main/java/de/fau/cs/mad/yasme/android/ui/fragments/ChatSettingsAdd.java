@@ -28,7 +28,7 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
  */
 public class ChatSettingsAdd extends InviteToChatFragment {
     private Chat chat;
-    private int index=-1;
+    private int index = -1;
 
     @Override
     public void onResume() {
@@ -62,12 +62,6 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         }
 
         return super.onCreateView(inflater, container, savedInstanceState);
-        /*View rootView = inflater.inflate(R.layout.fragment_invite_to_chat, container, false);
-        findViewsById(rootView);
-
-        new GetContactsTask(this.getClass()).execute();
-
-        return rootView;*/
     }
 
     @Override
@@ -75,7 +69,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         super.onStart();
         //Register at observer
         FragmentObservable<ChatSettingsAdd, InviteToChatParam> obs =
-            ObservableRegistry.getObservable(this.getClass());
+                ObservableRegistry.getObservable(this.getClass());
         obs.register(this);
         adaptToSettingsFragment();
     }
@@ -85,7 +79,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         super.onStop();
         //De-Register at observer
         FragmentObservable<ChatSettingsAdd, InviteToChatParam> obs =
-            ObservableRegistry.getObservable(this.getClass());
+                ObservableRegistry.getObservable(this.getClass());
         obs.remove(this);
     }
 
@@ -100,7 +94,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         SparseBooleanArray checked = adapter.getSelectedContacts();
 
         if (checked.size() == 0) {
-            Toast.makeText(getActivity(), getString(R.string.toast_no_selection),Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getString(R.string.toast_no_selection), Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -111,11 +105,11 @@ public class ChatSettingsAdd extends InviteToChatFragment {
             }
             // Get the item position (index) in adapter and show an alert dialog box
             index = checked.keyAt(i);
-            Log.d("XXXXXXXXXXX",i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName() );
+            Log.d("XXXXXXXXXXX", i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName());
             showAlertDialog(
-                getString(R.string.alert_add_user),
-                users.get(index).getName() + " " + getString(R.string.alert_add_user_message),
-                users.get(index).getId(), 1L
+                    getString(R.string.alert_add_user),
+                    users.get(index).getName() + " " + getString(R.string.alert_add_user_message),
+                    users.get(index).getId(), 1L
             );
         }
     }
@@ -145,25 +139,25 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         alert.setTitle(title);
         alert.setMessage(message);
         alert.setPositiveButton(
-            R.string.OK,
-            new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    if(index>=0) {
-                        users.remove(index);
-                        chat.addParticipant(DatabaseManager.INSTANCE.getUserDAO().get(userId));
-                        updateChatPartnersList(users);
+                R.string.OK,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if (index >= 0) {
+                            users.remove(index);
+                            chat.addParticipant(DatabaseManager.INSTANCE.getUserDAO().get(userId));
+                            updateChatPartnersList(users);
+                        }
+                        new ChangeUserTask(chat).execute(userId, type);
                     }
-                    new ChangeUserTask(chat).execute(userId, type);
                 }
-            }
         );
         alert.setNegativeButton(
-            R.string.cancel,
-            new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    dialog.cancel();
+                R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
                 }
-            }
         );
         alert.show();
     }

@@ -1,5 +1,12 @@
 package de.fau.cs.mad.yasme.android.connection;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.utils.URIBuilder;
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,17 +17,9 @@ import java.util.List;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.entities.Device;
 import de.fau.cs.mad.yasme.android.entities.User;
-import de.fau.cs.mad.yasme.android.exception.*;
 import de.fau.cs.mad.yasme.android.exception.Error;
+import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.utils.URIBuilder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 /**
  * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 16.06.14.
@@ -76,6 +75,19 @@ public class SearchTask extends ConnectionTask {
         }
     }
 
+    public User userById(String id) throws RestServiceException {
+
+        String path = "userById/" + id; //TODO maybe change path
+        HttpResponse httpResponse = executeRequest(Request.GET, path);
+
+        try {
+            return new ObjectMapper().readValue(new BufferedReader(new InputStreamReader(
+                    httpResponse.getEntity().getContent())).readLine(), User.class);
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        }
+    }
+
     public List<User> userByLike(String term) throws RestServiceException {
 
         ArrayList<User> users = new ArrayList<User>();
@@ -94,7 +106,7 @@ public class SearchTask extends ConnectionTask {
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         } catch (JSONException je) {
-            Log.e(this.getClass().getSimpleName(),je.getMessage());
+            Log.e(this.getClass().getSimpleName(), je.getMessage());
         }
         return users;
     }
@@ -116,7 +128,7 @@ public class SearchTask extends ConnectionTask {
                         toString(), User.class));
 
         } catch (JSONException e) {
-            Log.e(this.getClass().getSimpleName(),e.getMessage());
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         }
@@ -141,7 +153,7 @@ public class SearchTask extends ConnectionTask {
                         toString(), Device.class));
 
         } catch (JSONException e) {
-            Log.e(this.getClass().getSimpleName(),e.getMessage());
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         }
