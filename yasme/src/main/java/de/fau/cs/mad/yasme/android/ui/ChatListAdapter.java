@@ -2,6 +2,7 @@ package de.fau.cs.mad.yasme.android.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.entities.User;
@@ -41,11 +41,11 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 
     @Override
     public void notifyDataSetChanged() {
-        Log.d(getClass().getSimpleName(), "Notify");
+        //Log.d(getClass().getSimpleName(), "Notify");
         Collections.sort(chats, new Comparator<Object>() {
             @Override
             public int compare(Object o1, Object o2) {
-                Log.d(getClass().getSimpleName(), "Compare");
+                //Log.d(getClass().getSimpleName(), "Compare");
                 Chat c1 = (Chat) o1;
                 Chat c2 = (Chat) o2;
                 if (c1.getLastMessage() == null && c2.getLastMessage() == null) {
