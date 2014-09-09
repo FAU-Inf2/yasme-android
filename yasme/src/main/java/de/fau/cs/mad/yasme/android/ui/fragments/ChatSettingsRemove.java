@@ -73,8 +73,13 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(this.getClass().getSimpleName(),"onCreate");
+        FragmentObservable<ChatSettingsRemove, Chat> obs = 
+            ObservableRegistry.getObservable(ChatSettingsRemove.class);
+        obs.register(this);
         users = new ArrayList<User>();
+        users.add(new User("WUBDIDU",999));
         mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
+        mDelAdapter.setNotifyOnChange(true);
     }
 
     @Override
@@ -101,7 +106,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
         if(null != chat) {
             fillRemView();
         }
-        users = new ArrayList<User>();
+        //users = new ArrayList<User>();
         return rootView;
     }
 
@@ -118,21 +123,18 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
     private void fillRemView() {
         ListView participants = (ListView) chatRem.findViewById(R.id.chat_rem_participants);
         Log.d(this.getClass().getSimpleName(),"Participants: " + participants);
-        users = new ArrayList<User>();
+        users.clear();
         for (User u : chat.getParticipants()) {
-            Log.e(this.getClass().getSimpleName(),"User: "+u.getName());
+            Log.d(this.getClass().getSimpleName(),"User: "+u.getName());
             if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
                 continue;
             }
             users.add(u);
         }
-//        mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
         // Set the adapter
-        participants.setAdapter(mDelAdapter);
-        mDelAdapter.setNotifyOnChange(true);
-        mDelAdapter.clear();
         mDelAdapter.addAll(users);
         mDelAdapter.notifyDataSetChanged();
+        participants.setAdapter(mDelAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         participants.setOnItemClickListener(
