@@ -21,8 +21,8 @@ import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
-import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 import de.fau.cs.mad.yasme.android.ui.UserAdapter;
+import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 03.08.14.
@@ -64,12 +64,6 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         }
 
         return super.onCreateView(inflater, container, savedInstanceState);
-        /*View rootView = inflater.inflate(R.layout.fragment_invite_to_chat, container, false);
-        findViewsById(rootView);
-
-        new GetContactsTask(this.getClass()).execute();
-
-        return rootView;*/
     }
 
     @Override
@@ -121,8 +115,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                 users.get(index).getId(), 1L
             );
         }
-        adapter = new UserAdapter(getActivity(),R.layout.user_item, users);
-        adapter.setNotifyOnChange(true);
+        adapter = new UserAdapter(getActivity(),R.layout.user_item_checkbox, users);
         chatPartners.setAdapter(adapter);
     }
 
@@ -146,7 +139,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         startChat.setOnClickListener(this);
     }
 
-    private void showAlertDialog(String title, String message, final Long userId, final Long type) {
+    private void showAlertDialog(String title, String message, final Long userId, final Long rest) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(title);
         alert.setMessage(message);
@@ -166,7 +159,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                             }
                             updateChatPartnersList(users);
                         }
-                        new ChangeUserTask(chat).execute(userId, type);
+                        new ChangeUserTask(chat).execute(userId, rest);
                     }
                 }
         );
