@@ -77,7 +77,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
             ObservableRegistry.getObservable(ChatSettingsRemove.class);
         obs.register(this);
         users = new ArrayList<User>();
-        users.add(new User("WUBDIDU",999));
+//        users.add(new User("WUBDIDU",999));
         mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
         mDelAdapter.setNotifyOnChange(true);
     }
@@ -132,8 +132,8 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
             users.add(u);
         }
         // Set the adapter
-        mDelAdapter.addAll(users);
-        mDelAdapter.notifyDataSetChanged();
+        //mDelAdapter.addAll(users);
+        //mDelAdapter.notifyDataSetChanged();
         participants.setAdapter(mDelAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
