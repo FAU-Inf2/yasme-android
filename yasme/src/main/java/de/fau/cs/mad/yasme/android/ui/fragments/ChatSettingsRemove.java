@@ -118,7 +118,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
     private void fillRemView() {
         ListView participants = (ListView) chatRem.findViewById(R.id.chat_rem_participants);
         Log.d(this.getClass().getSimpleName(),"Participants: " + participants);
-//        users = new ArrayList<User>();
+        users = new ArrayList<User>();
         for (User u : chat.getParticipants()) {
             Log.e(this.getClass().getSimpleName(),"User: "+u.getName());
             if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
@@ -141,7 +141,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         User user = users.get(position);
                         Log.d(this.getClass().getSimpleName(),
-                            "Owner: " + chat.getOwner().getId() + 
+                            " Owner: " + chat.getOwner().getId() + 
                             " OwnId: " + DatabaseManager.INSTANCE.getUserId()
                         );
                         if (chat.getOwner().getId() != DatabaseManager.INSTANCE.getUserId()) {
