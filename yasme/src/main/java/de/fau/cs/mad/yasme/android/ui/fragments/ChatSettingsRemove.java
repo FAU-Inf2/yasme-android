@@ -44,11 +44,10 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (mDelAdapter != null) {
-            mDelAdapter.notifyDataSetChanged();
-        }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        users = new ArrayList<User>();
+        mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
     }
 
     @Override
@@ -67,12 +66,9 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
             ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
             new GetTask<>(chatDAO, chatId, this.getClass()).execute();
         }
-        users = new ArrayList<User>();
         View rootView = inflater.inflate(R.layout.fragment_chat_settings_remove, container, false);
 
         participants = rootView.findViewById(R.id.chat_settings_participants);
-
-        mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
 
         // Set the adapter
         list = (AbsListView) participants.findViewById(android.R.id.list);
@@ -114,6 +110,9 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         users.remove(pos);
+                        mDelAdapter.clear();
+                        mDelAdapter.addAll(users);
+                        mDelAdapter.notifyDataSetChanged();
                         chat.removeParticipant(DatabaseManager.INSTANCE.getUserDAO().get(userId));
                         new ChangeUserTask(chat).execute(userId, rest);
                     }
@@ -132,8 +131,6 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
 
     @Override
     public void notifyFragment(Chat value) {
-        mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
-        mDelAdapter.setNotifyOnChange(true);
         chat = value;
         mDelAdapter.clear();
         List<User> filteredUsers = new ArrayList<User>();
@@ -144,9 +141,8 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
             }
             filteredUsers.add(u);
         }
+        users = filteredUsers;
         mDelAdapter.addAll(filteredUsers);
         mDelAdapter.notifyDataSetChanged();
-        list = (AbsListView) participants.findViewById(android.R.id.list);
-        list.setAdapter(mDelAdapter);
     }
 }
