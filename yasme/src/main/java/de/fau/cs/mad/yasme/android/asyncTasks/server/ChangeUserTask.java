@@ -11,6 +11,7 @@ import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
+import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsAdd;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsInfo;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatSettingsRemove;
 
@@ -72,5 +73,6 @@ public class ChangeUserTask  extends AsyncTask<Long, Void, Boolean> {
 		}
 		ObservableRegistry.getObservable(ChatSettingsInfo.class).notifyFragments(chat);
 		ObservableRegistry.getObservable(ChatSettingsRemove.class).notifyFragments(chat);
+//		ObservableRegistry.getObservable(ChatSettingsAdd.class).notifyFragments(new ChatSettingsAdd.AllUsersFetchedParam(true,chat.getParticipants()));
 	}
 }

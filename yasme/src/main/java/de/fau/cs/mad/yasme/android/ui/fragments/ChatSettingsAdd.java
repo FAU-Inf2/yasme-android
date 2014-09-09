@@ -94,7 +94,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     @Override
     public void onClick(View view) {
         SparseBooleanArray checked = adapter.getSelectedContacts();
-        Log.d("FFFFFFFFFFFFFFFFF",checked.size()+" HALLELUJA");
+        Log.d(this.getClass().getSimpleName(),checked.size()+" HALLELUJA");
 
         if (checked.size() == 0) {
             Toast.makeText(getActivity(), getString(R.string.toast_no_selection), Toast.LENGTH_LONG).show();
@@ -108,7 +108,8 @@ public class ChatSettingsAdd extends InviteToChatFragment {
             }
             // Get the item position (index) in adapter and show an alert dialog box
             index = checked.keyAt(i);
-            Log.d("XXXXXXXXXXX",i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName() );
+            Log.d(this.getClass().getSimpleName(),
+                i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName() );
             showAlertDialog(
                 getString(R.string.alert_add_user),
                 users.get(index).getName() + " " + getString(R.string.alert_add_user_message),
@@ -150,7 +151,9 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                         if (index >= 0) {
                             users.remove(index);
                             chat.addParticipant(DatabaseManager.INSTANCE.getUserDAO().get(userId));
-                            Log.d("EEEEEEEEEEEEEEEEEEEEE", "Status Name : [" + chat.getStatusChanged() + "] [" + chat.getNameChanged() + "]");
+                            Log.d(this.getClass().getSimpleName(),
+                                "Status Name : [" + chat.getStatusChanged() +
+                                "] [" + chat.getNameChanged() + "]");
                             if (!chat.getStatusChanged()) {
                                 chat.setStatus(chat.getStatus(), false);
                             }
@@ -177,13 +180,19 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     @Override
     public void notifyFragment(InviteToChatParam inviteToChatParam) {
         if (inviteToChatParam instanceof AllUsersFetchedParam) {
+            Log.d(this.getClass().getSimpleName(),"notify1");
             updateChatPartnersList(((AllUsersFetchedParam) inviteToChatParam).getAllUsers());
             return;
         }
         if (inviteToChatParam instanceof GetChatParam) {
-            chat = ((GetChatParam) inviteToChatParam).getChat();
+            Log.d(this.getClass().getSimpleName(),"notify2");
+//            chat = ((GetChatParam) inviteToChatParam).getChat();
+//            updateChatPartnersList(this.chat.getParticipants());
+            super.notifyFragment(inviteToChatParam);
             return;
         }
+        Log.d(this.getClass().getSimpleName(),"notify3");
+//        updateChatPartnersList(this.chat.getParticipants());
         super.notifyFragment(inviteToChatParam);
     }
 
