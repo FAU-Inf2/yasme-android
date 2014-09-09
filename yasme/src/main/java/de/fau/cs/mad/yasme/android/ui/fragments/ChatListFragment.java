@@ -45,8 +45,7 @@ import de.fau.cs.mad.yasme.android.ui.activities.ContactActivity;
  * Created by Martin Sturm <***REMOVED***> on 21.06.2014.
  */
 public class ChatListFragment extends ListFragment implements NotifiableFragment<List<Chat>> {
-
-    private List<Chat> chatRooms = new ArrayList<Chat>();
+    private List<Chat> chatRooms;
     private ChatListAdapter adapter;
 
     public ChatListFragment() {
@@ -58,9 +57,9 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         super.onCreate(savedInstanceState);
 
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-
+        chatRooms = new ArrayList<Chat>();
         adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
-        setListAdapter(adapter);
+        this.setListAdapter(adapter);
         User self = activity.getSelfUser();
 
         String name = null;
@@ -112,7 +111,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         // At first, retrieve the chats from the database
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        new GetAllTask(chatDAO, ChatListFragment.class).execute();
+        new GetAllTask(chatDAO, this.getClass()).execute();
 
         // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
         // Aktualisiert die Datenbank auf den aktuellen Stand des Servers
@@ -145,7 +144,6 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         final Chat chat = (Chat) getListAdapter().getItem(info.position);
         switch (item.getItemId()) {
@@ -252,14 +250,12 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
     @Override
     public void notifyFragment(List<Chat> chatRooms) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
-
         if (chatRooms == null) {
-            adapter.notifyDataSetChanged();
             return;
         }
-        ChatListAdapter adapter = (ChatListAdapter) this.getListAdapter();
         this.chatRooms = chatRooms;
-        adapter.updateChats(chatRooms);
+        adapter.clear();
+        adapter.addAll(chatRooms);
         adapter.notifyDataSetChanged();
     }
 }

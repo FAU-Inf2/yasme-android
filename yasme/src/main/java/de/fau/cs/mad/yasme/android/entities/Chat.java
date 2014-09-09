@@ -1,7 +1,5 @@
 package de.fau.cs.mad.yasme.android.entities;
 
-import de.fau.cs.mad.yasme.android.controller.Log;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,8 +8,6 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import de.fau.cs.mad.yasme.android.storage.DatabaseConstants;
-
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
@@ -19,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import de.fau.cs.mad.yasme.android.controller.Log;
+import de.fau.cs.mad.yasme.android.storage.DatabaseConstants;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 28.05.14.
@@ -31,10 +30,11 @@ public class Chat implements Serializable {
     private long id;
 
     private List<User> participants;
-    @JsonIgnore
+
+    /*@JsonIgnore
     private boolean nameChanged=false;
     @JsonIgnore
-    private boolean statusChanged=false;
+    private boolean statusChanged=false;*/
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_STATUS)
     private String status;
@@ -169,27 +169,28 @@ public class Chat implements Serializable {
     }
 
     public String getStatus() {
-        if(this.statusChanged==false || this.status == null || this.status.isEmpty()) {
+        if (/*this.statusChanged == false || */this.status == null || this.status.isEmpty()) {
             return (getNumberOfParticipants() + " YASMEs");
         }
         return this.status;
     }
 
-    public void setStatus(String status, boolean isNotDefault) {
-        this.statusChanged=isNotDefault;
+    public void setStatus(String status/*, boolean isNotDefault*/) {
+        //this.statusChanged = isNotDefault;
         this.status = status;
     }
 
-    public boolean getStatusChanged() {
+    /*public boolean getStatusChanged() {
         return this.statusChanged;
     }
+
     public boolean getNameChanged() {
         return this.nameChanged;
-    }
+    }*/
 
     @JsonProperty("name")
     public String getName() {
-        if (this.nameChanged==true && this.name != null && this.name.length() > 0) {
+        if (/*this.nameChanged == true && */this.name != null && this.name.length() > 0) {
             return name;
         }
         // Create a new name
@@ -208,8 +209,8 @@ public class Chat implements Serializable {
         return returnName;
     }
 
-    public void setName(String name, boolean isNotDefault) {
-        this.nameChanged=isNotDefault;
+    public void setName(String name/*, boolean isNotDefault*/) {
+        //this.nameChanged = isNotDefault;
         this.name = name;
     }
 

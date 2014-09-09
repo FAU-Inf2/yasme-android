@@ -30,7 +30,7 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
  */
 public class ChatSettingsAdd extends InviteToChatFragment {
     private Chat chat;
-    private int index=-1;
+    private int index = -1;
 
     @Override
     public void onResume() {
@@ -94,7 +94,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
     @Override
     public void onClick(View view) {
         SparseBooleanArray checked = adapter.getSelectedContacts();
-        Log.d("FFFFFFFFFFFFFFFFF",checked.size()+" HALLELUJA");
+        Log.d("FFFFFFFFFFFFFFFFF", checked.size() + " HALLELUJA");
 
         if (checked.size() == 0) {
             Toast.makeText(getActivity(), getString(R.string.toast_no_selection), Toast.LENGTH_LONG).show();
@@ -108,14 +108,14 @@ public class ChatSettingsAdd extends InviteToChatFragment {
             }
             // Get the item position (index) in adapter and show an alert dialog box
             index = checked.keyAt(i);
-            Log.d("XXXXXXXXXXX",i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName() );
+            Log.d("XXXXXXXXXXX", i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName());
             showAlertDialog(
-                getString(R.string.alert_add_user),
-                users.get(index).getName() + " " + getString(R.string.alert_add_user_message),
-                users.get(index).getId(), 1L
+                    getString(R.string.alert_add_user),
+                    users.get(index).getName() + " " + getString(R.string.alert_add_user_message),
+                    users.get(index).getId(), 1L
             );
         }
-        adapter = new UserAdapter(getActivity(),R.layout.user_item_checkbox, users);
+        adapter = new UserAdapter(getActivity(), R.layout.user_item_checkbox, users);
         chatPartners.setAdapter(adapter);
     }
 
@@ -150,13 +150,14 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                         if (index >= 0) {
                             users.remove(index);
                             chat.addParticipant(DatabaseManager.INSTANCE.getUserDAO().get(userId));
-                            Log.d("EEEEEEEEEEEEEEEEEEEEE", "Status Name : [" + chat.getStatusChanged() + "] [" + chat.getNameChanged() + "]");
+                            //TODO wieder einkommentieren
+                            /*Log.d("EEEEEEEEEEEEEEEEEEEEE", "Status Name : [" + chat.getStatusChanged() + "] [" + chat.getNameChanged() + "]");
                             if (!chat.getStatusChanged()) {
                                 chat.setStatus(chat.getStatus(), false);
                             }
                             if (!chat.getNameChanged()) {
                                 chat.setName(chat.getName(), false);
-                            }
+                            }*/
                             updateChatPartnersList(users);
                         }
                         new ChangeUserTask(chat).execute(userId, rest);

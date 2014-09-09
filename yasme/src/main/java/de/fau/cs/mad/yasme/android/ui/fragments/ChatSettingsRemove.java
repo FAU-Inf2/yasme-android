@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -80,15 +79,15 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         User user = users.get(position);
-                        Log.d("DDDDDDDDDDDDDDDDDD","Owner: " + chat.getOwner().getId() + " OwnId: " + DatabaseManager.INSTANCE.getUserId());
+                        Log.d("DDDDDDDDDDDDDDDDDD", "Owner: " + chat.getOwner().getId() + " OwnId: " + DatabaseManager.INSTANCE.getUserId());
                         if (chat.getOwner().getId() != DatabaseManager.INSTANCE.getUserId()) {
                             Toaster.getInstance().toast(R.string.alert_not_owner, Toast.LENGTH_LONG);
                             return;
                         }
                         showAlertDialog(
-                            getString(R.string.alert_delete_user),
-                            user.getName() + " " + getString(R.string.alert_delete_user_message),
-                            user.getId(), 0L, position
+                                getString(R.string.alert_delete_user),
+                                user.getName() + " " + getString(R.string.alert_delete_user_message),
+                                user.getId(), 0L, position
                         );
                     }
                 }
@@ -99,12 +98,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
     public void showAlertDialog(String title, String message, final Long userId, final Long rest, final int pos) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(title);
-
-        TextView text = new TextView(getActivity());
-        text.setText(message);
-
-        alert.setView(text);
-
+        alert.setMessage(message);
         // "OK" button to save the values
         alert.setPositiveButton(R.string.OK,
                 new DialogInterface.OnClickListener() {
@@ -135,8 +129,8 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
         mDelAdapter.clear();
         List<User> filteredUsers = new ArrayList<User>();
         for (User u : chat.getParticipants()) {
-            Log.e("UUUUUUUUUUUUUUUU","User: "+u.getName());
-            if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
+            Log.e("UUUUUUUUUUUUUUUU", "User: " + u.getName());
+            if (u.getId() == DatabaseManager.INSTANCE.getUserId()) {
                 continue;
             }
             filteredUsers.add(u);

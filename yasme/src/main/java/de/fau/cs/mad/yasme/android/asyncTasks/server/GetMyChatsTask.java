@@ -70,7 +70,6 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
             Log.d(getClass().getSimpleName(), "LastMod: " + serverChats.get(0).getOwner().getLastModified().toString());
         }
 
-
         // Swap the complete database table with the new chats
         if (!chatDAO.refreshAll(serverChats)) {
             Log.e(this.getClass().getSimpleName(), "Refreshing all chats failed");
@@ -115,17 +114,14 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
         }
     }
 
-
     @Override
     protected void onPostExecute(final Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         new GetInfoTask().execute();
         if (!success) {
-            SpinnerObservable.getInstance().removeBackgroundTask(this);
             Log.e(this.getClass().getSimpleName(), "failed");
             return;
         }
-
         Log.i(this.getClass().getSimpleName(), "success");
         ObservableRegistry.getObservable(classToNotify).notifyFragments(chatsToReturn);
     }

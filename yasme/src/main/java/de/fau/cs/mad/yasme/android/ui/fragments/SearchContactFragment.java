@@ -132,8 +132,8 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mListener != null && !contactListContent.items.get(position).id.equals("null")) {
-            mListener.onSearchFragmentInteraction(contactListContent.items.get(position).user);
+        if (mListener != null && !users.get(position).equals("null")) {
+            mListener.onSearchFragmentInteraction(users.get(position));
         }
     }
 
@@ -142,9 +142,6 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
         Log.d(getClass().getSimpleName(), "SearchContactFragment has been notified!");
 
         if (userList != null && userList.size() != 0) {
-            /*for (User u : userList) {
-                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
-            }*/
             mAdapter.clear();
             mAdapter.addAll(userList);
             mAdapter.notifyDataSetChanged();

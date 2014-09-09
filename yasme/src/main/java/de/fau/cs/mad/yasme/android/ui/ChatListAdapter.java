@@ -2,7 +2,6 @@ package de.fau.cs.mad.yasme.android.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.entities.User;
@@ -30,7 +30,7 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
     private final static int CHATPARTNER_VISIBLE_CNT = 10;
     Context context;
     int layoutResourceId;
-    List<Chat> chats = null;
+    List<Chat> chats;
 
     public ChatListAdapter(Context context, int layoutResourceId, List<Chat> chats) {
         super(context, layoutResourceId, chats);
@@ -122,17 +122,6 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         }
 
         return row;
-    }
-
-    public void updateChats(List<Chat> updatedChats) {
-        // This:
-        // chats = updatedChats;
-        // does not work. No update at runtime!
-        chats.clear();
-        for (int i = 0; i < updatedChats.size(); i++) {
-            chats.add(updatedChats.get(i));
-        }
-        Log.d(this.getClass().getSimpleName(), "Chats updated: " + this.chats.size());
     }
 
     static class ChatListViewHolder {
