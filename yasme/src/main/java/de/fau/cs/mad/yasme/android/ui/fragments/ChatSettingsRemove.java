@@ -70,6 +70,14 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(this.getClass().getSimpleName(),"onCreate");
+        users = new ArrayList<User>();
+        mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(this.getClass().getSimpleName(),"onCreateView");
         if (null == chat) {
@@ -110,7 +118,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
     private void fillRemView() {
         ListView participants = (ListView) chatRem.findViewById(R.id.chat_rem_participants);
         Log.d(this.getClass().getSimpleName(),"Participants: " + participants);
-        users = new ArrayList<User>();
+//        users = new ArrayList<User>();
         for (User u : chat.getParticipants()) {
             Log.e(this.getClass().getSimpleName(),"User: "+u.getName());
             if(u.getId() == DatabaseManager.INSTANCE.getUserId()) {
@@ -118,7 +126,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
             }
             users.add(u);
         }
-        mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
+//        mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
         // Set the adapter
         participants.setAdapter(mDelAdapter);
         mDelAdapter.setNotifyOnChange(true);
@@ -164,6 +172,9 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         users.remove(pos);
+                        mDelAdapter.clear();
+                        mDelAdapter.addAll(users);
+                        mDelAdapter.notifyDataSetChanged();
                         chat.removeParticipant(DatabaseManager.INSTANCE.getUserDAO().get(userId));
                         new ChangeUserTask(chat).execute(userId, rest);
                     }

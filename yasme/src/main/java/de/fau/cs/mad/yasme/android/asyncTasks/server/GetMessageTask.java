@@ -68,16 +68,16 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         }
 
         //add new messages to DB
-        Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
+        //Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
         for(Message message : messages) {
-            Log.d(this.getClass().getSimpleName(), message.getMessage() + " " + message.getId());
+           // Log.d(this.getClass().getSimpleName(), message.getMessage() + " " + message.getId());
 
             // Refresh Sender-User-Data
             User sender = message.getSender();
             User dbUser = DatabaseManager.INSTANCE.getUserDAO().get(sender.getId());
-            Log.d(getClass().getSimpleName(), "Sender lastMod: " + sender.getLastModified());
+            //Log.d(getClass().getSimpleName(), "Sender lastMod: " + sender.getLastModified());
             if (dbUser == null || dbUser.getLastModified() == null || sender.getLastModified() == null || sender.getLastModified().compareTo(dbUser.getLastModified()) > 0) {
-                Log.d(getClass().getSimpleName(), "Sender has to be refreshed");
+                //Log.d(getClass().getSimpleName(), "Sender has to be refreshed");
                 RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER,sender.getId(),true);
                 refreshTask.execute();
             }
@@ -92,15 +92,15 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
                 Log.e(this.getClass().getSimpleName(), "Storing a message in database failed");
                 return false;
             } else {
-                Log.d(getClass().getSimpleName(), "Message successfully stored");
+                //Log.d(getClass().getSimpleName(), "Message successfully stored");
                 if (message.getChat() != null) {
-                    Log.d(getClass().getSimpleName(), "Get Chat from DB");
+                    //Log.d(getClass().getSimpleName(), "Get Chat from DB");
                     ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
                     Chat chat = chatDAO.get(message.getChat().getId());
                     if (chat != null) {
                         chat.setLastMessage(message);
                         chatDAO.addOrUpdate(chat);
-                        Log.d(getClass().getSimpleName(), "Set lastMessage for chat " + chat.getId() +": " + message.getId());
+                        //Log.d(getClass().getSimpleName(), "Set lastMessage for chat " + chat.getId() +": " + message.getId());
                     } else {
                         Log.e(getClass().getSimpleName(), "Chat not found in DB");
                     }
@@ -120,12 +120,12 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             SpinnerObservable.getInstance().removeBackgroundTask(this);
             return;
         } else {
-            Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
+            //Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
 
             int size = messages.size();
             if (size > 0) {
                 // Store lastMessageId
-                Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
+                //Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
 
                 SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
                 editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
@@ -172,7 +172,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         }
         messageKeyEncrypted.setCreatorDevice(creator);
         if (creator != null) {
-            Log.d(getClass().getSimpleName(), "Creator publicKey: " + messageKeyEncrypted.getCreatorDevice().getPublicKey());
+            //Log.d(getClass().getSimpleName(), "Creator publicKey: " + messageKeyEncrypted.getCreatorDevice().getPublicKey());
         }
 
         KeyEncryption keyEncryption = new KeyEncryption();
@@ -195,7 +195,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
             // For Developer-Devices only
             if (DebugManager.INSTANCE.isDebugMode()) {
-                Log.d(getClass().getSimpleName(), "Store messageKey to external storage");
+                //Log.d(getClass().getSimpleName(), "Store messageKey to external storage");
                 DebugManager.INSTANCE.storeMessageKeyToExternalStorage(messageKey);
             }
         }

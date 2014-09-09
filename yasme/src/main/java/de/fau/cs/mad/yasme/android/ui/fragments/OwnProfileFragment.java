@@ -123,7 +123,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             initial.setText(self.getName().substring(0, 1).toUpperCase());
 
             // Load profile image into profilePictureView from server as AsyncTask if available
-            new GetProfilePictureTask(getClass()).execute();
+            new GetProfilePictureTask(getClass()).execute(self.getId());
         } else {
             notifyFragment(picture);
         }
