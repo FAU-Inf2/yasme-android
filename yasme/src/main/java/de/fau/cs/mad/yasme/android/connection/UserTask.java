@@ -98,7 +98,6 @@ public class UserTask extends ConnectionTask {
         executeUpload(Request.POST, "profile", multipartEntity, null);
     }
 
-
     private byte[] drawableToByteArray(Drawable drawable) {
         Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

@@ -1,23 +1,25 @@
 package de.fau.cs.mad.yasme.android.asyncTasks.database;
 
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
-import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
+import java.io.IOException;
+
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
-import de.fau.cs.mad.yasme.android.ui.fragments.OwnProfileFragment;
+import de.fau.cs.mad.yasme.android.entities.User;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.storage.PictureManager;
 
 /**
  * Created by robert on 09.09.14.
  */
 public class StoreImageTask extends AsyncTask<String, Void, Boolean> {
 
-    private Drawable profilePicture;
-    private Class classToNotify;
+    private Bitmap profilePicture;
 
-    public StoreImageTask(Class classToNotify) {
-        this.classToNotify = classToNotify;
+    public StoreImageTask(Bitmap profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     /**
@@ -28,17 +30,32 @@ public class StoreImageTask extends AsyncTask<String, Void, Boolean> {
     protected Boolean doInBackground(String... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         long userId = Long.parseLong(params[0]);
-        return false;
+        User user = DatabaseManager.INSTANCE.getUserDAO().get(userId);
+        if (user == null) {
+            return false;
+        }
+
+        String path;
+        try {
+            path = PictureManager.INSTANCE.storePicture(user, profilePicture);
+        } catch (IOException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return false;
+        }
+
+        if (path == null || path.isEmpty()) {
+            return false;
+        }
+        user.setProfilePicture(path);
+        DatabaseManager.INSTANCE.getUserDAO().update(user);
+
+        return true;
     }
 
     @Override
     protected void onPostExecute(Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
-            // Notify registered fragments
-            FragmentObservable<OwnProfileFragment, Drawable> obs =
-                    ObservableRegistry.getObservable(classToNotify);
-            obs.notifyFragments(profilePicture);
         }
     }
 }

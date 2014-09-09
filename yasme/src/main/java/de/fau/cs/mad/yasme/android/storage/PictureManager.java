@@ -60,6 +60,10 @@ public enum PictureManager {
         Bitmap picture;
         String path = user.getProfilePicture();
 
+        if (path == null || path.isEmpty()) {
+            return null;
+        }
+
         // Open a stream
         FileInputStream fis = new FileInputStream(path);
         BufferedInputStream buf = new BufferedInputStream(fis);

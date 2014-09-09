@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +22,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.asyncTasks.database.StoreImageTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetProfilePictureTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SetProfileDataTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.UploadProfilePictureTask;
@@ -30,6 +34,7 @@ import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
+import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 
@@ -41,96 +46,106 @@ import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 
 public class OwnProfileFragment extends Fragment implements View.OnClickListener, NotifiableFragment<Drawable> {
 
-	private EditText name;
+    private EditText name;
     private ImageView profilePictureView;
     private TextView email, id, initial;
     private OnOwnProfileFragmentInteractionListener mListener;
 
     private static int RESULT_LOAD_IMAGE = 1;
 
-	public OwnProfileFragment() {
-		// Required empty public constructor
-	}
+    public OwnProfileFragment() {
+        // Required empty public constructor
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		// Register at observer
-		Log.d(this.getClass().getSimpleName(), "Try to get OwnProfileObservable");
-		FragmentObservable<OwnProfileFragment, Drawable> obs = ObservableRegistry.getObservable(OwnProfileFragment.class);
-		Log.d(this.getClass().getSimpleName(), "... successful");
-		obs.register(this);
-	}
+        // Register at observer
+        Log.d(this.getClass().getSimpleName(), "Try to get OwnProfileObservable");
+        FragmentObservable<OwnProfileFragment, Drawable> obs = ObservableRegistry.getObservable(OwnProfileFragment.class);
+        Log.d(this.getClass().getSimpleName(), "... successful");
+        obs.register(this);
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         View layout = inflater.inflate(R.layout.fragment_own_profile, container, false);
 
-		email = (TextView) layout.findViewById(R.id.own_profile_email);
-		id = (TextView) layout.findViewById(R.id.own_profile_id);
+        email = (TextView) layout.findViewById(R.id.own_profile_email);
+        id = (TextView) layout.findViewById(R.id.own_profile_id);
+        initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
         profilePictureView = (ImageView) layout.findViewById(R.id.own_profile_picture);
         profilePictureView.setOnClickListener(this);
 
         name = (EditText) layout.findViewById(R.id.own_profile_header);
-		name.setOnKeyListener(new OnKeyListener() {
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				// If the event isn't a key-down event on the "enter" button, skip this.
-				if (!((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)))
-					return false;
-				AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-				// Hide virtual keyboard
-				InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(name.getWindowToken(), 0);
-				// Set Focus away from edittext
-				name.setFocusable(false);
-				name.setFocusableInTouchMode(true);
+        name.setOnKeyListener(new OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event isn't a key-down event on the "enter" button, skip this.
+                if (!((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)))
+                    return false;
+                AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+                // Hide virtual keyboard
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(name.getWindowToken(), 0);
+                // Set Focus away from edittext
+                name.setFocusable(false);
+                name.setFocusableInTouchMode(true);
 
-				// Save name in android device
-				User u = activity.getSelfUser();
-				u.setName(name.getText().toString());
-				long t = -1;
-				User newUser = new User(u.getName(),u.getEmail(),t);
-				new SetProfileDataTask(newUser).execute();
-				return true;
-			}
-		});
+                // Save name in android device
+                User u = activity.getSelfUser();
+                u.setName(name.getText().toString());
+                long t = -1;
+                User newUser = new User(u.getName(), u.getEmail(), t);
+                new SetProfileDataTask(newUser).execute();
+                return true;
+            }
+        });
 
-		User self = activity.getSelfUser();
-		name.setText(self.getName());
-		email.setText(self.getEmail());
-		id.setText("" + self.getId());
+        User self = activity.getSelfUser();
+        name.setText(self.getName());
+        email.setText(self.getEmail());
+        id.setText("" + self.getId());
 
-		// Show nice profile picture
-        if (self.getId() > 0) {
-            profilePictureView.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
-            initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
+        boolean fetched = false;
+        Drawable picture = null;
+        try {
+            picture = new BitmapDrawable(getResources(), PictureManager.INSTANCE.getPicture(self));
+            fetched = (null != picture);
+        } catch (IOException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            fetched = false;
+        }
+        if (!fetched) {
+            // Show nice profile picture
+            profilePictureView.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB
+                    [(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
             initial.setText(self.getName().substring(0, 1).toUpperCase());
-		}
 
-        // TODO Load profile image into profilePictureView from storage as AsyncTask
-        // TODO at moment it will be loaded from server
-        Drawable profilePicture = null;
-        new GetProfilePictureTask(getClass()).execute();
+            // Load profile image into profilePictureView from server as AsyncTask if available
+            new GetProfilePictureTask(getClass()).execute();
+        } else {
+            notifyFragment(picture);
+        }
         return layout;
-	}
+    }
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (OnOwnProfileFragmentInteractionListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
-		}
-	}
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnOwnProfileFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
+        }
+    }
 
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		mListener = null;
-	}
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
 
     @Override
     public void onClick(View v) {
@@ -159,8 +174,11 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
+            //store image on device
             BitmapFactory factory = new BitmapFactory();
             Bitmap newProfilePicture = factory.decodeFile(picturePath);
+            new StoreImageTask(newProfilePicture).execute();
+
             //profilePictureView.setImageBitmap(newProfilePicture);
             Drawable d = Drawable.createFromPath(picturePath);
             notifyFragment(d);
@@ -170,14 +188,13 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         }
     }
 
-	@Override
-	public void notifyFragment(Drawable value) {
+    @Override
+    public void notifyFragment(Drawable value) {
         initial.setVisibility(View.GONE);
         profilePictureView.setImageDrawable(value);
-        //new StoreImageTask(getClass()).execute();
     }
 
-	public interface OnOwnProfileFragmentInteractionListener {
-		public void onOwnProfileFragmentInteraction(String s);
-	}
+    public interface OnOwnProfileFragmentInteractionListener {
+        public void onOwnProfileFragmentInteraction(String s);
+    }
 }
