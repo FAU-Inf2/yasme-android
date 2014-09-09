@@ -27,6 +27,7 @@ import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
+import de.fau.cs.mad.yasme.android.storage.dao.UserDAO;
 import de.fau.cs.mad.yasme.android.ui.UserAdapter;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 
@@ -173,7 +174,8 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
                         mDelAdapter.clear();
                         mDelAdapter.addAll(users);
                         mDelAdapter.notifyDataSetChanged();
-                        chat.removeParticipant(DatabaseManager.INSTANCE.getUserDAO().get(userId));
+                        UserDAO uDAO = DatabaseManager.INSTANCE.getUserDAO();
+                        chat.removeParticipant(uDAO.get(userId));
                         new ChangeUserTask(chat).execute(userId, rest);
                     }
                 }

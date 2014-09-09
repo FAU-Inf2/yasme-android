@@ -123,6 +123,14 @@ public class Chat implements Serializable {
         this.id = id;
     }
 
+    public int size() {
+        if(null == participants) {
+            Log.e(((Object)this).getClass().getSimpleName(),"Participants are null");
+            return 101;
+        }
+        return participants.size();
+    }
+
     @JsonIgnoreProperties({ "pw", "email", "name", "devices", "lastModified", "created" })
     public ArrayList<User> getParticipants() {
         if (participants == null) {
