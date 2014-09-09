@@ -41,11 +41,11 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 
     @Override
     public void notifyDataSetChanged() {
-        Log.d(getClass().getSimpleName(), "Notify");
+        //Log.d(getClass().getSimpleName(), "Notify");
         Collections.sort(chats, new Comparator<Object>() {
             @Override
             public int compare(Object o1, Object o2) {
-                Log.d(getClass().getSimpleName(), "Compare");
+                //Log.d(getClass().getSimpleName(), "Compare");
                 Chat c1 = (Chat) o1;
                 Chat c2 = (Chat) o2;
                 if (c1.getLastMessage() == null && c2.getLastMessage() == null) {
@@ -132,7 +132,7 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         for (int i = 0; i < updatedChats.size(); i++) {
             chats.add(updatedChats.get(i));
         }
-        Log.d(this.getClass().getSimpleName(), "Chats updated: " + this.chats.size());
+        //Log.d(this.getClass().getSimpleName(), "Chats updated: " + this.chats.size());
     }
 
     static class ChatListViewHolder {

@@ -65,31 +65,31 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
     protected Boolean doInBackground(String... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         boolean result = true;
-        Log.d(this.getClass().getSimpleName(), "Result " + result);
+        //Log.d(this.getClass().getSimpleName(), "Result " + result);
         for (long id : ids) {
-            Log.d(this.getClass().getSimpleName(), "Refresh id " + id);
+            //Log.d(this.getClass().getSimpleName(), "Refresh id " + id);
             switch (type) {
                 case CHAT:
                     if (recursive) {
                         result &= refreshChatRecursive(id);
-                        Log.d(this.getClass().getSimpleName(), "Result " + result);
+                        //Log.d(this.getClass().getSimpleName(), "Result " + result);
                     } else {
                         result &= refreshChat(id);
-                        Log.d(this.getClass().getSimpleName(), "Result " + result);
+                        //Log.d(this.getClass().getSimpleName(), "Result " + result);
                     }
                     break;
                 case USER:
                     if (recursive) {
                         result &= refreshUserRecursive(id);
-                        Log.d(this.getClass().getSimpleName(), "Result " + result);
+                        //Log.d(this.getClass().getSimpleName(), "Result " + result);
                     } else {
                         result &= refreshUser(id);
-                        Log.d(this.getClass().getSimpleName(), "Result " + result);
+                        //Log.d(this.getClass().getSimpleName(), "Result " + result);
                     }
                     break;
                 case DEVICE:
                     result &= refreshDevice(id);
-                    Log.d(this.getClass().getSimpleName(), "Result " + result);
+                    //Log.d(this.getClass().getSimpleName(), "Result " + result);
                     break;
                 default:
                     result &= false;
@@ -104,15 +104,15 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (!success) {
-            Log.e(this.getClass().getSimpleName(), "failed");
+            //Log.e(this.getClass().getSimpleName(), "failed");
             return;
         }
 
-        Log.i(this.getClass().getSimpleName(), "success");
+        //Log.i(this.getClass().getSimpleName(), "success");
     }
 
     private boolean refreshChatRecursive(long id) {
-        Log.d(this.getClass().getSimpleName(), "Refresh chatRec " + id);
+        //Log.d(this.getClass().getSimpleName(), "Refresh chatRec " + id);
         try {
             Chat chat = ChatTask.getInstance().getInfoOfChat(id);
             chatDAO.addOrUpdate(chat);
@@ -127,7 +127,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
     }
 
     private boolean refreshChat(long id) {
-        Log.d(this.getClass().getSimpleName(), "Refresh chat " + id);
+        //Log.d(this.getClass().getSimpleName(), "Refresh chat " + id);
         try {
             Chat chat = ChatTask.getInstance().getInfoOfChat(id);
             chatDAO.addOrUpdate(chat);
@@ -139,7 +139,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
     }
 
     private boolean refreshUserRecursive(long id) {
-        Log.d(this.getClass().getSimpleName(), "Refresh userRec " + id);
+        //Log.d(this.getClass().getSimpleName(), "Refresh userRec " + id);
         try {
             List<Device> devices = DeviceTask.getInstance().getAllDevices(id);
             deviceDAO.deleteAll(new User(id));
@@ -147,7 +147,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
                 device.getUser().addToContacts();
                 deviceDAO.addOrUpdate(device);
             }
-            Log.d(this.getClass().getSimpleName(), "... successful" + id);
+            //Log.d(this.getClass().getSimpleName(), "... successful" + id);
             return true;
         } catch (Exception e) {
             Log.e(this.getClass().getSimpleName(), "... failed" + id);
@@ -156,17 +156,17 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
     }
 
     private boolean refreshUser(long id) {
-        Log.d(this.getClass().getSimpleName(), "Refresh user " + id);
+        //Log.d(this.getClass().getSimpleName(), "Refresh user " + id);
         // Nothing to do
         return true;
     }
 
     private boolean refreshDevice(long id) {
-        Log.d(this.getClass().getSimpleName(), "Refresh device " + id);
+        //Log.d(this.getClass().getSimpleName(), "Refresh device " + id);
         try {
             Device device = DeviceTask.getInstance().getDevice(id);
             deviceDAO.addOrUpdate(device);
-            Log.d(this.getClass().getSimpleName(), "... successful" + id);
+            //Log.d(this.getClass().getSimpleName(), "... successful" + id);
             return true;
         } catch (Exception e) {
             Log.e(this.getClass().getSimpleName(), "... failed" + id);

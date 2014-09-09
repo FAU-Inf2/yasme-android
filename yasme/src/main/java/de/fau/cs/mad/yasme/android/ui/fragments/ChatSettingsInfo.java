@@ -50,9 +50,28 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(this.getClass().getSimpleName(),"onStart");
+        //Register at observer
+        FragmentObservable<ChatSettingsInfo, Chat> obs = 
+            ObservableRegistry.getObservable(ChatSettingsInfo.class);
+        obs.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(this.getClass().getSimpleName(),"onStop");
+        FragmentObservable<ChatSettingsInfo, Chat> obs = 
+            ObservableRegistry.getObservable(ChatSettingsInfo.class);
+        obs.remove(this);
+    }
+
+    @Override
     public void onResume() {
-        Log.d(this.getClass().getSimpleName(),"onResume");
         super.onResume();
+        Log.d(this.getClass().getSimpleName(),"onResume");
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
@@ -93,20 +112,56 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        //Register at observer
-        FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
-        obs.register(this);
+    public void notifyFragment(Chat chat) {
+        Log.d(this.getClass().getSimpleName(),"NOTIFICATION");
+        if (null == chat) {
+            throw new IllegalArgumentException("chat is null in "+this.getClass().getSimpleName());
+        }
+        this.chat = chat;
+        fillInfoView();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        FragmentObservable<ChatSettingsInfo, Chat> obs = ObservableRegistry.getObservable(ChatSettingsInfo.class);
-        obs.remove(this);
-    }
+    private void fillInfoView() {
+        TextView name = (TextView) chatInfo.findViewById(R.id.chat_info_name);
+        TextView status = (TextView) chatInfo.findViewById(R.id.chat_info_status);
+        TextView number = (TextView) chatInfo.findViewById(R.id.chat_info_number_participants);
+        ListView participants = (ListView) chatInfo.findViewById(R.id.chat_info_participants);
+        Log.d(this.getClass().getSimpleName(),"Participants: " + participants);
+        changeName.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    changeName();
+                }
+            }
+        );
+        changeStatus.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    changeStatus();
+                }
+            }
+        );
+        leaveChat.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    handleLeaveChat(chat);
+                }
+            }
+        );
 
+        name.setText(chat.getName());
+        status.setText(chat.getStatus());
+        number.setText(" " + chat.getNumberOfParticipants());
+
+        mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
+        participants.setAdapter(mAdapter);
+        mAdapter.clear();
+        mAdapter.addAll(chat.getParticipants());
+        mAdapter.notifyDataSetChanged();
+    }
 
     private void changeName() {
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
@@ -173,47 +228,6 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
             }
         );
         alert.show();
-    }
-
-    public void fillInfoView() {
-        TextView name = (TextView) chatInfo.findViewById(R.id.chat_info_name);
-        TextView status = (TextView) chatInfo.findViewById(R.id.chat_info_status);
-        TextView number = (TextView) chatInfo.findViewById(R.id.chat_info_number_participants);
-        ListView participants = (ListView) chatInfo.findViewById(R.id.chat_info_participants);
-        changeName.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    changeName();
-                }
-            }
-        );
-        changeStatus.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    changeStatus();
-                }
-            }
-        );
-        leaveChat.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    handleLeaveChat(chat);
-                }
-            }
-        );
-
-        name.setText(chat.getName());
-        status.setText(chat.getStatus());
-        number.setText(" " + chat.getNumberOfParticipants());
-
-        mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
-        participants.setAdapter(mAdapter);
-        mAdapter.clear();
-        mAdapter.addAll(chat.getParticipants());
-        mAdapter.notifyDataSetChanged();
     }
 
     private void handleLeaveChat(final Chat chat) {
@@ -293,15 +307,5 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                 });
             alert.show();
         }
-    }
-
-    @Override
-    public void notifyFragment(Chat chat) {
-        Log.e("XXXXXXXXXXXXXXXX","I, ChatSettingsInfo, got notifed. I will now try to fill the info view!!");
-        if (null == chat) {
-            throw new IllegalArgumentException("chat is null");
-        }
-        this.chat = chat;
-        fillInfoView();
     }
 }
