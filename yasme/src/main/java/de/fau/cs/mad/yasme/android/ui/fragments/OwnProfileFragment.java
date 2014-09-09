@@ -22,7 +22,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.GetProfilePictureTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SetProfileDataTask;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.UploadProfilePictureTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
@@ -41,8 +43,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
 	private EditText name;
     private ImageView profilePictureView;
-    private TextView email, id;
-	private OnOwnProfileFragmentInteractionListener mListener;
+    private TextView email, id, initial;
+    private OnOwnProfileFragmentInteractionListener mListener;
 
     private static int RESULT_LOAD_IMAGE = 1;
 
@@ -103,23 +105,15 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 		// Show nice profile picture
         if (self.getId() > 0) {
             profilePictureView.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
-            TextView initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
-			initial.setText(self.getName().substring(0, 1).toUpperCase());
+            initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
+            initial.setText(self.getName().substring(0, 1).toUpperCase());
 		}
 
         // TODO Load profile image into profilePictureView from storage as AsyncTask
+        // TODO at moment it will be loaded from server
         Drawable profilePicture = null;
-        /*try {
-            profilePicture = UserTask.getInstance().getProfilePicture(self.getId());
-            // profilePicture will be null if no one has been uploaded yet
-            if (null != profilePicture) {
-                profilePictureView.setImageDrawable(profilePicture);
-            }
-        } catch (RestServiceException e) {
-            Log.e(this.getClass().getSimpleName(), e.getMessage());
-        }*/
-
-		return layout;
+        new GetProfilePictureTask(getClass()).execute();
+        return layout;
 	}
 
 	@Override
@@ -167,21 +161,21 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
             BitmapFactory factory = new BitmapFactory();
             Bitmap newProfilePicture = factory.decodeFile(picturePath);
-            profilePictureView.setImageBitmap(newProfilePicture);
+            //profilePictureView.setImageBitmap(newProfilePicture);
+            Drawable d = Drawable.createFromPath(picturePath);
+            notifyFragment(d);
 
             // Upload picture as AsyncTask
-            Drawable d = Drawable.createFromPath(picturePath);
-            /*try {
-                UserTask.getInstance().uploadProfilePicture(d);
-            } catch (RestServiceException e) {
-                e.printStackTrace();
-            }*/
+            new UploadProfilePictureTask(d).execute();
         }
     }
 
 	@Override
 	public void notifyFragment(Drawable value) {
-	}
+        initial.setVisibility(View.GONE);
+        profilePictureView.setImageDrawable(value);
+        //new StoreImageTask(getClass()).execute();
+    }
 
 	public interface OnOwnProfileFragmentInteractionListener {
 		public void onOwnProfileFragmentInteraction(String s);
