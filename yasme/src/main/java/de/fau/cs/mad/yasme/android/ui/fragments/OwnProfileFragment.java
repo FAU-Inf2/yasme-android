@@ -48,7 +48,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
     private EditText name;
     private ImageView profilePictureView;
-    private TextView email, id, initial;
+    private TextView initial;
     private OnOwnProfileFragmentInteractionListener mListener;
 
     private static int RESULT_LOAD_IMAGE = 1;
@@ -73,8 +73,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         final AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         View layout = inflater.inflate(R.layout.fragment_own_profile, container, false);
 
-        email = (TextView) layout.findViewById(R.id.own_profile_email);
-        id = (TextView) layout.findViewById(R.id.own_profile_id);
+        TextView email = (TextView) layout.findViewById(R.id.own_profile_email);
+        TextView id = (TextView) layout.findViewById(R.id.own_profile_id);
         initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
         profilePictureView = (ImageView) layout.findViewById(R.id.own_profile_picture);
         profilePictureView.setOnClickListener(this);
@@ -108,16 +108,15 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         email.setText(self.getEmail());
         id.setText("" + self.getId());
 
-        boolean fetched = false;
-        Drawable picture = null;
+        Drawable picture;
         try {
             picture = new BitmapDrawable(getResources(), PictureManager.INSTANCE.getPicture(self));
-            fetched = (null != picture);
+            picture = null;
         } catch (IOException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
-            fetched = false;
+            picture = null;
         }
-        if (!fetched) {
+        if (picture == null) {
             // Show nice profile picture
             profilePictureView.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB
                     [(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
@@ -161,7 +160,6 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == RESULT_LOAD_IMAGE && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
