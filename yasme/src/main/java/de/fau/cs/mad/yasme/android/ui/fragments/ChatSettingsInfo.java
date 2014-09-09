@@ -77,6 +77,14 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         }
     }
 
+    @Override
+    public void onCreate(Bundle savedStateInstance) {
+        super.onCreate(savedStateInstance);
+        Log.d(this.getClass().getSimpleName(),"onResume");
+        users = new ArrayList<User>();
+        mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -156,7 +164,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         status.setText(chat.getStatus());
         number.setText(" " + chat.getNumberOfParticipants());
 
-        mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
+        if(mAdapter==null) mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
         participants.setAdapter(mAdapter);
         mAdapter.clear();
         mAdapter.addAll(chat.getParticipants());
