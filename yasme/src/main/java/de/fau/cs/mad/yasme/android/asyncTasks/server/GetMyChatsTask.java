@@ -61,9 +61,9 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
 
-        Log.d(this.getClass().getSimpleName(), "Something to refresh?");
+        //Log.d(this.getClass().getSimpleName(), "Something to refresh?");
         refresh(serverChats);
-        Log.d(this.getClass().getSimpleName(), "Something to refresh finished!");
+        //Log.d(this.getClass().getSimpleName(), "Something to refresh finished!");
 
         // Debug
         if (serverChats.size() > 0) {
@@ -136,23 +136,23 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
         for (Chat chat : serverChats) {
-            Log.d(this.getClass().getSimpleName(), "Chat " + chat.getId() + " outdated?");
+            //Log.d(this.getClass().getSimpleName(), "Chat " + chat.getId() + " outdated?");
             for (User user : chat.getParticipants()) {
-                Log.d(this.getClass().getSimpleName(), "User " + user.getId() + " outdated?");
+                //Log.d(this.getClass().getSimpleName(), "User " + user.getId() + " outdated?");
                 User dbUser = userDAO.get(user.getId());
                 if (dbUser == null || dbUser.getLastModified() == null) {
-                    Log.d(this.getClass().getSimpleName(), "Yes, not in DB");
+                    //Log.d(this.getClass().getSimpleName(), "Yes, not in DB");
                     refreshUserIds.add(user.getId());
                     continue;
                 }
                 if (user.getLastModified().compareTo(dbUser.getLastModified()) > 0) {
-                    Log.d(this.getClass().getSimpleName(), "Yes, not up-to-date");
+                    //Log.d(this.getClass().getSimpleName(), "Yes, not up-to-date");
                     refreshUserIds.add(user.getId());
                 }
             }
         }
         if (refreshUserIds.size() > 0) {
-            Log.d(this.getClass().getSimpleName(), refreshUserIds.size() + " users are not up-to-date");
+            //Log.d(this.getClass().getSimpleName(), refreshUserIds.size() + " users are not up-to-date");
             RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER, refreshUserIds, true);
             refreshTask.execute();
         }

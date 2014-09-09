@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
+import android.widget.ListView;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,9 +35,8 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
  */
 public class ChatSettingsRemove extends Fragment implements NotifiableFragment<Chat> {
     private List<User> users;
-    private UserAdapter mDelAdapter;
-    private View participants;
-    private AbsListView list;
+    private UserAdapter mDelAdapter=null;
+    private View chatRem;
     private Chat chat;
 
     public ChatSettingsRemove() {
@@ -45,10 +44,39 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
 
     @Override
     public void onResume() {
+        Log.d(this.getClass().getSimpleName(),"onResume");
         super.onResume();
         if (mDelAdapter != null) {
             mDelAdapter.notifyDataSetChanged();
         }
+    }
+
+    public void fillRemView() {
+        ListView participants = (ListView) chatRem.findViewById(R.id.chat_rem_participants);
+        mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
+
+        // Set the adapter
+        participants.setAdapter(mDelAdapter);
+
+        // Set OnItemClickListener so we can be notified on item clicks
+        participants.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                        User user = users.get(position);
+                        Log.d("DDDDDDDDDDDDDDDDDD","Owner: " + chat.getOwner().getId() + " OwnId: " + DatabaseManager.INSTANCE.getUserId());
+                        if (chat.getOwner().getId() != DatabaseManager.INSTANCE.getUserId()) {
+                            Toaster.getInstance().toast(R.string.alert_not_owner, Toast.LENGTH_LONG);
+                            return;
+                        }
+                        showAlertDialog(
+                            getString(R.string.alert_delete_user),
+                            user.getName() + " " + getString(R.string.alert_delete_user_message),
+                            user.getId(), 0L, position
+                        );
+                    }
+                }
+        );
     }
 
     @Override
@@ -67,36 +95,13 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
             ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
             new GetTask<>(chatDAO, chatId, this.getClass()).execute();
         }
-        users = new ArrayList<User>();
         View rootView = inflater.inflate(R.layout.fragment_chat_settings_remove, container, false);
+        chatRem = rootView.findViewById(R.id.chat_settings_remove);
 
-        participants = rootView.findViewById(R.id.chat_settings_participants);
-
-        mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
-
-        // Set the adapter
-        list = (AbsListView) participants.findViewById(android.R.id.list);
-        list.setAdapter(mDelAdapter);
-
-        // Set OnItemClickListener so we can be notified on item clicks
-        list.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                        User user = users.get(position);
-                        Log.d("DDDDDDDDDDDDDDDDDD","Owner: " + chat.getOwner().getId() + " OwnId: " + DatabaseManager.INSTANCE.getUserId());
-                        if (chat.getOwner().getId() != DatabaseManager.INSTANCE.getUserId()) {
-                            Toaster.getInstance().toast(R.string.alert_not_owner, Toast.LENGTH_LONG);
-                            return;
-                        }
-                        showAlertDialog(
-                            getString(R.string.alert_delete_user),
-                            user.getName() + " " + getString(R.string.alert_delete_user_message),
-                            user.getId(), 0L, position
-                        );
-                    }
-                }
-        );
+        if(null != chat) {
+            fillRemView();
+        }
+        users = new ArrayList<User>();
         return rootView;
     }
 
@@ -132,6 +137,7 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
 
     @Override
     public void notifyFragment(Chat value) {
+        Log.d(this.getClass().getSimpleName(),"I GOT NOTIFIED");
         mDelAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
         mDelAdapter.setNotifyOnChange(true);
         chat = value;
@@ -146,7 +152,6 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
         }
         mDelAdapter.addAll(filteredUsers);
         mDelAdapter.notifyDataSetChanged();
-        list = (AbsListView) participants.findViewById(android.R.id.list);
-        list.setAdapter(mDelAdapter);
+        fillRemView();
     }
 }

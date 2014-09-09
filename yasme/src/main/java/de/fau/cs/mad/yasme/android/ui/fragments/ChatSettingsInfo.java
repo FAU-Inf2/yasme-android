@@ -41,7 +41,7 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
  */
 public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Chat> {
     private List<User> users;
-    protected UserAdapter mAdapter = null;
+    private UserAdapter mAdapter = null;
     private View chatInfo;
     private Chat chat;
     private Button changeName, changeStatus, leaveChat;
@@ -51,6 +51,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
 
     @Override
     public void onResume() {
+        Log.d(this.getClass().getSimpleName(),"onResume");
         super.onResume();
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
@@ -60,6 +61,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(this.getClass().getSimpleName(),"onCreateView");
         if (null == chat) {
             Bundle bundle = getArguments();
             long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
@@ -86,7 +88,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         if (null != chat) {
             fillInfoView();
         }
-        users = new ArrayList<>();
+        users = new ArrayList<User>();
         return rootView;
     }
 
@@ -174,44 +176,44 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     }
 
     public void fillInfoView() {
-            TextView name = (TextView) chatInfo.findViewById(R.id.chat_info_name);
-            TextView status = (TextView) chatInfo.findViewById(R.id.chat_info_status);
-            TextView number = (TextView) chatInfo.findViewById(R.id.chat_info_number_participants);
-            ListView participants = (ListView) chatInfo.findViewById(R.id.chat_info_participants);
-            changeName.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        changeName();
-                    }
+        TextView name = (TextView) chatInfo.findViewById(R.id.chat_info_name);
+        TextView status = (TextView) chatInfo.findViewById(R.id.chat_info_status);
+        TextView number = (TextView) chatInfo.findViewById(R.id.chat_info_number_participants);
+        ListView participants = (ListView) chatInfo.findViewById(R.id.chat_info_participants);
+        changeName.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    changeName();
                 }
-            );
-            changeStatus.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        changeStatus();
-                    }
+            }
+        );
+        changeStatus.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    changeStatus();
                 }
-            );
-            leaveChat.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        handleLeaveChat(chat);
-                    }
+            }
+        );
+        leaveChat.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    handleLeaveChat(chat);
                 }
-            );
+            }
+        );
 
-            name.setText(chat.getName());
-            status.setText(chat.getStatus());
-            number.setText(" " + chat.getNumberOfParticipants());
+        name.setText(chat.getName());
+        status.setText(chat.getStatus());
+        number.setText(" " + chat.getNumberOfParticipants());
 
         mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
-            participants.setAdapter(mAdapter);
+        participants.setAdapter(mAdapter);
         mAdapter.clear();
         mAdapter.addAll(chat.getParticipants());
-            mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 
     private void handleLeaveChat(final Chat chat) {
