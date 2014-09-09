@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +21,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.IOException;
-
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SetProfileDataTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
@@ -26,7 +28,6 @@ import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
-import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 
@@ -39,9 +40,11 @@ import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 public class OwnProfileFragment extends Fragment implements View.OnClickListener, NotifiableFragment<Drawable> {
 
 	private EditText name;
-	private ImageView profilePicture;
-	private TextView email, id;
+    private ImageView profilePictureView;
+    private TextView email, id;
 	private OnOwnProfileFragmentInteractionListener mListener;
+
+    private static int RESULT_LOAD_IMAGE = 1;
 
 	public OwnProfileFragment() {
 		// Required empty public constructor
@@ -65,18 +68,9 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
 		email = (TextView) layout.findViewById(R.id.own_profile_email);
 		id = (TextView) layout.findViewById(R.id.own_profile_id);
-		profilePicture = (ImageView) layout.findViewById(R.id.own_profile_picture);
-        profilePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bitmap btmp = null;
-                try {
-                    PictureManager.INSTANCE.storePicture(activity.getSelfUser(), btmp);
-                } catch (IOException e) {
-                    Log.e(this.getClass().getSimpleName(), e.getMessage());
-                }
-            }
-        });
+        profilePictureView = (ImageView) layout.findViewById(R.id.own_profile_picture);
+        profilePictureView.setOnClickListener(this);
+
         name = (EditText) layout.findViewById(R.id.own_profile_header);
 		name.setOnKeyListener(new OnKeyListener() {
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -108,18 +102,24 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
 		// Show nice profile picture
         if (self.getId() > 0) {
-            profilePicture.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
-			TextView initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
+            profilePictureView.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
+            TextView initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
 			initial.setText(self.getName().substring(0, 1).toUpperCase());
 		}
 
-		return layout;
-	}
+        // TODO Load profile image into profilePictureView from storage as AsyncTask
+        Drawable profilePicture = null;
+        /*try {
+            profilePicture = UserTask.getInstance().getProfilePicture(self.getId());
+            // profilePicture will be null if no one has been uploaded yet
+            if (null != profilePicture) {
+                profilePictureView.setImageDrawable(profilePicture);
+            }
+        } catch (RestServiceException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+        }*/
 
-	public void onButtonPressed(String s) {
-		if (mListener != null) {
-			mListener.onOwnProfileFragmentInteraction(s);
-		}
+		return layout;
 	}
 
 	@Override
@@ -138,14 +138,46 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 		mListener = null;
 	}
 
-	@Override
-	public void onClick(View v) {
-	}
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.own_profile_picture:
+                Intent i = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                break;
+        }
+    }
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-	}
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            BitmapFactory factory = new BitmapFactory();
+            Bitmap newProfilePicture = factory.decodeFile(picturePath);
+            profilePictureView.setImageBitmap(newProfilePicture);
+
+            // Upload picture as AsyncTask
+            Drawable d = Drawable.createFromPath(picturePath);
+            /*try {
+                UserTask.getInstance().uploadProfilePicture(d);
+            } catch (RestServiceException e) {
+                e.printStackTrace();
+            }*/
+        }
+    }
 
 	@Override
 	public void notifyFragment(Drawable value) {

@@ -1,10 +1,10 @@
 package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.connection.InfoTask;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.ServerInfo;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
@@ -29,12 +29,12 @@ public class GetInfoTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        Log.d(getClass().getSimpleName(),"ServerInfo will be fetched");
-       long updateTime = DatabaseManager.INSTANCE.getServerInfoUpdateTime();
-       if ((updateTime + interval) > System.currentTimeMillis()) {
-           Log.d(getClass().getSimpleName(),"... up-to-date");
-           return false;
-       }
+        Log.d(getClass().getSimpleName(), "ServerInfo will be fetched");
+        long updateTime = DatabaseManager.INSTANCE.getServerInfoUpdateTime();
+        if ((updateTime + interval) > System.currentTimeMillis()) {
+            Log.d(getClass().getSimpleName(), "... up-to-date");
+            return false;
+        }
         DatabaseManager.INSTANCE.setServerInfoUpdateTime();
 
         InfoTask infoTask = InfoTask.getInstance();
@@ -42,7 +42,7 @@ public class GetInfoTask extends AsyncTask<Void, Void, Boolean> {
             serverInfo = infoTask.getInfo();
             return true;
         } catch (Exception e) {
-            Log.e(getClass().getSimpleName(),"...failed");
+            Log.e(getClass().getSimpleName(), "...failed");
             return false;
         }
     }
@@ -52,12 +52,12 @@ public class GetInfoTask extends AsyncTask<Void, Void, Boolean> {
         if (!success) {
             return;
         }
-        Log.d(getClass().getSimpleName(),"... finished");
+        Log.d(getClass().getSimpleName(), "... finished");
         DatabaseManager.INSTANCE.setServerInfo(serverInfo);
 
         if (serverInfo != null && serverInfo.hasMessage()) {
-            Log.d(getClass().getSimpleName(),"has Message:" + serverInfo.getMessage());
-            Log.d(getClass().getSimpleName(),"Login:" + serverInfo.getLoginAllowed());
+            Log.d(getClass().getSimpleName(), "has Message:" + serverInfo.getMessage());
+            Log.d(getClass().getSimpleName(), "Login:" + serverInfo.getLoginAllowed());
             Toaster.getInstance().toast(serverInfo.getMessage(), Toast.LENGTH_LONG);
         }
     }

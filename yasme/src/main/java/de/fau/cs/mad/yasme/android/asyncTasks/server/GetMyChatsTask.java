@@ -1,7 +1,6 @@
 package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
-import de.fau.cs.mad.yasme.android.controller.Log;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -9,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.fau.cs.mad.yasme.android.connection.ChatTask;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.entities.Chat;
@@ -17,7 +17,6 @@ import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.storage.dao.UserDAO;
-import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 07.07.14.
@@ -45,6 +44,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
 
     /**
      * Requests the user's chats from the server and updates the database.
+     *
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
@@ -56,7 +56,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
         }
 
-        if(serverChats == null) {
+        if (serverChats == null) {
             Log.e(this.getClass().getSimpleName(), "ServerChats are null");
             return false;
         }
@@ -67,7 +67,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
 
         // Debug
         if (serverChats.size() > 0) {
-            Log.d(getClass().getSimpleName(),"LastMod: " + serverChats.get(0).getOwner().getLastModified().toString());
+            Log.d(getClass().getSimpleName(), "LastMod: " + serverChats.get(0).getOwner().getLastModified().toString());
         }
 
 
@@ -118,7 +118,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
-
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         new GetInfoTask().execute();
         if (!success) {
             SpinnerObservable.getInstance().removeBackgroundTask(this);
@@ -128,7 +128,6 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
 
         Log.i(this.getClass().getSimpleName(), "success");
         ObservableRegistry.getObservable(classToNotify).notifyFragments(chatsToReturn);
-        SpinnerObservable.getInstance().removeBackgroundTask(this);
     }
 
     private boolean refresh(List<Chat> serverChats) {
@@ -152,7 +151,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
                 }
             }
         }
-        if (refreshUserIds.size() > 0 ) {
+        if (refreshUserIds.size() > 0) {
             Log.d(this.getClass().getSimpleName(), refreshUserIds.size() + " users are not up-to-date");
             RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER, refreshUserIds, true);
             refreshTask.execute();
