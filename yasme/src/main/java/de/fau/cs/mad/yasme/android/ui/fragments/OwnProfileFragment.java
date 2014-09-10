@@ -34,6 +34,7 @@ import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
@@ -94,10 +95,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 name.setFocusableInTouchMode(true);
 
                 // Save name in android device
-                User u = activity.getSelfUser();
-                u.setName(name.getText().toString());
                 long t = -1;
-                User newUser = new User(u.getName(), u.getEmail(), t);
+                User newUser = new User(name.getText().toString(), activity.getUserMail(), t);
                 new SetProfileDataTask(newUser).execute();
                 return true;
             }
@@ -106,7 +105,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         User self = activity.getSelfUser();
         name.setText(self.getName());
         email.setText(self.getEmail());
-        id.setText("" + self.getId());
+        id.setText("" + DatabaseManager.INSTANCE.getUserId());
+        //id.setText("" + self.getId());
 
         Drawable picture;
         try {
