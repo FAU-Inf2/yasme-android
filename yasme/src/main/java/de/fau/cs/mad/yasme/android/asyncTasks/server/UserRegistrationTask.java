@@ -82,7 +82,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
             SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
             editor.putString(AbstractYasmeActivity.USER_NAME, name);
             editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
-            editor.putLong(AbstractYasmeActivity.USER_ID, 0L);
+            editor.putLong(AbstractYasmeActivity.USER_ID, userId);
             editor.commit();
         }
 
