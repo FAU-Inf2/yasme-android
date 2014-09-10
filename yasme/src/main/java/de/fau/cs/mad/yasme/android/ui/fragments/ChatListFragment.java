@@ -162,8 +162,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
     private void handleLeaveChat(final Chat chat) {
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        boolean isOwner = (chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId());
-        if (isOwner) {
+        if (chat.isOwner(DatabaseManager.INSTANCE.getUserId())) {
             AlertDialog.Builder alert = new AlertDialog.Builder(activity);
             alert.setTitle(activity.getString(R.string.alert_owner));
 

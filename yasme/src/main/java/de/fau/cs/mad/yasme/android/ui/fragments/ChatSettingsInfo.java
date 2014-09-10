@@ -52,26 +52,26 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(this.getClass().getSimpleName(),"onStart");
+        Log.d(this.getClass().getSimpleName(), "onStart");
         //Register at observer
-        FragmentObservable<ChatSettingsInfo, Chat> obs = 
-            ObservableRegistry.getObservable(ChatSettingsInfo.class);
+        FragmentObservable<ChatSettingsInfo, Chat> obs =
+                ObservableRegistry.getObservable(ChatSettingsInfo.class);
         obs.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(this.getClass().getSimpleName(),"onStop");
-        FragmentObservable<ChatSettingsInfo, Chat> obs = 
-            ObservableRegistry.getObservable(ChatSettingsInfo.class);
+        Log.d(this.getClass().getSimpleName(), "onStop");
+        FragmentObservable<ChatSettingsInfo, Chat> obs =
+                ObservableRegistry.getObservable(ChatSettingsInfo.class);
         obs.remove(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(this.getClass().getSimpleName(),"onResume");
+        Log.d(this.getClass().getSimpleName(), "onResume");
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
@@ -80,7 +80,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     @Override
     public void onCreate(Bundle savedStateInstance) {
         super.onCreate(savedStateInstance);
-        Log.d(this.getClass().getSimpleName(),"onResume");
+        Log.d(this.getClass().getSimpleName(), "onResume");
         users = new ArrayList<User>();
         mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
     }
@@ -88,7 +88,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(this.getClass().getSimpleName(),"onCreateView");
+        Log.d(this.getClass().getSimpleName(), "onCreateView");
         if (null == chat) {
             Bundle bundle = getArguments();
             long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
@@ -121,9 +121,9 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
 
     @Override
     public void notifyFragment(Chat chat) {
-        Log.d(this.getClass().getSimpleName(),"NOTIFICATION");
+        Log.d(this.getClass().getSimpleName(), "NOTIFICATION");
         if (null == chat) {
-            throw new IllegalArgumentException("chat is null in "+this.getClass().getSimpleName());
+            throw new IllegalArgumentException("chat is null in " + this.getClass().getSimpleName());
         }
         this.chat = chat;
         fillInfoView();
@@ -134,37 +134,37 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         TextView status = (TextView) chatInfo.findViewById(R.id.chat_info_status);
         TextView number = (TextView) chatInfo.findViewById(R.id.chat_info_number_participants);
         ListView participants = (ListView) chatInfo.findViewById(R.id.chat_info_participants);
-        Log.d(this.getClass().getSimpleName(),"Participants: " + participants);
+        Log.d(this.getClass().getSimpleName(), "Participants: " + participants);
         changeName.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    changeName();
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        changeName();
+                    }
                 }
-            }
         );
         changeStatus.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    changeStatus();
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        changeStatus();
+                    }
                 }
-            }
         );
         leaveChat.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    handleLeaveChat(chat);
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        handleLeaveChat(chat);
+                    }
                 }
-            }
         );
 
         name.setText(chat.getName());
         status.setText(chat.getStatus());
         number.setText(" " + chat.getNumberOfParticipants());
 
-        if(mAdapter==null) mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
+        if (mAdapter == null) mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
         participants.setAdapter(mAdapter);
         mAdapter.clear();
         mAdapter.addAll(chat.getParticipants());
@@ -238,9 +238,8 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     }
 
     private void handleLeaveChat(final Chat chat) {
-        boolean isOwner = (chat.getOwner().getId() == DatabaseManager.INSTANCE.getUserId());
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        if (isOwner) {
+        if (chat.isOwner(DatabaseManager.INSTANCE.getUserId())) {
             AlertDialog.Builder alert = new AlertDialog.Builder(activity);
             alert.setTitle(activity.getString(R.string.alert_owner));
 

@@ -102,7 +102,6 @@ public class Chat implements Serializable {
     }
 
     public Chat(Chat origin) throws IllegalAccessException {
-
         Field[] fields = this.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.set(this, field.get(origin));
@@ -124,21 +123,21 @@ public class Chat implements Serializable {
     }
 
     public int size() {
-        if(null == participants) {
-            Log.e(((Object)this).getClass().getSimpleName(),"Participants are null");
-            return 101;
+        if (null == participants) {
+            Log.e(((Object) this).getClass().getSimpleName(), "Participants are null");
+            return -1;
         }
         return participants.size();
     }
 
-    @JsonIgnoreProperties({ "pw", "email", "name", "devices", "lastModified", "created" })
+    @JsonIgnoreProperties({"pw", "email", "name", "devices", "lastModified", "created"})
     public ArrayList<User> getParticipants() {
         if (participants == null) {
             participants = new ArrayList<>();
             User dummy = new User("Dummy", 12);
             participants.add(dummy);
             // Without cast IntelliJ is not happy
-            Log.d(((Object)this).getClass().getSimpleName(), "Participants are null, dummy users are added");
+            Log.d(((Object) this).getClass().getSimpleName(), "Participants are null, dummy users are added");
         }
         return new ArrayList<User>(participants);
     }
@@ -148,8 +147,8 @@ public class Chat implements Serializable {
     }
 
     public boolean addParticipant(User newUser) {
-        if(participants==null) {
-            Log.e(((Object)this).getClass().getSimpleName(), "Participants are null, sry.");
+        if (participants == null) {
+            Log.e(((Object) this).getClass().getSimpleName(), "Participants are null, sry.");
             return false;
         }
         participants.add(newUser);
@@ -157,22 +156,18 @@ public class Chat implements Serializable {
     }
 
     public boolean removeParticipant(User delUser) {
-        if(participants==null) {
-            Log.e(((Object)this).getClass().getSimpleName(), "Participants are null, sry.");
+        if (participants == null) {
+            Log.e(((Object) this).getClass().getSimpleName(), "Participants are null, sry.");
             return false;
         }
-//        Log.d("XX","User to delete: " + delUser.getName() + " " + delUser.toString());
-        boolean ret=false;
-        for(User u : participants) {
-            if(u.getId()!=delUser.getId()) {
+        boolean ret = false;
+        for (User u : participants) {
+            if (u.getId() != delUser.getId()) {
                 continue;
             }
-//            Log.d("XXXXXXXXXXXXXXXXXXXXXXXXX","WUB");
-            ret=participants.remove(u);
+            ret = participants.remove(u);
             break;
         }
-//        Log.d("XX","User deleted:");
-//        for(User u : participants) Log.d("XX",u.getName() + " "+u.toString()+" did happen: " + ret);
         return true;
     }
 
@@ -207,7 +202,7 @@ public class Chat implements Serializable {
             int size = getParticipants().size();
             for (int i = 0; i < size; i++) {
                 returnName += participants.get(i).getName();
-                if(i < size - 1) {
+                if (i < size - 1) {
                     returnName += ", ";
                 }
             }
@@ -246,7 +241,7 @@ public class Chat implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    @JsonIgnoreProperties({ "pw", "email", "name", "devices", "lastModified", "created" })
+    @JsonIgnoreProperties({"pw", "email", "name", "devices", "lastModified", "created"})
     public User getOwner() {
         if (owner == null) {
             owner = new User("Dummy", 12);
@@ -268,7 +263,7 @@ public class Chat implements Serializable {
 
     @JsonIgnore
     public ArrayList<Message> getMessages() {
-        if(messages == null) {
+        if (messages == null) {
             return new ArrayList<Message>();
         }
         return new ArrayList<Message>(messages);
@@ -308,7 +303,6 @@ public class Chat implements Serializable {
     public void setLastMessage(Message lastMessage) {
         this.lastMessage = lastMessage;
     }
-
 
     public Chat clone() {
         try {
