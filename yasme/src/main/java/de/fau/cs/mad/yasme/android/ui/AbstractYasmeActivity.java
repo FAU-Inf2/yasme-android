@@ -33,6 +33,7 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
     public final static String USER_MAIL = "de.fau.cs.mad.yasme.android.USER_MAIL";
     public final static String USER_PW = "de.fau.cs.mad.yasme.android.USER_PW";
     public final static String DEVICE_ID = "de.fau.cs.mad.yasme.android.DEVICE_ID";
+    public final static String PROFILE_PICTURE = "de.fau.cs.mad.yasme.android.PROFILE_PICTURE";
 
     public final static String CHAT_ID = "de.fau.cs.mad.yasme.android.CHAT_ID";
     public final static String LAST_MESSAGE_ID = "de.fau.cs.mad.yasme.android.LAST_MESSAGE_ID";
@@ -60,9 +61,6 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
     public static final String TAG = "YasmeGCM";
 
     protected User selfUser;
-
-
-    // protected SharedPreferences storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +191,24 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
 
     public long getUserId() {
         return selfUser.getId();
+    }
+
+    public String getOwnProfilePicture() {
+        String path = selfUser.getProfilePicture();
+        /*if(path == null || path.isEmpty()) {
+            path = DatabaseManager.INSTANCE.getOwnProfilePicture();
+        }
+        if(path == null || path.isEmpty()) {
+            path = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE).getString(PROFILE_PICTURE, null);
+        }*/
+        return path;
+    }
+
+    public void setOwnProfilePicture(String ownProfilePicture) {
+        selfUser.setProfilePicture(ownProfilePicture);
+        /*SharedPreferences.Editor editor = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE).edit();
+        editor.putString(AbstractYasmeActivity.PROFILE_PICTURE, ownProfilePicture);
+        editor.commit();*/
     }
 
     public String getAccessToken() {

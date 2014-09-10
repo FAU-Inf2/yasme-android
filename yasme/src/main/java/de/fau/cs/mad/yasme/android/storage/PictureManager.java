@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -12,6 +13,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import de.fau.cs.mad.yasme.android.controller.Log;
+import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.User;
 
 /**
@@ -23,11 +26,13 @@ public enum PictureManager {
     private Context mContext = DatabaseManager.INSTANCE.getContext();
 
     public Bitmap getPicture(User user) throws IOException {
-        return getPictureFromStream(user);
-    }
-
-    public String storePicture(User user, Bitmap bitmap) throws IOException {
-        return storePictureNew(user, bitmap);
+        String path = user.getProfilePicture();
+        if (path == null || path.isEmpty()) {
+            return null;
+        }
+        Log.e(this.getClass().getSimpleName(), "Try to load Picture from: " + path);
+        Toaster.getInstance().toast("Try to load Picture from: " + path, Toast.LENGTH_LONG);
+        return getPictureNew(user);
     }
 
     /**
@@ -36,29 +41,9 @@ public enum PictureManager {
      * @param bitmap bitmap to be stored
      * @return path of the stored picture
      */
-    private String storePictureOld(User user, Bitmap bitmap) throws IOException {
+    public String storePicture(User user, Bitmap bitmap) throws IOException {
         // TODO Remove old picture
 
-        // Generate file name
-        String filename = user.getId() + "_profilePicture_" + user.getLastModified().getTime();
-
-        ContextWrapper cw = new ContextWrapper(mContext);
-
-        // Create directory userProfiles
-        File directory = cw.getDir("userProfiles", Context.MODE_PRIVATE);
-
-        // path to /data/data/yourapp/app_data/userProfiles
-        File path = new File(directory, filename);
-
-        FileOutputStream fos = new FileOutputStream(path);
-
-        // Use the compress method on the BitMap object to write image to the OutputStream
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        fos.close();
-        return directory.getAbsolutePath() + "/" + filename;
-    }
-
-    private String storePictureNew(User user, Bitmap bitmap) throws IOException {
         // Create directory userProfiles
         ContextWrapper cw = new ContextWrapper(mContext);
         File directory = cw.getDir("userPictures", Context.MODE_PRIVATE);
@@ -72,12 +57,14 @@ public enum PictureManager {
         FileOutputStream fileOutputStream = new FileOutputStream(path);
         BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream);
 
+        // Use the compress method on the BitMap object to write image to the OutputStream
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 
         bos.flush();
         bos.close();
         fileOutputStream.close();
 
+        Log.d(this.getClass().getSimpleName(), "Picture stored under: " + path.getAbsolutePath());
         return path.getAbsolutePath();
     }
 
@@ -188,5 +175,24 @@ public enum PictureManager {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         return BitmapFactory.decodeFile(path);
+    }
+
+    private Bitmap getPictureNew(User user) throws IOException {
+        // Create directory userProfiles
+        ContextWrapper cw = new ContextWrapper(mContext);
+        File directory = cw.getDir("userPictures", Context.MODE_PRIVATE);
+
+        // Generate file name
+        String filename = user.getId() + "_profilePicture_"/* + user.getLastModified().getTime()*/ + ".jpg";
+
+        // Concatenate directory and filename to path
+        File path = new File(directory, filename);
+
+
+        FileInputStream inStream = new FileInputStream(path);
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inStream);
+
+        Bitmap bitmap = BitmapFactory.decodeFile(path.getAbsolutePath());
+        return bitmap;
     }
 }
