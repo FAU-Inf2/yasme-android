@@ -1,6 +1,5 @@
 package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -19,7 +18,6 @@ import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
  */
 public class ChangeOwnerAndLeaveTask extends AsyncTask<Long, Void, Boolean> {
     private Chat chat;
-    private Context mContext = DatabaseManager.INSTANCE.getContext();
 
     public ChangeOwnerAndLeaveTask(Chat chat) {
         this.chat = chat;
@@ -38,6 +36,8 @@ public class ChangeOwnerAndLeaveTask extends AsyncTask<Long, Void, Boolean> {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
+        chat.setOwner(DatabaseManager.INSTANCE.getUserDAO().get(params[0]));
+        DatabaseManager.INSTANCE.getChatDAO().update(chat);
         try {
             ChatTask.getInstance().removeOneSelfFromChat(chat.getId());
         } catch (RestServiceException e) {

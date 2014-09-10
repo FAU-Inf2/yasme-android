@@ -197,8 +197,8 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
                         public void onClick(DialogInterface dialog, int whichButton) {
                             int position = list.getCheckedItemPosition();
                             if (position != AdapterView.INVALID_POSITION) {
-                                Long newUserId = chat.getParticipants().get(position).getId();
-                                new ChangeOwnerAndLeaveTask(chat).execute(newUserId);
+                                Long newOwnerId = chat.getParticipants().get(position).getId();
+                                new ChangeOwnerAndLeaveTask(chat).execute(newOwnerId);
                             }
                         }
                     }

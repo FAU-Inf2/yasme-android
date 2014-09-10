@@ -87,7 +87,8 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
             Bundle bundle = getArguments();
             long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
             // Make sure that fragment is registered. Registering twice won't cause any issues
-            FragmentObservable<ChatSettingsRemove, Chat> obs = ObservableRegistry.getObservable(ChatSettingsRemove.class);
+            FragmentObservable<ChatSettingsRemove, Chat> obs =
+                    ObservableRegistry.getObservable(ChatSettingsRemove.class);
             obs.register(this);
 
             // load chat from database
@@ -142,7 +143,8 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
                                         " OwnId: " + DatabaseManager.INSTANCE.getUserId()
                         );
                         if (!chat.isOwner(DatabaseManager.INSTANCE.getUserId())) {
-                            Toaster.getInstance().toast(R.string.alert_not_owner, Toast.LENGTH_LONG);
+                            Toaster.getInstance()
+                                    .toast(R.string.alert_not_owner, Toast.LENGTH_LONG);
                             return;
                         }
                         showAlertDialog(
@@ -155,7 +157,8 @@ public class ChatSettingsRemove extends Fragment implements NotifiableFragment<C
         );
     }
 
-    private void showAlertDialog(String title, String message, final Long userId, final Long rest, final int pos) {
+    private void showAlertDialog(String title, String message, final Long userId,
+                                 final Long rest, final int pos) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(title);
         alert.setMessage(message);
