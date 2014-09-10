@@ -151,8 +151,8 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                     }
                 }
         );
-        if (!chat.isOwner(DatabaseManager.INSTANCE.getUserId())) {
-            changeOwner.setVisibility(View.GONE);
+        if (chat.isOwner(DatabaseManager.INSTANCE.getUserId())) {
+            changeOwner.setVisibility(View.VISIBLE);
         }
         changeOwner.setOnClickListener(
                 new View.OnClickListener() {

@@ -39,7 +39,6 @@ public class SetProfileDataTask extends AsyncTask<Void, Void, Boolean> {
             return;
         }
         SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
-        //editor.putLong(AbstractYasmeActivity.USER_ID, selfProfile.getId());
         editor.putString(AbstractYasmeActivity.USER_NAME, selfProfile.getName());
         editor.commit();
     }

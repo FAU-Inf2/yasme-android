@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:text="@string/change_owner"
             android:id="@+id/change_owner"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_weight="2" />
     </LinearLayout>
 
