@@ -25,6 +25,7 @@ public class ChangeOwnerAndLeaveTask extends AsyncTask<Long, Void, Boolean> {
 
     /**
      * @param params 0 is id of new owner
+     *               1 is additional leave
      * @return Returns true if it was successful, otherwise false
      */
     @Override
@@ -37,13 +38,17 @@ public class ChangeOwnerAndLeaveTask extends AsyncTask<Long, Void, Boolean> {
             return false;
         }
         chat.setOwner(DatabaseManager.INSTANCE.getUserDAO().get(params[0]));
-        DatabaseManager.INSTANCE.getChatDAO().update(chat);
-        try {
-            ChatTask.getInstance().removeOneSelfFromChat(chat.getId());
-        } catch (RestServiceException e) {
-            Log.e(this.getClass().getSimpleName(), e.getMessage());
-            return false;
+        if (params[1] == 1L) {
+            try {
+                ChatTask.getInstance().removeOneSelfFromChat(chat.getId());
+            } catch (RestServiceException e) {
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
+                return false;
+            }
+            chat.removeParticipant(DatabaseManager.INSTANCE.getUserDAO()
+                    .get(DatabaseManager.INSTANCE.getUserId()));
         }
+        DatabaseManager.INSTANCE.getChatDAO().update(chat);
         return true;
     }
 

@@ -44,7 +44,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     protected UserAdapter mAdapter = null;
     private View chatInfo;
     private Chat chat;
-    private Button changeName, changeStatus, leaveChat;
+    private Button changeName, changeStatus, leaveChat, changeOwner;
 
     public ChatSettingsInfo() {
     }
@@ -69,18 +69,9 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(this.getClass().getSimpleName(), "onResume");
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedStateInstance) {
         super.onCreate(savedStateInstance);
-        Log.d(this.getClass().getSimpleName(), "onResume");
+        Log.d(this.getClass().getSimpleName(), "onCreate");
         users = new ArrayList<User>();
         mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
     }
@@ -89,6 +80,18 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(this.getClass().getSimpleName(), "onCreateView");
+        View rootView = inflater.inflate(R.layout.fragment_chat_settings_info, container, false);
+
+        changeName = (Button) rootView.findViewById(R.id.change_name);
+        changeStatus = (Button) rootView.findViewById(R.id.change_status);
+        leaveChat = (Button) rootView.findViewById(R.id.leave_chat);
+        changeOwner = (Button) rootView.findViewById(R.id.change_owner);
+        chatInfo = rootView.findViewById(R.id.chat_settings_info);
+
+        if (null != chat) {
+            fillInfoView();
+        }
+
         if (null == chat) {
             Bundle bundle = getArguments();
             long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
@@ -105,17 +108,6 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
             new GetTask<>(chatDAO, chatId, this.getClass()).execute();
         }
 
-        View rootView = inflater.inflate(R.layout.fragment_chat_settings_info, container, false);
-
-        changeName = (Button) rootView.findViewById(R.id.change_name);
-        changeStatus = (Button) rootView.findViewById(R.id.change_status);
-        leaveChat = (Button) rootView.findViewById(R.id.leave_chat);
-        chatInfo = rootView.findViewById(R.id.chat_settings_info);
-
-        if (null != chat) {
-            fillInfoView();
-        }
-        users = new ArrayList<>();
         return rootView;
     }
 
@@ -159,7 +151,16 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                     }
                 }
         );
-
+        if (!chat.isOwner(DatabaseManager.INSTANCE.getUserId())) {
+            changeOwner.setVisibility(View.GONE);
+        }
+        changeOwner.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        handleChangeOwner();
+                    }
+                });
         name.setText(chat.getName());
         status.setText(chat.getStatus());
         number.setText(" " + chat.getNumberOfParticipants());
@@ -279,7 +280,8 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                             int position = list.getCheckedItemPosition();
                             if (position != AdapterView.INVALID_POSITION) {
                                 Long newUserId = chat.getParticipants().get(position).getId();
-                                new ChangeOwnerAndLeaveTask(chat).execute(newUserId);
+                                Long leaveChat = 1L; // leaveChat rest call
+                                new ChangeOwnerAndLeaveTask(chat).execute(newUserId, leaveChat);
                             }
                         }
                     }
@@ -313,5 +315,63 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                     });
             alert.show();
         }
+    }
+
+    private void handleChangeOwner() {
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+        alert.setTitle(activity.getString(R.string.alert_owner));
+
+        LinearLayout layout = new LinearLayout(activity);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+
+        TextView text = new TextView(activity);
+        text.setText(activity.getString(R.string.alert_owner_message));
+
+        final ListView list = new ListView(activity);
+        list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        List<String> participantNames = new ArrayList<>();
+        for (User u : chat.getParticipants()) {
+            if (u.getId() == DatabaseManager.INSTANCE.getUserId()) {
+                continue;
+            }
+            participantNames.add(u.getName());
+        }
+        final ArrayAdapter<List<User>> adapter = new ArrayAdapter<List<User>>(
+                activity,
+                android.R.layout.simple_list_item_single_choice,
+                (List) participantNames
+        );
+        list.setAdapter(adapter);
+
+        layout.addView(text, layoutParams);
+        layout.addView(list, layoutParams);
+        alert.setView(layout);
+
+        alert.setPositiveButton(R.string.change_and_leave_chat,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        int position = list.getCheckedItemPosition();
+                        if (position != AdapterView.INVALID_POSITION) {
+                            Long newUserId = chat.getParticipants().get(position).getId();
+                            Long leaveChat = 0L; // no leaveChat rest call
+                            new ChangeOwnerAndLeaveTask(chat).execute(newUserId, leaveChat);
+                        }
+                    }
+                }
+        );
+        alert.setNegativeButton(R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                }
+        );
+        alert.show();
+
     }
 }
