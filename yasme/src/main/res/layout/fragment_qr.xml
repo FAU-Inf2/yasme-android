@@ -1,19 +1,23 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical"
-    android:scrollbarAlwaysDrawVerticalTrack="true"
-    tools:context=".ui.OwnProfileFragment">
+    >
+
     <ImageView
         android:id="@+id/qr_code"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="2mm"
-        android:layout_marginRight="2mm"
-        android:layout_marginTop="2mm"
-        android:layout_marginBottom="2mm"
+        android:layout_alignParentTop="true" />
+
      />
-</LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:text="@string/scan_contact"
+        android:id="@+id/scan_contact_button"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:singleLine="true"/>
+</RelativeLayout>

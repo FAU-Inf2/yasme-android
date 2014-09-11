@@ -65,6 +65,7 @@
     <string name="contact_details_compose_email_action">E-Mail verfassen...</string>
     <string name="contact_details_email_default_subject"></string>
     <string name="contact_details_email_default_body"></string>
+    <string name="scan_contact">Scanne einen Freund</string>
 
     <!-- Own profile -->
     <string name="own_profile_email">E-Mail</string>

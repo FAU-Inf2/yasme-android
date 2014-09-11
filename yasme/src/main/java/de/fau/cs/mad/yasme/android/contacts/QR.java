@@ -1,20 +1,53 @@
 package de.fau.cs.mad.yasme.android.contacts;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+
+import de.fau.cs.mad.yasme.android.controller.Log;
+import de.fau.cs.mad.yasme.android.encryption.KeyEncryption;
+import de.fau.cs.mad.yasme.android.entities.QRData;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 /**
  * Created by Martin Sturm <martin.sturm@fau.de> on 11.09.2014.
  */
 
 public class QR {
-    private static final int SIZE = 400;
+    private static final int SIZE = 1024;
+
+    public Bitmap generateQRCode() {
+        QRData qrdata = new QRData();
+        DatabaseManager db = DatabaseManager.INSTANCE;
+        qrdata.setDeviceId(db.getDeviceId());
+        qrdata.setUserId(db.getUserId());
+
+        Context context = db.getContext();
+        String RSAKEY_STORAGE_USER = KeyEncryption.RSAKEY_STORAGE + "_" + db.getDeviceId();
+        SharedPreferences privKeyStorage = context.getSharedPreferences(RSAKEY_STORAGE_USER, Context.MODE_PRIVATE);
+        String pubKeyInBase64 = privKeyStorage.getString(KeyEncryption.PUBLICKEY, "");
+        qrdata.setPublicKey(pubKeyInBase64);
+
+        ObjectWriter objectWriter = new ObjectMapper().writer()
+                .withDefaultPrettyPrinter();
+        try {
+            String data = objectWriter.writeValueAsString(qrdata);
+            //data = "Hallo Welt";
+            return generateQRCode(data);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public Bitmap generateQRCode(String data) {
+        Log.d(getClass().getName(), "Generate QR for " + data);
         com.google.zxing.Writer writer = new QRCodeWriter();
         BitMatrix bm;
         try {

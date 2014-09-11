@@ -17,9 +17,9 @@ import java.security.PublicKey;
 
 public class KeyEncryption {
 
-    private String RSAKEY_STORAGE = "rsaKeyStorage"; //Storage for Private and Public Keys from user
-    private final String PRIVATEKEY = "privateKey";
-    private final String PUBLICKEY = "publicKey";
+    public static final String RSAKEY_STORAGE = "rsaKeyStorage"; //Storage for Private and Public Keys from user
+    public static final String PRIVATEKEY = "privateKey";
+    public static final String PUBLICKEY = "publicKey";
     private final byte CREATOR = 0;
     private final byte RECIPIENT = 1;
     private RSAEncryption rsa;
