@@ -1,11 +1,13 @@
 package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.connection.UserTask;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
+import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 
 /**
@@ -13,9 +15,9 @@ import de.fau.cs.mad.yasme.android.exception.RestServiceException;
  */
 public class UploadProfilePictureTask extends AsyncTask<String, Void, Boolean> {
 
-    private Drawable profilePicture;
+    private Bitmap profilePicture;
 
-    public UploadProfilePictureTask(Drawable profilePicture) {
+    public UploadProfilePictureTask(Bitmap profilePicture) {
         this.profilePicture = profilePicture;
     }
 
@@ -38,7 +40,8 @@ public class UploadProfilePictureTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
-
+            Log.d(this.getClass().getSimpleName(), "Successful uploaded profile picture");
+            Toaster.getInstance().toast("Successful uploaded profile picture", Toast.LENGTH_LONG);
         }
     }
 }

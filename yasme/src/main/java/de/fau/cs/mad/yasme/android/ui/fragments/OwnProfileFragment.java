@@ -27,6 +27,7 @@ import java.io.IOException;
 import de.fau.cs.mad.yasme.android.BuildConfig;
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SetProfileDataTask;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.UploadProfilePictureTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
@@ -112,36 +113,29 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         BitmapDrawable pic = null;
         if (BuildConfig.DEBUG) {
             if (self.getProfilePicture() != null) {
-                try {
-                    int width = 100;
-                    int height = 100;
-                    Log.e(this.getClass().getSimpleName(),
-                            "Width: " + width +
-                                    " Height: " + height);
-                    pic = new BitmapDrawable(getResources(), PictureManager.INSTANCE
-                            .getPicture(self, height, width));
-                    Log.e(this.getClass().getSimpleName(), "Try to load Picture from: " + self.getProfilePicture());
-                    Log.e(this.getClass().getSimpleName(), "try-Block");
-                } catch (IOException e) {
-                    Log.e(this.getClass().getSimpleName(), e.getMessage());
-                    pic = null;
-                }
+                int width = 100;
+                int height = 100;
+                Log.e(this.getClass().getSimpleName(),
+                        "Width: " + width +
+                                " Height: " + height);
+                pic = new BitmapDrawable(getResources(), PictureManager.INSTANCE
+                        .getPicture(self, height, width));
+                Log.d(this.getClass().getSimpleName(), "Try to load Picture from: " + self.getProfilePicture());
             }
         }
         if (pic == null) {
             // Show nice profile picture
+            Log.d(this.getClass().getSimpleName(), "using standard picture");
             profilePictureView.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB
                     [(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
             initial.setText(self.getName().substring(0, 1).toUpperCase());
-
-            Log.e(this.getClass().getSimpleName(), "standard Picture");
 
             // Load profile image into profilePictureView from server as AsyncTask if available
             //new GetProfilePictureTask(getClass()).execute(self.getId());
             //TODO serveranbindung
         } else {
             notifyFragment(pic);
-            Log.e(this.getClass().getSimpleName(), "loaded Picture");
+            Log.d(this.getClass().getSimpleName(), "successful loaded picture");
         }
         return layout;
     }
@@ -194,7 +188,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             try {
                 path = PictureManager.INSTANCE.storePicture(self, newProfilePicture);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
                 return;
             }
             Log.e(this.getClass().getSimpleName(), "Picture stored under: " + path);
@@ -205,8 +199,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             notifyFragment(new BitmapDrawable(getResources(), newProfilePicture));
 
             // Upload picture as AsyncTask
-            //new UploadProfilePictureTask(d).execute();
-            //TODO serveranbindung
+            new UploadProfilePictureTask(newProfilePicture).execute();
         }
     }
 

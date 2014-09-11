@@ -1,7 +1,6 @@
 package de.fau.cs.mad.yasme.android.connection;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -89,20 +88,28 @@ public class UserTask extends ConnectionTask {
         }
     }
 
-    public void uploadProfilePicture(Drawable drawable) throws RestServiceException {
+    public void uploadProfilePicture(Bitmap bitmap) throws RestServiceException {
 
         HttpEntity multipartEntity = MultipartEntityBuilder.create()
-                .addBinaryBody("file", drawableToByteArray(drawable), ContentType.create("image/jpeg"), "")
+                .addBinaryBody("file", scaleBitmap(bitmap, 500), ContentType.create("image/jpeg"), "")
                 .build();
 
         executeUpload(Request.POST, "profile", multipartEntity, null);
     }
 
-    private byte[] drawableToByteArray(Drawable drawable) {
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+    private byte[] bitmapToByteArray(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return stream.toByteArray();
+    }
+
+    private byte[] scaleBitmap(Bitmap bigBitmap, int newMaxSize) {
+        float picScale = ((float) newMaxSize)
+                / ((float) Math.max(bigBitmap.getHeight(), bigBitmap.getWidth()));
+        int newHeight = (int) (bigBitmap.getHeight() * picScale);
+        int newWidth = (int) (bigBitmap.getWidth() * picScale);
+        Bitmap bitmap = Bitmap.createScaledBitmap(bigBitmap, newWidth, newHeight, false);
+        return bitmapToByteArray(bitmap);
     }
 
     public Drawable getProfilePicture(long userId) throws RestServiceException {

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -12,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import de.fau.cs.mad.yasme.android.controller.Log;
-import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.User;
 
 /**
@@ -23,14 +21,13 @@ public enum PictureManager {
 
     private Context mContext = DatabaseManager.INSTANCE.getContext();
 
-    public Bitmap getPicture(User user, int height, int width) throws IOException {
-        String path = user.getProfilePicture();
-        if (path == null || path.isEmpty()) {
-            return null;
-        }
-        Toaster.getInstance().toast("Try to load Picture from: " + path, Toast.LENGTH_LONG);
-        //return getPictureFromFile(user);
-        return getPictureSampledFromFile(user, height, width);
+    private Bitmap scaleBitmap(Bitmap bigBitmap, int newMaxSize) {
+        float picScale = ((float) newMaxSize)
+                / ((float) Math.max(bigBitmap.getHeight(), bigBitmap.getWidth()));
+        int newHeight = (int) (bigBitmap.getHeight() * picScale);
+        int newWidth = (int) (bigBitmap.getWidth() * picScale);
+        Bitmap bitmap = Bitmap.createScaledBitmap(bigBitmap, newWidth, newHeight, false);
+        return bitmap;
     }
 
     /**
@@ -56,8 +53,11 @@ public enum PictureManager {
         FileOutputStream fileOutputStream = new FileOutputStream(path);
         BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream);
 
+        // scale down bitmap
+        Bitmap scaledBitmap = scaleBitmap(bitmap, 400);
+
         // Use the compress method on the BitMap object to write image to the OutputStream
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 
         bos.flush();
         bos.close();
@@ -66,6 +66,7 @@ public enum PictureManager {
         Log.d(this.getClass().getSimpleName(), "Picture stored under: " + path.getAbsolutePath());
         return path.getAbsolutePath();
     }
+
 
     private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -98,7 +99,7 @@ public enum PictureManager {
      * @return profilePicture as a bitmap
      * @throws IOException
      */
-    private Bitmap getPictureSampledFromFile(User user, int reqHeight, int reqWidth) {
+    public Bitmap getPicture(User user, int reqHeight, int reqWidth) {
         String path = user.getProfilePicture();
 
         // First decode with inJustDecodeBounds=true to check dimensions
@@ -107,7 +108,7 @@ public enum PictureManager {
         BitmapFactory.decodeFile(path, options);
 
         // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        //options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
@@ -121,7 +122,8 @@ public enum PictureManager {
      * @return profilePicture as a bitmap
      * @throws IOException
      */
-    private Bitmap getPictureFromFile(User user) throws IOException {
+    @Deprecated
+    private Bitmap getPictureFromFile(User user) {
         String path = user.getProfilePicture();
         return BitmapFactory.decodeFile(path);
     }
