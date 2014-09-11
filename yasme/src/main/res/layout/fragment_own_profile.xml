@@ -88,20 +88,4 @@
         android:text=""
         android:textSize="10pt" />
 
-    <TextView
-        android:id="@+id/own_profile_qr_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dip"
-        android:layout_marginTop="15dip"
-        android:text="@string/own_profile_qr"
-        android:textColor="@color/yasme_brombeer"
-        android:textSize="8pt" />
-
-    <ImageView
-        android:id="@+id/own_profile_qr"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dip" />
 </LinearLayout>
