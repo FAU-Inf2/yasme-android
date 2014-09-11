@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.connection.InfoTask;
 import de.fau.cs.mad.yasme.android.controller.Log;
+import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.ServerInfo;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
@@ -29,6 +30,7 @@ public class GetInfoTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
         Log.d(getClass().getSimpleName(), "ServerInfo will be fetched");
         long updateTime = DatabaseManager.INSTANCE.getServerInfoUpdateTime();
         if ((updateTime + interval) > System.currentTimeMillis()) {
@@ -49,6 +51,7 @@ public class GetInfoTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (!success) {
             return;
         }

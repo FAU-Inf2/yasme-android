@@ -1,8 +1,8 @@
 package de.fau.cs.mad.yasme.android.asyncTasks.database;
 
 import android.os.AsyncTask;
-import de.fau.cs.mad.yasme.android.controller.Log;
 
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.storage.dao.DAO;
@@ -35,8 +35,7 @@ public class GetTask<D extends Object, T extends DAO<D>> extends AsyncTask<Objec
         if (success) {
             // Notify
             ObservableRegistry.getObservable(classToNotify).notifyFragments(data);
-        }
-        else {
+        } else {
             Log.w(this.getClass().getSimpleName(), "Did not invoke notification as task did not finish successfully.");
         }
     }

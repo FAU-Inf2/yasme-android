@@ -24,17 +24,14 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
+import de.fau.cs.mad.yasme.android.BuildConfig;
 import de.fau.cs.mad.yasme.android.R;
-import de.fau.cs.mad.yasme.android.asyncTasks.database.StoreImageTask;
-import de.fau.cs.mad.yasme.android.asyncTasks.server.GetProfilePictureTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SetProfileDataTask;
-import de.fau.cs.mad.yasme.android.asyncTasks.server.UploadProfilePictureTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
-import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
@@ -51,6 +48,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     private ImageView profilePictureView;
     private TextView initial;
     private OnOwnProfileFragmentInteractionListener mListener;
+    User self;
+    AbstractYasmeActivity activity;
 
     private static int RESULT_LOAD_IMAGE = 1;
 
@@ -71,14 +70,17 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        View layout = inflater.inflate(R.layout.fragment_own_profile, container, false);
+        activity = (AbstractYasmeActivity) getActivity();
+        self = activity.getSelfUser();
 
+        View layout = inflater.inflate(R.layout.fragment_own_profile, container, false);
         TextView email = (TextView) layout.findViewById(R.id.own_profile_email);
         TextView id = (TextView) layout.findViewById(R.id.own_profile_id);
         initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
         profilePictureView = (ImageView) layout.findViewById(R.id.own_profile_picture);
-        profilePictureView.setOnClickListener(this);
+        if (BuildConfig.DEBUG) {
+            profilePictureView.setOnClickListener(this);
+        }
 
         name = (EditText) layout.findViewById(R.id.own_profile_header);
         name.setOnKeyListener(new OnKeyListener() {
@@ -102,30 +104,37 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             }
         });
 
-        User self = activity.getSelfUser();
         name.setText(self.getName());
         email.setText(self.getEmail());
-        id.setText("" + DatabaseManager.INSTANCE.getUserId());
-        //id.setText("" + self.getId());
+        id.setText("" + self.getId());
 
-        Drawable picture;
-        try {
-            picture = new BitmapDrawable(getResources(), PictureManager.INSTANCE.getPicture(self));
-            picture = null;
-        } catch (IOException e) {
-            Log.e(this.getClass().getSimpleName(), e.getMessage());
-            picture = null;
+        BitmapDrawable pic = null;
+        if (BuildConfig.DEBUG) {
+            try {
+                pic = new BitmapDrawable(getResources(), PictureManager.INSTANCE.getPicture(self));
+                if (self.getProfilePicture() != null) {
+                    Log.e(this.getClass().getSimpleName(), "Try to load Picture from: " + self.getProfilePicture());
+                }
+                Log.e(this.getClass().getSimpleName(), "try-Block");
+            } catch (IOException e) {
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
+                pic = null;
+            }
         }
-        if (picture == null) {
+        if (pic == null) {
             // Show nice profile picture
             profilePictureView.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB
                     [(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
             initial.setText(self.getName().substring(0, 1).toUpperCase());
 
+            Log.e(this.getClass().getSimpleName(), "standard Picture");
+
             // Load profile image into profilePictureView from server as AsyncTask if available
-            new GetProfilePictureTask(getClass()).execute(self.getId());
+            //new GetProfilePictureTask(getClass()).execute(self.getId());
+            //TODO serveranbindung
         } else {
-            notifyFragment(picture);
+            notifyFragment(pic);
+            Log.e(this.getClass().getSimpleName(), "loaded Picture");
         }
         return layout;
     }
@@ -172,17 +181,25 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-            //store image on device
-            BitmapFactory factory = new BitmapFactory();
-            Bitmap newProfilePicture = factory.decodeFile(picturePath);
-            new StoreImageTask(newProfilePicture).execute();
+            //store own image on device
+            Bitmap newProfilePicture = BitmapFactory.decodeFile(picturePath);
+            String path = "";
+            try {
+                path = PictureManager.INSTANCE.storePicture(self, newProfilePicture);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            Log.e(this.getClass().getSimpleName(), "Picture stored under: " + path);
 
-            //profilePictureView.setImageBitmap(newProfilePicture);
-            Drawable d = Drawable.createFromPath(picturePath);
-            notifyFragment(d);
+            activity.setOwnProfilePicture(path);
+
+            // set picture
+            notifyFragment(new BitmapDrawable(getResources(), newProfilePicture));
 
             // Upload picture as AsyncTask
-            new UploadProfilePictureTask(d).execute();
+            //new UploadProfilePictureTask(d).execute();
+            //TODO serveranbindung
         }
     }
 

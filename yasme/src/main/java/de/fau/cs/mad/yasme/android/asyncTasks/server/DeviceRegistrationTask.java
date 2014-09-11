@@ -2,9 +2,9 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import de.fau.cs.mad.yasme.android.controller.Log;
 
 import de.fau.cs.mad.yasme.android.connection.DeviceTask;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.encryption.KeyEncryption;
@@ -26,15 +26,15 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
     private String regId;
     private Class classToNotify;
 
-    public DeviceRegistrationTask(Activity activity, Class classToNotify){
+    public DeviceRegistrationTask(Activity activity, Class classToNotify) {
         this.activity = activity;
         this.classToNotify = classToNotify;
     }
 
     /**
-    * @params params[0] is userId
-    * @params params[1] is product
-    */
+     * @params params[0] is userId
+     * @params params[1] is product
+     */
     @Override
     protected Boolean doInBackground(String... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
@@ -58,7 +58,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
 
         if (cloudMessaging.checkPlayServices()) {
             String regid = cloudMessaging.getRegistrationId();
-            Log.d(this.getClass().getSimpleName(),"Google reg id is empty? " + regid.isEmpty());
+            Log.d(this.getClass().getSimpleName(), "Google reg id is empty? " + regid.isEmpty());
             if (regid.isEmpty()) {
                 regId = cloudMessaging.registerInBackground();
                 if (null == regId || regId.isEmpty()) {
@@ -99,18 +99,18 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         OwnDevice deviceToBeRegistered = new OwnDevice(user, OwnDevice.Platform.ANDROID, pubKeyInBase64, type, number, product, regId);
 
         // make the REST-Call
-        try{
+        try {
             deviceIdFromServer = DeviceTask.getInstance().registerDevice(deviceToBeRegistered);
             deviceId = deviceIdFromServer;
             //save private and public Key to storage
             rsa.saveRSAKeys(deviceId);
-        }catch(RestServiceException e){
+        } catch (RestServiceException e) {
             // if error occurs return false
-            Log.e(this.getClass().getSimpleName(),e.getMessage());
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
 
-        Log.d(this.getClass().getSimpleName(),"Device registered at yasme server");
+        Log.d(this.getClass().getSimpleName(), "Device registered at yasme server");
 
         // For Developer-Devices only
         if (DebugManager.INSTANCE.isDebugMode()) {
@@ -123,9 +123,9 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         // after device registration
         ObservableRegistry.getObservable(classToNotify)
-                        .notifyFragments(new LoginFragment.DeviceRegistrationParam(success));
-        SpinnerObservable.getInstance().removeBackgroundTask(this);
+                .notifyFragments(new LoginFragment.DeviceRegistrationParam(success));
     }
 }

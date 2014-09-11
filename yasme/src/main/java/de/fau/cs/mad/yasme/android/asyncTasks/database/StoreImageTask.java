@@ -14,7 +14,7 @@ import de.fau.cs.mad.yasme.android.storage.PictureManager;
 /**
  * Created by robert on 09.09.14.
  */
-public class StoreImageTask extends AsyncTask<String, Void, Boolean> {
+public class StoreImageTask extends AsyncTask<Long, Void, Boolean> {
 
     private Bitmap profilePicture;
 
@@ -27,9 +27,9 @@ public class StoreImageTask extends AsyncTask<String, Void, Boolean> {
      * @return true on success, false on error
      */
     @Override
-    protected Boolean doInBackground(String... params) {
+    protected Boolean doInBackground(Long... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
-        long userId = Long.parseLong(params[0]);
+        long userId = params[0];
         User user = DatabaseManager.INSTANCE.getUserDAO().get(userId);
         if (user == null) {
             return false;

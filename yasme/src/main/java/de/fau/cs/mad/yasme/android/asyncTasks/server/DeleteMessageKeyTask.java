@@ -1,9 +1,9 @@
 package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
-import de.fau.cs.mad.yasme.android.controller.Log;
 
 import de.fau.cs.mad.yasme.android.connection.MessageKeyTask;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 
 /**
@@ -12,18 +12,15 @@ import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 // Async-Task for sending Key to Server
 public class DeleteMessageKeyTask extends AsyncTask<Long, Void, Boolean> {
 
+    /**
+     * @param params [0] is keyId
+     *               params [1] is DeviceId from User
+     * @return Returns true if it was successful, otherwise false
+     */
     @Override
     protected Boolean doInBackground(Long... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
-
-        /**
-         * @param params [0] is keyId
-         *        params [1] is DeviceId from User
-         * @return Returns true if it was successful, otherwise false
-         */
-
         try {
-
             //delete Key
             MessageKeyTask keyTask = MessageKeyTask.getInstance();
             keyTask.deleteKey(params[0]);
