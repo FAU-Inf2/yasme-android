@@ -69,6 +69,7 @@
     <!-- Own profile -->
     <string name="own_profile_email">E-Mail</string>
     <string name="own_profile_id">YD</string>
+    <string name="own_profile_qr">QR-Code</string>
 
     <!-- Settings -->
     <string name="action_settings">Einstellungen</string>

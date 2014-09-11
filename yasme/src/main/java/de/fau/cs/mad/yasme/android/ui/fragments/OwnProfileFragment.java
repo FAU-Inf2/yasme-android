@@ -113,8 +113,13 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         if (BuildConfig.DEBUG) {
             if (self.getProfilePicture() != null) {
                 try {
+                    int width = 100;
+                    int height = 100;
+                    Log.e(this.getClass().getSimpleName(),
+                            "Width: " + width +
+                                    " Height: " + height);
                     pic = new BitmapDrawable(getResources(), PictureManager.INSTANCE
-                            .getPicture(self, profilePictureView.getHeight(), profilePictureView.getWidth()));
+                            .getPicture(self, height, width));
                     Log.e(this.getClass().getSimpleName(), "Try to load Picture from: " + self.getProfilePicture());
                     Log.e(this.getClass().getSimpleName(), "try-Block");
                 } catch (IOException e) {
