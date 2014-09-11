@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,12 +50,15 @@ import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 
 public class QRCodeFragment extends Fragment {
 
+    private Button scan;
+
     public QRCodeFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
     }
 
@@ -63,13 +67,43 @@ public class QRCodeFragment extends Fragment {
         final AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         View layout = inflater.inflate(R.layout.fragment_qr, container, false);
 
+        scan= (Button)layout.findViewById(R.id.scan_contact_button);
+
+        scan.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
+                startActivityForResult(intent, 0);
+            }
+        });
+
         ImageView qrCode = (ImageView) layout.findViewById(R.id.qr_code);
 
         QR qr = new QR();
-        Bitmap bitmap = qr.generateQRCode("hallo welt");
+        Bitmap bitmap = qr.generateQRCode();
         if (bitmap != null) {
             qrCode.setImageBitmap(bitmap);
         }
         return layout;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == 0) {
+           // if (resultCode == RESULT_OK) {
+
+                String contents = intent.getStringExtra("SCAN_RESULT");
+                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+                Log.d(getClass().getSimpleName(),"Scanned: " + contents);
+
+                // Handle successful scan
+
+            //} else if (resultCode == RESULT_CANCELED) {
+                // Handle cancel
+           //     Log.i("App","Scan unsuccessful");
+            //}
+        }
     }
 }
