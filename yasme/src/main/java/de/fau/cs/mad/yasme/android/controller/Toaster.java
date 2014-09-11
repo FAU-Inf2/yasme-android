@@ -11,6 +11,7 @@ import java.util.Set;
  * Created by Martin Sturm <***REMOVED***> on 18.07.2014.
  */
 public class Toaster {
+    // test
     private static Toaster instance;
     private Context context;
     private Set<Toastable> toastables = new HashSet<>();
