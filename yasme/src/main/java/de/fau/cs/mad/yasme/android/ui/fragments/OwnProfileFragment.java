@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
+import de.fau.cs.mad.yasme.android.BuildConfig;
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SetProfileDataTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
@@ -77,7 +78,9 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         TextView id = (TextView) layout.findViewById(R.id.own_profile_id);
         initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
         profilePictureView = (ImageView) layout.findViewById(R.id.own_profile_picture);
-        profilePictureView.setOnClickListener(this);
+        if (BuildConfig.DEBUG) {
+            profilePictureView.setOnClickListener(this);
+        }
 
         name = (EditText) layout.findViewById(R.id.own_profile_header);
         name.setOnKeyListener(new OnKeyListener() {
@@ -106,15 +109,17 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         id.setText("" + self.getId());
 
         BitmapDrawable pic = null;
-        try {
-            pic = new BitmapDrawable(getResources(), PictureManager.INSTANCE.getPicture(self));
-            if (self.getProfilePicture() != null) {
-                Log.e(this.getClass().getSimpleName(), "Try to load Picture from: " + self.getProfilePicture());
+        if (BuildConfig.DEBUG) {
+            try {
+                pic = new BitmapDrawable(getResources(), PictureManager.INSTANCE.getPicture(self));
+                if (self.getProfilePicture() != null) {
+                    Log.e(this.getClass().getSimpleName(), "Try to load Picture from: " + self.getProfilePicture());
+                }
+                Log.e(this.getClass().getSimpleName(), "try-Block");
+            } catch (IOException e) {
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
+                pic = null;
             }
-            Log.e(this.getClass().getSimpleName(), "try-Block");
-        } catch (IOException e) {
-            Log.e(this.getClass().getSimpleName(), e.getMessage());
-            pic = null;
         }
         if (pic == null) {
             // Show nice profile picture
