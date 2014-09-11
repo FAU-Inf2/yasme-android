@@ -1,0 +1,19 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    tools:context=".ui.OwnProfileFragment">
+    <ImageView
+        android:id="@+id/qr_code"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2mm"
+        android:layout_marginRight="2mm"
+        android:layout_marginTop="2mm"
+        android:layout_marginBottom="2mm"
+     />
+</LinearLayout>
