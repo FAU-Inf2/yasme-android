@@ -6,10 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -30,11 +28,9 @@ public enum PictureManager {
         if (path == null || path.isEmpty()) {
             return null;
         }
-        Log.e(this.getClass().getSimpleName(), "Try to load Picture from: " + path);
         Toaster.getInstance().toast("Try to load Picture from: " + path, Toast.LENGTH_LONG);
-        return getPictureFromFile(user);
-        //return getPictureSampledFromFile(user, height, width);
-        //return getSampledPicture(user, height, width);
+        //return getPictureFromFile(user);
+        return getPictureSampledFromFile(user, height, width);
     }
 
     /**
@@ -71,40 +67,6 @@ public enum PictureManager {
         return path.getAbsolutePath();
     }
 
-    /**
-     * Fetches the profilePicture from the storage
-     *
-     * @param user User
-     * @return profilePicture as a bitmap
-     * @throws IOException
-     */
-    private Bitmap getPictureFromStream(User user) throws IOException {
-        Bitmap picture;
-        String path = user.getProfilePicture();
-
-        if (path == null || path.isEmpty()) {
-            return null;
-        }
-
-        // Open a stream
-        FileInputStream fis = new FileInputStream(path);
-        BufferedInputStream buf = new BufferedInputStream(fis);
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-
-        picture = BitmapFactory.decodeStream(buf, null, options);
-
-        if (fis != null) {
-            fis.close();
-        }
-        if (buf != null) {
-            buf.close();
-        }
-
-        return picture;
-    }
-
     private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
@@ -136,42 +98,6 @@ public enum PictureManager {
      * @return profilePicture as a bitmap
      * @throws IOException
      */
-    private static Bitmap getSampledPicture(User user, int reqHeight, int reqWidth)
-            throws IOException {
-
-        Bitmap picture;
-        String path = user.getProfilePicture();
-
-        if (path == null || path.isEmpty()) {
-            return null;
-        }
-
-        // Open a stream
-        FileInputStream fis = new FileInputStream(path);
-        BufferedInputStream buf = new BufferedInputStream(fis);
-
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(buf, null, options);
-
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        picture = BitmapFactory.decodeStream(buf, null, options);
-
-        if (fis != null) {
-            fis.close();
-        }
-        if (buf != null) {
-            buf.close();
-        }
-
-        return picture;
-    }
-
     private Bitmap getPictureSampledFromFile(User user, int reqHeight, int reqWidth) {
         String path = user.getProfilePicture();
 
@@ -185,32 +111,18 @@ public enum PictureManager {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        Bitmap picture = BitmapFactory.decodeFile(path, options);
-
-        return picture;//BitmapFactory.decodeFile(path);
+        return BitmapFactory.decodeFile(path, options);
     }
 
+    /**
+     * Fetches the profilePicture from the storage sampled to a smaller size
+     *
+     * @param user User
+     * @return profilePicture as a bitmap
+     * @throws IOException
+     */
     private Bitmap getPictureFromFile(User user) throws IOException {
         String path = user.getProfilePicture();
         return BitmapFactory.decodeFile(path);
-    }
-
-    private Bitmap getPictureNew(User user) throws IOException {
-        // Create directory userProfiles
-        ContextWrapper cw = new ContextWrapper(mContext);
-        File directory = cw.getDir("userPictures", Context.MODE_PRIVATE);
-
-        // Generate file name
-        String filename = user.getId() + "_profilePicture_"/* + user.getLastModified().getTime()*/ + ".jpg";
-
-        // Concatenate directory and filename to path
-        File path = new File(directory, filename);
-
-
-        FileInputStream inStream = new FileInputStream(path);
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(inStream);
-
-        Bitmap bitmap = BitmapFactory.decodeFile(path.getAbsolutePath());
-        return bitmap;
     }
 }

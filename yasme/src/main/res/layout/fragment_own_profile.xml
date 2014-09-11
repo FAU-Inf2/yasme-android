@@ -13,40 +13,40 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5pt"
-        android:layout_span="5"
         android:background="@android:color/transparent"
         android:cursorVisible="true"
         android:text="@string/own_contact_header"
         android:textSize="16pt"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:inputType="text" />
 
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_width="100dip"
+        android:layout_height="100dip"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="15dp"
+        android:layout_margin="15dip"
         android:gravity="center_horizontal">
 
         <ImageView
             android:id="@+id/own_profile_picture"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true" />
+            android:layout_width="100dip"
+            android:layout_height="100dip"
+            android:adjustViewBounds="true" />
 
         <TextView
             android:id="@+id/own_profile_picture_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignLeft="@+id/own_profile_picture"
             android:layout_alignRight="@+id/own_profile_picture"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="10dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="B"
             android:textColor="#FFFFFF"
-            android:textSize="70sp" />
+            android:textSize="70sp"
+            android:layout_alignTop="@+id/own_profile_picture"
+            android:layout_alignBottom="@+id/own_profile_picture" />
     </RelativeLayout>
 
 
@@ -54,10 +54,8 @@
         android:id="@+id/own_profile_email_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_marginLeft="2mm"
-        android:layout_marginRight="2mm"
-        android:layout_marginTop="4mm"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="15dip"
         android:text="@string/own_profile_email"
         android:textColor="@color/yasme_brombeer"
         android:textSize="8pt" />
@@ -66,10 +64,8 @@
         android:id="@+id/own_profile_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_marginLeft="4mm"
-        android:layout_marginRight="30pt"
-        android:layout_marginTop="0.5mm"
+        android:layout_marginLeft="30dip"
+        android:layout_marginTop="3dip"
         android:text=""
         android:textSize="10pt" />
 
@@ -77,30 +73,35 @@
         android:id="@+id/own_profile_id_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_marginLeft="2mm"
-        android:layout_marginRight="2mm"
-        android:layout_marginTop="4mm"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="15dip"
         android:text="@string/own_profile_id"
         android:textColor="@color/yasme_brombeer"
         android:textSize="8pt" />
 
     <TextView
         android:id="@+id/own_profile_id"
-        android:layout_width="294dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_marginLeft="4mm"
-        android:layout_marginRight="30pt"
-        android:layout_marginTop="0.5mm"
+        android:layout_marginLeft="30dip"
+        android:layout_marginTop="3dip"
         android:text=""
         android:textSize="10pt" />
+
+    <TextView
+        android:id="@+id/own_profile_qr_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="15dip"
+        android:text="@string/own_profile_qr"
+        android:textColor="@color/yasme_brombeer"
+        android:textSize="8pt" />
 
     <ImageView
         android:id="@+id/own_profile_qr"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true" />
+        android:layout_margin="10dip" />
 </LinearLayout>
