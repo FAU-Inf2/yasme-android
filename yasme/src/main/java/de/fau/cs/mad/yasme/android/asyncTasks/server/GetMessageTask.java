@@ -2,13 +2,13 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import de.fau.cs.mad.yasme.android.controller.Log;
 
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.connection.DeviceTask;
 import de.fau.cs.mad.yasme.android.connection.MessageKeyTask;
 import de.fau.cs.mad.yasme.android.connection.MessageTask;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NewMessageNotificationManager;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
@@ -50,7 +50,8 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Object... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
-        lastMessageId = DatabaseManager.INSTANCE.getSharedPreferences().getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
+        lastMessageId = DatabaseManager.INSTANCE.getSharedPreferences()
+                .getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
         try {
             messages = MessageTask.getInstance().getMessages(lastMessageId);
@@ -69,8 +70,8 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
         //add new messages to DB
         //Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
-        for(Message message : messages) {
-           // Log.d(this.getClass().getSimpleName(), message.getMessage() + " " + message.getId());
+        for (Message message : messages) {
+            // Log.d(this.getClass().getSimpleName(), message.getMessage() + " " + message.getId());
 
             // Refresh Sender-User-Data
             User sender = message.getSender();
@@ -78,7 +79,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             //Log.d(getClass().getSimpleName(), "Sender lastMod: " + sender.getLastModified());
             if (dbUser == null || dbUser.getLastModified() == null || sender.getLastModified() == null || sender.getLastModified().compareTo(dbUser.getLastModified()) > 0) {
                 //Log.d(getClass().getSimpleName(), "Sender has to be refreshed");
-                RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER,sender.getId(),true);
+                RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER, sender.getId(), true);
                 refreshTask.execute();
             }
 
@@ -115,9 +116,9 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (!success) {
             Log.e(this.getClass().getSimpleName(), "No success");
-            SpinnerObservable.getInstance().removeBackgroundTask(this);
             return;
         } else {
             //Log.i(this.getClass().getSimpleName(), "UpdateDB successfull, Messages stored");
@@ -136,12 +137,11 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
                 }
             }
 
-            if(classToNotify == ChatFragment.class) {
+            if (classToNotify == ChatFragment.class) {
                 ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(null);
-            } else if(classToNotify == ChatListFragment.class) {
+            } else if (classToNotify == ChatListFragment.class) {
                 ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(null);
             }
-            SpinnerObservable.getInstance().removeBackgroundTask(this);
         }
     }
 
@@ -152,7 +152,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         message.setSender(sender);
 
         // Decrypt
-        MessageEncryption messageEncryption = new MessageEncryption(chat,sender);
+        MessageEncryption messageEncryption = new MessageEncryption(chat, sender);
         message = messageEncryption.decrypt(message);
         return message;
 
@@ -178,9 +178,9 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         KeyEncryption keyEncryption = new KeyEncryption();
 
         //verify the signature of the key and save authenticity-status in messageKeyEncrypted
-        if(messageKeyEncrypted.setAuthenticity(keyEncryption.verify(messageKeyEncrypted))){
+        if (messageKeyEncrypted.setAuthenticity(keyEncryption.verify(messageKeyEncrypted))) {
             Log.d(this.getClass().getSimpleName(), "MessageKey has successfully been verified");
-        }else{
+        } else {
             Log.d(this.getClass().getSimpleName(), "MessageKey could not be verified");
         }
 
@@ -189,8 +189,8 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         if (messageKey != null && DatabaseManager.INSTANCE.getMessageKeyDAO().addIfNotExists(messageKey) != null) {
             try {
                 MessageKeyTask.getInstance().deleteKey(messageKey.getId());
-            } catch(Exception e) {
-                Log.e(this.getClass().getSimpleName(),e.getMessage());
+            } catch (Exception e) {
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
             }
 
             // For Developer-Devices only

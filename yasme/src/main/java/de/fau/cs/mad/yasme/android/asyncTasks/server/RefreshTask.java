@@ -1,10 +1,14 @@
 package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
-import de.fau.cs.mad.yasme.android.controller.Log;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import de.fau.cs.mad.yasme.android.connection.ChatTask;
 import de.fau.cs.mad.yasme.android.connection.DeviceTask;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Device;
@@ -13,10 +17,6 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.storage.dao.DeviceDAO;
 import de.fau.cs.mad.yasme.android.storage.dao.UserDAO;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Martin Sturm <***REMOVED***> on 26.07.2014.
@@ -39,13 +39,13 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
     }
 
     public RefreshTask(RefreshType type, long id, boolean recursive) {
-        this(type,recursive);
+        this(type, recursive);
         ids = new HashSet<>();
         ids.add(id);
     }
 
     public RefreshTask(RefreshType type, Set<Long> ids, boolean recursive) {
-        this(type,recursive);
+        this(type, recursive);
         this.ids = ids;
     }
 
@@ -58,8 +58,10 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
         this.type = type;
         this.recursive = recursive;
     }
+
     /**
      * Requests the user's chats from the server and updates the database.
+     *
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
@@ -104,11 +106,10 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (!success) {
-            //Log.e(this.getClass().getSimpleName(), "failed");
+            Log.e(this.getClass().getSimpleName(), "failed");
             return;
         }
-
-        //Log.i(this.getClass().getSimpleName(), "success");
+        Log.i(this.getClass().getSimpleName(), "success");
     }
 
     private boolean refreshChatRecursive(long id) {
@@ -121,7 +122,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
             }
             return true;
         } catch (Exception e) {
-            Log.e(this.getClass().getSimpleName(),e.getMessage());
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
     }
@@ -133,7 +134,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
             chatDAO.addOrUpdate(chat);
             return true;
         } catch (Exception e) {
-            Log.e(this.getClass().getSimpleName(),e.getMessage());
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
     }

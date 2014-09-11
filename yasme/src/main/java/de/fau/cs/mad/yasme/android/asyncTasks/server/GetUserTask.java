@@ -39,9 +39,9 @@ public class GetUserTask extends AsyncTask<Object, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (!success) {
             Log.e(this.getClass().getSimpleName(), "No success");
-            SpinnerObservable.getInstance().removeBackgroundTask(this);
             return;
         }
 
@@ -55,6 +55,5 @@ public class GetUserTask extends AsyncTask<Object, Void, Boolean> {
         } else if (classToNotify == ChatListFragment.class) {
             ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(null);
         }
-        SpinnerObservable.getInstance().removeBackgroundTask(this);
     }
 }

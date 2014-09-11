@@ -32,12 +32,13 @@ public enum PictureManager {
         }
         Log.e(this.getClass().getSimpleName(), "Try to load Picture from: " + path);
         Toaster.getInstance().toast("Try to load Picture from: " + path, Toast.LENGTH_LONG);
-        return getPictureNew(user);
+        return getPictureFromFile(user);
     }
 
     /**
      * Stores a given bitmap on internal storage
-     * @param user for generating the filename
+     *
+     * @param user   for generating the filename
      * @param bitmap bitmap to be stored
      * @return path of the stored picture
      */
@@ -171,9 +172,6 @@ public enum PictureManager {
 
     private Bitmap getPictureFromFile(User user) {
         String path = user.getProfilePicture();
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
         return BitmapFactory.decodeFile(path);
     }
 

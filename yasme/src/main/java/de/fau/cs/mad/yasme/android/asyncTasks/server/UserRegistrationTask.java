@@ -75,6 +75,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         // Ask server for news, i.e. new version of app
         new GetInfoTask().execute();
 
@@ -85,10 +86,7 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
             editor.putLong(AbstractYasmeActivity.USER_ID, userId);
             editor.commit();
         }
-
         ObservableRegistry.getObservable(classToNotify).notifyFragments(
                 new RegisterFragment.RegistrationParam(success, email, password, message));
-
-        SpinnerObservable.getInstance().removeBackgroundTask(this);
     }
 }

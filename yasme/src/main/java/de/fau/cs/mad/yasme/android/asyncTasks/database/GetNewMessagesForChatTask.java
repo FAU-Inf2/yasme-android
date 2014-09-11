@@ -1,10 +1,10 @@
 package de.fau.cs.mad.yasme.android.asyncTasks.database;
 
 import android.os.AsyncTask;
-import de.fau.cs.mad.yasme.android.controller.Log;
 
 import java.util.List;
 
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.entities.Message;
@@ -33,7 +33,7 @@ public class GetNewMessagesForChatTask extends AsyncTask<String, Void, Boolean> 
     protected Boolean doInBackground(String... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         messages = messageDao.getNewMessagesByChat(chatId, latestMessageId);
-        if(messages == null) {
+        if (messages == null) {
             return false;
         }
         return true;
@@ -44,11 +44,10 @@ public class GetNewMessagesForChatTask extends AsyncTask<String, Void, Boolean> 
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             // Notify
-            if(classToNotify == ChatFragment.class) {
+            if (classToNotify == ChatFragment.class) {
                 ObservableRegistry.getObservable(ChatFragment.class).notifyFragments(messages);
             }
-        }
-        else {
+        } else {
             Log.w(this.getClass().getSimpleName(), "Getting new messages failed");
         }
     }
