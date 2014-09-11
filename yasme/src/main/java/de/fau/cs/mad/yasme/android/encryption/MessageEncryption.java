@@ -1,5 +1,6 @@
 package de.fau.cs.mad.yasme.android.encryption;
 
+import de.fau.cs.mad.yasme.android.asyncTasks.server.RefreshTask;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import de.fau.cs.mad.yasme.android.exception.*;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,13 +166,16 @@ public class MessageEncryption {
      * @param local define, if the devices should be loaded from local storage or if the devices should be loaded from the server
      * @return list of all devices
      */
-    private List<Device> getRecipientwDevices(boolean local) {
+    private List<Device> getRecipientDevices(boolean local) {
         if (local) {
             //Log.d(this.getClass().getSimpleName(),"Get local stored devices");
             List<Device> devices = new ArrayList<>();
+            //Log.d(this.getClass().getSimpleName(),"Generate keys for " + chat.getParticipants().size() + " users");
             for (User user : chat.getParticipants()) {
+                //Log.d(this.getClass().getSimpleName(),"Add Devices for User " + user.getId());
                 for (Device device : DatabaseManager.INSTANCE.getDeviceDAO().getAll(user)) {
                     //Log.d(this.getClass().getSimpleName(),"Local-device: " + device.getId());
+                    //Log.d(this.getClass().getSimpleName(),"Add Device" + device.getId() + " from User " + device.getUser().getName());
                     devices.add(device);
                 }
             }
@@ -207,17 +212,24 @@ public class MessageEncryption {
             long deviceId = DatabaseManager.INSTANCE.getDeviceId();
             Device sender = new Device(deviceId);
             ArrayList<MessageKey> messageKeys = new ArrayList<MessageKey>();
-            List<Device> devices = getRecipientwDevices(local);
+            List<Device> devices = getRecipientDevices(local);
             if (local && devices.size() == 0) {
-                getRecipientwDevices(false);
+                local = false;
+                devices = getRecipientDevices(false);
             }
 
-            for (Device recipientDevice : getRecipientwDevices(local)) {
-                //Log.d(this.getClass().getSimpleName(),"Send Key for Device" + recipientDevice.getId() + " with pubKey: " + recipientDevice.getPublicKey());
+            if (!local) {
+                RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.CHAT, chat.getId(), true);
+                refreshTask.execute();
+            }
+
+            for (Device recipientDevice : devices) {
+                //Log.d(this.getClass().getSimpleName(),"Send Key for Device" + recipientDevice.getId() + " from User " + recipientDevice.getUser().getName());
 
 
                 // Do not store the key on the server for the creating device
                 if (recipientDevice.getId() == deviceId) {
+                    //Log.d(this.getClass().getSimpleName(),"Ignored Key for Device" + recipientDevice.getId());
                     continue;
                 }
 
