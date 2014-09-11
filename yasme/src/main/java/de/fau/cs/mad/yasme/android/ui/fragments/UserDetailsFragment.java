@@ -6,6 +6,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import de.fau.cs.mad.yasme.android.asyncTasks.server.RefreshTask;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -213,6 +215,8 @@ public class UserDetailsFragment
 
         contact.addToContacts();
         userDAO.addOrUpdate(contact);
+        RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER, contact.getId(), true);
+        refreshTask.execute();
         Log.d(this.getClass().getSimpleName(), "contact added");
 
         if (showToast) {
