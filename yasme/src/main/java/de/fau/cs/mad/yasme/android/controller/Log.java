@@ -1,7 +1,7 @@
 package de.fau.cs.mad.yasme.android.controller;
 
 /**
- * Created by Martin Sturm <***REMOVED***> on 13.08.2014.
+ * Created by Martin Sturm <martin.sturm@fau.de> on 13.08.2014.
  */
 public class Log {
     static final boolean LOG_I = true;

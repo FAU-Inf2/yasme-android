@@ -19,7 +19,7 @@ import de.fau.cs.mad.yasme.android.storage.dao.DeviceDAO;
 import de.fau.cs.mad.yasme.android.storage.dao.UserDAO;
 
 /**
- * Created by Martin Sturm <***REMOVED***> on 26.07.2014.
+ * Created by Martin Sturm <martin.sturm@fau.de> on 26.07.2014.
  */
 public class RefreshTask extends AsyncTask<String, Void, Boolean> {
 

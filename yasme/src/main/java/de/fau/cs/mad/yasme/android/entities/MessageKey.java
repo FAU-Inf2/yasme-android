@@ -3,7 +3,7 @@ package de.fau.cs.mad.yasme.android.entities;
 
 /**
  * Created by Marco Eberl <mfrankie89@aol.de> on 16.06.14.
- * Created by Martin Sturm <***REMOVED***>
+ * Created by Martin Sturm <martin.sturm@fau.de>
  */
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

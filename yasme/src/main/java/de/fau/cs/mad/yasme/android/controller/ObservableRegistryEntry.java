@@ -1,7 +1,7 @@
 package de.fau.cs.mad.yasme.android.controller;
 
 /**
- * Created by Martin Sturm <***REMOVED***> on 27.06.14.
+ * Created by Martin Sturm <martin.sturm@fau.de> on 27.06.14.
  */
 public class ObservableRegistryEntry<P> {
 
