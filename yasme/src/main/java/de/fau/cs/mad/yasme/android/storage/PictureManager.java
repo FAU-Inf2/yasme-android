@@ -39,13 +39,14 @@ public enum PictureManager {
      */
     public String storePicture(User user, Bitmap bitmap) throws IOException {
         // TODO Remove old picture
+        // I think it will be replaced automatically
 
         // Create directory userProfiles
         ContextWrapper cw = new ContextWrapper(mContext);
         File directory = cw.getDir("userPictures", Context.MODE_PRIVATE);
 
         // Generate file name
-        String filename = user.getId() + "_profilePicture_"/* + user.getLastModified().getTime()*/ + ".jpg";
+        String filename = user.getId() + "_profilePicture.jpg";
 
         // Concatenate directory and filename to path
         File path = new File(directory, filename);
@@ -97,10 +98,16 @@ public enum PictureManager {
      * @param reqHeight int
      * @param reqWidth  int
      * @return profilePicture as a bitmap
-     * @throws IOException
      */
     public Bitmap getPicture(User user, int reqHeight, int reqWidth) {
         String path = user.getProfilePicture();
+        if (path == null || path.isEmpty()) {
+            return null;
+        }
+        File file = new File(path);
+        if (!file.exists()) {
+            return null;
+        }
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();

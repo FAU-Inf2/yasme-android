@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -79,9 +80,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         TextView id = (TextView) layout.findViewById(R.id.own_profile_id);
         initial = (TextView) layout.findViewById(R.id.own_profile_picture_text);
         profilePictureView = (ImageView) layout.findViewById(R.id.own_profile_picture);
-        if (BuildConfig.DEBUG) {
-            profilePictureView.setOnClickListener(this);
-        }
+        profilePictureView.setOnClickListener(this);
+
 
         name = (EditText) layout.findViewById(R.id.own_profile_header);
         name.setOnKeyListener(new OnKeyListener() {
@@ -111,17 +111,13 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         self.setProfilePicture(activity.getOwnProfilePicture());
 
         BitmapDrawable pic = null;
-        if (BuildConfig.DEBUG) {
-            if (self.getProfilePicture() != null) {
-                int width = 100;
-                int height = 100;
-                Log.e(this.getClass().getSimpleName(),
-                        "Width: " + width +
-                                " Height: " + height);
-                pic = new BitmapDrawable(getResources(), PictureManager.INSTANCE
-                        .getPicture(self, height, width));
-                Log.d(this.getClass().getSimpleName(), "Try to load Picture from: " + self.getProfilePicture());
-            }
+        if (self.getProfilePicture() != null) {
+            int width = 100;
+            int height = 100;
+            Log.e(this.getClass().getSimpleName(), "Width: " + width + " Height: " + height);
+            pic = new BitmapDrawable(getResources(), PictureManager.INSTANCE
+                    .getPicture(self, height, width));
+            Log.d(this.getClass().getSimpleName(), "Try to load Picture from: " + self.getProfilePicture());
         }
         if (pic == null) {
             // Show nice profile picture
@@ -191,15 +187,16 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 Log.e(this.getClass().getSimpleName(), e.getMessage());
                 return;
             }
-            Log.e(this.getClass().getSimpleName(), "Picture stored under: " + path);
-
             activity.setOwnProfilePicture(path);
 
             // set picture
+            profilePictureView.setBackgroundColor(Color.WHITE);
             notifyFragment(new BitmapDrawable(getResources(), newProfilePicture));
 
             // Upload picture as AsyncTask
-            new UploadProfilePictureTask(newProfilePicture).execute();
+            if (BuildConfig.DEBUG) {
+                new UploadProfilePictureTask(newProfilePicture).execute();
+            }
         }
     }
 
