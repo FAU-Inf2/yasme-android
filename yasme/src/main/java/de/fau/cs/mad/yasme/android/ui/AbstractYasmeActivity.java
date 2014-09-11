@@ -195,20 +195,17 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
 
     public String getOwnProfilePicture() {
         String path = selfUser.getProfilePicture();
-        /*if(path == null || path.isEmpty()) {
-            path = DatabaseManager.INSTANCE.getOwnProfilePicture();
-        }
-        if(path == null || path.isEmpty()) {
+        if (path == null || path.isEmpty()) {
             path = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE).getString(PROFILE_PICTURE, null);
-        }*/
+        }
         return path;
     }
 
     public void setOwnProfilePicture(String ownProfilePicture) {
         selfUser.setProfilePicture(ownProfilePicture);
-        /*SharedPreferences.Editor editor = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE).edit();
         editor.putString(AbstractYasmeActivity.PROFILE_PICTURE, ownProfilePicture);
-        editor.commit();*/
+        editor.commit();
     }
 
     public String getAccessToken() {

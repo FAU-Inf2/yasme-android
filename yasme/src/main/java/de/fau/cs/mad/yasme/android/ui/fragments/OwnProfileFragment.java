@@ -107,18 +107,20 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         name.setText(self.getName());
         email.setText(self.getEmail());
         id.setText("" + self.getId());
+        self.setProfilePicture(activity.getOwnProfilePicture());
 
         BitmapDrawable pic = null;
         if (BuildConfig.DEBUG) {
-            try {
-                pic = new BitmapDrawable(getResources(), PictureManager.INSTANCE.getPicture(self));
-                if (self.getProfilePicture() != null) {
+            if (self.getProfilePicture() != null) {
+                try {
+                    pic = new BitmapDrawable(getResources(), PictureManager.INSTANCE
+                            .getPicture(self, profilePictureView.getHeight(), profilePictureView.getWidth()));
                     Log.e(this.getClass().getSimpleName(), "Try to load Picture from: " + self.getProfilePicture());
+                    Log.e(this.getClass().getSimpleName(), "try-Block");
+                } catch (IOException e) {
+                    Log.e(this.getClass().getSimpleName(), e.getMessage());
+                    pic = null;
                 }
-                Log.e(this.getClass().getSimpleName(), "try-Block");
-            } catch (IOException e) {
-                Log.e(this.getClass().getSimpleName(), e.getMessage());
-                pic = null;
             }
         }
         if (pic == null) {

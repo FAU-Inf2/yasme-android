@@ -25,7 +25,7 @@ public enum PictureManager {
 
     private Context mContext = DatabaseManager.INSTANCE.getContext();
 
-    public Bitmap getPicture(User user) throws IOException {
+    public Bitmap getPicture(User user, int height, int width) throws IOException {
         String path = user.getProfilePicture();
         if (path == null || path.isEmpty()) {
             return null;
@@ -33,6 +33,8 @@ public enum PictureManager {
         Log.e(this.getClass().getSimpleName(), "Try to load Picture from: " + path);
         Toaster.getInstance().toast("Try to load Picture from: " + path, Toast.LENGTH_LONG);
         return getPictureFromFile(user);
+        //return getPictureSampledFromFile(user, height, width);
+        //return getSampledPicture(user, height, width);
     }
 
     /**
@@ -134,7 +136,7 @@ public enum PictureManager {
      * @return profilePicture as a bitmap
      * @throws IOException
      */
-    private static Bitmap getSampledPicture(User user, int reqWidth, int reqHeight)
+    private static Bitmap getSampledPicture(User user, int reqHeight, int reqWidth)
             throws IOException {
 
         Bitmap picture;
@@ -170,7 +172,25 @@ public enum PictureManager {
         return picture;
     }
 
-    private Bitmap getPictureFromFile(User user) {
+    private Bitmap getPictureSampledFromFile(User user, int reqHeight, int reqWidth) {
+        String path = user.getProfilePicture();
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        Bitmap picture = BitmapFactory.decodeFile(path, options);
+
+        return picture;//BitmapFactory.decodeFile(path);
+    }
+
+    private Bitmap getPictureFromFile(User user) throws IOException {
         String path = user.getProfilePicture();
         return BitmapFactory.decodeFile(path);
     }
