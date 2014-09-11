@@ -9,8 +9,9 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 /**
- * Created by martin on 11.09.2014.
+ * Created by Martin Sturm <martin.sturm@fau.de> on 11.09.2014.
  */
+
 public class QR {
     private static final int SIZE = 400;
     public Bitmap generateQRCode(String data) {

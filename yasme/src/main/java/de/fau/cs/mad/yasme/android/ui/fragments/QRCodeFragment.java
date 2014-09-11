@@ -42,9 +42,9 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 
 /**
- * Created by Martin Sturm <martin.sturm@informatik.stud.uni-erlangen.de>
- * Modified by Tim Nisslbeck <hu78sapy@stud.cs.fau.de>
+ * Created by Martin Sturm <martin.sturm@fau.de> on 11.09.2014.
  */
+
 
 
 public class QRCodeFragment extends Fragment {
