@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 /**
- * Created by Martin Sturm <***REMOVED***> on 08.08.2014.
+ * Created by Martin Sturm <martin.sturm@fau.de> on 08.08.2014.
  * Created by Marco Eberl <mfrankie89@aol.de>
  */
 

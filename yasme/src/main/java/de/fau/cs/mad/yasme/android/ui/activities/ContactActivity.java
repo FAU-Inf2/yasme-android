@@ -21,6 +21,7 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.ContactListFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.OwnProfileFragment;
+import de.fau.cs.mad.yasme.android.ui.fragments.QRCodeFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.SearchContactFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.UserDetailsFragment;
 
@@ -191,6 +192,8 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
                     return new SearchContactFragment();
                 case 2:
                     return new OwnProfileFragment();
+                case 3:
+                    return new QRCodeFragment();
                 default:
                     return new ContactListFragment();
             }
@@ -200,7 +203,7 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
 
         @Override
@@ -213,6 +216,8 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
                     return getString(R.string.title_section2).toUpperCase(l);
                 case 2:
                     return getString(R.string.title_section3).toUpperCase(l);
+                case 3:
+                    return getString(R.string.title_section4).toUpperCase(l);
 
             }
             return null;

@@ -1,7 +1,7 @@
 package de.fau.cs.mad.yasme.android.exception;
 
 /**
- * Created by Martin Sturm <***REMOVED***> on 08.08.2014.
+ * Created by Martin Sturm <martin.sturm@fau.de> on 08.08.2014.
  */
 
 public class IncompleteKeyException extends Exception {

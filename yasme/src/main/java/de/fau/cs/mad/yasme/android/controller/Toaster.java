@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by Martin Sturm <***REMOVED***> on 18.07.2014.
+ * Created by Martin Sturm <martin.sturm@fau.de> on 18.07.2014.
  */
 public class Toaster {
     private static Toaster instance;

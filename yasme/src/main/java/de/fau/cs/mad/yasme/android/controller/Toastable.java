@@ -1,7 +1,7 @@
 package de.fau.cs.mad.yasme.android.controller;
 
 /**
- * Created by Martin Sturm <***REMOVED***> on 19.07.2014.
+ * Created by Martin Sturm <martin.sturm@fau.de> on 19.07.2014.
  */
 public interface Toastable {
     public void toast(int id, int duration);

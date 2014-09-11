@@ -34,6 +34,7 @@
     <string name="title_section1">All Contacts</string>
     <string name="title_section2">Search Contact</string>
     <string name="title_section3">Own Profile</string>
+    <string name="title_section4">QR Code</string>
     <string name="hello_world">Hello world!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

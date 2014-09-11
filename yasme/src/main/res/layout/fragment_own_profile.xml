@@ -95,4 +95,12 @@
         android:layout_marginTop="0.5mm"
         android:text=""
         android:textSize="10pt" />
+
+    <ImageView
+        android:id="@+id/own_profile_qr"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true" />
 </LinearLayout>

@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by Martin Sturm <***REMOVED***> on 26.06.2014.
+ * Created by Martin Sturm <martin.sturm@fau.de> on 26.06.2014.
  */
 public class FragmentObservable<T extends NotifiableFragment<P>,  P> {
     private Set<T> fragments;
