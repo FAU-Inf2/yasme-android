@@ -17,7 +17,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
-import de.fau.cs.mad.yasme.android.asyncTasks.server.GetProfilePictureTask;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.PictureManager;
@@ -91,10 +90,7 @@ public class UserAdapter extends ArrayAdapter<User> {
             profileImage.setBackgroundColor(Color.TRANSPARENT);
             profileImage.setImageBitmap(PictureManager.INSTANCE.getPicture(user, 50, 50));
         } else {
-            if (!isSelf) {
-                // no local picture found. load picture from server and set default pic
-                new GetProfilePictureTask(this.getClass()).execute(user.getId());
-            }
+            // no local picture found. Set default pic
             profileImage.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB
                     [(int) user.getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
             initial.setText(user.getName().substring(0, 1).toUpperCase());

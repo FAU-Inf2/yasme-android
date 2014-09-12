@@ -120,8 +120,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         });
 
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        mAdapter = new ChatAdapter(activity, R.layout.chat_item_other,
-                activity.getUserId(), new ArrayList<Message>());
+        mAdapter = new ChatAdapter(activity, R.layout.chat_item_other, new ArrayList<Message>());
         list.setAdapter(mAdapter);
         mAdapter.setNotifyOnChange(true);
         notifyFragment(chat.getMessages());

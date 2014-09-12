@@ -17,7 +17,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
-import de.fau.cs.mad.yasme.android.asyncTasks.server.GetProfilePictureTask;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.entities.User;
@@ -122,8 +121,7 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
                 img.setBackgroundColor(Color.TRANSPARENT);
                 img.setImageBitmap(PictureManager.INSTANCE.getPicture(user, 50, 50));
             } else {
-                // no local picture found. load picture from server and set default pic
-                new GetProfilePictureTask(this.getClass()).execute(user.getId());
+                // no local picture found. Set default pic
                 img.setImageResource(R.drawable.chatlist_default_icon);
                 img.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB
                         [(int) user.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);

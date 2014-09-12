@@ -2,6 +2,7 @@ package de.fau.cs.mad.yasme.android.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
@@ -23,7 +24,9 @@ import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.encryption.MessageEncryption;
 import de.fau.cs.mad.yasme.android.entities.Message;
+import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.storage.PictureManager;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 12.07.14.
@@ -31,7 +34,6 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 public class ChatAdapter extends ArrayAdapter<Message> {
     private final Context context;
     private List<Message> messages;
-    private long selfId;
 
     /**
      * @see <a href="http://developer.android.com/design/style/color.html">Color palette used</a>
@@ -50,22 +52,22 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             0xffCC0000
     };
 
-    public ChatAdapter(Context context, int resource, long selfId, List<Message> messages) {
+    public ChatAdapter(Context context, int resource, List<Message> messages) {
         super(context, resource, messages);
-        this.selfId = selfId;
         this.context = context;
         this.messages = messages;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Boolean self;
         Message msg = messages.get(position);
+        Boolean isSelf;
         View rowView;
         TextView textView;
         TextView dateView;
-        ImageView imageView;
+        ImageView imageView = null;
         LinearLayout textViews;
+        TextView initial = null;
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         if (msg == null) {
@@ -74,26 +76,26 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         if (msg.getSender() == null) {
             Log.e(this.getClass().getSimpleName(), "sender == null");
         }
+        User user = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId());
+        if (user == null) {
+            Log.e(this.getClass().getSimpleName(), "User nicht in DB gefunden");
+            user = msg.getSender();
+        }
+        String name = msg.getSender().getName();
 
-        self = msg.getSender().getId() == selfId;
-        if (self) {
+        isSelf = user.getId() == DatabaseManager.INSTANCE.getUserId();
+        if (isSelf) {
             rowView = inflater.inflate(R.layout.chat_item_own, parent, false);
         } else {
             rowView = inflater.inflate(R.layout.chat_item_other, parent, false);
+            imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture);
+            initial = (TextView) rowView.findViewById(R.id.chat_item_picture_text);
         }
         textView = (TextView) rowView.findViewById(R.id.chat_item_message);
         dateView = (TextView) rowView.findViewById(R.id.chat_item_date);
-        imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture);
         textViews = (LinearLayout) rowView.findViewById(R.id.chat_item_text);
 
         String time = getDateOfMessage(msg);
-        String name;
-        try {
-            name = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId()).getName();
-        } catch (NullPointerException e) {
-            Log.e(this.getClass().getSimpleName(), "User nicht in DB gefunden");
-            name = "anonym";
-        }
 
         String text;
         if (msg.getErrorId() != MessageEncryption.ErrorType.OK) {
@@ -113,23 +115,29 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         }
 
         textView.setText(text);
-        if (self) {
+        if (isSelf) {
             dateView.setText(time);
         } else {
             dateView.setText(name + ", " + time);
-
         }
 
-        //dateView.setText(time);
         Log.d(this.getClass().getSimpleName(), name + ": " + msg.getMessage());
-        if (imageView != null && !self) {
-            imageView.setImageResource(R.drawable.chat_default_icon); //TODO
-            imageView.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB[(int) msg.getSender().getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
-            TextView initial = (TextView) rowView.findViewById(R.id.chat_item_picture_text);
-            initial.setText(name.substring(0, 1).toUpperCase());
+        if (imageView != null && initial != null && !isSelf) {
+            if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
+                // load picture from local storage
+                initial.setVisibility(View.GONE);
+                imageView.setBackgroundColor(Color.TRANSPARENT);
+                imageView.setImageBitmap(PictureManager.INSTANCE.getPicture(user, 50, 50));
+            } else {
+                // no local picture found. Set default pic
+                imageView.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB
+                        [(int) user.getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
+                initial.setText(user.getName().substring(0, 1).toUpperCase());
+            }
             LayerDrawable d = (LayerDrawable) textViews.getBackground();
             GradientDrawable bgShape = (GradientDrawable) d.findDrawableByLayerId(R.id.chat_item_line);
-            bgShape.setColor(CONTACT_DUMMY_COLORS_ARGB[(int) msg.getSender().getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
+            bgShape.setColor(CONTACT_DUMMY_COLORS_ARGB
+                    [(int) user.getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
         }
 
         rowView.requestFocus();

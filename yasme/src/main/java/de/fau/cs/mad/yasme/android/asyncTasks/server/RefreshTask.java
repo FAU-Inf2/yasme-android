@@ -149,7 +149,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
                 deviceDAO.addOrUpdate(device);
             }
             //Log.d(this.getClass().getSimpleName(), "... successful" + id);
-            return true;
+            return refreshUser(id);
         } catch (Exception e) {
             Log.e(this.getClass().getSimpleName(), "... failed" + id);
             return false;
@@ -158,7 +158,7 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
 
     private boolean refreshUser(long id) {
         //Log.d(this.getClass().getSimpleName(), "Refresh user " + id);
-        // Nothing to do
+        new GetProfilePictureTask(this.getClass()).execute(id);
         return true;
     }
 

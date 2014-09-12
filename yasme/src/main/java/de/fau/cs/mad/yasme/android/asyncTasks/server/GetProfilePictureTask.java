@@ -11,7 +11,6 @@ import de.fau.cs.mad.yasme.android.connection.UserTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
-import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
@@ -38,7 +37,6 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(Long... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
         long userId = params[0];
 
         try {
@@ -51,8 +49,10 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
             Log.e(this.getClass().getSimpleName(), "profilePicture was null");
             return false;
         }
+
+        //store the picture
         if (userId == DatabaseManager.INSTANCE.getUserId()) {
-            String path = "";
+            String path;
             SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
             try {
                 User self = new User();
@@ -69,14 +69,14 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
             if (user == null) {
                 return false;
             }
-            String path = "";
+            String path;
             try {
                 path = PictureManager.INSTANCE.storePicture(user, profilePicture.getBitmap());
             } catch (IOException e) {
                 Log.e(this.getClass().getSimpleName(), e.getMessage());
                 return false;
             }
-            if (!path.isEmpty()) {
+            if (path != null && !path.isEmpty()) {
                 user.setProfilePicture(path);
                 DatabaseManager.INSTANCE.getUserDAO().update(user);
             }
@@ -86,7 +86,6 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean success) {
-        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             if (classToNotify == UserAdapter.class) {
                 //TODO Adapter benachrichtigen, dass Bild da ist
