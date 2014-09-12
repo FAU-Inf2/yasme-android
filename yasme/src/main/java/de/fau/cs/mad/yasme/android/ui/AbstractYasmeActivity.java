@@ -11,6 +11,7 @@ import android.widget.Toast;
 import de.fau.cs.mad.yasme.android.BuildConfig;
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.ConnectionTask;
+import de.fau.cs.mad.yasme.android.contacts.QR;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.controller.Toastable;
@@ -95,6 +96,9 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
         if (!DatabaseManager.INSTANCE.isInitialized()) {
             DatabaseManager.INSTANCE.init(this, storage, settings, userId);
         }
+
+        //Init QR-Code
+        QR.init();
 
         String accessToken = DatabaseManager.INSTANCE.getAccessToken();
         if ((accessToken == null || accessToken.length() <= 0) && !this.getClass().equals(LoginActivity.class)) {

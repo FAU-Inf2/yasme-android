@@ -11,6 +11,7 @@ import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
+import de.fau.cs.mad.yasme.android.ui.fragments.QRCodeFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.SearchContactFragment;
 
 /**
@@ -65,6 +66,9 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (classToNotify == SearchContactFragment.class) {
             ObservableRegistry.getObservable(SearchContactFragment.class).notifyFragments(userList);
+        }
+        if (classToNotify == QRCodeFragment.class) {
+            ObservableRegistry.getObservable(QRCodeFragment.class).notifyFragments(userList);
         }
     }
 

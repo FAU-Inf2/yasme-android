@@ -23,8 +23,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.StoreImageTask;
@@ -36,11 +38,15 @@ import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
+import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 /**
  * Created by Martin Sturm <martin.sturm@fau.de> on 11.09.2014.
@@ -48,9 +54,10 @@ import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 
 
 
-public class QRCodeFragment extends Fragment {
+public class QRCodeFragment extends Fragment implements NotifiableFragment<ArrayList<User>>{
 
-    private Button scan;
+    private Button scanButton;
+    private OnQRCodeFragmentInteractionListener mListener;
 
     public QRCodeFragment() {
     }
@@ -63,22 +70,35 @@ public class QRCodeFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        FragmentObservable<QRCodeFragment, ArrayList<User>> obs = ObservableRegistry.getObservable(QRCodeFragment.class);
+        obs.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        FragmentObservable<QRCodeFragment, ArrayList<User>> obs = ObservableRegistry.getObservable(QRCodeFragment.class);
+        obs.remove(this);
+        super.onStop();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         View layout = inflater.inflate(R.layout.fragment_qr, container, false);
+        mListener = (OnQRCodeFragmentInteractionListener) getActivity();
 
-        scan= (Button)layout.findViewById(R.id.scan_contact_button);
-
-        scan.setOnClickListener(new View.OnClickListener() {
+        scanButton= (Button)layout.findViewById(R.id.scan_contact_button);
+        scanButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-                startActivityForResult(intent, 0);
+                IntentIntegrator scanIntegrator = new IntentIntegrator(getActivity());
+                scanIntegrator.initiateScan();
             }
         });
+
 
         ImageView qrCode = (ImageView) layout.findViewById(R.id.qr_code);
 
@@ -90,20 +110,18 @@ public class QRCodeFragment extends Fragment {
         return layout;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == 0) {
-           // if (resultCode == RESULT_OK) {
-
-                String contents = intent.getStringExtra("SCAN_RESULT");
-                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-                Log.d(getClass().getSimpleName(),"Scanned: " + contents);
-
-                // Handle successful scan
-
-            //} else if (resultCode == RESULT_CANCELED) {
-                // Handle cancel
-           //     Log.i("App","Scan unsuccessful");
-            //}
+    @Override
+    public void notifyFragment(ArrayList<User> userList) {
+        Log.d(getClass().getSimpleName(), "QRCodeFragment has been notified!");
+        if (userList.size() == 1 && userList.get(0) != null) {
+            User user = userList.get(0);
+            Log.d(getClass().getSimpleName(), "Username" + user.getName());
+            mListener.onQRCodeFragmentInteraction(user);
         }
     }
+
+    public interface OnQRCodeFragmentInteractionListener {
+        public void onQRCodeFragmentInteraction(User user);
+    }
+
 }
