@@ -253,13 +253,13 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
                 QRData qrData = new ObjectMapper().readValue(scanContent, QRData.class);
                 Log.d(getClass().getSimpleName(), "UserId: " + qrData.getUserId());
                 SearchUserTask searchUserTask = new SearchUserTask(SearchUserTask.SearchBy.ID,String.valueOf(qrData.getUserId()), QRCodeFragment.class);
+                toast(R.string.please_wait,Toast.LENGTH_LONG);
                 searchUserTask.execute();
-            }else{
-                Log.d(getClass().getSimpleName(), "Nothing scanned");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            Toaster.getInstance().toast("Nichts gefunden",Toast.LENGTH_LONG);
+            //e.printStackTrace();
+            //Log.d(getClass().getSimpleName(), "Not valid");
+            toast(R.string.qr_not_valid,Toast.LENGTH_LONG);
         }
     }
 }
