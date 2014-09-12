@@ -46,7 +46,7 @@ How to build and run YASME from source
 * Get [gradle][g1] [1.12][g2]
 * Get [Android SDK Platform 19 and Android SDK Build-Tools 19.1][at], as well as [Google Support Repository][gs]
 * Change directory to the android folder: `cd yasme-android`
-* If `local.properties` file does not exists then create
+* If `local.properties` file does not exists then create this file
 * Add the sdk path to `local.properties`: `sdk_dir=/path/to/your/sdk`
 * Build the YASME apk: `gradle assembleDebug`
 * Plugin your Android Device to your PC - Make sure USB Debugging is turned on!
