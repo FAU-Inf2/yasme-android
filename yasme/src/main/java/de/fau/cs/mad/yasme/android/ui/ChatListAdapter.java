@@ -2,7 +2,7 @@ package de.fau.cs.mad.yasme.android.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import de.fau.cs.mad.yasme.android.controller.Log;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +17,12 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.GetProfilePictureTask;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.storage.PictureManager;
 
 /**
  * Created by Martin Sturm <martin.sturm@fau.de> on 18.06.2014.
@@ -108,10 +110,25 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
             }
             View chatpartner = inflater.inflate(R.layout.chatpartner_item, null);
             ImageView img = (ImageView) chatpartner.findViewById(R.id.chatpartner_picture);
-            img.setImageResource(R.drawable.chatlist_default_icon);
-            img.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) users.get(i).getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
             TextView text = (TextView) chatpartner.findViewById(R.id.chatpartner_picture_text);
-            text.setText(users.get(i).getName().substring(0, 1).toUpperCase());
+
+            User user = DatabaseManager.INSTANCE.getUserDAO().get(users.get(i).getId());
+            if (user == null) {
+                user = users.get(i);
+            }
+            if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
+                // load picture from local storage
+                text.setVisibility(View.GONE);
+                img.setBackgroundColor(Color.TRANSPARENT);
+                img.setImageBitmap(PictureManager.INSTANCE.getPicture(user, 50, 50));
+            } else {
+                // no local picture found. load picture from server and set default pic
+                new GetProfilePictureTask(this.getClass()).execute(user.getId());
+                img.setImageResource(R.drawable.chatlist_default_icon);
+                img.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB
+                        [(int) user.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
+                text.setText(user.getName().substring(0, 1).toUpperCase());
+            }
             holder.chatpartnerList.addView(chatpartner);
         }
         if (users.size() > CHATPARTNER_VISIBLE_CNT) {
