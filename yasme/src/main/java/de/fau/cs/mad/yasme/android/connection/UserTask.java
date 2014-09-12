@@ -1,7 +1,8 @@
 package de.fau.cs.mad.yasme.android.connection;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -26,6 +27,7 @@ import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.Error;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 /**
  * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 16.06.14.
@@ -112,7 +114,7 @@ public class UserTask extends ConnectionTask {
         return bitmapToByteArray(bitmap);
     }
 
-    public Drawable getProfilePicture(long userId) throws RestServiceException {
+    public BitmapDrawable getProfilePicture(long userId) throws RestServiceException {
         try {
             String path = "profile/" + userId;
             Map<String, String> headers = new HashMap<>();
@@ -122,8 +124,8 @@ public class UserTask extends ConnectionTask {
                 return null;
             }
             InputStream stream = response.getContent();
-            return Drawable.createFromStream(stream, null);
-
+            Bitmap picture = BitmapFactory.decodeStream(stream);
+            return new BitmapDrawable(DatabaseManager.INSTANCE.getContext().getResources(), picture);
         } catch (IOException e) {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         }

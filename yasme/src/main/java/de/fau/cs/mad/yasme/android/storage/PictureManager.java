@@ -55,7 +55,7 @@ public enum PictureManager {
         BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream);
 
         // scale down bitmap
-        Bitmap scaledBitmap = scaleBitmap(bitmap, 400);
+        Bitmap scaledBitmap = scaleBitmap(bitmap, 300);
 
         // Use the compress method on the BitMap object to write image to the OutputStream
         scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);

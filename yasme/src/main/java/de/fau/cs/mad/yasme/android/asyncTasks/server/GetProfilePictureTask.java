@@ -1,14 +1,22 @@
 package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
+import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+
+import java.io.IOException;
 
 import de.fau.cs.mad.yasme.android.connection.UserTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
+import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.storage.PictureManager;
+import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.OwnProfileFragment;
 
 /**
@@ -16,7 +24,7 @@ import de.fau.cs.mad.yasme.android.ui.fragments.OwnProfileFragment;
  */
 public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
 
-    private Drawable profilePicture;
+    private BitmapDrawable profilePicture;
     private Class classToNotify;
 
     public GetProfilePictureTask(Class classToNotify) {
@@ -38,7 +46,41 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return false;
         }
-        return profilePicture != null;
+        if (profilePicture == null) {
+            Log.e(this.getClass().getSimpleName(), "profilePicture was null");
+            return false;
+        }
+        if (userId == DatabaseManager.INSTANCE.getUserId()) {
+            String path = "";
+            SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
+            try {
+                User self = new User();
+                self.setId(DatabaseManager.INSTANCE.getUserId());
+                path = PictureManager.INSTANCE.storePicture(self, profilePicture.getBitmap());
+            } catch (IOException e) {
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
+                return false;
+            }
+            editor.putString(AbstractYasmeActivity.PROFILE_PICTURE, path);
+            editor.commit();
+        } else {
+            User user = DatabaseManager.INSTANCE.getUserDAO().get(userId);
+            if (user == null) {
+                return false;
+            }
+            String path = "";
+            try {
+                path = PictureManager.INSTANCE.storePicture(user, profilePicture.getBitmap());
+            } catch (IOException e) {
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
+                return false;
+            }
+            if (!path.isEmpty()) {
+                user.setProfilePicture(path);
+                DatabaseManager.INSTANCE.getUserDAO().update(user);
+            }
+        }
+        return true;
     }
 
     @Override
