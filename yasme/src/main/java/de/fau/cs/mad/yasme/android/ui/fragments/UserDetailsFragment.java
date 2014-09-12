@@ -2,13 +2,11 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-
-import de.fau.cs.mad.yasme.android.asyncTasks.server.RefreshTask;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +21,15 @@ import java.util.Set;
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetContactsTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.CreateChatTask;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.RefreshTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.storage.dao.UserDAO;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
@@ -93,6 +94,10 @@ public class UserDetailsFragment
         if (getArguments() != null) {
             contact = (User) getArguments().getSerializable(ARG_USER);
         }
+        User user = DatabaseManager.INSTANCE.getUserDAO().get(contact.getId());
+        if (user != null) {
+            contact = user;
+        }
     }
 
     @Override
@@ -107,19 +112,35 @@ public class UserDetailsFragment
         profilePicture = (ImageView) layout.findViewById(R.id.contact_details_profile_picture);
         startChat = (Button) layout.findViewById(R.id.contact_detail_newchat);
         addContact = (Button) layout.findViewById(R.id.contact_detail_addcontact);
+        TextView initial = (TextView) layout.findViewById(R.id.contact_details_profile_picture_text);
 
         contactName.setText(contact.getName());
+        boolean isSelf = (selfUser.getId() == contact.getId());
 
         // Show first letter of contact name as profile image
         if (profilePicture != null) {
-            profilePicture.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB[(int) contact.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
-            TextView initial = (TextView) layout.findViewById(R.id.contact_details_profile_picture_text);
-            initial.setText(contact.getName().substring(0,1).toUpperCase());
+            if (isSelf) {
+                SharedPreferences storage = context
+                        .getSharedPreferences(AbstractYasmeActivity.STORAGE_PREFS, Context.MODE_PRIVATE);
+                contact = selfUser;
+                contact.setProfilePicture(storage.getString(AbstractYasmeActivity.PROFILE_PICTURE, null));
+            }
+
+            if (contact.getProfilePicture() != null && !contact.getProfilePicture().isEmpty()) {
+                // load picture from local storage
+                initial.setVisibility(View.GONE);
+                profilePicture.setBackgroundColor(Color.TRANSPARENT);
+                profilePicture.setImageBitmap(PictureManager.INSTANCE.getPicture(contact, 50, 50));
+            } else {
+                // no local picture found. Set default pic
+                profilePicture.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB
+                        [(int) contact.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
+                initial.setText(contact.getName().substring(0, 1).toUpperCase());
+            }
         }
 
-
         // Don't show button to add self to contacts
-        if (selfUser.getId() == contact.getId()) {
+        if (isSelf) {
             startChat.setVisibility(View.GONE);
             addContact.setVisibility(View.GONE);
         } else {
