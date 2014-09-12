@@ -72,6 +72,7 @@
     <!-- Own profile -->
     <string name="own_profile_email">Email</string>
     <string name="own_profile_id">YD</string>
+    <string name="change_hint_text">With a click on your name or your profile picture you can change it</string>
 
     <!-- Settings -->
     <string name="action_settings">Settings</string>

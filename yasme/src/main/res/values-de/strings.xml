@@ -70,6 +70,7 @@
     <!-- Own profile -->
     <string name="own_profile_email">E-Mail</string>
     <string name="own_profile_id">YD</string>
+    <string name="change_hint_text">Mit einem Klick auf das Profilbild oder den Namen kannst du ihn ändern</string>
 
     <!-- Settings -->
     <string name="action_settings">Einstellungen</string>
