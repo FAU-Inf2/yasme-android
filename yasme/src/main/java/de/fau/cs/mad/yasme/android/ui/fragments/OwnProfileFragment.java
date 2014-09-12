@@ -25,8 +25,8 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
-import de.fau.cs.mad.yasme.android.BuildConfig;
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.GetProfilePictureTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SetProfileDataTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.UploadProfilePictureTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
@@ -127,8 +127,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             initial.setText(self.getName().substring(0, 1).toUpperCase());
 
             // Load profile image into profilePictureView from server as AsyncTask if available
-            //new GetProfilePictureTask(getClass()).execute(self.getId());
-            //TODO serveranbindung
+            new GetProfilePictureTask(getClass()).execute(self.getId());
         } else {
             notifyFragment(pic);
             Log.d(this.getClass().getSimpleName(), "successful loaded picture");
@@ -190,19 +189,17 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             activity.setOwnProfilePicture(path);
 
             // set picture
-            profilePictureView.setBackgroundColor(Color.WHITE);
             notifyFragment(new BitmapDrawable(getResources(), newProfilePicture));
 
             // Upload picture as AsyncTask
-            if (BuildConfig.DEBUG) {
-                new UploadProfilePictureTask(newProfilePicture).execute();
-            }
+            new UploadProfilePictureTask(newProfilePicture).execute();
         }
     }
 
     @Override
     public void notifyFragment(Drawable value) {
         initial.setVisibility(View.GONE);
+        profilePictureView.setBackgroundColor(Color.TRANSPARENT);
         profilePictureView.setImageDrawable(value);
     }
 

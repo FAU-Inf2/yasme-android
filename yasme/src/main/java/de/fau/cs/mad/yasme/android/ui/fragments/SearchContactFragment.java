@@ -141,8 +141,6 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
             mAdapter.addAll(userList);
             mAdapter.notifyDataSetChanged();
         } else {
-            //String noResults = DatabaseManager.INSTANCE.getContext().getResources().getString(R.string.search_no_results);
-            //contactListContent.addItem(new ContactListContent.ContactListItem("null", noResults, ""));
             Toaster.getInstance().toast(R.string.search_no_results, Toast.LENGTH_SHORT);
             mAdapter.clear();
             mAdapter.notifyDataSetChanged();
