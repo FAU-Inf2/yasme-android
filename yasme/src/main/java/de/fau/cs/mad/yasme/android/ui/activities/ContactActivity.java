@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,12 +13,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Locale;
 
 import de.fau.cs.mad.yasme.android.BuildConfig;
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.SearchUserTask;
+import de.fau.cs.mad.yasme.android.connection.SearchTask;
 import de.fau.cs.mad.yasme.android.controller.Log;
+import de.fau.cs.mad.yasme.android.controller.Toaster;
+import de.fau.cs.mad.yasme.android.entities.OwnDevice;
+import de.fau.cs.mad.yasme.android.entities.QRData;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.ContactListFragment;
@@ -30,7 +41,7 @@ import de.fau.cs.mad.yasme.android.ui.fragments.UserDetailsFragment;
  * Created by Stefan Ettl <stefan.ettl@fau.de>
  */
 
-public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener, SearchContactFragment.OnSearchFragmentInteractionListener, OwnProfileFragment.OnOwnProfileFragmentInteractionListener {
+public class ContactActivity extends AbstractYasmeActivity implements ActionBar.TabListener, ContactListFragment.OnFragmentInteractionListener, UserDetailsFragment.OnDetailsFragmentInteractionListener, SearchContactFragment.OnSearchFragmentInteractionListener, OwnProfileFragment.OnOwnProfileFragmentInteractionListener, QRCodeFragment.OnQRCodeFragmentInteractionListener {
 
     public static final String SEARCH_FOR_CONTACTS = "search_for_new_contacts";
     /**
@@ -141,6 +152,11 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
     }
 
     @Override
+    public void onQRCodeFragmentInteraction(User user) {
+        this.displayDetailsFragment(user, true);
+    }
+
+    @Override
     public void onDetailsFragmentInteraction(User user, Integer buttonId) {
 
     }
@@ -225,6 +241,25 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
 
             }
             return null;
+        }
+    }
+
+    // QR Code
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        try {
+            IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+            if (scanningResult != null) {
+                String scanContent = scanningResult.getContents();
+                QRData qrData = new ObjectMapper().readValue(scanContent, QRData.class);
+                Log.d(getClass().getSimpleName(), "UserId: " + qrData.getUserId());
+                SearchUserTask searchUserTask = new SearchUserTask(SearchUserTask.SearchBy.ID,String.valueOf(qrData.getUserId()), QRCodeFragment.class);
+                toast(R.string.please_wait,Toast.LENGTH_LONG);
+                searchUserTask.execute();
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+            //Log.d(getClass().getSimpleName(), "Not valid");
+            toast(R.string.qr_not_valid,Toast.LENGTH_LONG);
         }
     }
 }

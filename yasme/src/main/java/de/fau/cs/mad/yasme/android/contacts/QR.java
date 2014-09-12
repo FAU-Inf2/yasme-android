@@ -11,6 +11,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import de.fau.cs.mad.yasme.android.asyncTasks.QRTask;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.encryption.KeyEncryption;
 import de.fau.cs.mad.yasme.android.entities.QRData;
@@ -22,8 +23,24 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 public class QR {
     private static final int SIZE = 1024;
+    private static Bitmap qrCode;
+    private static boolean isRunning = false;
+
+    public static void init() {
+        if (qrCode == null && !isRunning) {
+            isRunning = true;
+            new QRTask().execute();
+        }
+    }
+
+    public static void finished() {
+        isRunning = false;
+    }
 
     public Bitmap generateQRCode() {
+        if (qrCode != null) {
+            return qrCode;
+        }
         QRData qrdata = new QRData();
         DatabaseManager db = DatabaseManager.INSTANCE;
         qrdata.setDeviceId(db.getDeviceId());
@@ -39,8 +56,8 @@ public class QR {
                 .withDefaultPrettyPrinter();
         try {
             String data = objectWriter.writeValueAsString(qrdata);
-            //data = "Hallo Welt";
-            return generateQRCode(data);
+            qrCode = generateQRCode(data);
+            return qrCode;
         } catch (Exception e) {
             return null;
         }
