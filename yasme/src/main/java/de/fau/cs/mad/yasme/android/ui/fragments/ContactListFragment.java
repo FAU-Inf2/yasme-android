@@ -15,7 +15,6 @@ import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetContactsTask;
-import de.fau.cs.mad.yasme.android.contacts.ContactListContent;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
@@ -32,7 +31,6 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
 
 
     private OnFragmentInteractionListener mListener;
-    private ContactListContent contactListContent;
     private List<User> contacts;
 
     //The fragment's ListView/GridView.
@@ -47,24 +45,17 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ContactListFragment() { }
+    public ContactListFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         contacts = new ArrayList<>();
-        contactListContent = new ContactListContent();
 
         mAdapter = new UserAdapter(getActivity(), R.layout.user_item, contacts);
-                /*new SimpleAdapter(
-                getActivity(),
-                contactListContent.getMap(),
-                android.R.layout.simple_list_item_2,
-                new String[] {"name", "email"},
-                new int[]{ android.R.id.text1, android.R.id.text2});*/
 
         new GetContactsTask(this.getClass()).execute();
-
     }
 
 
@@ -109,7 +100,7 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                + " must implement OnFragmentInteractionListener");
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -135,10 +126,6 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
 
         if (param.getSuccess()) {
-            /*contactListContent.clearItems();
-            for (User u : param.getAllUsers()) {
-                contactListContent.addItem(new ContactListContent.ContactListItem(String.valueOf(u.getId()), u.getName(), u.getEmail(), u));
-            }*/
             mAdapter.clear();
             mAdapter.addAll(param.getAllUsers());
             contacts = param.getAllUsers();
@@ -150,15 +137,15 @@ public class ContactListFragment extends Fragment implements AbsListView.OnItemC
 
 
     /**
-    * This interface must be implemented by activities that contain this
-    * fragment to allow an interaction in this fragment to be communicated
-    * to the activity and potentially other fragments contained in that
-    * activity.
-    * <p>
-    * See the Android Training lesson <a href=
-    * "http://developer.android.com/training/basics/fragments/communicating.html"
-    * >Communicating with Other Fragments</a> for more information.
-    */
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(User user, View view);
     }

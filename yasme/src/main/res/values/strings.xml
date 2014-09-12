@@ -50,7 +50,7 @@
     <string-array name="search_spinner_content">
         <item>Search By Name</item>
         <item>Search By E-Mail</item>
-        <item>Search By YD</item>
+        <!--<item>Search By YD</item>-->
     </string-array>
     <string name="phone_number">Telephone number</string>
     <string name="contact_added_success">was successfully added to your contacts</string>

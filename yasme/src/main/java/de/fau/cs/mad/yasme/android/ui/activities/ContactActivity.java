@@ -8,7 +8,6 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +15,9 @@ import android.view.Window;
 
 import java.util.Locale;
 
+import de.fau.cs.mad.yasme.android.BuildConfig;
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.ContactListFragment;
@@ -202,8 +203,11 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 4;
+            // Show 4 total pages.
+            if (BuildConfig.DEBUG) {
+                return 4;
+            }
+            return 3;
         }
 
         @Override

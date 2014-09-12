@@ -20,7 +20,6 @@ import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.SearchUserTask;
-import de.fau.cs.mad.yasme.android.contacts.ContactListContent;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
@@ -36,7 +35,6 @@ import de.fau.cs.mad.yasme.android.ui.UserAdapter;
 
 public class SearchContactFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, NotifiableFragment<ArrayList<User>> {
     private List<User> users;
-    ContactListContent contactListContent;
     private Spinner searchSpinner;
     private Button searchButton;
     private ListView searchResultView;
@@ -78,13 +76,9 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
 
         this.loadSearchSpinner();
 
-        contactListContent = new ContactListContent();
         users = new ArrayList<>();
 
         mAdapter = new UserAdapter(getActivity(), R.layout.user_item, users);
-                /*new SimpleAdapter(getActivity(), contactListContent.getMap(),
-                android.R.layout.simple_list_item_2, new String[]{"name", "mail"},
-                new int[]{android.R.id.text1, android.R.id.text2});*/
 
         searchResultView.setAdapter(mAdapter);
         searchResultView.setOnItemClickListener(this);
@@ -109,7 +103,8 @@ public class SearchContactFragment extends Fragment implements View.OnClickListe
         if (text.toString().equals("")) {
             return;
         } else {
-            contactListContent.clearItems();
+            mAdapter.clear();
+            mAdapter.notifyDataSetChanged();
             new SearchUserTask(
                     SearchUserTask.SearchBy.getSearchBy(
                             searchSpinner.getSelectedItemPosition()),
