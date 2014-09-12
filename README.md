@@ -45,6 +45,7 @@ How to build and run YASME from source
 * Clone the project: `git clone https://github.com/FAU-Inf2/yasme-android.git`
 * Get [gradle][g1] [1.12][g2]
 * Get [Android SDK Platform 19 and Android SDK Build-Tools 19.1][at], as well as [Google Support Repository][gs]
+* Get [Java SDK][js]
 * Change directory to the android folder: `cd yasme-android`
 * If `local.properties` file does not exists then create this file
 * Add the sdk path to `local.properties`: `sdk_dir=/path/to/your/sdk`
@@ -122,4 +123,4 @@ Feel free to contact us: <yasme@i2.cs.fau.de>
 [tos]: https://github.com/FAU-Inf2/yasme-android/blob/master/legal/termsOfService
 [pp]: https://github.com/FAU-Inf2/yasme-android/blob/master/legal/privacyPolicy
 [li]: https://github.com/FAU-Inf2/yasme-android/blob/master/LICENSE
-
+[js]: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html

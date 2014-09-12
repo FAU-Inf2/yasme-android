@@ -220,10 +220,11 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
         @Override
         public int getCount() {
             // Show 4 total pages.
-            if (BuildConfig.DEBUG) {
-                return 4;
-            }
-            return 3;
+            //if (BuildConfig.DEBUG) {
+            //    return 4;
+            //}
+            //return 3;
+            return 4;
         }
 
         @Override
