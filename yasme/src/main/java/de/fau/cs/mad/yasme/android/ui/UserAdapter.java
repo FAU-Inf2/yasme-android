@@ -2,6 +2,8 @@ package de.fau.cs.mad.yasme.android.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,10 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.GetProfilePictureTask;
 import de.fau.cs.mad.yasme.android.entities.User;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.storage.PictureManager;
 
 /**
  * Created by robert on 07.09.14.
@@ -67,19 +72,34 @@ public class UserAdapter extends ArrayAdapter<User> {
         TextView profileName = (TextView) rowView.findViewById(R.id.user_name);
         TextView profileId = (TextView) rowView.findViewById(R.id.user_id);
         CheckBox checkBox;
-        try {
+        if (layout == R.layout.user_item_checkbox) {
             checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
-        } catch (NullPointerException e) {
+        } else {
             checkBox = null;
         }
 
-        if (false) {
-            //TODO: add picture
+        boolean isSelf = (user.getId() == DatabaseManager.INSTANCE.getUserId());
+        if (isSelf) {
+            SharedPreferences storage = context
+                    .getSharedPreferences(AbstractYasmeActivity.STORAGE_PREFS, Context.MODE_PRIVATE);
+            user.setProfilePicture(storage.getString(AbstractYasmeActivity.PROFILE_PICTURE, null));
+        }
+
+        if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
+            // load picture from local storage
+            initial.setVisibility(View.GONE);
+            profileImage.setBackgroundColor(Color.TRANSPARENT);
+            profileImage.setImageBitmap(PictureManager.INSTANCE.getPicture(user, 50, 50));
         } else {
+            if (!isSelf) {
+                // no local picture found. load picture from server and set default pic
+                new GetProfilePictureTask(this.getClass()).execute(user.getId());
+            }
             profileImage.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB
                     [(int) user.getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
             initial.setText(user.getName().substring(0, 1).toUpperCase());
         }
+
         profileName.setText(user.getName());
         profileId.setText("YD " + user.getId());
         if (checkBox != null) {

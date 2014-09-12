@@ -17,6 +17,7 @@ import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
+import de.fau.cs.mad.yasme.android.ui.UserAdapter;
 import de.fau.cs.mad.yasme.android.ui.fragments.OwnProfileFragment;
 
 /**
@@ -87,6 +88,10 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
     protected void onPostExecute(Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
+            if (classToNotify == UserAdapter.class) {
+                //TODO Adapter benachrichtigen, dass Bild da ist
+                return;
+            }
             // Notify registered fragments
             FragmentObservable<OwnProfileFragment, Drawable> obs =
                     ObservableRegistry.getObservable(classToNotify);
