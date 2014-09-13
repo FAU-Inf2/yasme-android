@@ -178,7 +178,18 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             cursor.close();
 
             //store own image on device
-            Bitmap newProfilePicture = BitmapFactory.decodeFile(picturePath);
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(picturePath, options);
+
+            // Calculate inSampleSize
+            options.inSampleSize = PictureManager.INSTANCE.calculateInSampleSize(options, 500, 500);
+
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;
+            Bitmap newProfilePicture = BitmapFactory.decodeFile(picturePath, options);
+
             String path = "";
             try {
                 path = PictureManager.INSTANCE.storePicture(self, newProfilePicture);

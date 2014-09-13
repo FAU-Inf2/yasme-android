@@ -69,7 +69,7 @@ public enum PictureManager {
     }
 
 
-    private static int calculateInSampleSize(
+    public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
@@ -115,7 +115,7 @@ public enum PictureManager {
         BitmapFactory.decodeFile(path, options);
 
         // Calculate inSampleSize
-        //options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
