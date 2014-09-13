@@ -2,18 +2,22 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 
 import java.io.IOException;
 
 import de.fau.cs.mad.yasme.android.connection.UserTask;
+import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
+import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.UserAdapter;
+import de.fau.cs.mad.yasme.android.ui.fragments.OwnProfileFragment;
 
 /**
  * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 09.07.14.
@@ -22,6 +26,7 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
 
     private BitmapDrawable profilePicture;
     private Class classToNotify;
+    private boolean isSelf;
 
     public GetProfilePictureTask(Class classToNotify) {
         this.classToNotify = classToNotify;
@@ -46,8 +51,10 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
             return false;
         }
 
+        isSelf = (userId == DatabaseManager.INSTANCE.getUserId());
+
         //store the picture
-        if (userId == DatabaseManager.INSTANCE.getUserId()) {
+        if (isSelf) {
             String path;
             SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
             try {
@@ -87,10 +94,12 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
                 //TODO Adapter benachrichtigen, dass Bild da ist
                 return;
             }
-            // Notify registered fragments
-            //FragmentObservable<OwnProfileFragment, Drawable> obs =
-            //        ObservableRegistry.getObservable(classToNotify);
-            //obs.notifyFragments(profilePicture);
+            if (isSelf) {
+                // Notify registered fragments
+                FragmentObservable<OwnProfileFragment, Drawable> obs =
+                        ObservableRegistry.getObservable(classToNotify);
+                obs.notifyFragments(profilePicture);
+            }
         }
     }
 }

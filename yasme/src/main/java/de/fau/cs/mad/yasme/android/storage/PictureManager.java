@@ -121,17 +121,4 @@ public enum PictureManager {
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(path, options);
     }
-
-    /**
-     * Fetches the profilePicture from the storage sampled to a smaller size
-     *
-     * @param user User
-     * @return profilePicture as a bitmap
-     * @throws IOException
-     */
-    @Deprecated
-    private Bitmap getPictureFromFile(User user) {
-        String path = user.getProfilePicture();
-        return BitmapFactory.decodeFile(path);
-    }
 }
