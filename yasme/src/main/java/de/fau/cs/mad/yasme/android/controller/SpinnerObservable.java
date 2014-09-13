@@ -47,14 +47,14 @@ public class SpinnerObservable {
     }
 
     public void registerBackgroundTask(AsyncTask backgroundTask) {
-        Log.d(getClass().getSimpleName(), "Register backgroundTask");
+        Log.d(getClass().getSimpleName(), "Register backgroundTask: " + backgroundTask.getClass().getSimpleName());
         backgroundTasks.add(backgroundTask);
         spinning = true;
         startSpinning();
     }
 
     public void removeBackgroundTask(AsyncTask backgroundTask) {
-        Log.d(getClass().getSimpleName(), "Remove backgroundTask");
+        Log.d(getClass().getSimpleName(), "Remove backgroundTask: " + backgroundTask.getClass().getSimpleName());
         backgroundTasks.remove(backgroundTask);
         if (backgroundTasks.size() == 0) {
             spinning = false;

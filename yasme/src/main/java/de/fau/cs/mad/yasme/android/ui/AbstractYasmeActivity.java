@@ -96,9 +96,8 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
         if (!DatabaseManager.INSTANCE.isInitialized()) {
             DatabaseManager.INSTANCE.init(this, storage, settings, userId);
         }
-
         //Init QR-Code
-        QR.init();
+        QR.init(false);
 
         String accessToken = DatabaseManager.INSTANCE.getAccessToken();
         if ((accessToken == null || accessToken.length() <= 0) && !this.getClass().equals(LoginActivity.class)) {
