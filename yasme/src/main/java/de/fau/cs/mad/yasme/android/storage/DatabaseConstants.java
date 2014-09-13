@@ -24,7 +24,7 @@ public class DatabaseConstants {
     public static final String DATE = "date";
     public static final String MESSAGE = "message";
     public static final String MESSAGE_MESSAGEKEY_ID = "messageKeyId";
-    public static final String AUTHENTICATED= "authenticated";
+    public static final String AUTHENTICATED = "authenticated";
     public static final String ERROR_ID = "errorId";
     public static final String READ = "read";
     public static final String SENT = "sent";
@@ -38,6 +38,7 @@ public class DatabaseConstants {
     public static final String CONTACT = "contactFlag";
     public static final String USER_CREATED = "created";
     public static final String USER_LAST_MODIFIED = "lastModified";
+    public static final String USER_PICTURE = "profilePicture";
 
 
     //Device

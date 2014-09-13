@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.PictureManager;
@@ -60,7 +61,11 @@ public class UserAdapter extends ArrayAdapter<User> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        User user = users.get(position);
+        User user = DatabaseManager.INSTANCE.getUserDAO().get(users.get(position).getId());
+        if (user == null) {
+            Log.w(this.getClass().getSimpleName(), "User nicht in DB gefunden");
+            user = users.get(position);
+        }
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 

@@ -3,7 +3,6 @@ package de.fau.cs.mad.yasme.android.storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import de.fau.cs.mad.yasme.android.controller.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -13,6 +12,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Device;
 import de.fau.cs.mad.yasme.android.entities.Message;
@@ -26,7 +26,7 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // when anything changes in your database objects, we have to increase the database version
-    private static final int DATABASE_VERSION = 58;
+    private static final int DATABASE_VERSION = 60;
 
     // name of the database file
     private static final String DATABASE = "de.fau.cs.mad.yasme.android.DATABASE";
@@ -99,7 +99,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public Dao<User, Long> getUserDao() {
-        if(null == userDao) {
+        if (null == userDao) {
             try {
                 userDao = DaoManager.createDao(connectionSource, User.class);
             } catch (SQLException e) {
@@ -110,7 +110,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public Dao<Message, Long> getMessageDao() {
-        if(null == messageDao) {
+        if (null == messageDao) {
             try {
                 messageDao = DaoManager.createDao(connectionSource, Message.class);
             } catch (SQLException e) {
@@ -121,7 +121,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public Dao<ChatUser, Long> getChatUserDao() {
-        if(null == chatUserDao) {
+        if (null == chatUserDao) {
             try {
                 chatUserDao = DaoManager.createDao(connectionSource, ChatUser.class);
             } catch (SQLException e) {
@@ -132,7 +132,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public Dao<MessageKey, Long> getMessageKeyDao() {
-        if(null == messageKeyDao) {
+        if (null == messageKeyDao) {
             try {
                 messageKeyDao = DaoManager.createDao(connectionSource, MessageKey.class);
             } catch (SQLException e) {
@@ -143,7 +143,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public Dao<Device, Long> getDeviceDao() {
-        if(null == deviceDAO) {
+        if (null == deviceDAO) {
             try {
                 deviceDAO = DaoManager.createDao(connectionSource, Device.class);
             } catch (SQLException e) {

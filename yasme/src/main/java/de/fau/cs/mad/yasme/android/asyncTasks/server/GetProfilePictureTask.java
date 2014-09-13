@@ -90,6 +90,10 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean success) {
         if (success) {
+            if (classToNotify == null) {
+                //No one to notify
+                return;
+            }
             if (classToNotify == UserAdapter.class) {
                 //TODO Adapter benachrichtigen, dass Bild da ist
                 return;

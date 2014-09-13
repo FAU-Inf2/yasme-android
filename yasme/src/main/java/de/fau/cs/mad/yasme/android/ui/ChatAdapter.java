@@ -78,7 +78,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         }
         User user = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId());
         if (user == null) {
-            Log.e(this.getClass().getSimpleName(), "User nicht in DB gefunden");
+            Log.w(this.getClass().getSimpleName(), "User nicht in DB gefunden");
             user = msg.getSender();
         }
         String name = msg.getSender().getName();

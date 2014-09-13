@@ -39,6 +39,7 @@ public class User implements Serializable {
     private Date created;
 
     @JsonIgnore
+    @DatabaseField(columnName = DatabaseConstants.USER_PICTURE)
     private String profilePicture;
 
 

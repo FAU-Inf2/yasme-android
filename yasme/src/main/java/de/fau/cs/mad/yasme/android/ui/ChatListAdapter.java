@@ -121,6 +121,8 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
                 img.setBackgroundColor(Color.TRANSPARENT);
                 img.setImageBitmap(PictureManager.INSTANCE.getPicture(user, 20, 20));
             } else {
+                // get picture from server. It will be shown the next time the list is displayed
+                // new GetProfilePictureTask(null).execute(user.getId());
                 // no local picture found. Set default pic
                 img.setImageResource(R.drawable.chatlist_default_icon);
                 img.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB
