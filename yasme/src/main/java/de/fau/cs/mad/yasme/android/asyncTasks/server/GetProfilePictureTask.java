@@ -2,22 +2,18 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 
 import java.io.IOException;
 
 import de.fau.cs.mad.yasme.android.connection.UserTask;
-import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
-import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.UserAdapter;
-import de.fau.cs.mad.yasme.android.ui.fragments.OwnProfileFragment;
 
 /**
  * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 09.07.14.
@@ -92,9 +88,9 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
                 return;
             }
             // Notify registered fragments
-            FragmentObservable<OwnProfileFragment, Drawable> obs =
-                    ObservableRegistry.getObservable(classToNotify);
-            obs.notifyFragments(profilePicture);
+            //FragmentObservable<OwnProfileFragment, Drawable> obs =
+            //        ObservableRegistry.getObservable(classToNotify);
+            //obs.notifyFragments(profilePicture);
         }
     }
 }

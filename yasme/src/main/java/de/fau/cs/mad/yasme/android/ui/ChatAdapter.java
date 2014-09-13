@@ -127,7 +127,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
                 // load picture from local storage
                 initial.setVisibility(View.GONE);
                 imageView.setBackgroundColor(Color.TRANSPARENT);
-                imageView.setImageBitmap(PictureManager.INSTANCE.getPicture(user, 50, 50));
+                imageView.setImageBitmap(PictureManager.INSTANCE.getPicture(user, 100, 100));
             } else {
                 // no local picture found. Set default pic
                 imageView.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB

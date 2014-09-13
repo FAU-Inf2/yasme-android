@@ -112,8 +112,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
         BitmapDrawable pic = null;
         if (self.getProfilePicture() != null) {
-            int width = 100;
-            int height = 100;
+            int width = 300;
+            int height = 300;
             Log.e(this.getClass().getSimpleName(), "Width: " + width + " Height: " + height);
             pic = new BitmapDrawable(getResources(), PictureManager.INSTANCE
                     .getPicture(self, height, width));

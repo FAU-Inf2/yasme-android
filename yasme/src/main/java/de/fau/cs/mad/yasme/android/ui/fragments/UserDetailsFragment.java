@@ -130,7 +130,7 @@ public class UserDetailsFragment
                 // load picture from local storage
                 initial.setVisibility(View.GONE);
                 profilePicture.setBackgroundColor(Color.TRANSPARENT);
-                profilePicture.setImageBitmap(PictureManager.INSTANCE.getPicture(contact, 50, 50));
+                profilePicture.setImageBitmap(PictureManager.INSTANCE.getPicture(contact, 300, 300));
             } else {
                 // no local picture found. Set default pic
                 profilePicture.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB
@@ -155,7 +155,6 @@ public class UserDetailsFragment
 
         return layout;
     }
-
 
 
     @Override
@@ -253,7 +252,7 @@ public class UserDetailsFragment
     private void sendMail(String email) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL, new String[] { email });
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
         i.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.contact_details_email_default_subject));
         i.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.contact_details_email_default_body));
         try {

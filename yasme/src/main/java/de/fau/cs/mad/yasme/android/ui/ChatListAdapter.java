@@ -119,7 +119,7 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
                 // load picture from local storage
                 text.setVisibility(View.GONE);
                 img.setBackgroundColor(Color.TRANSPARENT);
-                img.setImageBitmap(PictureManager.INSTANCE.getPicture(user, 50, 50));
+                img.setImageBitmap(PictureManager.INSTANCE.getPicture(user, 20, 20));
             } else {
                 // no local picture found. Set default pic
                 img.setImageResource(R.drawable.chatlist_default_icon);
