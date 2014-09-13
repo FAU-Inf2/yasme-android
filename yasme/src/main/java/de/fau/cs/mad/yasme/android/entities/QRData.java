@@ -1,9 +1,12 @@
 package de.fau.cs.mad.yasme.android.entities;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 /**
  * Created by Martin Sturm <martin.sturm@fau.de> on 11.09.2014.
  */
 
+@JsonPropertyOrder({ "userId", "deviceId", "publicKey" })
 public class QRData {
 
     private long userId;

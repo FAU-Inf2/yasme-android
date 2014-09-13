@@ -26,7 +26,11 @@ public class QR {
     private static Bitmap qrCode;
     private static boolean isRunning = false;
 
-    public static void init() {
+    public static void init(boolean force) {
+        if (force) {
+            qrCode = null;
+            isRunning = false;
+        }
         if (qrCode == null && !isRunning) {
             isRunning = true;
             new QRTask().execute();

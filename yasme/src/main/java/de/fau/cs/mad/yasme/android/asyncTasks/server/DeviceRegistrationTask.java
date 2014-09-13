@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 
 import de.fau.cs.mad.yasme.android.connection.DeviceTask;
+import de.fau.cs.mad.yasme.android.contacts.QR;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
@@ -111,7 +112,7 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         }
 
         Log.d(this.getClass().getSimpleName(), "Device registered at yasme server");
-
+        QR.init(true);
         // For Developer-Devices only
         if (DebugManager.INSTANCE.isDebugMode()) {
             Log.d(getClass().getSimpleName(), "Store keys to external storage");
