@@ -352,7 +352,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         layout.addView(list, layoutParams);
         alert.setView(layout);
 
-        alert.setPositiveButton(R.string.change_and_leave_chat,
+        alert.setPositiveButton(R.string.change_owner,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         int position = list.getCheckedItemPosition();
@@ -361,6 +361,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                             Long leaveChat = 0L; // no leaveChat rest call
                             new ChangeOwnerAndLeaveTask(chat).execute(newUserId, leaveChat);
                         }
+                        dialog.dismiss();
                     }
                 }
         );
