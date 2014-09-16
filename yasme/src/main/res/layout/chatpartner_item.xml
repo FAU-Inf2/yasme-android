@@ -10,18 +10,15 @@
         android:layout_width="15dip"
         android:layout_height="15dip"
         android:layout_margin="2dip"
-        android:layout_alignParentRight="false" />
+        android:layout_alignParentRight="false"
+        android:layout_centerInParent="true" />
 
     <TextView
             android:id="@+id/chatpartner_picture_text"
         android:layout_width="15dip"
         android:layout_height="15dip"
-            android:layout_alignLeft="@+id/chatpartner_picture"
-            android:layout_alignRight="@+id/chatpartner_picture"
-            android:textColor="#FFFFFF"
-        android:textSize="11sp"
-        android:layout_alignTop="@+id/chatpartner_picture"
-        android:layout_alignBottom="@+id/chatpartner_picture"
-        android:gravity="center|center_vertical|center_horizontal"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:gravity="center"
         android:layout_centerInParent="true" />
 </RelativeLayout>
