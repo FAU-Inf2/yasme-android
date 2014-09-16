@@ -263,4 +263,18 @@ public class RSAEncryption extends de.fau.cs.mad.yasme.android.encryption.Base64
         }
     }
 
+    public boolean comparePublicKeys(String pk1, String pk2) {
+        byte[] key1 = base64Decode(pk1);
+        byte[] key2 = base64Decode(pk2);
+        if (key1.length != key2.length) {
+            return false;
+        }
+        for (int i=0; i < key1.length; i++) {
+            if (key1[i] != key2[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

@@ -68,6 +68,7 @@
     <string name="scan_contact">Scanne einen Freund</string>
     <string name="qr_not_valid">Dies scheint kein gültiger Yasme QR-Code zu sein!</string>
     <string name="please_wait">Bitte warten ...</string>
+    <string name="public_keys_differ">Achtung! Öffentlicher Schlüssel des Servers unterscheidet sich. Dies könnte eine ernsthafte Sicherheitsbedrohung darstellen!</string>
 
     <!-- Own profile -->
     <string name="own_profile_email">E-Mail</string>
