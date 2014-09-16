@@ -1,36 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayout1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="15dip"
+    android:layout_height="15dip"
+    android:layout_gravity="center_horizontal">
 
-        <ImageView
+    <ImageView
             android:id="@+id/chatpartner_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="6dip" />
+        android:layout_width="15dip"
+        android:layout_height="15dip"
+        android:layout_margin="2dip"
+        android:layout_alignParentRight="false" />
 
-        <TextView
+    <TextView
             android:id="@+id/chatpartner_picture_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        android:layout_width="15dip"
+        android:layout_height="15dip"
             android:layout_alignLeft="@+id/chatpartner_picture"
             android:layout_alignRight="@+id/chatpartner_picture"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="1dp"
-            android:gravity="center_horizontal"
-            android:text="B"
             android:textColor="#FFFFFF"
-            android:textSize="12sp" />
-    </RelativeLayout>
-
-</LinearLayout> 
+        android:textSize="11sp"
+        android:layout_alignTop="@+id/chatpartner_picture"
+        android:layout_alignBottom="@+id/chatpartner_picture"
+        android:gravity="center|center_vertical|center_horizontal"
+        android:layout_centerInParent="true" />
+</RelativeLayout>
