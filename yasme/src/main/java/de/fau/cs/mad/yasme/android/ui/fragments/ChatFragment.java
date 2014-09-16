@@ -146,6 +146,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         super.onResume();
         Log.d(getClass().getSimpleName(), "Update Chat");
         // Ask server for new messages
+        Log.d(getClass().getSimpleName(), "GetMessageTask started from ChatFragment");
         new GetMessageTask(this.getClass()).execute();
     }
 
@@ -204,6 +205,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
         // Send message and get new messages afterwards
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+        Log.d(getClass().getSimpleName(), "GetMessageTask started from ChatFragment (send)");
         new SendMessageTask(chat, activity.getSelfUser(),
                 new GetMessageTask(this.getClass())).execute(msgText);
 

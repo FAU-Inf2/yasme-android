@@ -48,6 +48,7 @@ public class GcmIntentService extends IntentService {
                 Log.d(this.getClass().getSimpleName(), "Received message with type message from GCM");
                 if (extras.containsKey("type") && extras.get("type").equals("msg")) {
                     // GetMessageTask might fail!
+                    Log.d(getClass().getSimpleName(), "GetMessageTask started from GCM");
                     new GetMessageTask(ChatFragment.class).execute();
                 } else if (extras.containsKey("type") && extras.get("type").equals("usr")) {
                     String userIdS = (String) extras.get("extra");

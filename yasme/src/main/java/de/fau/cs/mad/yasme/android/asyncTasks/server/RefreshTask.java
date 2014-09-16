@@ -8,6 +8,7 @@ import java.util.Set;
 
 import de.fau.cs.mad.yasme.android.connection.ChatTask;
 import de.fau.cs.mad.yasme.android.connection.DeviceTask;
+import de.fau.cs.mad.yasme.android.connection.UserTask;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.entities.Chat;
@@ -67,31 +68,31 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
     protected Boolean doInBackground(String... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         boolean result = true;
-        //Log.d(this.getClass().getSimpleName(), "Result " + result);
+        Log.d(this.getClass().getSimpleName(), "Start refreshing: " + type + " , recursive: " + recursive);
         for (long id : ids) {
-            //Log.d(this.getClass().getSimpleName(), "Refresh id " + id);
+            Log.d(this.getClass().getSimpleName(), "Refresh id " + id);
             switch (type) {
                 case CHAT:
                     if (recursive) {
                         result &= refreshChatRecursive(id);
-                        //Log.d(this.getClass().getSimpleName(), "Result " + result);
+                        Log.d(this.getClass().getSimpleName(), "Result " + result);
                     } else {
                         result &= refreshChat(id);
-                        //Log.d(this.getClass().getSimpleName(), "Result " + result);
+                        Log.d(this.getClass().getSimpleName(), "Result " + result);
                     }
                     break;
                 case USER:
                     if (recursive) {
                         result &= refreshUserRecursive(id);
-                        //Log.d(this.getClass().getSimpleName(), "Result " + result);
+                        Log.d(this.getClass().getSimpleName(), "Result " + result);
                     } else {
                         result &= refreshUser(id);
-                        //Log.d(this.getClass().getSimpleName(), "Result " + result);
+                        Log.d(this.getClass().getSimpleName(), "Result " + result);
                     }
                     break;
                 case DEVICE:
                     result &= refreshDevice(id);
-                    //Log.d(this.getClass().getSimpleName(), "Result " + result);
+                    Log.d(this.getClass().getSimpleName(), "Result " + result);
                     break;
                 default:
                     result &= false;
@@ -142,6 +143,8 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
     private boolean refreshUserRecursive(long id) {
         //Log.d(this.getClass().getSimpleName(), "Refresh userRec " + id);
         try {
+            User user = UserTask.getInstance().getUser(id);
+            userDAO.addOrUpdate(user);
             List<Device> devices = DeviceTask.getInstance().getAllDevices(id);
             deviceDAO.deleteAll(new User(id));
             for (Device device : devices) {
@@ -158,6 +161,12 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
 
     private boolean refreshUser(long id) {
         //Log.d(this.getClass().getSimpleName(), "Refresh user " + id);
+        try {
+            User user = UserTask.getInstance().getUser(id);
+            userDAO.addOrUpdate(user);
+        } catch (Exception e) {
+            return false;
+        }
         new GetProfilePictureTask(this.getClass()).execute(id);
         return true;
     }
