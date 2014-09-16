@@ -27,6 +27,7 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 public class SettingsFragment extends Fragment {
     private Switch notificationSound, notificationVibration;
     private SharedPreferences.Editor settingsEditor;
+    private SharedPreferences settings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,11 +36,15 @@ public class SettingsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        settingsEditor = DatabaseManager.INSTANCE.getSettings().edit();
+        settings = DatabaseManager.INSTANCE.getSettings();
+        settingsEditor = settings.edit();
 
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
         notificationSound = (Switch) rootView.findViewById(R.id.switch_notification_sound);
         notificationVibration = (Switch) rootView.findViewById(R.id.switch_notification_vibration);
+
+        notificationSound.setChecked(settings.getBoolean(AbstractYasmeActivity.NOTIFICATION_SOUND, false));
+        notificationVibration.setChecked(settings.getBoolean(AbstractYasmeActivity.NOTIFICATION_VIBRATE, false));
 
         notificationSound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

@@ -67,7 +67,9 @@ public class NewMessageNotificationManager {
         ComponentName componentInfo = task.get(0).topActivity;
 
         // Check if it matches our package name.
-        if (componentInfo.getPackageName().equals(mContext.getPackageName())) return true;
+        if (componentInfo.getPackageName().equals(mContext.getPackageName())) {
+            return true;
+        }
 
         // If not then our app is not on the foreground.
         return false;
