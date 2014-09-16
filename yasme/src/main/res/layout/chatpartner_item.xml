@@ -9,7 +9,7 @@
             android:id="@+id/chatpartner_picture"
         android:layout_width="15dip"
         android:layout_height="15dip"
-        android:layout_margin="2dip"
+        android:layout_margin="1dip"
         android:layout_alignParentRight="false"
         android:layout_centerInParent="true" />
 
@@ -18,7 +18,7 @@
         android:layout_width="15dip"
         android:layout_height="15dip"
         android:textColor="#FFFFFF"
-        android:textSize="12sp"
+        android:textSize="11sp"
         android:gravity="center"
         android:layout_centerInParent="true" />
 </RelativeLayout>
