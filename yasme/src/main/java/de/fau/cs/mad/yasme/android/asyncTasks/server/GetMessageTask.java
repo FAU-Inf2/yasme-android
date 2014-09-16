@@ -126,12 +126,13 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             int size = messages.size();
             if (size > 0) {
                 // Store lastMessageId
-                //Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
+                //Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId) + " this message id: " + messages.get(size-1).getId());
 
                 SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
                 editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
                 editor.commit();
 
+                
                 if (!(size == 1 && messages.get(0).getSender().getId() == DatabaseManager.INSTANCE.getUserId())) {
                     notifier.mNotify(size, messages.get(size - 1).getChatId());
                 }

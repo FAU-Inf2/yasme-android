@@ -8,14 +8,26 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.controller.Log;
+import de.fau.cs.mad.yasme.android.controller.NewMessageNotificationManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatFragment;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de>
  */
 
 public class ChatActivity extends AbstractYasmeActivity {
+
+    private NewMessageNotificationManager notifier;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        notifier = DatabaseManager.INSTANCE.getNotifier();
+        notifier.clearMessages();
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
