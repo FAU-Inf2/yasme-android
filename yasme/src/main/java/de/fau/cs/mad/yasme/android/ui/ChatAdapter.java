@@ -72,11 +72,20 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         if (msg == null) {
             Log.e(this.getClass().getSimpleName(), "msg == null");
+            return new View(context);
         }
         if (msg.getSender() == null) {
             Log.e(this.getClass().getSimpleName(), "sender == null");
+            return new View(context);
         }
-        User user = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId());
+        User user;
+        try {
+            user = DatabaseManager.INSTANCE.getUserDAO().get(msg.getSender().getId());
+            //NPE occured - maybe DatabaseManager is not initialized yet
+        } catch (NullPointerException npe) {
+            Log.e(this.getClass().getSimpleName(), "NullPointerException occured");
+            user = msg.getSender();
+        }
         if (user == null) {
             Log.w(this.getClass().getSimpleName(), "User nicht in DB gefunden");
             user = msg.getSender();
