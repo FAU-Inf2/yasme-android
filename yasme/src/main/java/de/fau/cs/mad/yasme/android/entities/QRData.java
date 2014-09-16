@@ -1,25 +1,20 @@
 package de.fau.cs.mad.yasme.android.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * Created by Martin Sturm <martin.sturm@fau.de> on 11.09.2014.
  */
 
-@JsonPropertyOrder({ "userId", "deviceId", "publicKey" })
+@JsonPropertyOrder({ "deviceId", "publicKey" })
 public class QRData {
 
-    private long userId;
     private long deviceId;
     private String publicKey;
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
+    @JsonIgnore
+    private Device serverDevice;
 
     public long getDeviceId() {
         return deviceId;
@@ -35,5 +30,15 @@ public class QRData {
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
+    }
+
+    @JsonIgnore
+    public Device getServerDevice() {
+        return serverDevice;
+    }
+
+    @JsonIgnore
+    public void setServerDevice(Device serverDevice) {
+        this.serverDevice = serverDevice;
     }
 }

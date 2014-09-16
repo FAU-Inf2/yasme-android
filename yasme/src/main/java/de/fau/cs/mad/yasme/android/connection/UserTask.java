@@ -79,6 +79,17 @@ public class UserTask extends ConnectionTask {
         Log.d(this.getClass().getSimpleName(), "User data changed");
     }
 
+
+    public User getUser(long userId) throws RestServiceException {
+        try {
+            HttpResponse httpResponse = executeRequest(Request.GET, String.valueOf(userId));
+            return new ObjectMapper().readValue(((new BufferedReader(new InputStreamReader(
+                    httpResponse.getEntity().getContent(), "UTF-8"))).readLine()), User.class);
+        } catch (IOException e) {
+            throw new RestServiceException(Error.CONNECTION_ERROR);
+        }
+    }
+
     public User getUserData() throws RestServiceException {
 
         try {

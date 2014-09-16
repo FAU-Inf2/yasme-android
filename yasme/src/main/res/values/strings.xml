@@ -61,6 +61,7 @@
     <string name="scan_contact">Scan a friend</string>
     <string name="qr_not_valid">This seems not to be a valid Yasme QR code!</string>
     <string name="please_wait">Please wait ...</string>
+    <string name="public_keys_differ">Warning! Server public key differs! This might be a serious security vulnerability!</string>
 
     <!-- Contact details -->
     <string name="contact_details_start_chat">Chat!</string>

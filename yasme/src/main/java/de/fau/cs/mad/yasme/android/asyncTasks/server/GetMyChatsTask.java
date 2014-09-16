@@ -17,6 +17,7 @@ import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.storage.dao.UserDAO;
+import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 07.07.14.
@@ -26,16 +27,26 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
     private DatabaseManager dbManager;
     private UserDAO userDAO;
     private ChatDAO chatDAO;
-    private Class classToNotify;
+    //private Class classToNotify;
     private long selfId = DatabaseManager.INSTANCE.getUserId();
 
     private List<Chat> chatsToReturn;
+
+    private volatile boolean isQueued = false;
+
+    public void startIfNecessary() {
+        if (!isQueued) {
+            isQueued = true;
+            execute();
+        }
+        Log.d(getClass().getSimpleName(), "GetMyChats not necessary");
+    }
 
     public GetMyChatsTask(Class classToNotify) {
         this.dbManager = DatabaseManager.INSTANCE;
         this.userDAO = DatabaseManager.INSTANCE.getUserDAO();
         this.chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        this.classToNotify = classToNotify;
+        //this.classToNotify = classToNotify;
 
         if (this.selfId <= 0) {
             throw new ExceptionInInitializerError("self id <= 0. DatabaseManager was not initialized correctly");
@@ -48,10 +59,13 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
+        isQueued = false;
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         List<Chat> serverChats = null;
         try {
+            Log.d(this.getClass().getSimpleName(), "GetAllChats ...");
             serverChats = ChatTask.getInstance().getAllChatsForUser();
+            Log.d(this.getClass().getSimpleName(), " ... done");
         } catch (RestServiceException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
         }
@@ -61,28 +75,32 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
 
-        //Log.d(this.getClass().getSimpleName(), "Something to refresh?");
+        Log.d(this.getClass().getSimpleName(), "Something to refresh?");
         refresh(serverChats);
-        //Log.d(this.getClass().getSimpleName(), "Something to refresh finished!");
+        Log.d(this.getClass().getSimpleName(), "Something to refresh finished!");
 
         // Debug
         if (serverChats.size() > 0) {
             Log.d(getClass().getSimpleName(), "LastMod: " + serverChats.get(0).getOwner().getLastModified().toString());
         }
 
+
         // Swap the complete database table with the new chats
+        Log.d(this.getClass().getSimpleName(), "Store to DB");
         if (!chatDAO.refreshAll(serverChats)) {
             Log.e(this.getClass().getSimpleName(), "Refreshing all chats failed");
         }
 
         // Add all the chat's participants as contacts
         // This could be done more efficiently in chatDAO's refresh method but would destroy the layer abstraction
+        Log.d(this.getClass().getSimpleName(), "Add as contact");
         addAllParticipantsAsContact(serverChats);
 
         if (null == (chatsToReturn = chatDAO.getAll())) {
             Log.e(this.getClass().getSimpleName(), "Error while trying to retrieve all chats from the database.");
             return false;
         }
+        Log.d(this.getClass().getSimpleName(), "Finished");
         return true;
     }
 
@@ -123,7 +141,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
             return;
         }
         Log.i(this.getClass().getSimpleName(), "success");
-        ObservableRegistry.getObservable(classToNotify).notifyFragments(chatsToReturn);
+        ObservableRegistry.getObservable(ChatListFragment.class).notifyFragments(chatsToReturn);
     }
 
     private boolean refresh(List<Chat> serverChats) {
@@ -148,7 +166,7 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
             }
         }
         if (refreshUserIds.size() > 0) {
-            //Log.d(this.getClass().getSimpleName(), refreshUserIds.size() + " users are not up-to-date");
+            Log.d(this.getClass().getSimpleName(), refreshUserIds.size() + " users are not up-to-date");
             RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER, refreshUserIds, true);
             refreshTask.execute();
         }

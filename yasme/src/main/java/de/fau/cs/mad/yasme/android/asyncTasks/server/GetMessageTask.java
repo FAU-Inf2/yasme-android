@@ -52,7 +52,7 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
         lastMessageId = DatabaseManager.INSTANCE.getSharedPreferences()
                 .getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
-
+        Log.d(this.getClass().getSimpleName(), "Last message id: " + lastMessageId);
         try {
             messages = MessageTask.getInstance().getMessages(lastMessageId);
         } catch (RestServiceException e) {
@@ -69,16 +69,16 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         }
 
         //add new messages to DB
-        //Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
+        Log.d(this.getClass().getSimpleName(), "Number of messages to store in DB: " + messages.size());
         for (Message message : messages) {
             // Log.d(this.getClass().getSimpleName(), message.getMessage() + " " + message.getId());
 
             // Refresh Sender-User-Data
             User sender = message.getSender();
             User dbUser = DatabaseManager.INSTANCE.getUserDAO().get(sender.getId());
-            //Log.d(getClass().getSimpleName(), "Sender lastMod: " + sender.getLastModified());
+            Log.d(getClass().getSimpleName(), "Sender lastMod: " + sender.getLastModified());
             if (dbUser == null || dbUser.getLastModified() == null || sender.getLastModified() == null || sender.getLastModified().compareTo(dbUser.getLastModified()) > 0) {
-                //Log.d(getClass().getSimpleName(), "Sender has to be refreshed");
+                Log.d(getClass().getSimpleName(), "Sender has to be refreshed");
                 RefreshTask refreshTask = new RefreshTask(RefreshTask.RefreshType.USER, sender.getId(), true);
                 refreshTask.execute();
             }
@@ -126,12 +126,13 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
             int size = messages.size();
             if (size > 0) {
                 // Store lastMessageId
-                //Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId));
+                //Log.d(this.getClass().getSimpleName(), "LastMessageId: " + Long.toString(lastMessageId) + " this message id: " + messages.get(size-1).getId());
 
                 SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
                 editor.putLong(AbstractYasmeActivity.LAST_MESSAGE_ID, lastMessageId);
                 editor.commit();
 
+                
                 if (!(size == 1 && messages.get(0).getSender().getId() == DatabaseManager.INSTANCE.getUserId())) {
                     notifier.mNotify(size, messages.get(size - 1).getChatId());
                 }

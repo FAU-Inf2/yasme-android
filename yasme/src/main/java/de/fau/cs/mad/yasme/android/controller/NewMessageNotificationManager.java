@@ -51,6 +51,10 @@ public class NewMessageNotificationManager {
         mId = 1;
     }
 
+    public void clearMessages() {
+        this.numberOfMessages = 0;
+    }
+
     private boolean isForeground() {
         //get Context
         Context mContext = DatabaseManager.INSTANCE.getContext();
@@ -81,7 +85,7 @@ public class NewMessageNotificationManager {
             return;
         }
         mNotificationManager.cancel(mId);
-        numberOfMessages = numberOfNewMessages;
+        numberOfMessages += numberOfNewMessages;
 
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(mContext, ChatActivity.class);

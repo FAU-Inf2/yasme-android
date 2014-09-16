@@ -115,7 +115,9 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
         // Aktualisiert die Datenbank auf den aktuellen Stand des Servers
-        new GetMyChatsTask(this.getClass()).execute();
+        Log.d(getClass().getSimpleName(), "GetMyChatsTask started from ChatListFragment");
+        new GetMyChatsTask(this.getClass()).startIfNecessary();
+        Log.d(getClass().getSimpleName(), "GetMessageTask started from ChatListFragment");
         new GetMessageTask(this.getClass()).execute();
     }
 

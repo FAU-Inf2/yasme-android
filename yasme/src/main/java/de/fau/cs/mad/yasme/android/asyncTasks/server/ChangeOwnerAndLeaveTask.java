@@ -57,7 +57,7 @@ public class ChangeOwnerAndLeaveTask extends AsyncTask<Long, Void, Boolean> {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             Toaster.getInstance().toast(R.string.change_successful, Toast.LENGTH_LONG);
-            new GetMyChatsTask(ChatListFragment.class).execute();
+            new GetMyChatsTask(ChatListFragment.class).startIfNecessary();
         } else {
             Toaster.getInstance().toast(R.string.change_not_successful, Toast.LENGTH_LONG);
         }

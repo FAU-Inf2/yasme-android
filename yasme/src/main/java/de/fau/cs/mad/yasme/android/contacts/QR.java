@@ -48,7 +48,6 @@ public class QR {
         QRData qrdata = new QRData();
         DatabaseManager db = DatabaseManager.INSTANCE;
         qrdata.setDeviceId(db.getDeviceId());
-        qrdata.setUserId(db.getUserId());
 
         Context context = db.getContext();
         String RSAKEY_STORAGE_USER = KeyEncryption.RSAKEY_STORAGE + "_" + db.getDeviceId();

@@ -21,13 +21,9 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Locale;
 
-import de.fau.cs.mad.yasme.android.BuildConfig;
 import de.fau.cs.mad.yasme.android.R;
-import de.fau.cs.mad.yasme.android.asyncTasks.server.SearchUserTask;
-import de.fau.cs.mad.yasme.android.connection.SearchTask;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.GetQRDataTask;
 import de.fau.cs.mad.yasme.android.controller.Log;
-import de.fau.cs.mad.yasme.android.controller.Toaster;
-import de.fau.cs.mad.yasme.android.entities.OwnDevice;
 import de.fau.cs.mad.yasme.android.entities.QRData;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
@@ -252,10 +248,11 @@ public class ContactActivity extends AbstractYasmeActivity implements ActionBar.
             if (scanningResult != null) {
                 String scanContent = scanningResult.getContents();
                 QRData qrData = new ObjectMapper().readValue(scanContent, QRData.class);
-                Log.d(getClass().getSimpleName(), "UserId: " + qrData.getUserId());
-                SearchUserTask searchUserTask = new SearchUserTask(SearchUserTask.SearchBy.ID,String.valueOf(qrData.getUserId()), QRCodeFragment.class);
+                Log.d(getClass().getSimpleName(), "DeviceId: " + qrData.getDeviceId());
+                //SearchUserTask searchUserTask = new SearchUserTask(SearchUserTask.SearchBy.ID,String.valueOf(qrData.getUserId()), QRCodeFragment.class);
+                GetQRDataTask getQRDataTask = new GetQRDataTask(qrData);
                 toast(R.string.please_wait,Toast.LENGTH_LONG);
-                searchUserTask.execute();
+                getQRDataTask.execute();
             }
         } catch (Exception e) {
             //e.printStackTrace();
