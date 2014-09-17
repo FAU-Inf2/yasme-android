@@ -44,7 +44,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     //UI references
     private EditText editMessage;
     private ListView list;
-    //private List<Message> localMessages = new ArrayList<>();
     private Chat chat;
     private AtomicLong latestMessageOnDisplay;
 
@@ -173,7 +172,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     public void notifyFragment(List<Message> messages) {
         Log.d(super.getClass().getSimpleName(), "I have been notified. Yeeha!");
         if (messages == null) {
-            //Notified from GetMessageTask, new Messages are stored in the DB
+            // Notified from GetMessageTask, new Messages are stored in the DB
             // Note that retrieved messages will be ordered ascending by id
             new GetNewMessagesForChatTask(latestMessageOnDisplay.get(), chat.getId(), this.getClass())
                     .execute(this.getClass().getName());
@@ -184,8 +183,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             updateViews(messages);
         }
         Log.d(this.getClass().getSimpleName(), "Received " + messages.size() + " messages");
-
-        //progress bar off
     }
 
     public Chat getChat() {
@@ -203,11 +200,11 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             return;
         }
 
-        // Send message and get new messages afterwards
+        // Send trimmed message without whitespaces and get new messages afterwards
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         Log.d(getClass().getSimpleName(), "GetMessageTask started from ChatFragment (send)");
         new SendMessageTask(chat, activity.getSelfUser(),
-                new GetMessageTask(this.getClass())).execute(msgText);
+                new GetMessageTask(this.getClass())).execute(msgText.trim());
 
         Log.d(this.getClass().getSimpleName(), "Send message in bg");
         // Empty the input field after send button was pressed
