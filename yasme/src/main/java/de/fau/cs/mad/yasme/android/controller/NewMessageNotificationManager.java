@@ -96,9 +96,11 @@ public class NewMessageNotificationManager {
                 resultIntent, 0);
         if (mSettings.getBoolean(AbstractYasmeActivity.NOTIFICATION_VIBRATE, false)) {
             mBuilder.setDefaults(NotificationCompat.DEFAULT_VIBRATE);
+            Log.d(this.getClass().getSimpleName(), "Vibration should be activated");
         }
         if (mSettings.getBoolean(AbstractYasmeActivity.NOTIFICATION_SOUND, false)) {
             mBuilder.setDefaults(NotificationCompat.DEFAULT_SOUND);
+            Log.d(this.getClass().getSimpleName(), "Sound should be activated");
         }
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setContentInfo("" + numberOfMessages);

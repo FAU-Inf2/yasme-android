@@ -77,7 +77,7 @@ public class UserAdapter extends ArrayAdapter<User> {
                     return -1;
                 }
                 if (u2.getName() == null) {
-                    return -1;
+                    return 1;
                 }
                 return u1.getName().toLowerCase().compareTo(u2.getName().toLowerCase());
             }
