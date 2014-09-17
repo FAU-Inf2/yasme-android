@@ -79,7 +79,7 @@ public class NewMessageNotificationManager {
         return false;
     }
 
-    public void mNotify(final int numberOfNewMessages, final long newestMessageId) {
+    public void mNotify(final int numberOfNewMessages, final long chatId) {
         if (isForeground()) {
             Log.i(this.getClass().getSimpleName(), "App in foreground");
             return;
@@ -89,7 +89,7 @@ public class NewMessageNotificationManager {
 
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(mContext, ChatActivity.class);
-        resultIntent.putExtra(AbstractYasmeActivity.CHAT_ID, newestMessageId);
+        resultIntent.putExtra(AbstractYasmeActivity.CHAT_ID, chatId);
 
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0,
@@ -109,11 +109,6 @@ public class NewMessageNotificationManager {
     }
 
     private Bitmap getIcon(Context mContext) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = false;
-        int imageHeight = options.outHeight;
-        int imageWidth = options.outWidth;
-        String imageType = options.outMimeType;
-        return BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_launcher, options);
+        return BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_launcher);
     }
 }

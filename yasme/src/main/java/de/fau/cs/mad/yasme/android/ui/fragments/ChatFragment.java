@@ -41,11 +41,12 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     public static final String RESTORE_LATEST_MESSAGE_ON_DISPLAY = "LATEST_MESSAGE_ON_DISPLAY";
     public static final String RESTORE_CHAT_ID = "CHAT_ID";
     private ChatAdapter mAdapter;
+    private Chat chat;
+    private AtomicLong latestMessageOnDisplay;
+
     //UI references
     private EditText editMessage;
     private ListView list;
-    private Chat chat;
-    private AtomicLong latestMessageOnDisplay;
 
 
     public ChatFragment() {
@@ -58,10 +59,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         // Retrain instance variables!
         // setRetainInstance(true);
 
-        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+        ChatActivity activity = (ChatActivity) getActivity();
 
         Intent intent = activity.getIntent();
-        long chatId = intent.getLongExtra(activity.CHAT_ID, -1);
+        long chatId = intent.getLongExtra(AbstractYasmeActivity.CHAT_ID, -1);
         if (chatId <= 0) {
             throw new ExceptionInInitializerError("chatId <= 0");
         }
@@ -74,7 +75,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
             // Assuming that the messages are sorted by id
             latestMessageOnDisplay = new AtomicLong(0);
-
         } catch (NullPointerException e) {
             // Occurs when new chat has been generated, but id hasn't been returned by the server yet
             chat = null;
