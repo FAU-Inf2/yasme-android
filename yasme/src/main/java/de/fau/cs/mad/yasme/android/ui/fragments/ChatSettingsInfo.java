@@ -3,6 +3,7 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.dao.ChatDAO;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.UserAdapter;
+import de.fau.cs.mad.yasme.android.ui.activities.ChatListActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 
 /**
@@ -282,6 +284,11 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                                 Long newUserId = chat.getParticipants().get(position).getId();
                                 Long leaveChat = 1L; // leaveChat rest call
                                 new ChangeOwnerAndLeaveTask(chat).execute(newUserId, leaveChat);
+
+                                // close this Fragment and open ChatList
+                                Intent intent = new Intent(getActivity(), ChatListActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
                             }
                         }
                     }
