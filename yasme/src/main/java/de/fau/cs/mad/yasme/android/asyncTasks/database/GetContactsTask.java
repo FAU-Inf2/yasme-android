@@ -27,7 +27,11 @@ public class GetContactsTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected Boolean doInBackground(String... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
-        contacts = DatabaseManager.INSTANCE.getUserDAO().getContacts();
+        try {
+            contacts = DatabaseManager.INSTANCE.getUserDAO().getContacts();
+        } catch (NullPointerException npe) {
+            return false;
+        }
         if (contacts == null) {
             return false;
         }

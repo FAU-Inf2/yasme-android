@@ -72,11 +72,17 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         if (msg == null) {
             Log.e(this.getClass().getSimpleName(), "msg == null");
-            return new View(context);
+            rowView = inflater.inflate(R.layout.chat_item_other, parent, false);
+            textView = (TextView) rowView.findViewById(R.id.chat_item_message);
+            textView.setText(context.getResources().getString(R.string.message_not_correctly_delivered));
+            return rowView;
         }
         if (msg.getSender() == null) {
             Log.e(this.getClass().getSimpleName(), "sender == null");
-            return new View(context);
+            rowView = inflater.inflate(R.layout.chat_item_other, parent, false);
+            textView = (TextView) rowView.findViewById(R.id.chat_item_message);
+            textView.setText(context.getResources().getString(R.string.message_not_correctly_delivered));
+            return rowView;
         }
         User user;
         try {
@@ -104,8 +110,6 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         dateView = (TextView) rowView.findViewById(R.id.chat_item_date);
         textViews = (LinearLayout) rowView.findViewById(R.id.chat_item_text);
 
-        String time = getDateOfMessage(msg);
-
         String text;
         if (msg.getErrorId() != MessageEncryption.ErrorType.OK) {
             switch (msg.getErrorId()) {
@@ -122,8 +126,9 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         } else {
             text = msg.getMessage();
         }
-
         textView.setText(text);
+
+        String time = getDateOfMessage(msg);
         if (isSelf) {
             dateView.setText(time);
         } else {
