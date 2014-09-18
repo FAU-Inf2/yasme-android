@@ -14,8 +14,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
@@ -59,30 +57,6 @@ public class UserAdapter extends ArrayAdapter<User> {
         this.users = users;
         this.context = context;
         this.layout = resource;
-    }
-
-    @Override
-    public void notifyDataSetChanged() {
-        //Log.d(getClass().getSimpleName(), "Notify");
-        Collections.sort(users, new Comparator<Object>() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                //Log.d(getClass().getSimpleName(), "Compare");
-                User u1 = (User) o1;
-                User u2 = (User) o2;
-                if (u1.getName() == null && u2.getName() == null) {
-                    return 0;
-                }
-                if (u1.getName() == null) {
-                    return -1;
-                }
-                if (u2.getName() == null) {
-                    return 1;
-                }
-                return u1.getName().toLowerCase().compareTo(u2.getName().toLowerCase());
-            }
-        });
-        super.notifyDataSetChanged();
     }
 
     @Override

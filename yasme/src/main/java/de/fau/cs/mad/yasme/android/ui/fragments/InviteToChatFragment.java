@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -97,6 +99,24 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
      */
     public void updateChatPartnersList(List<User> contacts) {
         users = contacts;
+        Collections.sort(users, new Comparator<Object>() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                //Log.d(getClass().getSimpleName(), "Compare");
+                User u1 = (User) o1;
+                User u2 = (User) o2;
+                if (u1.getName() == null && u2.getName() == null) {
+                    return 0;
+                }
+                if (u1.getName() == null) {
+                    return -1;
+                }
+                if (u2.getName() == null) {
+                    return 1;
+                }
+                return u1.getName().toLowerCase().compareTo(u2.getName().toLowerCase());
+            }
+        });
         adapter.clear();
         adapter.addAll(contacts);
         adapter.notifyDataSetChanged();
@@ -115,7 +135,9 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
         }
 
         for (int i = 0; i < checked.size(); i++) {
-            if(!checked.valueAt(i)) continue;
+            if (!checked.valueAt(i)) {
+                continue;
+            }
             // Item position in adapter
             int position = checked.keyAt(i);
             selectedUsers.add(users.get(position));
