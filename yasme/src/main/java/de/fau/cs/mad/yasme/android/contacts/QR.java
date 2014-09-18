@@ -55,8 +55,8 @@ public class QR {
         String pubKeyInBase64 = privKeyStorage.getString(KeyEncryption.PUBLICKEY, "");
         qrdata.setPublicKey(pubKeyInBase64);
 
-        ObjectWriter objectWriter = new ObjectMapper().writer()
-                .withDefaultPrettyPrinter();
+        //ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        ObjectWriter objectWriter = new ObjectMapper().writer();
         try {
             String data = objectWriter.writeValueAsString(qrdata);
             qrCode = generateQRCode(data);

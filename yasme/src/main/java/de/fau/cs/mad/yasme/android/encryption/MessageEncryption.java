@@ -236,10 +236,14 @@ public class MessageEncryption {
                 //Log.d(this.getClass().getSimpleName(),"Generate Key for Device" + recipientDevice.getId());
 
                 MessageKey messageKey = new MessageKey(0, sender, recipientDevice, chat, key, iv);
+                Log.d(getClass().getSimpleName(), "MessageKey1: " + messageKey.getMessageKey());
                 KeyEncryption keyEncryption = new KeyEncryption();
+                Log.d(getClass().getSimpleName(), "MessageKey2: " + messageKey.getMessageKey());
                 MessageKey messageKeyEncrypted = keyEncryption.encrypt(messageKey);
+                Log.d(getClass().getSimpleName(), "MessageKey3: " + messageKeyEncrypted.getMessageKey());
                 //Log.d(this.getClass().getSimpleName(), "MessageKey has successfully been encrypted.");
                 MessageKey messageKeySigned = keyEncryption.sign(messageKeyEncrypted);
+                Log.d(getClass().getSimpleName(), "MessageKey4: " + messageKeySigned.getMessageKey());
                 //Log.d(this.getClass().getSimpleName(), "MessageKey has successfully been signed.");
 
                 messageKeys.add(messageKeySigned);

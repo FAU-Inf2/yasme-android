@@ -51,6 +51,9 @@ public class MessageKeyTask extends ConnectionTask {
     public MessageKey saveKeys(ArrayList<MessageKey> messageKeys) throws IncompleteKeyException {
         try {
             Log.d(this.getClass().getSimpleName(), "Keys sent");
+            if (messageKeys.size() >= 1) {
+                Log.d(getClass().getSimpleName(), "MessageKey: " + messageKeys.get(0).getMessageKey());
+            }
             HttpResponse httpResponse = executeRequest(Request.POST, "", messageKeys);
 
             Log.d(this.getClass().getSimpleName(), "Analyze Response");

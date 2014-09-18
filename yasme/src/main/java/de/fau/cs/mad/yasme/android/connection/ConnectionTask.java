@@ -4,6 +4,7 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -87,8 +88,8 @@ public abstract class ConnectionTask {
         }
 
         ConnectionTask.initialized = true;
-        ConnectionTask.objectWriter = new ObjectMapper().writer()
-                .withDefaultPrettyPrinter();
+        //ConnectionTask.objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        ConnectionTask.objectWriter = new ObjectMapper().writer();
     }
 
     public static boolean isInitialized() {

@@ -94,14 +94,17 @@ public class NewMessageNotificationManager {
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0,
                 resultIntent, 0);
+
+        int soundAndOrVibration = 0;
         if (mSettings.getBoolean(AbstractYasmeActivity.NOTIFICATION_VIBRATE, false)) {
-            mBuilder.setDefaults(NotificationCompat.DEFAULT_VIBRATE);
+            soundAndOrVibration |= NotificationCompat.DEFAULT_VIBRATE;
             Log.d(this.getClass().getSimpleName(), "Vibration should be activated");
         }
         if (mSettings.getBoolean(AbstractYasmeActivity.NOTIFICATION_SOUND, false)) {
-            mBuilder.setDefaults(NotificationCompat.DEFAULT_SOUND);
+            soundAndOrVibration |= NotificationCompat.DEFAULT_SOUND;
             Log.d(this.getClass().getSimpleName(), "Sound should be activated");
         }
+        mBuilder.setDefaults(soundAndOrVibration);
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setContentInfo("" + numberOfMessages);
 
