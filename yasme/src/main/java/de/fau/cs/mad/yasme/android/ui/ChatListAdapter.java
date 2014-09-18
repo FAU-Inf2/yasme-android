@@ -95,7 +95,7 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 
         Message lastMessage = DatabaseManager.INSTANCE.getMessageDAO().
                 getNewestMessageOfChat(chat.getId());
-        if (!lastMessage.getMessage().isEmpty()) {
+        if (lastMessage != null && !lastMessage.getMessage().isEmpty()) {
             holder.lastMessageView.setText(lastMessage.getSender().getName()
                     + ": " + lastMessage.getMessage());
             holder.lastMessageView.setVisibility(View.VISIBLE);
