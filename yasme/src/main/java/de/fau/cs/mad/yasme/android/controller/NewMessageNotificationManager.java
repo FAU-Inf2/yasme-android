@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
+import de.fau.cs.mad.yasme.android.ui.activities.ChatListActivity;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 02.08.14.
@@ -91,10 +93,23 @@ public class NewMessageNotificationManager {
         Intent resultIntent = new Intent(mContext, ChatActivity.class);
         resultIntent.putExtra(AbstractYasmeActivity.CHAT_ID, chatId);
 
+        // Creates a back stack builder
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
+
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(ChatListActivity.class);
+
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+
+        PendingIntent resultPendingIntent = stackBuilder
+                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+/*
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0,
                 resultIntent, 0);
-
+*/
         int soundAndOrVibration = 0;
         if (mSettings.getBoolean(AbstractYasmeActivity.NOTIFICATION_VIBRATE, false)) {
             soundAndOrVibration |= NotificationCompat.DEFAULT_VIBRATE;
