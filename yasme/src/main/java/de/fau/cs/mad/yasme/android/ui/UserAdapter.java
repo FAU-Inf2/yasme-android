@@ -60,10 +60,16 @@ public class UserAdapter extends ArrayAdapter<User> {
     }
 
     @Override
+    public void notifyDataSetChanged() {
+        selectedContacts = new SparseBooleanArray();
+        super.notifyDataSetChanged();
+    }
+
+    @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         User user = DatabaseManager.INSTANCE.getUserDAO().get(users.get(position).getId());
         if (user == null) {
-            Log.w(this.getClass().getSimpleName(), "User nicht in DB gefunden");
+            Log.w(this.getClass().getSimpleName(), "User not found in DB");
             user = users.get(position);
         }
 

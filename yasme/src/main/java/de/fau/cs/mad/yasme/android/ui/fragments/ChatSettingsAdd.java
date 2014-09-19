@@ -30,7 +30,6 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 public class ChatSettingsAdd extends InviteToChatFragment {
     private Chat chat;
     private int index = -1;
-    private List<User> remainingUsers;
 
     @Override
     public void onResume() {
@@ -62,7 +61,6 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                 throw new ExceptionInInitializerError("Chat could not be loaded from database");
             }
         }
-        remainingUsers = new ArrayList<>();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -98,7 +96,8 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         Log.d(this.getClass().getSimpleName(), checked.size() + "");
 
         if (checked.size() == 0) {
-            Toast.makeText(getActivity(), getString(R.string.toast_no_selection), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getString(R.string.toast_no_selection),
+                    Toast.LENGTH_LONG).show();
             return;
         }
         for (int i = 0; i < checked.size(); i++) {
@@ -107,7 +106,6 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
             // If the box is not set/checked (true), just skip
             if (!checked.valueAt(i)) {
-                remainingUsers.add(users.get(index));
                 continue;
             }
             usersToAdd.add(users.get(index));
@@ -147,7 +145,8 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         startChat.setOnClickListener(this);
     }
 
-    private void showAlertDialog(String title, String message, final List<User> usersToAdd, final Long rest) {
+    private void showAlertDialog
+            (String title, String message, final List<User> usersToAdd, final Long rest) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(title);
         alert.setMessage(message);
@@ -169,7 +168,8 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                             }*/
                             new ChangeUserTask(chat).execute(user.getId(), rest);
                         }
-                        users = remainingUsers;
+                        //users.addAll(remainingUsers);
+                        users.removeAll(usersToAdd);
                         updateChatPartnersList(users);
                     }
                 }
