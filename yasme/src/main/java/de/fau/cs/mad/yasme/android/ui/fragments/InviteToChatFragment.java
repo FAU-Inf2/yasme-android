@@ -118,9 +118,8 @@ public class InviteToChatFragment extends Fragment implements View.OnClickListen
             }
         });
         adapter.clear();
-        adapter.addAll(contacts);
+        adapter.addAll(users);
         adapter.notifyDataSetChanged();
-
         startChat.setOnClickListener(this);
     }
 
