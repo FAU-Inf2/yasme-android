@@ -29,7 +29,7 @@
     <string name="alert_delete_user">Do you want to remove this user?</string>
     <string name="alert_delete_user_message">will be removed from this chat</string>
     <string name="alert_add_user">Do you want to add this user?</string>
-    <string name="alert_add_user_message">will be added to this chat</string>
+    <string name="alert_add_user_message">Should these User be added to this Chat?</string>
     <string name="alert_owner">You are currently owner of the chat</string>
     <string name="alert_not_owner">You are currently not owner of the chat</string>
     <string name="alert_owner_message">Please select a new owner from the list to proceed</string>

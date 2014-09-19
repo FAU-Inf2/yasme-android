@@ -29,7 +29,7 @@
     <string name="alert_delete_user">Benutzer wirklich entfernen?</string>
     <string name="alert_delete_user_message">wird dann aus dem Chat entfernt</string>
     <string name="alert_add_user">Benutzer hinzufügen?</string>
-    <string name="alert_add_user_message">wird dann dem Chat hinzugefügt</string>
+    <string name="alert_add_user_message">Sollen folgende User zum Chat hinzugefügt werden?</string>
     <string name="alert_owner">Du bist Eigentümer des Chats</string>
     <string name="alert_not_owner">Du bist momentan nicht Eigentümer des Chats</string>
     <string name="alert_owner_message">Um fortzufahren, wähle einen Teilnehmer aus der Liste als neuen

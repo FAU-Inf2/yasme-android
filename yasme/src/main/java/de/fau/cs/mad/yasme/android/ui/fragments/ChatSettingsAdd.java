@@ -30,7 +30,7 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 public class ChatSettingsAdd extends InviteToChatFragment {
     private Chat chat;
     private int index = -1;
-    private List<User> notChecked;
+    private List<User> remainingUsers;
 
     @Override
     public void onResume() {
@@ -62,7 +62,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                 throw new ExceptionInInitializerError("Chat could not be loaded from database");
             }
         }
-
+        remainingUsers = new ArrayList<>();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -93,34 +93,37 @@ public class ChatSettingsAdd extends InviteToChatFragment {
 
     @Override
     public void onClick(View view) {
-        notChecked = new ArrayList<>();
+        List<User> usersToAdd = new ArrayList<>();
         SparseBooleanArray checked = adapter.getSelectedContacts();
-        Log.d(this.getClass().getSimpleName(),checked.size()+" HALLELUJA");
+        Log.d(this.getClass().getSimpleName(), checked.size() + "");
 
         if (checked.size() == 0) {
             Toast.makeText(getActivity(), getString(R.string.toast_no_selection), Toast.LENGTH_LONG).show();
             return;
         }
-
         for (int i = 0; i < checked.size(); i++) {
-            // If the box is not set/checked (true), just skip
+            // Get the item position (index) in adapter and show an alert dialog box
             index = checked.keyAt(i);
+
+            // If the box is not set/checked (true), just skip
             if (!checked.valueAt(i)) {
-                notChecked.add(users.get(index));
+                remainingUsers.add(users.get(index));
                 continue;
             }
-            // Get the item position (index) in adapter and show an alert dialog box
+            usersToAdd.add(users.get(index));
+
             Log.d(this.getClass().getSimpleName(),
                 i + " " + index + " " + checked.valueAt(i) + " " + users.get(index).getName() );
-            showAlertDialog(
-                    getString(R.string.alert_add_user),
-                    users.get(index).getName() + " " + getString(R.string.alert_add_user_message),
-                    users.get(index), 1L
-            );
         }
-        updateChatPartnersList(notChecked);
-        //adapter = new UserAdapter(getActivity(), R.layout.user_item_checkbox, users);
-        //chatPartners.setAdapter(adapter);
+        String messageBody = "";
+        for (User u : usersToAdd) {
+            messageBody += "- " + u.getName() + "\n";
+        }
+        showAlertDialog(
+                getString(R.string.alert_add_user),
+                getString(R.string.alert_add_user_message) + "\n" + messageBody,
+                //users.get(index).getName() + " " + getString(R.string.alert_add_user_message),
+                usersToAdd, 1L);
     }
 
     public void updateChatPartnersList(List<User> contacts) {
@@ -144,7 +147,7 @@ public class ChatSettingsAdd extends InviteToChatFragment {
         startChat.setOnClickListener(this);
     }
 
-    private void showAlertDialog(String title, String message, final User user, final Long rest) {
+    private void showAlertDialog(String title, String message, final List<User> usersToAdd, final Long rest) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(title);
         alert.setMessage(message);
@@ -152,7 +155,8 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                 R.string.OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        chat.addParticipant(user);
+                        for (User user : usersToAdd) {
+                            chat.addParticipant(user);
                             //TODO wieder einkommentieren
                             /*Log.d(this.getClass().getSimpleName(),
                                 "Status Name : [" + chat.getStatusChanged() +
@@ -163,7 +167,10 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                             if (!chat.getNameChanged()) {
                                 chat.setName(chat.getName(), false);
                             }*/
-                        new ChangeUserTask(chat).execute(user.getId(), rest);
+                            new ChangeUserTask(chat).execute(user.getId(), rest);
+                        }
+                        users = remainingUsers;
+                        updateChatPartnersList(users);
                     }
                 }
         );
@@ -171,9 +178,6 @@ public class ChatSettingsAdd extends InviteToChatFragment {
                 R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        List<User> list = new ArrayList<User>(users);
-                        list.add(user);
-                        updateChatPartnersList(list);
                         dialog.cancel();
                     }
                 }
