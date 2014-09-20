@@ -81,8 +81,8 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
         SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
         SharedPreferences settings = getSharedPreferences(SETTINGS_PREFS, MODE_PRIVATE);
         Long userId = storage.getLong(USER_ID, 0);
-        String userName = storage.getString(USER_NAME, "dummy");
-        String userMail = storage.getString(USER_MAIL, "@yasme.net");
+        String userName = storage.getString(USER_NAME, "");
+        String userMail = storage.getString(USER_MAIL, "");
         String userPw = storage.getString(USER_PW, "password");
 
 
@@ -184,11 +184,23 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
         }
     }
 
+    public String getSelfName() {
+        if (selfUser.getName().isEmpty()) {
+            String name = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE).getString(USER_NAME, "");
+            selfUser.setName(name);
+        }
+        return selfUser.getName();
+    }
+
     public User getSelfUser() {
         return selfUser;
     }
 
     public String getUserMail() {
+        if (selfUser.getEmail().isEmpty()) {
+            String mail = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE).getString(USER_MAIL, "");
+            selfUser.setEmail(mail);
+        }
         return selfUser.getEmail();
     }
 

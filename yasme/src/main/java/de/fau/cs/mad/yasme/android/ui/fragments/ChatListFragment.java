@@ -66,10 +66,10 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         try {
             name = self.getName();
         } catch (NullPointerException npe) {
-            Log.e(this.getClass().getSimpleName(), "Error: " + npe.getMessage());
+            Log.e(this.getClass().getSimpleName(), npe.getMessage());
         }
         if (name != null) {
-            activity.setTitle(activity.getSelfUser().getName());
+            activity.setTitle(activity.getSelfName());
         }
 
         //holt vor allem den Namen des Users ab

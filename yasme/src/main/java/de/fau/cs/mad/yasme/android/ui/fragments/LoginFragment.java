@@ -182,7 +182,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
             cancel = true;
         }
 
-        // Check for a valid name.
+        // Check for a valid mail.
         if (TextUtils.isEmpty(emailTmp)) {
             emailView.setError(getString(R.string.error_field_required));
             focusView = emailView;
