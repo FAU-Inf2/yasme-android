@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -99,13 +100,14 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 name.setFocusableInTouchMode(true);
 
                 // Save name in android device
-                long t = -1;
-                String newName = name.getText().toString();
-                newName=Sanitizer.sanitize(newName);
-                name.setText(newName);
-                Log.d(this.getClass().getSimpleName(),"After Name: "+newName);
-                User newUser = new User(newName, activity.getUserMail(), t);
-                new SetProfileDataTask(newUser).execute();
+                Sanitizer sanitizer = new Sanitizer();
+                String oldName = name.getText().toString();
+                String newName=sanitizer.sanitize(oldName);
+                if(!oldName.equals(newName)) {
+                    Toast.makeText(getActivity(), getString(R.string.illegal_characters) + ": " + sanitizer.getRegex(), Toast.LENGTH_LONG).show();
+                    name.setText(newName);
+                }
+                new SetProfileDataTask(new User(newName, activity.getUserMail(), -1)).execute();
                 return true;
             }
         });

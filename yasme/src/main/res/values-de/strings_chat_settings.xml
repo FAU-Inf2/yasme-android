@@ -18,8 +18,8 @@
 
     <string name="change_name">Chatname ändern</string>
     <string name="change_status">Chatstatus ändern</string>
-    <string name="change_name_hint">Neuer Chatname</string>
-    <string name="change_status_hint">Neuer Chatstatus</string>
+    <string name="change_name_hint">Neuer Chatname (A-Za-z0-9,)</string>
+    <string name="change_status_hint">Neuer Chatstatus (A-Za-z0-9)</string>
     <string name="number_of_participants">Anzahl Teilnehmer: </string>
 
     <string name="change_successful">Die Änderung war erfolgreich</string>

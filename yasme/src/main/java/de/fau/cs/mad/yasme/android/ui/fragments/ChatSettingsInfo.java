@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -191,9 +192,14 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Grab the EditText's input
-                        String newName = chatName.getText().toString();
+                        Sanitizer sanitizer = new Sanitizer();
+                        String oldName = chatName.getText().toString();
+                        String newName=sanitizer.sanitizeExtra(oldName,",");
                         Log.d(this.getClass().getSimpleName(),"New chat name [before]: " + newName);
-                        newName=Sanitizer.sanitizeExtra(newName,",");
+                        if(!newName.equals(oldName)) {
+                            chatName.setText(newName);
+                            Toast.makeText(getActivity(), getString(R.string.illegal_characters) + ": " + sanitizer.getRegex()+" and ,",Toast.LENGTH_LONG).show();
+                        }
                         chatName.setText(newName);
                         Log.d(this.getClass().getSimpleName(),"New chat name [after]: " + newName);
                         chat.setName(newName/*, true*/);
@@ -229,9 +235,15 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Grab the EditText's input
                         String newStatus = chatStatus.getText().toString();
+                        String oldStatus = newStatus;
+                        Sanitizer sanitizer = new Sanitizer();
                         Log.d(this.getClass().getSimpleName(),"New chat status [before]: " + newStatus);
-                        newStatus=Sanitizer.sanitizeExtra(newStatus,",");
-                        chatStatus.setText(newStatus);
+                        newStatus=sanitizer.sanitize(newStatus);
+                        if(!newStatus.equals(oldStatus)) {
+                            chatStatus.setText(newStatus);
+                            Toast.makeText(getActivity(), getString(R.string.illegal_characters) + ": " + sanitizer.getRegex(),
+                                Toast.LENGTH_LONG).show();
+                        }
                         Log.d(this.getClass().getSimpleName(),"New chat status [after]: " + newStatus);
                         chat.setStatus(newStatus/*, true*/);
                         new ChangeChatProperties(chat, ChatSettingsInfo.class).execute();

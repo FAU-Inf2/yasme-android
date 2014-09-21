@@ -18,8 +18,8 @@
 
     <string name="change_name">Change name</string>
     <string name="change_status">Change status</string>
-    <string name="change_name_hint">New name for chat</string>
-    <string name="change_status_hint">New status name for chat</string>
+    <string name="change_name_hint">New name for chat (A-Za-z0-9,)</string>
+    <string name="change_status_hint">New status name for chat (A-Za-z0-9)</string>
     <string name="number_of_participants">Number of participants: </string>
 
     <string name="change_successful">Change was successful</string>
