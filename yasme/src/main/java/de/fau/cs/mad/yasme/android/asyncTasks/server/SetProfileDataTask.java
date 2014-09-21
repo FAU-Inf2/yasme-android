@@ -24,6 +24,7 @@ public class SetProfileDataTask extends AsyncTask<Void, Void, Boolean> {
 
     protected Boolean doInBackground(Void... nothing) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
+        // Sanitize input
         try {
             UserTask.getInstance().changeUserData(selfProfile);
         } catch (RestServiceException rse) {

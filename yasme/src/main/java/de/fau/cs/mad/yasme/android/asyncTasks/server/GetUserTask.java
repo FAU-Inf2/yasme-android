@@ -10,7 +10,7 @@ import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatFragment;
 import de.fau.cs.mad.yasme.android.ui.fragments.ChatListFragment;
 
-//import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
+import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 
 /**
  * Created by Tim on 03.09.14.
@@ -30,9 +30,22 @@ public class GetUserTask extends AsyncTask<Object, Void, Boolean> {
     protected Boolean doInBackground(Object... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
 //		lastMessageId = DatabaseManager.INSTANCE.getSharedPreferences().getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
+/*
+        AbstractYasmeActivity aya = (AbstractYasmeActivity) getActivity();
+        if(null==aya) {
+            Log.e(this.getClass().getSimpleName(),"fail due YasmeActivity == null");
+            return false;
+        }
+
+        if(id.longValue()==aya.getSelfUser().getId()) {
+            Log.i(this.getClass().getSimpleName(),"Abort due own user");
+            return false;
+        }
+*/
 
         User dbUser = DatabaseManager.INSTANCE.getUserDAO().get(id);
-        Log.d("OOOOOOOOOOOOO", "User id in doInBackground: " + dbUser.getId() + " with name " + dbUser.getName());
+        Log.d(this.getClass().getSimpleName(),"ID IS: "+id + " User is: "+dbUser);
+//        Log.d("OOOOOOOOOOOOO", "User id in doInBackground: " + dbUser.getId() + " with name " + dbUser.getName());
 //		DatabaseManager.INSTANCE.getUserDAO().update(user);
         return true;
     }

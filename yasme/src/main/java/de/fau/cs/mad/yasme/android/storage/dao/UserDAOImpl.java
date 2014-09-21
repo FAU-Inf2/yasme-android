@@ -82,6 +82,8 @@ public enum UserDAOImpl implements UserDAO {
     @Override
     public User get(long id) {
         try {
+        User u = databaseHelper.getUserDao().queryForId(id);
+        Log.d(this.getClass().getSimpleName(),"USER IN DAO: "+u+"for LONG: "+id);
             return databaseHelper.getUserDao().queryForId(id);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
