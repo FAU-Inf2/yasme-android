@@ -11,6 +11,7 @@ import de.fau.cs.mad.yasme.android.connection.UserTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
+import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
@@ -30,6 +31,12 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
 
     public GetProfilePictureTask(Class classToNotify) {
         this.classToNotify = classToNotify;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
     }
 
     /**
@@ -89,6 +96,7 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean success) {
+        SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             if (classToNotify == null) {
                 //No one to notify

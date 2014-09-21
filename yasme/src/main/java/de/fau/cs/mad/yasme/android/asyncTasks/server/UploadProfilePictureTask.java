@@ -21,12 +21,17 @@ public class UploadProfilePictureTask extends AsyncTask<String, Void, Boolean> {
         this.profilePicture = profilePicture;
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
     /**
      * @return true on success, false on error
      */
     @Override
     protected Boolean doInBackground(String... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
         try {
             UserTask.getInstance().uploadProfilePicture(profilePicture);
         } catch (RestServiceException e) {

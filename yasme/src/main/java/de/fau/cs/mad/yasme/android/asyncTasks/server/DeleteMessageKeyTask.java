@@ -12,6 +12,12 @@ import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 // Async-Task for sending Key to Server
 public class DeleteMessageKeyTask extends AsyncTask<Long, Void, Boolean> {
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
     /**
      * @param params [0] is keyId
      *               params [1] is DeviceId from User
@@ -19,7 +25,6 @@ public class DeleteMessageKeyTask extends AsyncTask<Long, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(Long... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
         try {
             //delete Key
             MessageKeyTask keyTask = MessageKeyTask.getInstance();

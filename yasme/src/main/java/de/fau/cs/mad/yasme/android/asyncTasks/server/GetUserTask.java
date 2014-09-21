@@ -17,7 +17,6 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
  */
 
 public class GetUserTask extends AsyncTask<Object, Void, Boolean> {
-
     private Class classToNotify = null;
     private Long id = null;
 
@@ -27,8 +26,13 @@ public class GetUserTask extends AsyncTask<Object, Void, Boolean> {
     }
 
     @Override
-    protected Boolean doInBackground(Object... params) {
+    protected void onPreExecute() {
+        super.onPreExecute();
         SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
+    @Override
+    protected Boolean doInBackground(Object... params) {
 //		lastMessageId = DatabaseManager.INSTANCE.getSharedPreferences().getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
 
         User dbUser = DatabaseManager.INSTANCE.getUserDAO().get(id);

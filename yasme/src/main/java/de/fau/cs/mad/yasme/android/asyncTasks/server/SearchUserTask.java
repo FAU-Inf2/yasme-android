@@ -32,8 +32,13 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
     }
 
     @Override
-    protected List<User> doInBackground(String... params) {
+    protected void onPreExecute() {
+        super.onPreExecute();
         SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
+    @Override
+    protected List<User> doInBackground(String... params) {
         SearchTask searchTask = SearchTask.getInstance();
         List<User> uList = new ArrayList<User>();
 

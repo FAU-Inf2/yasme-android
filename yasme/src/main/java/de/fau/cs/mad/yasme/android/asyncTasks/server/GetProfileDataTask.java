@@ -17,8 +17,14 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
 
     User selfProfile;
-    protected Boolean doInBackground(String... params) {
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
         SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
+    protected Boolean doInBackground(String... params) {
         try {
             selfProfile = UserTask.getInstance().getUserData();
         } catch (RestServiceException e) {

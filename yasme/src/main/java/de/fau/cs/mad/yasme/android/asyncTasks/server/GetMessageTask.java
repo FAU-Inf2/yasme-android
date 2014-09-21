@@ -44,12 +44,17 @@ public class GetMessageTask extends AsyncTask<Object, Void, Boolean> {
         this.classToNotify = classToNotify;
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
     /**
      * @return Returns true if it was successful, otherwise false
      */
     @Override
     protected Boolean doInBackground(Object... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
         lastMessageId = DatabaseManager.INSTANCE.getSharedPreferences()
                 .getLong(AbstractYasmeActivity.LAST_MESSAGE_ID, 0L);
         Log.d(this.getClass().getSimpleName(), "Last message id: " + lastMessageId);

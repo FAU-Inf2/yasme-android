@@ -32,13 +32,18 @@ public class DeviceRegistrationTask extends AsyncTask<String, Void, Boolean> {
         this.classToNotify = classToNotify;
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
     /**
      * @params params[0] is userId
      * @params params[1] is product
      */
     @Override
     protected Boolean doInBackground(String... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
         long userId = Long.parseLong(params[0]);
 
         // the product : e.g Google Nexus

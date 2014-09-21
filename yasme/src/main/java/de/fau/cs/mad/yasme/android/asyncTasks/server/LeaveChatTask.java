@@ -22,12 +22,17 @@ public class LeaveChatTask extends AsyncTask<Long, Void, Boolean> {
         this.chat = chat;
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
     /**
      * @return true an success, otherwise false
      */
     @Override
     protected Boolean doInBackground(Long... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
         try {
             ChatTask.getInstance().removeOneSelfFromChat(chat.getId());
         } catch (RestServiceException e) {

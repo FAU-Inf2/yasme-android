@@ -60,13 +60,18 @@ public class RefreshTask extends AsyncTask<String, Void, Boolean> {
         this.recursive = recursive;
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
     /**
      * Requests the user's chats from the server and updates the database.
      *
      * @return Returns true if it was successful, otherwise false
      */
     protected Boolean doInBackground(String... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
         boolean result = true;
         Log.d(this.getClass().getSimpleName(), "Start refreshing: " + type + " , recursive: " + recursive);
         for (long id : ids) {

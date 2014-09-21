@@ -23,6 +23,12 @@ public class ChangeOwnerAndLeaveTask extends AsyncTask<Long, Void, Boolean> {
         this.chat = chat;
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
     /**
      * @param params 0 is id of new owner
      *               1 is additional leave
@@ -30,7 +36,6 @@ public class ChangeOwnerAndLeaveTask extends AsyncTask<Long, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(Long... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
         try {
             ChatTask.getInstance().changeOwnerOfChat(chat.getId(), params[0]);
         } catch (RestServiceException e) {

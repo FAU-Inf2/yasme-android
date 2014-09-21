@@ -40,6 +40,11 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
         this.classToNotify = classToNotify;
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
 
     /**
      * @return Returns true if it was successful, otherwise false
@@ -47,7 +52,6 @@ public class CreateChatTask extends AsyncTask<String, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(String... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
 
         // Add self to selected users and names
         if (!selectedUsers.contains(selfUser)) {

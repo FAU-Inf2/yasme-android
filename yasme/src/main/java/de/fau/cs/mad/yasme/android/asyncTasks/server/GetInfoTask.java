@@ -29,8 +29,13 @@ public class GetInfoTask extends AsyncTask<Void, Void, Boolean> {
     private ServerInfo serverInfo = null;
 
     @Override
-    protected Boolean doInBackground(Void... params) {
+    protected void onPreExecute() {
+        super.onPreExecute();
         SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
+    @Override
+    protected Boolean doInBackground(Void... params) {
         Log.d(getClass().getSimpleName(), "ServerInfo will be fetched");
         long updateTime = DatabaseManager.INSTANCE.getServerInfoUpdateTime();
         if ((updateTime + interval) > System.currentTimeMillis()) {

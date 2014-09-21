@@ -22,9 +22,13 @@ public class SetProfileDataTask extends AsyncTask<Void, Void, Boolean> {
         selfProfile = selfUser;
     }
 
-    protected Boolean doInBackground(Void... nothing) {
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
         SpinnerObservable.getInstance().registerBackgroundTask(this);
-        // Sanitize input
+    }
+
+    protected Boolean doInBackground(Void... nothing) {
         try {
             UserTask.getInstance().changeUserData(selfProfile);
         } catch (RestServiceException rse) {

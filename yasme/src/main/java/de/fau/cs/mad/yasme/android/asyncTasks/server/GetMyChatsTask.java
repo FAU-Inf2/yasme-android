@@ -53,6 +53,12 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
         }
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
     /**
      * Requests the user's chats from the server and updates the database.
      *
@@ -60,7 +66,6 @@ public class GetMyChatsTask extends AsyncTask<String, Void, Boolean> {
      */
     protected Boolean doInBackground(String... params) {
         isQueued = false;
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
         List<Chat> serverChats = null;
         try {
             Log.d(this.getClass().getSimpleName(), "GetAllChats ...");

@@ -27,12 +27,17 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
     }
 
 
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
     /**
      * @param msgs
      * @return true on success and false on error
      */
     protected Boolean doInBackground(String... msgs) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
+        //SpinnerObservable.getInstance().registerBackgroundTask(this);
         for (String msgText : msgs) {
             if (null == msgText) {
                 Log.e(this.getClass().getSimpleName(), "Received message is null!");

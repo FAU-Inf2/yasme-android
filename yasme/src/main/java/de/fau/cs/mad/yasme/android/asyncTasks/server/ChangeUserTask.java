@@ -25,6 +25,11 @@ public class ChangeUserTask extends AsyncTask<Long, Void, Boolean> {
         this.chat = chat;
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
 
     /**
      * @param params 0 is id of participant to remove
@@ -33,7 +38,6 @@ public class ChangeUserTask extends AsyncTask<Long, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(Long... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
         switch (params[1].intValue()) {
             case 0:
                 try {

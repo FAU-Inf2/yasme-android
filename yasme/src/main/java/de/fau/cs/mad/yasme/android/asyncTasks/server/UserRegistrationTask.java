@@ -37,6 +37,12 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
     }
 
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
     /**
      * @params params[0] is name
      * @params params[1] is email
@@ -45,8 +51,6 @@ public class UserRegistrationTask extends AsyncTask<String, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(String... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
-
         name = params[0];
         email = params[1].toLowerCase();
         password = params[2];

@@ -29,8 +29,13 @@ public class GetQRDataTask extends AsyncTask<Object, Void, Device> {
     }
 
     @Override
-    protected Device doInBackground(Object... params) {
+    protected void onPreExecute() {
+        super.onPreExecute();
         SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
+    @Override
+    protected Device doInBackground(Object... params) {
 
         try {
             DeviceTask deviceTask = DeviceTask.getInstance();

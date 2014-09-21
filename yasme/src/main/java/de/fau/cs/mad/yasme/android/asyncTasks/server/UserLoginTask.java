@@ -30,14 +30,18 @@ public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
         this.classToNotify = classToNotify;
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SpinnerObservable.getInstance().registerBackgroundTask(this);
+    }
+
     /**
      * @param params 0 is email
      *               1 is password
      * @return
      */
     protected Boolean doInBackground(String... params) {
-        SpinnerObservable.getInstance().registerBackgroundTask(this);
-
         GetInfoTask getInfoTask = new GetInfoTask(0);
         getInfoTask.execute();
 
