@@ -29,6 +29,7 @@ import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
+import de.fau.cs.mad.yasme.android.controller.Sanitizer;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
@@ -191,6 +192,10 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Grab the EditText's input
                         String newName = chatName.getText().toString();
+                        Log.d(this.getClass().getSimpleName(),"New chat name [before]: " + newName);
+                        newName=Sanitizer.sanitizeExtra(newName,",");
+                        chatName.setText(newName);
+                        Log.d(this.getClass().getSimpleName(),"New chat name [after]: " + newName);
                         chat.setName(newName/*, true*/);
                         new ChangeChatProperties(chat, ChatSettingsInfo.class).execute();
                     }
@@ -212,19 +217,23 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
         alert.setTitle(getString(R.string.change_status));
 
-        final EditText chatName = new EditText(activity);
-        chatName.setInputType(InputType.TYPE_CLASS_TEXT);
-        chatName.setHint(R.string.change_status_hint);
+        final EditText chatStatus = new EditText(activity);
+        chatStatus.setInputType(InputType.TYPE_CLASS_TEXT);
+        chatStatus.setHint(R.string.change_status_hint);
 
-        alert.setView(chatName);
+        alert.setView(chatStatus);
 
         // "OK" button
         alert.setPositiveButton(R.string.OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Grab the EditText's input
-                        String inputStatus = chatName.getText().toString();
-                        chat.setStatus(inputStatus/*, true*/);
+                        String newStatus = chatStatus.getText().toString();
+                        Log.d(this.getClass().getSimpleName(),"New chat status [before]: " + newStatus);
+                        newStatus=Sanitizer.sanitizeExtra(newStatus,",");
+                        chatStatus.setText(newStatus);
+                        Log.d(this.getClass().getSimpleName(),"New chat status [after]: " + newStatus);
+                        chat.setStatus(newStatus/*, true*/);
                         new ChangeChatProperties(chat, ChatSettingsInfo.class).execute();
                     }
                 }

@@ -33,6 +33,7 @@ import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
+import de.fau.cs.mad.yasme.android.controller.Sanitizer;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
@@ -99,7 +100,11 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
                 // Save name in android device
                 long t = -1;
-                User newUser = new User(name.getText().toString(), activity.getUserMail(), t);
+                String newName = name.getText().toString();
+                newName=Sanitizer.sanitize(newName);
+                name.setText(newName);
+                Log.d(this.getClass().getSimpleName(),"After Name: "+newName);
+                User newUser = new User(newName, activity.getUserMail(), t);
                 new SetProfileDataTask(newUser).execute();
                 return true;
             }
