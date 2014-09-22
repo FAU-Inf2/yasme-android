@@ -12,7 +12,7 @@
     <string name="text_to_long">Text too long. Limit: 10,000 chars.</string>
     <string name="passwords_do_not_match">Passwords don\'t match.</string>
     <string name="password_too_short">Password too short. 8 chars required.</string>
-    <string name="name_too_short">Name too short. 2 chars required.</string>
+    <string name="name_too_short">Name too short. 1 char required.</string>
     <string name="email_exists">This email address has been registered yet.</string>
     <string name="email_invalid">This email address is not valid.</string>
 </resources>

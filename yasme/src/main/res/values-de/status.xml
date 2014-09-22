@@ -11,8 +11,8 @@
     <string name="message_not_correctly_delivered">Diese Nachricht wurde nicht korrekt übermittelt</string>
     <string name="text_to_long">Text ist zu lang. Maximal 10.000 Zeichen.</string>
     <string name="passwords_do_not_match">Passwörter stimmen nicht überein.</string>
-    <string name="password_too_short">Passwort zu kurz. Mindestens 8 Zeichen benötigt.</string>
-    <string name="name_too_short">Name zu kurz. Mindestens 2 Zeichen benötigt.</string>
+    <string name="password_too_short">Passwort zu kurz. Mindestens 8 Zeichen.</string>
+    <string name="name_too_short">Name zu kurz. Mindestens 1 Zeichen benötigt.</string>
     <string name="email_exists">Diese Email-Adresse wurde bereits registriert.</string>
     <string name="email_invalid">Die Email-Adresse ist fehlerhaft.</string>
 </resources>
