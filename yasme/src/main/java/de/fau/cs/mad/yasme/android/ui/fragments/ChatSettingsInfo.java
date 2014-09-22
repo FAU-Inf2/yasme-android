@@ -194,7 +194,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                         // Grab the EditText's input
                         Sanitizer sanitizer = new Sanitizer();
                         String oldName = chatName.getText().toString();
-                        String newName=sanitizer.sanitizeExtra(oldName,",");
+                        String newName=sanitizer.sanitize(oldName,",");
                         Log.d(this.getClass().getSimpleName(),"New chat name [before]: " + newName);
                         if(!newName.equals(oldName)) {
                             chatName.setText(newName);
