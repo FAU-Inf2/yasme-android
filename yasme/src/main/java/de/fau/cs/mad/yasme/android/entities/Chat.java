@@ -31,10 +31,11 @@ public class Chat implements Serializable {
 
     private List<User> participants;
 
-    /*@JsonIgnore
-    private boolean nameChanged=false;
-    @JsonIgnore
-    private boolean statusChanged=false;*/
+    @DatabaseField(columnName = DatabaseConstants.NAME_CHANGED)
+    private boolean nameChanged = false;
+
+    @DatabaseField(columnName = DatabaseConstants.STATUS_CHANGED)
+    private boolean statusChanged = false;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT_STATUS)
     private String status;
@@ -172,28 +173,28 @@ public class Chat implements Serializable {
     }
 
     public String getStatus() {
-        if (/*this.statusChanged == false || */this.status == null || this.status.isEmpty()) {
+        if (this.statusChanged == false || this.status == null || this.status.isEmpty()) {
             return (getNumberOfParticipants() + " YASMEs");
         }
         return this.status;
     }
 
-    public void setStatus(String status/*, boolean isNotDefault*/) {
-        //this.statusChanged = isNotDefault;
+    public void setStatus(String status, boolean isNotDefault) {
+        this.statusChanged = isNotDefault;
         this.status = status;
     }
 
-    /*public boolean getStatusChanged() {
+    public boolean getStatusChanged() {
         return this.statusChanged;
     }
 
     public boolean getNameChanged() {
         return this.nameChanged;
-    }*/
+    }
 
     @JsonProperty("name")
     public String getName() {
-        if (/*this.nameChanged == true && */this.name != null && this.name.length() > 0) {
+        if (this.nameChanged == true && this.name != null && this.name.length() > 0) {
             return name;
         }
         // Create a new name
@@ -212,8 +213,8 @@ public class Chat implements Serializable {
         return returnName;
     }
 
-    public void setName(String name/*, boolean isNotDefault*/) {
-        //this.nameChanged = isNotDefault;
+    public void setName(String name, boolean isNotDefault) {
+        this.nameChanged = isNotDefault;
         this.name = name;
     }
 
@@ -286,14 +287,6 @@ public class Chat implements Serializable {
             return true;
         }
         return false;
-    }
-
-    @JsonIgnore
-    public void addMessage(Message msg) {
-        if (messages == null) {
-            messages = new ArrayList<Message>();
-        }
-        messages.add(msg);
     }
 
     public Message getLastMessage() {

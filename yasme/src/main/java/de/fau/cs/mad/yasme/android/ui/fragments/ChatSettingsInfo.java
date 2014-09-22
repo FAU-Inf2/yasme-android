@@ -15,8 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -194,15 +194,15 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                         // Grab the EditText's input
                         Sanitizer sanitizer = new Sanitizer();
                         String oldName = chatName.getText().toString();
-                        String newName=sanitizer.sanitize(oldName,",");
-                        Log.d(this.getClass().getSimpleName(),"New chat name [before]: " + newName);
-                        if(!newName.equals(oldName)) {
+                        String newName = sanitizer.sanitize(oldName, ",");
+                        Log.d(this.getClass().getSimpleName(), "New chat name [before]: " + newName);
+                        if (!newName.equals(oldName)) {
                             chatName.setText(newName);
-                            Toast.makeText(getActivity(), getString(R.string.illegal_characters) + ": " + sanitizer.getRegex()+" and ,",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getString(R.string.illegal_characters) + ": " + sanitizer.getRegex() + " and ,", Toast.LENGTH_LONG).show();
                         }
                         chatName.setText(newName);
-                        Log.d(this.getClass().getSimpleName(),"New chat name [after]: " + newName);
-                        chat.setName(newName/*, true*/);
+                        Log.d(this.getClass().getSimpleName(), "New chat name [after]: " + newName);
+                        chat.setName(newName, true);
                         new ChangeChatProperties(chat, ChatSettingsInfo.class).execute();
                     }
                 }
@@ -237,15 +237,15 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                         String newStatus = chatStatus.getText().toString();
                         String oldStatus = newStatus;
                         Sanitizer sanitizer = new Sanitizer();
-                        Log.d(this.getClass().getSimpleName(),"New chat status [before]: " + newStatus);
-                        newStatus=sanitizer.sanitize(newStatus);
-                        if(!newStatus.equals(oldStatus)) {
+                        Log.d(this.getClass().getSimpleName(), "New chat status [before]: " + newStatus);
+                        newStatus = sanitizer.sanitize(newStatus);
+                        if (!newStatus.equals(oldStatus)) {
                             chatStatus.setText(newStatus);
                             Toast.makeText(getActivity(), getString(R.string.illegal_characters) + ": " + sanitizer.getRegex(),
-                                Toast.LENGTH_LONG).show();
+                                    Toast.LENGTH_LONG).show();
                         }
-                        Log.d(this.getClass().getSimpleName(),"New chat status [after]: " + newStatus);
-                        chat.setStatus(newStatus/*, true*/);
+                        Log.d(this.getClass().getSimpleName(), "New chat status [after]: " + newStatus);
+                        chat.setStatus(newStatus, true);
                         new ChangeChatProperties(chat, ChatSettingsInfo.class).execute();
                     }
                 }

@@ -15,6 +15,8 @@ public class DatabaseConstants {
     public static final String CHAT_LAST_MODIFIED = "lastModified";
     public static final String CHAT_CREATED = "created";
     public static final String LAST_MESSAGE = "lastMessage";
+    public static final String STATUS_CHANGED = "statusChanged";
+    public static final String NAME_CHANGED = "nameChanged";
 
     //Message
     public static final String MESSAGE_TABLE = "messages";
