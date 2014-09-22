@@ -132,6 +132,10 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                             Toaster.getInstance().toast(R.string.password_too_short, Toast.LENGTH_LONG);
                             return;
                         }
+                        if (inputName.length() < 2) {
+                            Toaster.getInstance().toast(R.string.name_too_short, Toast.LENGTH_LONG);
+                            return;
+                        }
                         if (!inputPassword.equals(inputPasswordCheck)) {
                             Log.d(getClass().getSimpleName(), "Password1##" + inputPassword + "##");
                             Log.d(getClass().getSimpleName(), "Password2##" + inputPasswordCheck + "##");
