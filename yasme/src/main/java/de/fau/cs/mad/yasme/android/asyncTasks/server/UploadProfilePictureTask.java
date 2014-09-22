@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.UserTask;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
@@ -45,8 +46,8 @@ public class UploadProfilePictureTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
-            Log.d(this.getClass().getSimpleName(), "Successful uploaded profile picture");
-            Toaster.getInstance().toast("Successful uploaded profile picture", Toast.LENGTH_LONG);
+            Log.d(this.getClass().getSimpleName(), "Successfully uploaded profile picture");
+            Toaster.getInstance().toast(R.string.picture_changed, Toast.LENGTH_LONG);
         }
     }
 }
