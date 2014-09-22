@@ -6,8 +6,8 @@
     <string name="notification_sound">Sound</string>
     <string name="notification_vibration">Vibration</string>
 
-    <string name="legal">Legal</string>
-    <string name="about">About</string>
+    <string name="legal">Nutzungsbedingungen</string>
+    <string name="about">Kontakt</string>
     <string name="link_text_legal">Hier findest du unsere Nutzungsbedingungen
         und unsere Datenschutzrichtlinien</string>
     <string name="link_text_about">Hier findest du YASME auf GitHub</string>
