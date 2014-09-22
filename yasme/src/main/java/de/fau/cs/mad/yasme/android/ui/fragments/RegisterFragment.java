@@ -118,10 +118,6 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
 
                         // Grab the EditText's input
                         String inputName = name.getText().toString();
-                        if(inputName.length() < 1) {
-                            Toaster.getInstance().toast(R.string.name_too_short, Toast.LENGTH_LONG);
-                            return;
-                        }
                         String inputMail = mail.getText().toString();
                         String inputPassword = password.getText().toString();
                         String inputPasswordCheck = passwordCheck.getText()
@@ -136,7 +132,7 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                             Toaster.getInstance().toast(R.string.password_too_short, Toast.LENGTH_LONG);
                             return;
                         }
-                        if (inputName.length() < 2) {
+                        if (inputName.length() < 1) {
                             Toaster.getInstance().toast(R.string.name_too_short, Toast.LENGTH_LONG);
                             return;
                         }
