@@ -17,8 +17,8 @@
             android:layout_height="match_parent"
             android:layout_alignParentBottom="false"
             android:layout_alignParentTop="false"
-            android:layout_marginRight="5dip"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            android:layout_margin="5dip" />
 
         <TextView
 		    android:id="@+id/chat_item_picture_text"
