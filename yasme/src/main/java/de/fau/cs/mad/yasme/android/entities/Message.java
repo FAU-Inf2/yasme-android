@@ -13,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 
+//import javax.activation.MimeType;
+
 /**
  * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 06.05.14.
  */
@@ -55,6 +57,9 @@ public class Message implements Serializable {
     @DatabaseField(columnName = DatabaseConstants.RECEIVED)
     private boolean received = false;
 
+    @DatabaseField(columnName = DatabaseConstants.MIMETYPE)
+    private String mimeType;
+
     private MessageKey messageKey;
 
     /**
@@ -81,6 +86,13 @@ public class Message implements Serializable {
         this.sender = sender;
         this.message = message;
         this.messageKeyId = messageKeyId;
+    }
+    public Message(User sender, String message, Chat chat, long messageKeyId, String mimeType) {
+        this.chat = chat;
+        this.sender = sender;
+        this.message = message;
+        this.messageKeyId = messageKeyId;
+        this.mimeType=mimeType;
     }
     /**
      * Getters *
@@ -129,6 +141,10 @@ public class Message implements Serializable {
     @JsonIgnore
     public int getErrorId() {
         return errorId;
+    }
+
+    public String getMimeType() {
+        return this.mimeType;
     }
 
     @JsonIgnore
@@ -211,6 +227,10 @@ public class Message implements Serializable {
 
     public void setReceived(boolean received) {
         this.received = received;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType=mimeType;
     }
 }
 

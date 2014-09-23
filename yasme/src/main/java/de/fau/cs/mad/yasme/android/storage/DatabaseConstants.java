@@ -31,6 +31,7 @@ public class DatabaseConstants {
     public static final String READ = "read";
     public static final String SENT = "sent";
     public static final String RECEIVED = "received";
+    public static final String MIMETYPE = "mimeType";
 
     //User
     public static final String USER_TABLE = "users";
