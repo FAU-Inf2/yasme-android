@@ -108,7 +108,7 @@ Feel free to contact us: <yasme@i2.cs.fau.de>
 [fk]: https://help.github.com/forking/
 [g1]: http://www.gradle.org/downloads
 [g2]: https://services.gradle.org/distributions/gradle-1.12-bin.zip
-[gp]: https://play.google.com/store/apps/details?id=de.fau.cs.mad.yasme
+[gp]: https://play.google.com/store/apps/details?id=de.fau.cs.mad.yasme.android
 [gh]: https://github.com/FAU-Inf2/yasme-android
 [gs]: https://developer.android.com/tools/support-library/setup.html
 [ie]: https://github.com/FAU-Inf2/yasme-android/issues
