@@ -49,7 +49,7 @@ public class AuthorizationTask extends ConnectionTask {
         DatabaseManager.INSTANCE.setUserId(Long.parseLong(userID.getValue()));
         DatabaseManager.INSTANCE.setAccessToken(token.getValue());
 
-        Log.d(this.getClass().getSimpleName(), "Login successful!");
+        Log.d(this.getClass().getSimpleName(), "Login successful");
         return new String[]{userID.getValue(), token.getValue()};
     }
 
