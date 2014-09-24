@@ -185,7 +185,7 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
     }
 
     public String getSelfName() {
-        if (selfUser.getName().isEmpty()) {
+        if (selfUser == null || selfUser.getName().isEmpty()) {
             String name = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE).getString(USER_NAME, "");
             selfUser.setName(name);
         }
@@ -197,7 +197,7 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
     }
 
     public String getUserMail() {
-        if (selfUser.getEmail().isEmpty()) {
+        if (selfUser == null || selfUser.getEmail().isEmpty()) {
             String mail = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE).getString(USER_MAIL, "");
             selfUser.setEmail(mail);
         }

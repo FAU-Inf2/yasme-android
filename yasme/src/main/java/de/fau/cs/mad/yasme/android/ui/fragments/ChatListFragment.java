@@ -60,15 +60,9 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         chatRooms = new ArrayList<Chat>();
         adapter = new ChatListAdapter(activity, R.layout.chatlist_item, chatRooms);
         this.setListAdapter(adapter);
-        User self = activity.getSelfUser();
 
-        String name = null;
-        try {
-            name = self.getName();
-        } catch (NullPointerException npe) {
-            Log.e(this.getClass().getSimpleName(), npe.getMessage());
-        }
-        if (name != null) {
+        String name = activity.getSelfName();
+        if (name != null || !name.isEmpty()) {
             activity.setTitle(activity.getSelfName());
         }
 
