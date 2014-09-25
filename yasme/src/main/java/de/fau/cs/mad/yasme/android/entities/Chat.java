@@ -135,10 +135,10 @@ public class Chat implements Serializable {
     public ArrayList<User> getParticipants() {
         if (participants == null) {
             participants = new ArrayList<>();
-            User dummy = new User("Dummy", 12);
-            participants.add(dummy);
+            User mDummy = new User("Dummy", 12);
+            participants.add(mDummy);
             // Without cast IntelliJ is not happy
-            Log.d(((Object) this).getClass().getSimpleName(), "Participants are null, dummy users are added");
+            Log.e(((Object) this).getClass().getSimpleName(), "Participants are null");
         }
         return new ArrayList<User>(participants);
     }
@@ -149,7 +149,7 @@ public class Chat implements Serializable {
 
     public boolean addParticipant(User newUser) {
         if (participants == null) {
-            Log.e(((Object) this).getClass().getSimpleName(), "Participants are null, sry.");
+            Log.e(((Object) this).getClass().getSimpleName(), "Participants are null");
             return false;
         }
         participants.add(newUser);

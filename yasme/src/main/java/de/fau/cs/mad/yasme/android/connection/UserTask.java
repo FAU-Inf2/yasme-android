@@ -141,4 +141,14 @@ public class UserTask extends ConnectionTask {
             throw new RestServiceException(Error.CONNECTION_ERROR);
         }
     }
+
+    public void requirePasswordToken(User user) throws RestServiceException {
+        Log.d(getClass().getSimpleName(), "Require password token");
+        HttpResponse httpResponse = executeRequest(Request.POST, "password/token/" + language, user);
+    }
+
+    public void changePassword(User user, String token) throws RestServiceException {
+        Log.d(getClass().getSimpleName(), "Change password");
+        HttpResponse httpResponse = executeRequest(Request.POST, "password/" + token, user);
+    }
 }

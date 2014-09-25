@@ -4,9 +4,11 @@ import android.os.AsyncTask;
 
 import de.fau.cs.mad.yasme.android.controller.Log;
 
+import de.fau.cs.mad.yasme.android.connection.UserTask;
 import de.fau.cs.mad.yasme.android.connection.MessageTask;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.encryption.MessageEncryption;
+import de.fau.cs.mad.yasme.android.encryption.PasswordEncryption;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.entities.User;
@@ -38,7 +40,6 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
      * @return true on success and false on error
      */
     protected Boolean doInBackground(String... msgs) {
-        //SpinnerObservable.getInstance().registerBackgroundTask(this);
         for (String msgText : msgs) {
             if (null == msgText) {
                 Log.e(this.getClass().getSimpleName(), "Received message is null!");

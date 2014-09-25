@@ -3,6 +3,7 @@ package de.fau.cs.mad.yasme.android.asyncTasks;
 import android.os.AsyncTask;
 
 import de.fau.cs.mad.yasme.android.contacts.QR;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 
 
@@ -18,6 +19,7 @@ public class QRTask extends AsyncTask<String, Void, Boolean> {
      */
     protected Boolean doInBackground(String... params) {
         SpinnerObservable.getInstance().registerBackgroundTask(this);
+
         QR qr = new QR();
         if (qr.generateQRCode() != null) {
             return true;
