@@ -3,12 +3,15 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -17,11 +20,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.BuildConfig;
 import de.fau.cs.mad.yasme.android.R;
+import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangePasswordTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.DeviceRegistrationTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.UserLoginTask;
 import de.fau.cs.mad.yasme.android.controller.FragmentObservable;
@@ -29,7 +34,9 @@ import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.NotifiableFragment;
 import de.fau.cs.mad.yasme.android.controller.ObservableRegistry;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
+import de.fau.cs.mad.yasme.android.encryption.PasswordEncryption;
 import de.fau.cs.mad.yasme.android.entities.ServerInfo;
+import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.DebugManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
@@ -116,6 +123,24 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                     public void onClick(View view) {
                         Log.d(this.getClass().getSimpleName(), "Register-Button pushed");
                         registerDialog();
+                    }
+                }
+        );
+
+        rootView.findViewById(R.id.forgot_password).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d(this.getClass().getSimpleName(), "Forgot Password-Button pushed");
+                        User user = new User();
+                        if (emailTmp == null || emailTmp.isEmpty()) {
+                            requestMail();
+                        }
+                        user.setEmail(emailTmp);
+                        new ChangePasswordTask(user).execute("1");
+                        Toaster.getInstance().toast(R.string.sent_token_mail + emailTmp,
+                                Toast.LENGTH_SHORT);
+                        forgotPasswordDialog(emailTmp);
                     }
                 }
         );
@@ -339,6 +364,137 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
 
         Log.d(this.getClass().getSimpleName(), "deviceId is " + deviceId);
         return true;
+    }
+
+    public void requestMail() {
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+        alert.setTitle(getString(R.string.request_email_title));
+
+        LinearLayout list = new LinearLayout(activity);
+        list.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+
+        final TextView requestEmailText = new EditText(activity);
+        requestEmailText.setText(R.string.request_email_body);
+
+        final EditText mail = new EditText(activity);
+        mail.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        mail.setHint(R.string.registration_email);
+
+        list.addView(mail);
+        list.addView(requestEmailText, layoutParams);
+
+        alert.setView(list);
+
+        // "OK" button to save the values
+        alert.setPositiveButton(R.string.registration_button_ok,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Grab the EditText's input
+                        emailTmp = mail.getText().toString();
+                        Log.d(this.getClass().getSimpleName(), "Mail to send token at: " + emailTmp);
+                    }
+                }
+        );
+
+        // "Cancel" button
+        alert.setNegativeButton(R.string.registration_button_cancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                }
+        );
+        alert.show();
+    }
+
+    public void forgotPasswordDialog(final String inputMail) {
+        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+        alert.setTitle(getString(R.string.password_title));
+
+        LinearLayout list = new LinearLayout(activity);
+        list.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+
+        final EditText token = new EditText(activity);
+        token.setInputType(InputType.TYPE_CLASS_TEXT);
+        token.setHint(R.string.hint_mail_token);
+
+        final TextView tokenExplanation = new EditText(activity);
+        tokenExplanation.setText(R.string.explanation_mail_token);
+
+        final EditText password = new EditText(activity);
+        password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        password.setHint(R.string.hint_new_password);
+
+        final EditText passwordCheck = new EditText(activity);
+        passwordCheck.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        passwordCheck.setHint(R.string.hint_repeat_new_password);
+
+        final EditText mail = new EditText(activity);
+        mail.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        mail.setHint(R.string.registration_email);
+
+        if (inputMail == null || inputMail.isEmpty()) {
+            list.addView(mail);
+        }
+        list.addView(token, layoutParams);
+        list.addView(tokenExplanation, layoutParams);
+        list.addView(password, layoutParams);
+        list.addView(passwordCheck, layoutParams);
+
+        alert.setView(list);
+
+        // "OK" button to save the values
+        alert.setPositiveButton(R.string.registration_button_ok,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        // Grab the EditText's input
+                        String email;
+                        if (inputMail == null || inputMail.isEmpty()) {
+                            email = mail.getText().toString();
+                        } else {
+                            email = inputMail;
+                        }
+                        String mailToken = token.getText().toString();
+                        String inputPassword = password.getText().toString();
+                        String inputPasswordCheck = passwordCheck.getText()
+                                .toString();
+
+                        if (password.getText().length() < 8) {
+                            Toaster.getInstance().toast(R.string.password_too_short,
+                                    Toast.LENGTH_LONG);
+                            return;
+                        }
+                        if (!inputPassword.equals(inputPasswordCheck)) {
+                            Toaster.getInstance().toast(R.string.passwords_do_not_match,
+                                    Toast.LENGTH_LONG);
+                            return;
+                        }
+                        User user = new User(email, inputPassword);
+                        PasswordEncryption pwEnc = new PasswordEncryption(user);
+                        User secured = pwEnc.securePassword();
+                        new ChangePasswordTask(secured).execute("0", mailToken);
+                    }
+                }
+        );
+
+        // "Cancel" button
+        alert.setNegativeButton(R.string.registration_button_cancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                }
+        );
+        alert.show();
     }
 
     /**
