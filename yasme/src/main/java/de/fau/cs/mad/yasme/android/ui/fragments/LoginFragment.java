@@ -132,15 +132,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                     @Override
                     public void onClick(View view) {
                         Log.d(this.getClass().getSimpleName(), "Forgot Password-Button pushed");
-                        User user = new User();
-                        if (emailTmp == null || emailTmp.isEmpty()) {
-                            requestMail();
-                        }
-                        user.setEmail(emailTmp);
-                        new ChangePasswordTask(user).execute("1");
-                        Toaster.getInstance().toast(R.string.sent_token_mail + emailTmp,
-                                Toast.LENGTH_SHORT);
-                        forgotPasswordDialog(emailTmp);
+                        requestMail();
                     }
                 }
         );
@@ -377,7 +369,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
 
-        final TextView requestEmailText = new EditText(activity);
+        final TextView requestEmailText = new TextView(activity);
         requestEmailText.setText(R.string.request_email_body);
 
         final EditText mail = new EditText(activity);
@@ -390,18 +382,32 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         alert.setView(list);
 
         // "OK" button to save the values
-        alert.setPositiveButton(R.string.registration_button_ok,
+        alert.setPositiveButton(R.string.OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Grab the EditText's input
                         emailTmp = mail.getText().toString();
                         Log.d(this.getClass().getSimpleName(), "Mail to send token at: " + emailTmp);
+                        User user = new User();
+                        user.setEmail(emailTmp);
+                        new ChangePasswordTask(user).execute("1");
+                        forgotPasswordDialog(emailTmp);
+                    }
+                }
+        );
+
+        // Skip, email was already sent
+        alert.setNeutralButton(R.string.skip,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        forgotPasswordDialog(null);
                     }
                 }
         );
 
         // "Cancel" button
-        alert.setNegativeButton(R.string.registration_button_cancel,
+        alert.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         dialog.cancel();
@@ -426,7 +432,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         token.setInputType(InputType.TYPE_CLASS_TEXT);
         token.setHint(R.string.hint_mail_token);
 
-        final TextView tokenExplanation = new EditText(activity);
+        final TextView tokenExplanation = new TextView(activity);
         tokenExplanation.setText(R.string.explanation_mail_token);
 
         final EditText password = new EditText(activity);
@@ -452,7 +458,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         alert.setView(list);
 
         // "OK" button to save the values
-        alert.setPositiveButton(R.string.registration_button_ok,
+        alert.setPositiveButton(R.string.OK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
@@ -487,7 +493,7 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         );
 
         // "Cancel" button
-        alert.setNegativeButton(R.string.registration_button_cancel,
+        alert.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         dialog.cancel();

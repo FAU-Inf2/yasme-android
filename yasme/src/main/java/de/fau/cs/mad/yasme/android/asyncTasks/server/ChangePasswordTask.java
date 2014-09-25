@@ -10,12 +10,14 @@ import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 /**
  * Created by robert on 25.09.14.
  */
 public class ChangePasswordTask extends AsyncTask<String, Void, Boolean> {
     private User user;
+    private String task;
 
     public ChangePasswordTask(User user) {
         this.user = user;
@@ -37,7 +39,8 @@ public class ChangePasswordTask extends AsyncTask<String, Void, Boolean> {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             return false;
         }
-        if (params[0].equals("1")) {
+        task = params[0];
+        if (task.equals("1")) {
             try {
                 UserTask.getInstance().requirePasswordToken(user);
             } catch (RestServiceException e) {
@@ -59,7 +62,14 @@ public class ChangePasswordTask extends AsyncTask<String, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
-            Toaster.getInstance().toast(R.string.successful_changed_password, Toast.LENGTH_LONG);
+            if (task.equals("1")) {
+                Toaster.getInstance().toast(
+                        DatabaseManager.INSTANCE.getContext().getString(R.string.sent_token_mail)
+                                + " " + user.getEmail(),
+                        Toast.LENGTH_SHORT);
+            } else {
+                Toaster.getInstance().toast(R.string.successful_changed_password, Toast.LENGTH_LONG);
+            }
         } else {
             Toaster.getInstance().toast(R.string.error_change_password, Toast.LENGTH_LONG);
         }

@@ -22,12 +22,14 @@
     <string name="hint_mail_token">Code aus der EMail</string>
     <string name="hint_new_password">Neues Passwort</string>
     <string name="hint_repeat_new_password">Neues Passwort wiederholen</string>
-    <string name="explanation_mail_token">Wir haben dir eine EMail mit dem Code zugesendet</string>
+    <string name="explanation_mail_token">Wir haben dir eine EMail mit dem benötigten Code zugesendet</string>
     <string name="successful_changed_password">Dein Passwort wurde erfolgreich geändert</string>
     <string name="error_change_password">Bei der Passortänderung trat ein Fehler auf. Vielleicht war die EMail-Adresse nicht richtig</string>
     <string name="request_email_title">EMail-Adresse eingeben</string>
-    <string name="request_email_body">Gib hier die EMail an, an die wir den Code zum Zurücksetzen senden sollen</string>
-    <string name="sent_token_mail">Es wurde eine Mail an folgende Adresse gesendet: </string>
+    <string name="request_email_body">Gib hier die EMail an, an die wir den Code zum Zurücksetzen senden sollen.
+        Falls du schon eine EMail angefordert hast, überspringe diesen Schritt einfach</string>
+    <string name="sent_token_mail">Es wurde eine Mail an folgende Adresse gesendet:</string>
+    <string name="skip">Überspringen</string>
 
     <!-- Strings related to registration -->
     <string name="registration_not_successful">Fehler bei der Registrierung!</string>

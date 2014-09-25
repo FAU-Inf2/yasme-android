@@ -24,12 +24,14 @@
     <string name="hint_mail_token">Code from the email</string>
     <string name="hint_new_password">New password</string>
     <string name="hint_repeat_new_password">Repeat new password</string>
-    <string name="explanation_mail_token">We have sent you an email with the Code</string>
+    <string name="explanation_mail_token">We have sent you an email with the required Code</string>
     <string name="successful_changed_password">Your password was changed successfully</string>
     <string name="error_change_password">There was an error while changing your password. Maybe your email address was not correct</string>
     <string name="request_email_title">Enter email address</string>
-    <string name="request_email_body">Enter your email address to get a code for resetting your password</string>
-    <string name="sent_token_mail">An email was sent to the following address: </string>
+    <string name="request_email_body">Enter your email address to get a code for resetting your password.
+        If you already requested a new password, just skip this step</string>
+    <string name="sent_token_mail">An email was sent to the following address:</string>
+    <string name="skip">Skip this</string>
 
     <!-- Strings related to registration -->
     <string name="registration_title">Please enter values</string>
