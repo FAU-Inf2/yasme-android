@@ -33,6 +33,9 @@ public class Device {
     @DatabaseField(columnName = DatabaseConstants.DEVICE_LAST_MODIFIED, dataType = DataType.DATE)
     private Date lastModified;
 
+    @DatabaseField(columnName = DatabaseConstants.DEVICE_TRUSTED)
+    private boolean trusted = false;
+
     public Device() {
     }
 
@@ -61,6 +64,10 @@ public class Device {
         return this.lastModified;
     }
 
+    public boolean isTrusted() {
+        return this.trusted;
+    }
+
 
     // Setter
     public void setId(long id) {
@@ -79,5 +86,9 @@ public class Device {
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
+    }
+
+    public void setTrusted(boolean trusted) {
+        this.trusted=trusted;
     }
 }

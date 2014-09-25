@@ -58,7 +58,7 @@ public class Message implements Serializable {
     private boolean received = false;
 
     @DatabaseField(columnName = DatabaseConstants.MIMETYPE)
-    private String mimeType;
+    private String mimeType = "text/plain";
 
     private MessageKey messageKey;
 

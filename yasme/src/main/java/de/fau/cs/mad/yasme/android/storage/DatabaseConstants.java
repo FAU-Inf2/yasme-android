@@ -51,6 +51,7 @@ public class DatabaseConstants {
     public static final String DEVICE_PRODUCT = "product";
     public static final String DEVICE_PUBLIC_KEY = "publicKey";
     public static final String DEVICE_LAST_MODIFIED = "lastModified";
+    public static final String DEVICE_TRUSTED = "trusted";
 
     //ChatUser
     public static final String CHAT_USER_TABLE = "chatUsers";

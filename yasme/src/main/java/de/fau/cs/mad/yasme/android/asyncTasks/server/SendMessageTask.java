@@ -2,8 +2,6 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
 
-import javax.activation.MimeType;
-
 import de.fau.cs.mad.yasme.android.controller.Log;
 
 import de.fau.cs.mad.yasme.android.connection.MessageTask;
@@ -83,7 +81,7 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
     private Message sendMessage(String text, Boolean forceKeyGeneration) throws KeyOutdatedException {
         // Create message
-        Message message = new Message(sender, text, chat, 0);
+        Message message = new Message(sender, text, chat, 0, "text/plain");
 
         // Encrypt
         MessageEncryption messageEncryption = new MessageEncryption(chat, sender);
