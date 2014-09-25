@@ -26,7 +26,7 @@ import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // when anything changes in your database objects, we have to increase the database version
-    private static final int DATABASE_VERSION = 62;
+    private static final int DATABASE_VERSION = 64;
 
     // name of the database file
     private static final String DATABASE = "de.fau.cs.mad.yasme.android.DATABASE";
