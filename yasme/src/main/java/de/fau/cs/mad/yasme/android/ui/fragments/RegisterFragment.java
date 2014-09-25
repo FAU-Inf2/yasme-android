@@ -137,8 +137,6 @@ public class RegisterFragment extends Fragment implements NotifiableFragment<Reg
                             return;
                         }
                         if (!inputPassword.equals(inputPasswordCheck)) {
-                            Log.d(getClass().getSimpleName(), "Password1##" + inputPassword + "##");
-                            Log.d(getClass().getSimpleName(), "Password2##" + inputPasswordCheck + "##");
                             Toaster.getInstance().toast(R.string.passwords_do_not_match, Toast.LENGTH_LONG);
                             return;
                         }
