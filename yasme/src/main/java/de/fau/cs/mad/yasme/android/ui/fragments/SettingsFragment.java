@@ -106,7 +106,7 @@ public class SettingsFragment extends Fragment {
         Linkify.addLinks(textMessage, pattern, "", null, new Linkify.TransformFilter() {
             @Override
             public String transformUrl(Matcher matcher, String s) {
-                return getString(R.string.link_text_about);
+                return getString(R.string.link_readme);
             }
         });
 
