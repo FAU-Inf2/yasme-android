@@ -224,7 +224,9 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                         Log.d(this.getClass().getSimpleName(), "New chat name [before]: " + newName);
                         if (!newName.equals(oldName)) {
                             chatName.setText(newName);
-                            Toast.makeText(getActivity(), getString(R.string.illegal_characters) + ": " + sanitizer.getRegex() + " and ,", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getString(R.string.illegal_characters) + ": "
+                                    + sanitizer.getRegex() + " and ,", Toast.LENGTH_LONG).show();
+                            return;
                         }
                         chatName.setText(newName);
                         Log.d(this.getClass().getSimpleName(), "New chat name [after]: " + newName);
@@ -267,9 +269,11 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                         newStatus = sanitizer.sanitize(newStatus);
                         if (!newStatus.equals(oldStatus)) {
                             chatStatus.setText(newStatus);
-                            Toast.makeText(getActivity(), getString(R.string.illegal_characters) + ": " + sanitizer.getRegex(),
-                                    Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getString(R.string.illegal_characters) + ": "
+                                    + sanitizer.getRegex(), Toast.LENGTH_LONG).show();
+                            return;
                         }
+                        chatStatus.setText(newStatus);
                         Log.d(this.getClass().getSimpleName(), "New chat status [after]: " + newStatus);
                         chat.setStatus(newStatus, true);
                         new ChangeChatProperties(chat, ChatSettingsInfo.class).execute();

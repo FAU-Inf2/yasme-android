@@ -37,7 +37,6 @@ public class ChangeChatProperties extends AsyncTask<String, Void, Boolean> {
      */
     @Override
     protected Boolean doInBackground(String... params) {
-        //SpinnerObservable.getInstance().registerBackgroundTask(this);
         try {
             ChatTask.getInstance().updateChat(chat);
         } catch (RestServiceException e) {
