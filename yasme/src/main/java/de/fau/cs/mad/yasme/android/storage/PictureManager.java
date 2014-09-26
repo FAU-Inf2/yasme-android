@@ -121,4 +121,16 @@ public enum PictureManager {
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(path, options);
     }
+
+    public boolean deletePicture(User user) {
+        String path = user.getProfilePicture();
+        if (path == null || path.isEmpty()) {
+            return false;
+        }
+        File file = new File(path);
+        if (!file.exists()) {
+            return false;
+        }
+        return file.delete();
+    }
 }
