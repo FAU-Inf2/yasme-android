@@ -2,9 +2,9 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import de.fau.cs.mad.yasme.android.controller.Log;
 
 import de.fau.cs.mad.yasme.android.connection.UserTask;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
@@ -42,6 +42,6 @@ public class GetProfileDataTask extends AsyncTask<String, Void, Boolean> {
         SharedPreferences.Editor editor = DatabaseManager.INSTANCE.getSharedPreferences().edit();
         editor.putLong(AbstractYasmeActivity.USER_ID, selfProfile.getId());
         editor.putString(AbstractYasmeActivity.USER_NAME, selfProfile.getName());
-        editor.commit();
+        editor.apply();
     }
 }

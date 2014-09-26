@@ -67,7 +67,9 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
         }
 
         //holt vor allem den Namen des Users ab
-        new GetProfileDataTask().execute();
+        if (DatabaseManager.INSTANCE.isInitialized()) {
+            new GetProfileDataTask().execute();
+        }
     }
 
     @Override

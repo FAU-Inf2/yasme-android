@@ -85,7 +85,6 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
         String userMail = storage.getString(USER_MAIL, "");
         String userPw = storage.getString(USER_PW, "password");
 
-
         selfUser = new User();
         selfUser.setId(userId);
         selfUser.setName(userName);

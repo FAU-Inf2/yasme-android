@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import de.fau.cs.mad.yasme.android.controller.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -12,6 +11,7 @@ import android.view.Window;
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.AuthorizationTask;
 import de.fau.cs.mad.yasme.android.connection.ssl.HttpClient;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
@@ -41,7 +41,8 @@ public class ChatListActivity extends AbstractYasmeActivity {
         // Make sure that the device has been registered. Otherwise several other tasks will fail
         long deviceId = DatabaseManager.INSTANCE.getDeviceId();
         if (deviceId <= 0) {
-            Log.e(this.getClass().getSimpleName(), "Device id should not be <= 0 after login. Looks like the device registration failed but no one was notified about that");
+            Log.e(this.getClass().getSimpleName(), "Device id should not be <= 0 after login. " +
+                    "Looks like the device registration failed but no one was notified about that");
         }
 
         if (savedInstanceState == null) {

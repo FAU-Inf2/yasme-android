@@ -131,7 +131,7 @@ public enum DatabaseManager {
         this.mUserId = mUserId;
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putLong(AbstractYasmeActivity.USER_ID, mUserId);
-        editor.commit();
+        editor.apply();
     }
 
     public long getDeviceId() {
@@ -145,7 +145,7 @@ public enum DatabaseManager {
         this.mDeviceId = mDeviceId;
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putLong(AbstractYasmeActivity.DEVICE_ID, mDeviceId);
-        editor.commit();
+        editor.apply();
     }
 
     public String getAccessToken() {
