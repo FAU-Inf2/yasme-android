@@ -4,4 +4,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <!-- margin inside of a fragment -->
+    <dimen name="in_fragment_horizontal">8dp</dimen>
+    <dimen name="in_fragment_vertical">8dp</dimen>
+
 </resources>

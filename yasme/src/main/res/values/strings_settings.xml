@@ -6,6 +6,9 @@
     <string name="notification_sound">Sound</string>
     <string name="notification_vibration">Vibration</string>
 
+    <string name="reset_password">password</string>
+    <string name="button_reset_password_text">Reset password</string>
+
     <string name="legal">Legal</string>
     <string name="about">About</string>
     <string name="link_text_legal">Here you can find a link to our
