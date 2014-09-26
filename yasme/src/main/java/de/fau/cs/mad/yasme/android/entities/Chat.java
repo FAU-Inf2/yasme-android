@@ -147,6 +147,14 @@ public class Chat implements Serializable {
         this.participants = participants;
     }
 
+    public void setNameChanged(boolean nameChanged) {
+        this.nameChanged = nameChanged;
+    }
+
+    public void setStatusChanged(boolean statusChanged) {
+        this.statusChanged = statusChanged;
+    }
+
     public boolean addParticipant(User newUser) {
         if (participants == null) {
             Log.e(((Object) this).getClass().getSimpleName(), "Participants are null");
@@ -173,7 +181,7 @@ public class Chat implements Serializable {
     }
 
     public String getStatus() {
-        if (this.statusChanged == false || this.status == null || this.status.isEmpty()) {
+        if (!this.statusChanged || this.status == null || this.status.isEmpty()) {
             return (getNumberOfParticipants() + " YASMEs");
         }
         return this.status;
@@ -194,7 +202,7 @@ public class Chat implements Serializable {
 
     @JsonProperty("name")
     public String getName() {
-        if (this.nameChanged == true && this.name != null && this.name.length() > 0) {
+        if (this.nameChanged && this.name != null && this.name.length() > 0) {
             return name;
         }
         // Create a new name

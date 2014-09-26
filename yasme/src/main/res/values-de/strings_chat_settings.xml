@@ -15,6 +15,7 @@
     <string name="change_owner">Owner ändern</string>
     <string name="change_and_leave_chat">Owner wechseln und Chat verlassen</string>
     <string name="change">Ändern</string>
+    <string name="reset">Zurücksetzten</string>
 
     <string name="change_name">Chatname ändern</string>
     <string name="change_status">Chatstatus ändern</string>

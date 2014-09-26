@@ -1,13 +1,12 @@
 package de.fau.cs.mad.yasme.android.storage.dao;
 
-import de.fau.cs.mad.yasme.android.controller.Log;
+import java.sql.SQLException;
+import java.util.List;
 
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseConstants;
 import de.fau.cs.mad.yasme.android.storage.DatabaseHelper;
-
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by Benedikt Lorch <benedikt.lorch@studium.fau.de> on 10.07.14.
@@ -82,8 +81,6 @@ public enum UserDAOImpl implements UserDAO {
     @Override
     public User get(long id) {
         try {
-        User u = databaseHelper.getUserDao().queryForId(id);
-        Log.d(this.getClass().getSimpleName(),"USER IN DAO: "+u+"for LONG: "+id);
             return databaseHelper.getUserDao().queryForId(id);
         } catch (SQLException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());

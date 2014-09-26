@@ -23,6 +23,7 @@ import java.util.List;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
+import de.fau.cs.mad.yasme.android.asyncTasks.database.UpdateTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeChatProperties;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangeOwnerAndLeaveTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.LeaveChatTask;
@@ -48,7 +49,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
     protected UserAdapter mAdapter = null;
     private View chatInfo;
     private Chat chat;
-    private Button changeName, changeStatus, leaveChat, changeOwner;
+    private Button changeName, changeStatus, leaveChat, changeOwner, resetName, resetStatus;
 
     public ChatSettingsInfo() {
     }
@@ -91,12 +92,12 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         leaveChat = (Button) rootView.findViewById(R.id.leave_chat);
         changeOwner = (Button) rootView.findViewById(R.id.change_owner);
         chatInfo = rootView.findViewById(R.id.chat_settings_info);
+        resetName = (Button) rootView.findViewById(R.id.button_reset_name);
+        resetStatus = (Button) rootView.findViewById(R.id.button_reset_status);
 
         if (null != chat) {
             fillInfoView();
-        }
-
-        if (null == chat) {
+        } else {
             Bundle bundle = getArguments();
             long chatId = bundle.getLong(ChatSettingsActivity.CHAT_ID);
             // Make sure that fragment is registered. Registering twice won't cause any issues
@@ -155,6 +156,31 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
                     }
                 }
         );
+        resetName.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        chat.setNameChanged(false);
+                        String newName = chat.getName();
+                        chat.setName(newName, false);
+                        new UpdateTask<>(DatabaseManager.INSTANCE.getChatDAO(),
+                                chat, this.getClass()).execute();
+                    }
+                }
+        );
+        resetStatus.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        chat.setStatusChanged(false);
+                        String newStatus = chat.getName();
+                        chat.setStatus(newStatus, false);
+                        new UpdateTask<>(DatabaseManager.INSTANCE.getChatDAO(),
+                                chat, this.getClass()).execute();
+                    }
+                }
+        );
+
         if (chat.isOwner(DatabaseManager.INSTANCE.getUserId())) {
             changeOwner.setVisibility(View.VISIBLE);
         }
