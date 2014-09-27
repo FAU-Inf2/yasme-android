@@ -70,7 +70,8 @@ public class SearchUserTask extends AsyncTask<String, Void, List<User>> {
     protected void onPostExecute(List<User> userList) {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (classToNotify == SearchContactFragment.class) {
-            ObservableRegistry.getObservable(SearchContactFragment.class).notifyFragments(userList);
+            ObservableRegistry.getObservable(SearchContactFragment.class)
+                    .notifyFragments(new SearchContactFragment.DataClass(userList));
         }
         if (classToNotify == QRCodeFragment.class) {
             ObservableRegistry.getObservable(QRCodeFragment.class).notifyFragments(userList);

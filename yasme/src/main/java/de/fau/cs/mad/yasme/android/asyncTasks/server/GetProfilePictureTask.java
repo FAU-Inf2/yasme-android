@@ -73,7 +73,7 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
                 return false;
             }
             editor.putString(AbstractYasmeActivity.PROFILE_PICTURE, path);
-            editor.commit();
+            editor.apply();
         } else {
             User user = DatabaseManager.INSTANCE.getUserDAO().get(userId);
             if (user == null) {
@@ -103,7 +103,7 @@ public class GetProfilePictureTask extends AsyncTask<Long, Void, Boolean> {
                 return;
             }
             if (classToNotify == UserAdapter.class) {
-                //TODO Adapter benachrichtigen, dass Bild da ist
+                // Adapter benachrichtigen, dass Bild da ist
                 return;
             }
             if (isSelf) {
