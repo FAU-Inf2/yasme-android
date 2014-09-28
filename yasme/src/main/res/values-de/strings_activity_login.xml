@@ -15,7 +15,7 @@
     <string name="default_password">password</string>
     <string name="save_values">Eingaben merken</string>
 
-    <string name="forgot_password">Ich habe mein Passwort vergessen</string>
+    <string name="forgot_password">Passwort vergessen?</string>
 
     <!-- strings related to forgot password dialog -->
     <string name="password_title">Neues Passwort eingeben</string>

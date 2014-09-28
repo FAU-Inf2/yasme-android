@@ -135,7 +135,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             dateView.setText(name + ", " + time);
         }
 
-        Log.d(this.getClass().getSimpleName(), name + ": " + msg.getMessage());
+        //Log.d(this.getClass().getSimpleName(), name + ": " + msg.getMessage());
         if (imageView != null && initial != null && !isSelf) {
             if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
                 // load picture from local storage

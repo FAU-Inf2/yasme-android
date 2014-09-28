@@ -83,7 +83,6 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         if (chat == null) {
             Toaster.getInstance().toast(R.string.unable_open_chat, Toast.LENGTH_SHORT);
             activity.finish();
-            return;
         }
     }
 

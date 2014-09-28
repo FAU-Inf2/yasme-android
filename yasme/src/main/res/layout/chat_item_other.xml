@@ -4,36 +4,36 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="6dip"
-    android:showDividers="none" >
+    android:showDividers="none">
 
     <RelativeLayout
-	    android:id="@+id/imagelayout"
+        android:id="@+id/imagelayout"
         android:layout_width="40dip"
         android:layout_height="40dip">
 
         <ImageView
-		    android:id="@+id/chat_item_picture"
+            android:id="@+id/chat_item_picture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="false"
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="true"
-            android:layout_margin="5dip" />
+            android:layout_margin="5dip"
+            android:layout_centerInParent="true" />
 
         <TextView
-		    android:id="@+id/chat_item_picture_text"
+            android:id="@+id/chat_item_picture_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-		    android:layout_alignLeft="@+id/chat_item_picture"
-		    android:layout_alignRight="@+id/chat_item_picture"
-            android:gravity="center_horizontal"
-		    android:text="B"
-		    android:textSize="24sp"
+            android:layout_alignLeft="@+id/chat_item_picture"
+            android:layout_alignRight="@+id/chat_item_picture"
+            android:gravity="center"
+            android:textSize="24sp"
             android:textColor="#FFFFFF"
             android:layout_alignTop="@+id/chat_item_picture"
             android:layout_alignBottom="@+id/chat_item_picture"
             android:layout_centerInParent="true"
-            android:layout_margin="1dp" />
+            android:layout_marginBottom="1dip" />
     </RelativeLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -43,7 +43,7 @@
         android:padding="6dip"
         android:background="@drawable/border_other"
         android:textColor="@color/chat_text_color_other"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
 
         <TextView
@@ -54,15 +54,14 @@
             android:gravity="center_vertical|left"
             android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/chat_item_date"
-                android:textSize="8sp"
-                android:gravity="left"
-                android:textColor="@color/chat_status_color_other"
-                android:ellipsize="marquee"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
+        <TextView
+            android:id="@+id/chat_item_date"
+            android:textSize="8sp"
+            android:gravity="left"
+            android:textColor="@color/chat_status_color_other"
+            android:ellipsize="marquee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
 
     </LinearLayout>
