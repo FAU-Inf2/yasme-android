@@ -142,16 +142,16 @@ public class SearchContactFragment
         }
     }
 
-    //TODO: Ablauf: nicht alle auf einmal adden
-    //TODO 1.für jeden einzelnen User das Bild holen
-    //TODO 2. wenn Bild da ist, user zum Adapter adden
-    //TODO 3. notifyDateSetChanged()
+    // Steps:
+    // 1. get the picture for every single user
+    // 2. when the GetImageWithoutSavingTask returns, add the user to the adapter
+    // 3. call notifyDateSetChanged()
     @Override
     public void notifyFragment(DataClass data) {
-        if (data.getBitmap() == null) {
-            notifyFragment(data.getUsers());
-        } else if (data.getUsers() == null) {
-            mAdapter.add(data.user);
+        if (data instanceof UsersClass) {
+            notifyFragment(((UsersClass) data).getUsers());
+        } else if (data instanceof ImageClass) {
+            mAdapter.add(((ImageClass) data).getUser());
             mAdapter.notifyDataSetChanged();
         } else {
             // do nothing
@@ -178,23 +178,19 @@ public class SearchContactFragment
     }
 
     public static class DataClass {
-        private List<User> users;
+
+        public DataClass() {
+
+        }
+    }
+
+    public static class ImageClass extends DataClass {
         private BitmapDrawable bitmap;
         private User user;
 
-        public DataClass(BitmapDrawable bitmap, User user) {
+        public ImageClass(BitmapDrawable bitmap, User user) {
             this.bitmap = bitmap;
-            this.users = null;
             this.user = user;
-        }
-
-        public DataClass(List<User> users) {
-            this.bitmap = null;
-            this.users = users;
-        }
-
-        public ArrayList<User> getUsers() {
-            return new ArrayList<>(users);
         }
 
         public BitmapDrawable getBitmap() {
@@ -203,6 +199,18 @@ public class SearchContactFragment
 
         public User getUser() {
             return user;
+        }
+    }
+
+    public static class UsersClass extends DataClass {
+        private List<User> users;
+
+        public UsersClass(List<User> users) {
+            this.users = users;
+        }
+
+        public ArrayList<User> getUsers() {
+            return new ArrayList<>(users);
         }
     }
 

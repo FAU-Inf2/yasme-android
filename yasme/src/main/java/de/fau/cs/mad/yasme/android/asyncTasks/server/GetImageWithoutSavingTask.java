@@ -51,8 +51,9 @@ public class GetImageWithoutSavingTask extends AsyncTask<Long, Void, Boolean> {
             return false;
         }
         if (profilePicture == null) {
-            Log.e(this.getClass().getSimpleName(), "profilePicture was null");
-            return false;
+            Log.d(this.getClass().getSimpleName(), "profilePicture was null");
+            user.setProfilePicture(null);
+            return true;
         }
 
         isSelf = (userId == DatabaseManager.INSTANCE.getUserId());
@@ -81,12 +82,10 @@ public class GetImageWithoutSavingTask extends AsyncTask<Long, Void, Boolean> {
                 //No one to notify
                 return;
             }
-            if (isSelf) {
-                // Notify registered fragments
-                FragmentObservable<SearchContactFragment, SearchContactFragment.DataClass> obs =
-                        ObservableRegistry.getObservable(classToNotify);
-                obs.notifyFragments(new SearchContactFragment.DataClass(profilePicture, user));
-            }
+            // Notify registered fragments
+            FragmentObservable<SearchContactFragment, SearchContactFragment.DataClass> obs =
+                    ObservableRegistry.getObservable(classToNotify);
+            obs.notifyFragments(new SearchContactFragment.ImageClass(profilePicture, user));
         }
     }
 }
