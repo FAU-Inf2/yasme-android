@@ -142,7 +142,7 @@ public class SearchContactFragment
         }
     }
 
-    //TODO: Ablauf: nicht alle auf eimal adden
+    //TODO: Ablauf: nicht alle auf einmal adden
     //TODO 1.für jeden einzelnen User das Bild holen
     //TODO 2. wenn Bild da ist, user zum Adapter adden
     //TODO 3. notifyDateSetChanged()
@@ -165,18 +165,15 @@ public class SearchContactFragment
             PictureManager.INSTANCE.deletePicture(user);
         }
         users = userList;
+        mAdapter.clear();
+        mAdapter.notifyDataSetChanged();
         if (userList != null && userList.size() != 0) {
             //get profile pictures
             for (User user : userList) {
                 new GetImageWithoutSavingTask(this.getClass(), user).execute();
             }
-            mAdapter.clear();
-            //mAdapter.addAll(userList);
-            mAdapter.notifyDataSetChanged();
         } else {
             Toaster.getInstance().toast(R.string.search_no_results, Toast.LENGTH_SHORT);
-            mAdapter.clear();
-            mAdapter.notifyDataSetChanged();
         }
     }
 
