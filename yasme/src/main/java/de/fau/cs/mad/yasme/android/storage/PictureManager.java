@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,6 +29,18 @@ public enum PictureManager {
         int newWidth = (int) (bigBitmap.getWidth() * picScale);
         Bitmap bitmap = Bitmap.createScaledBitmap(bigBitmap, newWidth, newHeight, false);
         return bitmap;
+    }
+
+    public byte[] scaledBitmapToByteArray(Bitmap bitmap, int newMaxSize) {
+        float picScale = ((float) newMaxSize)
+                / ((float) Math.max(bitmap.getHeight(), bitmap.getWidth()));
+        int newHeight = (int) (bitmap.getHeight() * picScale);
+        int newWidth = (int) (bitmap.getWidth() * picScale);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        return stream.toByteArray();
     }
 
     /**

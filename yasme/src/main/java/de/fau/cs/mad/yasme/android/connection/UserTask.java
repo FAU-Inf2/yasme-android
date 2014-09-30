@@ -15,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,6 +27,7 @@ import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.Error;
 import de.fau.cs.mad.yasme.android.exception.RestServiceException;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.storage.PictureManager;
 
 /**
  * Created by Florian Winklmeier <f.winklmeier@t-online.de> on 16.06.14.
@@ -104,25 +104,11 @@ public class UserTask extends ConnectionTask {
     public void uploadProfilePicture(Bitmap bitmap) throws RestServiceException {
 
         HttpEntity multipartEntity = MultipartEntityBuilder.create()
-                .addBinaryBody("file", scaleBitmap(bitmap, 500), ContentType.create("image/jpeg"), "")
+                .addBinaryBody("file", PictureManager.INSTANCE.scaledBitmapToByteArray(bitmap, 500),
+                        ContentType.create("image/jpeg"), "")
                 .build();
 
         executeUpload(Request.POST, "profile", multipartEntity, null);
-    }
-
-    private byte[] bitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        return stream.toByteArray();
-    }
-
-    private byte[] scaleBitmap(Bitmap bigBitmap, int newMaxSize) {
-        float picScale = ((float) newMaxSize)
-                / ((float) Math.max(bigBitmap.getHeight(), bigBitmap.getWidth()));
-        int newHeight = (int) (bigBitmap.getHeight() * picScale);
-        int newWidth = (int) (bigBitmap.getWidth() * picScale);
-        Bitmap bitmap = Bitmap.createScaledBitmap(bigBitmap, newWidth, newHeight, false);
-        return bitmapToByteArray(bitmap);
     }
 
     public BitmapDrawable getProfilePicture(long userId) throws RestServiceException {

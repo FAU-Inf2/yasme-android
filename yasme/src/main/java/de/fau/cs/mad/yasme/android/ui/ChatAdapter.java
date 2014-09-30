@@ -2,6 +2,8 @@ package de.fau.cs.mad.yasme.android.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -65,7 +67,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         View rowView;
         TextView textView;
         TextView dateView;
-        ImageView imageView = null;
+        ImageView profileImageView = null;
         LinearLayout textViews;
         TextView initial = null;
 
@@ -103,30 +105,39 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             rowView = inflater.inflate(R.layout.chat_item_own, parent, false);
         } else {
             rowView = inflater.inflate(R.layout.chat_item_other, parent, false);
-            imageView = (ImageView) rowView.findViewById(R.id.chat_item_picture);
+            profileImageView = (ImageView) rowView.findViewById(R.id.chat_item_picture);
             initial = (TextView) rowView.findViewById(R.id.chat_item_picture_text);
         }
         textView = (TextView) rowView.findViewById(R.id.chat_item_message);
         dateView = (TextView) rowView.findViewById(R.id.chat_item_date);
         textViews = (LinearLayout) rowView.findViewById(R.id.chat_item_text);
 
-        String text;
-        if (msg.getErrorId() != MessageEncryption.ErrorType.OK) {
-            switch (msg.getErrorId()) {
-                case MessageEncryption.ErrorType.DECRYPTION_FAILED:
-                    text = context.getResources().getString(R.string.decryption_failed) + msg.getMessage();
-                    break;
-                case MessageEncryption.ErrorType.AUTHENTICATION_FAILED:
-                    text = context.getResources().getString(R.string.authentication_failed) + msg.getMessage();
-                    break;
-                default:
-                    text = context.getResources().getString(R.string.unknown_message_error) + msg.getMessage();
-                    break;
+        if (msg.getMimeType().compareTo("text/plain") == 0) {
+            String text;
+            if (msg.getErrorId() != MessageEncryption.ErrorType.OK) {
+                switch (msg.getErrorId()) {
+                    case MessageEncryption.ErrorType.DECRYPTION_FAILED:
+                        text = context.getResources().getString(R.string.decryption_failed) + msg.getMessage();
+                        break;
+                    case MessageEncryption.ErrorType.AUTHENTICATION_FAILED:
+                        text = context.getResources().getString(R.string.authentication_failed) + msg.getMessage();
+                        break;
+                    default:
+                        text = context.getResources().getString(R.string.unknown_message_error) + msg.getMessage();
+                        break;
+                }
+            } else {
+                text = msg.getMessage();
             }
-        } else {
-            text = msg.getMessage();
+            textView.setText(text);
+        } else if (msg.getMimeType().compareTo("media/image") == 0) {
+            byte[] bytes = msg.getMessage().getBytes();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            if (bitmap == null) {
+                //error decoding bitmap, TODO print error
+            }
+            //TODO print image
         }
-        textView.setText(text);
 
         String time = getDateOfMessage(msg);
         if (isSelf) {
@@ -135,16 +146,15 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             dateView.setText(name + ", " + time);
         }
 
-        //Log.d(this.getClass().getSimpleName(), name + ": " + msg.getMessage());
-        if (imageView != null && initial != null && !isSelf) {
+        if (profileImageView != null && initial != null && !isSelf) {
             if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
                 // load picture from local storage
                 initial.setVisibility(View.GONE);
-                imageView.setBackgroundColor(Color.TRANSPARENT);
-                imageView.setImageBitmap(PictureManager.INSTANCE.getPicture(user, 40, 40));
+                profileImageView.setBackgroundColor(Color.TRANSPARENT);
+                profileImageView.setImageBitmap(PictureManager.INSTANCE.getPicture(user, 40, 40));
             } else {
                 // no local picture found. Set default pic
-                imageView.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB
+                profileImageView.setBackgroundColor(CONTACT_DUMMY_COLORS_ARGB
                         [(int) user.getId() % CONTACT_DUMMY_COLORS_ARGB.length]);
                 initial.setText(user.getName().substring(0, 1).toUpperCase());
             }
@@ -159,7 +169,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
     }
 
     private String getDateOfMessage(Message message) {
-        String returnDate = "";
+        String returnDate;
 
         Date dateSent = message.getDateSent();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -183,8 +193,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
     public String formatTime(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+2"));
-        String formattedDate = formatter.format(date);
-        return formattedDate;
+        return formatter.format(date);
     }
 
     public String formatDate(Calendar calendar, Calendar current, Date date) {
@@ -203,8 +212,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+2"));
-        String formattedDate = formatter.format(date);
-        return formattedDate;
+        return formatter.format(date);
     }
 
 

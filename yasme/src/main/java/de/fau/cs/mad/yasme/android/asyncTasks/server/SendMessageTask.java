@@ -2,13 +2,10 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
 
-import de.fau.cs.mad.yasme.android.controller.Log;
-
-import de.fau.cs.mad.yasme.android.connection.UserTask;
 import de.fau.cs.mad.yasme.android.connection.MessageTask;
+import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
 import de.fau.cs.mad.yasme.android.encryption.MessageEncryption;
-import de.fau.cs.mad.yasme.android.encryption.PasswordEncryption;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.entities.User;
@@ -22,11 +19,13 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
     private AsyncTask onPostExecute;
     private Chat chat;
     private User sender;
+    private Mime type;
 
-    public SendMessageTask(Chat chat, User sender, AsyncTask onPostExecute) {
+    public SendMessageTask(Chat chat, User sender, AsyncTask onPostExecute, Mime type) {
         this.sender = sender;
         this.chat = chat;
         this.onPostExecute = onPostExecute;
+        this.type = type;
     }
 
 
@@ -82,7 +81,15 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
     private Message sendMessage(String text, Boolean forceKeyGeneration) throws KeyOutdatedException {
         // Create message
-        Message message = new Message(sender, text, chat, 0, "text/plain");
+        Message message;
+        if (type == Mime.PLAIN) {
+            message = new Message(sender, text, chat, 0, "text/plain");
+        } else if (type == Mime.IMAGE) {
+            message = new Message(sender, text, chat, 0, "media/image");
+        } else {
+            Log.e(this.getClass().getSimpleName(), "Error during creating a new message");
+            return null;
+        }
 
         // Encrypt
         MessageEncryption messageEncryption = new MessageEncryption(chat, sender);
@@ -98,5 +105,10 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
         // Send
         return  MessageTask.getInstance().sendMessage(message);
+    }
+
+    public enum Mime {
+        PLAIN, //"text/plain"
+        IMAGE;
     }
 }

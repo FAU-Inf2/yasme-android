@@ -1,17 +1,16 @@
 package de.fau.cs.mad.yasme.android.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import de.fau.cs.mad.yasme.android.encryption.MessageEncryption;
-import de.fau.cs.mad.yasme.android.storage.DatabaseConstants;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.io.Serializable;
 import java.util.Date;
+
+import de.fau.cs.mad.yasme.android.encryption.MessageEncryption;
+import de.fau.cs.mad.yasme.android.storage.DatabaseConstants;
 
 //import javax.activation.MimeType;
 
@@ -22,7 +21,7 @@ import java.util.Date;
 @DatabaseTable(tableName = DatabaseConstants.MESSAGE_TABLE)
 public class Message implements Serializable {
 
-    @DatabaseField(columnName = DatabaseConstants.MESSAGE_ID, id = true)// generatedId = true, allowGeneratedIdInsert = true)
+    @DatabaseField(columnName = DatabaseConstants.MESSAGE_ID, id = true)
     private long id;
 
     @DatabaseField(columnName = DatabaseConstants.CHAT, canBeNull = false, foreign = true,
@@ -92,7 +91,7 @@ public class Message implements Serializable {
         this.sender = sender;
         this.message = message;
         this.messageKeyId = messageKeyId;
-        this.mimeType=mimeType;
+        this.mimeType = mimeType;
     }
     /**
      * Getters *
@@ -230,7 +229,7 @@ public class Message implements Serializable {
     }
 
     public void setMimeType(String mimeType) {
-        this.mimeType=mimeType;
+        this.mimeType = mimeType;
     }
 }
 

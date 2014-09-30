@@ -2,6 +2,7 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import de.fau.cs.mad.yasme.android.encryption.MessageEncryption;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
+import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
 import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 import de.fau.cs.mad.yasme.android.ui.activities.ChatActivity;
@@ -189,25 +191,37 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     }
 
     public void send(View view) {
-        String msgText = editMessage.getText().toString();
-        if (msgText.isEmpty()) {
-            Log.d(this.getClass().getSimpleName(), "Nichts eingegeben");
-            return;
-        }
-        if (msgText.length() > 10000) {
-            Toaster.getInstance().toast(R.string.text_to_long, Toast.LENGTH_LONG);
-            return;
-        }
+        if (true) {
+            //case message
+            String msgText = editMessage.getText().toString();
+            if (msgText.isEmpty()) {
+                Log.d(this.getClass().getSimpleName(), "Nichts eingegeben");
+                return;
+            }
+            if (msgText.length() > 10000) {
+                Toaster.getInstance().toast(R.string.text_to_long, Toast.LENGTH_LONG);
+                return;
+            }
 
-        // Send trimmed message without whitespaces and get new messages afterwards
-        AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
-        Log.d(getClass().getSimpleName(), "GetMessageTask started from ChatFragment (send)");
-        new SendMessageTask(chat, activity.getSelfUser(),
-                new GetMessageTask(this.getClass())).execute(msgText.trim());
+            // Send trimmed message without whitespaces and get new messages afterwards
+            AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+            Log.d(getClass().getSimpleName(), "GetMessageTask started from ChatFragment (send)");
+            new SendMessageTask(chat, activity.getSelfUser(),
+                    new GetMessageTask(this.getClass()), SendMessageTask.Mime.PLAIN).execute(msgText.trim());
 
-        Log.d(this.getClass().getSimpleName(), "Send message in bg");
-        // Empty the input field after send button was pressed
-        editMessage.setText("");
+            Log.d(this.getClass().getSimpleName(), "Send message in bg");
+            // Empty the input field after send button was pressed
+            editMessage.setText("");
+        } else {
+            // case picture TODO
+            Bitmap bitmap = null;
+            AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+
+            byte[] pictureToSend = PictureManager.INSTANCE.scaledBitmapToByteArray(bitmap, 500);
+            String imageMessage = new String(pictureToSend);
+            new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask(this.getClass()),
+                    SendMessageTask.Mime.IMAGE).execute(imageMessage);
+        }
     }
 
     public void updateViews(List<Message> messages) {
