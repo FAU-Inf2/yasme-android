@@ -24,6 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.regex.Pattern;
+
 import de.fau.cs.mad.yasme.android.BuildConfig;
 import de.fau.cs.mad.yasme.android.EditTextWithX;
 import de.fau.cs.mad.yasme.android.R;
@@ -128,7 +130,18 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
                 }
         );
 
-        rootView.findViewById(R.id.forgot_password).setOnClickListener(
+        TextView tv = (TextView) rootView.findViewById(R.id.forgot_password);
+
+        Pattern pattern = Pattern.compile(getString(R.string.forgot_password));
+        /*
+        Linkify.addLinks(tv, pattern, "", null, new Linkify.TransformFilter() {
+            @Override
+            public String transformUrl(Matcher matcher, String s) {
+                return "";
+            }
+        });
+        */
+        tv.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
