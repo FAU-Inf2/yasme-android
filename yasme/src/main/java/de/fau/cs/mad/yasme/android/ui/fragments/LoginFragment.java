@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import de.fau.cs.mad.yasme.android.BuildConfig;
+import de.fau.cs.mad.yasme.android.EditTextWithX;
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.ChangePasswordTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.DeviceRegistrationTask;
@@ -372,9 +373,10 @@ public class LoginFragment extends Fragment implements NotifiableFragment<LoginF
         final TextView requestEmailText = new TextView(activity);
         requestEmailText.setText(R.string.request_email_body);
 
-        final EditText mail = new EditText(activity);
+        final EditText mail = new EditTextWithX(activity).getEditText();
         mail.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mail.setHint(R.string.registration_email);
+        mail.setText(emailTmp);
 
         list.addView(mail);
         list.addView(requestEmailText, layoutParams);

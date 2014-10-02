@@ -54,7 +54,7 @@ public class EditTextWithX {
         });
     }
 
-    public EditText getEditTextt() {
+    public EditText getEditText() {
         return et;
     }
 }

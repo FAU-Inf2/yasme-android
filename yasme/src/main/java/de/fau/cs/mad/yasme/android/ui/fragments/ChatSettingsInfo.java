@@ -208,7 +208,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
         alert.setTitle(getString(R.string.change_name));
 
-        final EditText chatName = new EditTextWithX(activity).getEditTextt();
+        final EditText chatName = new EditTextWithX(activity).getEditText();
         if (chat != null && chat.getName() != null && !chat.getName().isEmpty()) {
             chatName.setText(chat.getName());
         }
@@ -255,7 +255,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
         alert.setTitle(getString(R.string.change_status));
 
-        final EditText chatStatus = new EditTextWithX(activity).getEditTextt();
+        final EditText chatStatus = new EditTextWithX(activity).getEditText();
         if (chat != null && chat.getStatus() != null && !chat.getStatus().isEmpty()) {
             chatStatus.setText(chat.getStatus());
         }
@@ -400,7 +400,7 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         final ListView list = new ListView(activity);
         list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         List<String> participantNames = new ArrayList<String>();
-        if(null==participantNames) return;
+        if (null == participantNames) return;
         for (User u : chat.getParticipants()) {
             if (u.getId() == DatabaseManager.INSTANCE.getUserId()) {
                 continue;
