@@ -175,15 +175,18 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
             final ListView list = new ListView(activity);
             list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            List<String> participantNames = new ArrayList<>();
+            List<String> participantNames = new ArrayList<String>();
             for (User u : chat.getParticipants()) {
                 if (u.getId() == DatabaseManager.INSTANCE.getUserId()) {
                     continue;
                 }
                 participantNames.add(u.getName());
             }
-            final ArrayAdapter<List<User>> adapter = new ArrayAdapter<List<User>>(activity,
-                    android.R.layout.simple_list_item_single_choice, (List) participantNames);
+            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                activity,
+                android.R.layout.simple_list_item_single_choice,
+                participantNames
+            );
             list.setAdapter(adapter);
 
             layout.addView(text, layoutParams);
