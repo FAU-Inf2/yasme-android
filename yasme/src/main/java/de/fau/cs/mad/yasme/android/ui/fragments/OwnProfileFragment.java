@@ -102,7 +102,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 // Save name in android device
                 Sanitizer sanitizer = new Sanitizer();
                 String oldName = name.getText().toString();
-                String newName=sanitizer.sanitize(oldName);
+                String newName = sanitizer.sanitize(oldName);
                 if(!oldName.equals(newName)) {
                     Toast.makeText(getActivity(), getString(R.string.illegal_characters) + ": " + sanitizer.getRegex(), Toast.LENGTH_LONG).show();
                     name.setText(newName);
@@ -131,7 +131,9 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             Log.d(this.getClass().getSimpleName(), "using standard picture");
             profilePictureView.setBackgroundColor(ChatAdapter.CONTACT_DUMMY_COLORS_ARGB
                     [(int) self.getId() % ChatAdapter.CONTACT_DUMMY_COLORS_ARGB.length]);
-            initial.setText(self.getName().substring(0, 1).toUpperCase());
+            if (self.getName() != null && !self.getName().isEmpty()) {
+                initial.setText(self.getName().substring(0, 1).toUpperCase());
+            }
 
             // Load profile image into profilePictureView from server as AsyncTask if available
             new GetProfilePictureTask(getClass()).execute(self.getId());
