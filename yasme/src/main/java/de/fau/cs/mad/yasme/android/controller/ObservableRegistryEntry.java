@@ -5,7 +5,7 @@ package de.fau.cs.mad.yasme.android.controller;
  */
 public class ObservableRegistryEntry<P> {
 
-    private FragmentObservable<?, ?> obs;
+    private FragmentObservable<?, ?> obs; // can be <T,P> ?
     private Class fragment;
     private Class param;
 

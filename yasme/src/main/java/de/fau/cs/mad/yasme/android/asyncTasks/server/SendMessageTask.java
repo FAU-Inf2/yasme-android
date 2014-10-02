@@ -19,11 +19,11 @@ import de.fau.cs.mad.yasme.android.exception.KeyOutdatedException;
  */
 public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
-    private AsyncTask onPostExecute;
+    private AsyncTask<Object,Void,Boolean> onPostExecute; // could also be a GetMessageTask
     private Chat chat;
     private User sender;
 
-    public SendMessageTask(Chat chat, User sender, AsyncTask onPostExecute) {
+    public SendMessageTask(Chat chat, User sender, AsyncTask<Object,Void,Boolean> onPostExecute) {
         this.sender = sender;
         this.chat = chat;
         this.onPostExecute = onPostExecute;
@@ -57,7 +57,7 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         SpinnerObservable.getInstance().removeBackgroundTask(this);
         if (success) {
             if (null != this.onPostExecute) {
-                onPostExecute.execute(success); // onPostExecute is a GetMessageTask
+                onPostExecute.execute(); // onPostExecute is a GetMessageTask
                 // onPostExecute async task will call notify the registered fragments
             }
         } else {
