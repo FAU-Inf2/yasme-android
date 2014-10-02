@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fau.cs.mad.yasme.android.EditTextWithX;
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.UpdateTask;
@@ -207,7 +208,10 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
         alert.setTitle(getString(R.string.change_name));
 
-        final EditText chatName = new EditText(activity);
+        final EditText chatName = new EditTextWithX(activity).getEditTextt();
+        if (chat != null && chat.getName() != null && !chat.getName().isEmpty()) {
+            chatName.setText(chat.getName());
+        }
         chatName.setInputType(InputType.TYPE_CLASS_TEXT);
         chatName.setHint(R.string.change_name_hint);
 
@@ -251,7 +255,10 @@ public class ChatSettingsInfo extends Fragment implements NotifiableFragment<Cha
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
         alert.setTitle(getString(R.string.change_status));
 
-        final EditText chatStatus = new EditText(activity);
+        final EditText chatStatus = new EditTextWithX(activity).getEditTextt();
+        if (chat != null && chat.getStatus() != null && !chat.getStatus().isEmpty()) {
+            chatStatus.setText(chat.getStatus());
+        }
         chatStatus.setInputType(InputType.TYPE_CLASS_TEXT);
         chatStatus.setHint(R.string.change_status_hint);
 
