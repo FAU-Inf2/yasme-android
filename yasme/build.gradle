@@ -92,6 +92,10 @@ allprojects {
             android.signingConfigs[configName].keyPassword = props['keyPassword']
         }
     }
+    
+    tasks.withType(Compile) {
+        options.compilerArgs << "-Xlint:unchecked"
+    }
 }
 
 apply plugin: "sonar-runner"

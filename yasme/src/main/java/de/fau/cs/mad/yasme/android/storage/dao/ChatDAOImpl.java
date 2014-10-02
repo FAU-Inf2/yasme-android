@@ -159,16 +159,16 @@ public enum ChatDAOImpl implements ChatDAO {
             }
         }
 
-        String query = "SELECT " + DatabaseConstants.CHAT_FIELD_NAME + ", count(*) AS " + count + " FROM " + DatabaseConstants.CHAT_USER_TABLE + " WHERE " + conditionBuilder.toString() + " GROUP BY " + DatabaseConstants.CHAT_FIELD_NAME + ";";
+        String query = "SELECT " + DatabaseConstants.CHAT_FIELD_NAME + ", count(*) AS " + count + " FROM " + DatabaseConstants.CHAT_USER_TABLE + " WHERE " + conditionBuilder.toString() + " GROUP BY " + DatabaseConstants.CHAT_FIELD_NAME + ";"; // wow :S
         Log.d(this.getClass().getSimpleName(), "Get by participants query: " + query);
 
 
-        GenericRawResults result = null;
+        GenericRawResults<String[]> result = null;
         try {
             result = databaseHelper.getChatUserDao().queryRaw(query);
 
-            List<String[]> matches = result.getResults();
-            List<Chat> chats = new ArrayList<>();
+            List<String[]> matches = (List<String[]>) result.getResults();
+            List<Chat> chats = new ArrayList<Chat>();
             for (String[] match : matches) {
                 // match[0] chatId, match[1] number of matching participants
                 if (Integer.valueOf(match[1]) >= users.size()) {

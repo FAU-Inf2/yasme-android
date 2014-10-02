@@ -16,12 +16,12 @@ import de.fau.cs.mad.yasme.android.exception.KeyOutdatedException;
  */
 public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
-    private AsyncTask onPostExecute;
+    private AsyncTask<Object,Void,Boolean> onPostExecute; // could also be a GetMessageTask
     private Chat chat;
     private User sender;
     private Mime type;
 
-    public SendMessageTask(Chat chat, User sender, AsyncTask onPostExecute, Mime type) {
+    public SendMessageTask(Chat chat, User sender, AsyncTask<Object,Void,Boolean> onPostExecute, Mime type) {
         this.sender = sender;
         this.chat = chat;
         this.onPostExecute = onPostExecute;
