@@ -15,7 +15,6 @@
     <string name="registration_not_successful">Registration error!</string>
     <string name="registration_successful">Registration successful!</string>
     <string name="default_password">password</string>
-    <string name="save_values">Remember me</string>
 
     <string name="forgot_password">I forgot my password</string>
 

@@ -74,13 +74,6 @@
                     android:maxLines="1"
                     android:singleLine="true" />
 
-                <CheckBox
-                    android:id="@+id/checkBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:text="@string/save_values" />
-
                 <Button
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"

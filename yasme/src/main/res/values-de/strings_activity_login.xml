@@ -13,7 +13,6 @@
     <string name="error_incorrect_user_or_password">Benutzername oder Passwort falsch</string>
     <string name="error_field_required">Dieses Feld ist erforderlich</string>
     <string name="default_password">password</string>
-    <string name="save_values">Eingaben merken</string>
 
     <string name="forgot_password">Passwort vergessen?</string>
 
