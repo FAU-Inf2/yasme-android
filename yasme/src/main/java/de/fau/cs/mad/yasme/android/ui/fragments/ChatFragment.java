@@ -58,6 +58,8 @@ import de.fau.cs.mad.yasme.android.ui.activities.ChatSettingsActivity;
 public class ChatFragment extends Fragment implements NotifiableFragment<List<Message>> {
     public static final String RESTORE_LATEST_MESSAGE_ON_DISPLAY = "LATEST_MESSAGE_ON_DISPLAY";
     public static final String RESTORE_CHAT_ID = "CHAT_ID";
+    public static final String RESTORE_IMAGE_URI = "imageUri";
+
     private ChatAdapter mAdapter;
     private Chat chat;
     private AtomicLong latestMessageOnDisplay;
@@ -71,6 +73,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     private static final int RESULT_LOAD_IMAGE = 100;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 200;
+
     private Uri imageUri;
     private Bitmap bitmap;
 
@@ -119,18 +122,26 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
 
         // Restore saved state if member variables are null
-        if (null != savedInstanceState && null == latestMessageOnDisplay) {
-            long latestMessageOnDisplayId = savedInstanceState.getLong(RESTORE_LATEST_MESSAGE_ON_DISPLAY);
-            latestMessageOnDisplay = new AtomicLong(latestMessageOnDisplayId);
-        }
-        if (null != savedInstanceState && null == chat) {
-            long chatId = savedInstanceState.getLong(RESTORE_CHAT_ID);
-            chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
+        // These lines would better fit to onRestoreView but this method requires a higher API level
+        if (null != savedInstanceState) {
+            if (null == latestMessageOnDisplay) {
+                long latestMessageOnDisplayId = savedInstanceState.getLong(RESTORE_LATEST_MESSAGE_ON_DISPLAY);
+                latestMessageOnDisplay = new AtomicLong(latestMessageOnDisplayId);
+            }
             if (null == chat) {
-                Log.e(this.getClass().getSimpleName(), "Oh no, looks like this chat has been deleted in the meantime");
-                return rootView;
+                long chatId = savedInstanceState.getLong(RESTORE_CHAT_ID);
+                chat = DatabaseManager.INSTANCE.getChatDAO().get(chatId);
+                if (null == chat) {
+                    Log.e(this.getClass().getSimpleName(), "Oh no, looks like this chat has been deleted in the meantime");
+                    return rootView;
+                }
+            }
+            // Restore the image uri if the device is rotated while capturing an image
+            if (null == imageUri && savedInstanceState.containsKey(RESTORE_IMAGE_URI)) {
+                imageUri = Uri.fromFile(new File(savedInstanceState.getString(RESTORE_IMAGE_URI)));
             }
         }
+
         list = (ListView) rootView.findViewById(R.id.chat_messageList);
         imageCancel = (Button) rootView.findViewById(R.id.button_cancel_image);
         imageCancel.setOnClickListener(new View.OnClickListener() {
@@ -233,6 +244,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         // Save states
         savedInstanceState.putLong(RESTORE_LATEST_MESSAGE_ON_DISPLAY, latestMessageOnDisplay.get());
         savedInstanceState.putLong(RESTORE_CHAT_ID, chat.getId());
+        if (null != imageUri) {
+            savedInstanceState.putString(RESTORE_IMAGE_URI, imageUri.getPath());
+        }
     }
 
     private void showSelectionDialog() {

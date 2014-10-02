@@ -28,8 +28,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.client.utils.URIBuilder;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -70,7 +68,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     private Uri imageUri;
     private Uri cropUri;
 
-    public final static String SAVED_BUNDLE_IMAGE_URI = "imageUri";
+    private static final String RESTORE_IMAGE_URI = "imageUri";
 
     public OwnProfileFragment() {
         // Required empty public constructor
@@ -83,8 +81,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         // Restore the image uri if the device is rotated while capturing a profile photo
         // These lines would better fit to onRestoreView but this method requires a higher API level
         if (null != savedInstanceState) {
-            if (null == imageUri && savedInstanceState.containsKey(SAVED_BUNDLE_IMAGE_URI)) {
-                imageUri = Uri.fromFile(new File(savedInstanceState.getString(SAVED_BUNDLE_IMAGE_URI)));
+            if (null == imageUri && savedInstanceState.containsKey(RESTORE_IMAGE_URI)) {
+                imageUri = Uri.fromFile(new File(savedInstanceState.getString(RESTORE_IMAGE_URI)));
             }
         }
 
@@ -188,7 +186,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (null != outState && null != imageUri) {
-            outState.putString(SAVED_BUNDLE_IMAGE_URI, imageUri.getPath());
+            outState.putString(RESTORE_IMAGE_URI, imageUri.getPath());
         }
     }
 
