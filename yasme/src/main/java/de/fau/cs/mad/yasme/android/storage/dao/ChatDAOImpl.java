@@ -163,12 +163,12 @@ public enum ChatDAOImpl implements ChatDAO {
         Log.d(this.getClass().getSimpleName(), "Get by participants query: " + query);
 
 
-        GenericRawResults result = null;
+        GenericRawResults<String[]> result = null;
         try {
             result = databaseHelper.getChatUserDao().queryRaw(query);
 
             List<String[]> matches = (List<String[]>) result.getResults();
-            List<Chat> chats = new ArrayList<>();
+            List<Chat> chats = new ArrayList<Chat>();
             for (String[] match : matches) {
                 // match[0] chatId, match[1] number of matching participants
                 if (Integer.valueOf(match[1]) >= users.size()) {

@@ -107,7 +107,7 @@ public class ChatListFragment extends ListFragment implements NotifiableFragment
 
         // At first, retrieve the chats from the database
         ChatDAO chatDAO = DatabaseManager.INSTANCE.getChatDAO();
-        new GetAllTask(chatDAO, this.getClass()).execute();
+        new GetAllTask<Chat,ChatDAO>(chatDAO, this.getClass()).execute();
 
         // Dann beim Server nachfragen, ob es neue gibt, und in der Datenbank abspeichern
         // Aktualisiert die Datenbank auf den aktuellen Stand des Servers
