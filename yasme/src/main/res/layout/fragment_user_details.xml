@@ -28,6 +28,7 @@
             android:id="@+id/contact_details_profile_picture"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:cropToPadding="true"
             android:layout_alignParentBottom="true"
             android:layout_alignParentTop="true" />
 

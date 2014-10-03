@@ -18,6 +18,7 @@
             android:id="@+id/user_picture"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:cropToPadding="true"
             android:layout_alignParentBottom="false"
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="false"
