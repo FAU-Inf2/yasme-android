@@ -79,7 +79,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/forgot_password"
                     android:id="@+id/forgot_password"
-                    android:layout_gravity="right" />
+                    android:layout_gravity="right"
+                    android:textColor="#6EC0CA" />
 
             </LinearLayout>
         </ScrollView>
