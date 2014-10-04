@@ -19,7 +19,7 @@ public class EditTextWithX {
         et = new EditText(context);
         x = context.getResources().getDrawable(android.R.drawable.presence_offline);
         x.setBounds(0, 0, x.getIntrinsicWidth(), x.getIntrinsicHeight());
-        et.setCompoundDrawables(null, null, x, null);
+        et.setCompoundDrawables(null, null, et.getText().toString().equals("") ? null : x, null);
         et.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

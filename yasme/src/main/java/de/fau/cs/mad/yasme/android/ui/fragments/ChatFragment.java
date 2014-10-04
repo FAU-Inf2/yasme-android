@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import de.fau.cs.mad.yasme.android.EditTextWithImage;
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.database.GetNewMessagesForChatTask;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetMessageTask;
@@ -107,17 +109,30 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 return rootView;
             }
         }
-
-        editMessage = (EditText) rootView.findViewById(R.id.text_message);
         list = (ListView) rootView.findViewById(R.id.chat_messageList);
 
-        final Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout chatAction = (LinearLayout) rootView.findViewById(R.id.chat_action);
+        EditTextWithImage ownEdit = new EditTextWithImage(DatabaseManager.INSTANCE.getContext());
+        editMessage = ownEdit.getEditText(); //(EditText) rootView.findViewById(R.id.text_message);
+        chatAction.addView(editMessage, params);
+
+        Button buttonSend = new Button(DatabaseManager.INSTANCE.getContext());
+        //final Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 send(v);
             }
         });
+        buttonSend.setBackground(DatabaseManager.INSTANCE.getContext()
+                .getResources().getDrawable(R.drawable.ic_action_send_now));
+        params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        chatAction.addView(buttonSend, params);
 
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         mAdapter = new ChatAdapter(activity, R.layout.chat_item_other, new ArrayList<Message>());
