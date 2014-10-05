@@ -112,12 +112,12 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         list = (ListView) rootView.findViewById(R.id.chat_messageList);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout layoutTextView = (LinearLayout) rootView.findViewById(R.id.text_view_layout);
         EditTextWithImage ownEdit = new EditTextWithImage(DatabaseManager.INSTANCE.getContext());
         editMessage = ownEdit.getEditText();
-        layoutTextView.addView(editMessage, params);
+        layoutTextView.addView(editMessage, 0, params);
 
         Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
         buttonSend.setOnClickListener(new View.OnClickListener() {
