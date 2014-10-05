@@ -4,11 +4,12 @@
     android:layout_height="match_parent"
     tools:context="de.fau.cs.mad.yasme.android.ui.activities.ChatActivity">
 <!-- nice background: EEDEBC -->
+
+
     <ListView
         android:id="@+id/chat_messageList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/chat_action"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
@@ -16,16 +17,40 @@
         android:divider="@null"
         android:dividerHeight="0dp"
         android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll" />
+        android:transcriptMode="alwaysScroll"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_alignParentBottom="false" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/chat_action"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_below="@id/chat_messageList">
+
+        <LinearLayout
+            android:id="@+id/text_view_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="left"
+            android:gravity="left"
+            android:layout_toLeftOf="@+id/button_send"
+            android:layout_toStartOf="@+id/button_send"
+            android:layout_alignParentBottom="true">
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_action_send_now"
+            android:gravity="center_horizontal|right"
+            android:layout_gravity="right"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
         <!--
                 <EditText
                     android:id="@+id/text_message"
@@ -37,14 +62,8 @@
                     android:hint="@string/type_text">
                     <requestFocus />
                 </EditText>
+-->
 
-                <Button
-                    android:id="@+id/button_send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/ic_action_send_now" />
-        -->
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

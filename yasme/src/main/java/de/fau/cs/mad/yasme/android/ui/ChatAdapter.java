@@ -112,7 +112,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         dateView = (TextView) rowView.findViewById(R.id.chat_item_date);
         textViews = (LinearLayout) rowView.findViewById(R.id.chat_item_text);
 
-        if (msg.getMimeType().compareTo("text/plain") == 0) {
+        if (msg.getMimeType() == null || msg.getMimeType().compareTo("text/plain") == 0) {
             String text;
             if (msg.getErrorId() != MessageEncryption.ErrorType.OK) {
                 switch (msg.getErrorId()) {

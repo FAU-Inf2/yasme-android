@@ -1,14 +1,17 @@
 package de.fau.cs.mad.yasme.android.controller;
 
+import de.fau.cs.mad.yasme.android.BuildConfig;
+
+
 /**
  * Created by Martin Sturm <martin.sturm@fau.de> on 13.08.2014.
  */
 public class Log {
-    static final boolean LOG_I = true;
-    static final boolean LOG_E = true;
-    static final boolean LOG_D = true;
-    static final boolean LOG_V = true;
-    static final boolean LOG_W = true;
+    static final boolean LOG_I = BuildConfig.DEBUG;
+    static final boolean LOG_E = BuildConfig.DEBUG;
+    static final boolean LOG_D = BuildConfig.DEBUG;
+    static final boolean LOG_V = BuildConfig.DEBUG;
+    static final boolean LOG_W = BuildConfig.DEBUG;
 
     public static void i(String tag, String string) {
         if (LOG_I) android.util.Log.i(tag, string);

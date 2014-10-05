@@ -40,7 +40,7 @@ public class NewMessageNotificationManager {
             mNotificationManager = (NotificationManager) mContext
                     .getSystemService(Context.NOTIFICATION_SERVICE);
         } catch (NullPointerException e) {
-            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            Log.e(this.getClass().getSimpleName(), "NullPointerException");
             return;
         }
         mBuilder = new NotificationCompat.Builder(mContext)

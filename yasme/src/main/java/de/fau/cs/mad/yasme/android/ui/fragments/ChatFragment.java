@@ -112,27 +112,20 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         list = (ListView) rootView.findViewById(R.id.chat_messageList);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        LinearLayout chatAction = (LinearLayout) rootView.findViewById(R.id.chat_action);
+        LinearLayout layoutTextView = (LinearLayout) rootView.findViewById(R.id.text_view_layout);
         EditTextWithImage ownEdit = new EditTextWithImage(DatabaseManager.INSTANCE.getContext());
-        editMessage = ownEdit.getEditText(); //(EditText) rootView.findViewById(R.id.text_message);
-        chatAction.addView(editMessage, params);
+        editMessage = ownEdit.getEditText();
+        layoutTextView.addView(editMessage, params);
 
-        Button buttonSend = new Button(DatabaseManager.INSTANCE.getContext());
-        //final Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
+        Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 send(v);
             }
         });
-        buttonSend.setBackground(DatabaseManager.INSTANCE.getContext()
-                .getResources().getDrawable(R.drawable.ic_action_send_now));
-        params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        chatAction.addView(buttonSend, params);
 
         AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
         mAdapter = new ChatAdapter(activity, R.layout.chat_item_other, new ArrayList<Message>());
