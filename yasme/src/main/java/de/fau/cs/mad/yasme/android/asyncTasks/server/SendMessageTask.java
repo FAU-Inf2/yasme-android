@@ -2,6 +2,7 @@ package de.fau.cs.mad.yasme.android.asyncTasks.server;
 
 import android.os.AsyncTask;
 
+import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.connection.MessageTask;
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.controller.SpinnerObservable;
@@ -10,6 +11,7 @@ import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Message;
 import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.exception.KeyOutdatedException;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 /**
  * Created by Robert Meissner <robert.meissner@studium.fau.de> on 19.06.14.
@@ -83,9 +85,11 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
         // Create message
         Message message;
         if (type == Mime.PLAIN) {
-            message = new Message(sender, text, chat, 0, "text/plain");
+            message = new Message(sender, text, chat, 0,
+                    DatabaseManager.INSTANCE.getContext().getResources().getString(R.string.mime_text));
         } else if (type == Mime.IMAGE) {
-            message = new Message(sender, text, chat, 0, "media/image");
+            message = new Message(sender, text, chat, 0,
+                    DatabaseManager.INSTANCE.getContext().getResources().getString(R.string.mime_image));
         } else {
             Log.e(this.getClass().getSimpleName(), "Error during creating a new message");
             return null;
@@ -109,6 +113,6 @@ public class SendMessageTask extends AsyncTask<String, Void, Boolean> {
 
     public enum Mime {
         PLAIN, //"text/plain"
-        IMAGE;
+        IMAGE; //"media/image"
     }
 }

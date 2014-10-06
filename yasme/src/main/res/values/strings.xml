@@ -85,10 +85,12 @@
 
     <!-- Notification -->
     <string name="notification_message">"Received new messages"</string>
-
     <string name="unable_create_chat">Unable to create new Chat. Maybe there is an internal
         server error</string>
     <string name="unable_open_chat">Yasme was not able to open the chat</string>
     <string name="device_registration_failed">Unfortunately, your device could not be registered. Please retry to login later.</string>
 
+    <!-- Other -->
+    <string name="mime_image">image/media</string>
+    <string name="mime_text">text/plain</string>
 </resources>

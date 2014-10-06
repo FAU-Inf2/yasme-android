@@ -96,9 +96,13 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         Message lastMessage = DatabaseManager.INSTANCE.getMessageDAO().
                 getNewestMessageOfChat(chat.getId());
         if (lastMessage != null && !lastMessage.getMessage().isEmpty()) {
-            holder.lastMessageView.setText(lastMessage.getSender().getName()
-                    + ": " + lastMessage.getMessage());
-            holder.lastMessageView.setVisibility(View.VISIBLE);
+            if (lastMessage.getMimeType().compareTo(context.getResources().getString(R.string.mime_image)) != 0) {
+                //TODO print "mediendatei gefunden"
+            } else {
+                holder.lastMessageView.setText(lastMessage.getSender().getName()
+                        + ": " + lastMessage.getMessage());
+                holder.lastMessageView.setVisibility(View.VISIBLE);
+            }
         }
 
         holder.chatpartnerList.removeAllViews(); // TODO: also recycle these

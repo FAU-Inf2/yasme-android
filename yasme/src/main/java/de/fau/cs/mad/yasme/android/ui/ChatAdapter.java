@@ -65,6 +65,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         Message msg = messages.get(position);
         Boolean isSelf;
         View rowView;
+        ImageView imageView;
         TextView textView;
         TextView dateView;
         ImageView profileImageView = null;
@@ -110,9 +111,11 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         }
         textView = (TextView) rowView.findViewById(R.id.chat_item_message);
         dateView = (TextView) rowView.findViewById(R.id.chat_item_date);
+        imageView = (ImageView) rowView.findViewById(R.id.image_content);
         textViews = (LinearLayout) rowView.findViewById(R.id.chat_item_text);
 
-        if (msg.getMimeType() == null || msg.getMimeType().compareTo("text/plain") == 0) {
+        if (msg.getMimeType() == null || msg.getMimeType()
+                .compareTo(context.getResources().getString(R.string.mime_text)) == 0) {
             String text;
             if (msg.getErrorId() != MessageEncryption.ErrorType.OK) {
                 switch (msg.getErrorId()) {
@@ -130,13 +133,17 @@ public class ChatAdapter extends ArrayAdapter<Message> {
                 text = msg.getMessage();
             }
             textView.setText(text);
-        } else if (msg.getMimeType().compareTo("media/image") == 0) {
+        } else if (msg.getMimeType().compareTo(context.getResources().getString(R.string.mime_image)) == 0) {
             byte[] bytes = msg.getMessage().getBytes();
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             if (bitmap == null) {
-                //error decoding bitmap, TODO print error
+                //error decoding bitmap
+                textView.setText("Error");
+            } else {
+                textView.setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
+                imageView.setImageBitmap(bitmap);
             }
-            //TODO print image
         }
 
         String time = getDateOfMessage(msg);

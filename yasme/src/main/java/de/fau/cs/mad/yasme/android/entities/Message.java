@@ -9,8 +9,10 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.util.Date;
 
+import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.encryption.MessageEncryption;
 import de.fau.cs.mad.yasme.android.storage.DatabaseConstants;
+import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 
 //import javax.activation.MimeType;
 
@@ -57,7 +59,8 @@ public class Message implements Serializable {
     private boolean received = false;
 
     @DatabaseField(columnName = DatabaseConstants.MIMETYPE)
-    private String mimeType = "text/plain";
+    private String mimeType
+            = DatabaseManager.INSTANCE.getContext().getResources().getString(R.string.mime_image);
 
     private MessageKey messageKey;
 
