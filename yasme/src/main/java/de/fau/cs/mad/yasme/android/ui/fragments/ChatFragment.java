@@ -154,15 +154,15 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                     return false;
                 }
                 if (motionEvent.getX() > editMessage.getWidth() - editMessage.getPaddingRight() - ownEdit.getIntrinsicWidth()) {
-                    //button pressed - TODO load image
-                    //Intent i = new Intent(Intent.ACTION_PICK,
-                    //        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    //startActivityForResult(i, RESULT_LOAD_IMAGE);
+                    //button pressed
+                    Intent i = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(i, RESULT_LOAD_IMAGE);
 
-                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-                    imageCancel.setVisibility(View.VISIBLE);
-                    imageView.setVisibility(View.VISIBLE);
-                    imageView.setImageBitmap(bitmap);
+                    //bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+                    //imageCancel.setVisibility(View.VISIBLE);
+                    //imageView.setVisibility(View.VISIBLE);
+                    //imageView.setImageBitmap(bitmap);
                     editMessage.setVisibility(View.GONE);
                 }
                 return false;
@@ -267,6 +267,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             cursor.close();
 
             bitmap = BitmapFactory.decodeFile(picturePath);
+            imageCancel.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.VISIBLE);
             imageView.setImageBitmap(bitmap);
         }
     }
