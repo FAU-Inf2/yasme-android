@@ -20,7 +20,7 @@ public class EditTextWithImage {
         et = new EditText(context);
         iv = new ImageView(context);
         iv.setVisibility(View.GONE);
-        button = context.getResources().getDrawable(android.R.drawable.ic_menu_camera);
+        button = context.getResources().getDrawable(R.drawable.ic_action_camera);
         button.setBounds(0, 0, button.getIntrinsicWidth(), button.getIntrinsicHeight());
         et.setCompoundDrawables(null, null, button, null);
 
