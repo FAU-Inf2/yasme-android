@@ -1,15 +1,23 @@
 package de.fau.cs.mad.yasme.android.ui.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -47,11 +55,14 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     private ChatAdapter mAdapter;
     private Chat chat;
     private AtomicLong latestMessageOnDisplay;
+    private Context mContext;
 
     //UI references
+    private ImageView imageView;
     private EditText editMessage;
     private ListView list;
 
+    final int RESULT_LOAD_IMAGE = 1;
 
     public ChatFragment() {
     }
@@ -64,6 +75,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         // setRetainInstance(true);
 
         ChatActivity activity = (ChatActivity) getActivity();
+        mContext = DatabaseManager.INSTANCE.getContext();
 
         Intent intent = activity.getIntent();
         long chatId = intent.getLongExtra(AbstractYasmeActivity.CHAT_ID, -1);
@@ -115,8 +127,30 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout layoutTextView = (LinearLayout) rootView.findViewById(R.id.text_view_layout);
-        EditTextWithImage ownEdit = new EditTextWithImage(DatabaseManager.INSTANCE.getContext());
+        final EditTextWithImage ownEdit = new EditTextWithImage(DatabaseManager.INSTANCE.getContext());
         editMessage = ownEdit.getEditText();
+        editMessage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (editMessage.getCompoundDrawables()[2] == null) {
+                    return false;
+                }
+                if (motionEvent.getAction() != MotionEvent.ACTION_UP) {
+                    return false;
+                }
+                if (motionEvent.getX() > editMessage.getWidth() - editMessage.getPaddingRight() - ownEdit.getIntrinsicWidth()) {
+                    //button pressed - TODO load image
+                    Intent i = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(i, RESULT_LOAD_IMAGE);
+
+                    //imageView.setVisibility(View.VISIBLE);
+                    //imageView.setImageResource(R.drawable.ic_action_search);
+                    editMessage.setCompoundDrawables(null, null, null, null);
+                }
+                return false;
+            }
+        });
         layoutTextView.addView(editMessage, 0, params);
 
         Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
@@ -196,6 +230,29 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     public Chat getChat() {
         return chat;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = mContext.getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            BitmapDrawable bitmapDrawable =
+                    new BitmapDrawable(getResources(), BitmapFactory.decodeFile(picturePath));
+            editMessage.setBackground(bitmapDrawable);
+
+            //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+        }
     }
 
     public void send(View view) {
