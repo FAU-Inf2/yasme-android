@@ -91,6 +91,6 @@
     <string name="device_registration_failed">Unfortunately, your device could not be registered. Please retry to login later.</string>
 
     <!-- Other -->
-    <string name="mime_image">image/media</string>
+    <string name="mime_image">media/image</string>
     <string name="mime_text">text/plain</string>
 </resources>

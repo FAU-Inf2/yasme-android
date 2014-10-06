@@ -88,6 +88,6 @@
     <string name="device_registration_failed">Leider konnte das Gerät nicht registriert werden. Bitte versuche es später nochmal.</string>
 
     <!-- Other -->
-    <string name="mime_image">image/media</string>
+    <string name="mime_image">media/image</string>
     <string name="mime_text">text/plain</string>
 </resources>
