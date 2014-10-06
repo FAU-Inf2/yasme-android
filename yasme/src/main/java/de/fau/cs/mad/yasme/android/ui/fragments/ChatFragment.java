@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -58,11 +57,13 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     private Context mContext;
 
     //UI references
+    private Button imageCancel;
     private ImageView imageView;
     private EditText editMessage;
     private ListView list;
 
     final int RESULT_LOAD_IMAGE = 1;
+    Bitmap bitmap;
 
     public ChatFragment() {
     }
@@ -122,6 +123,17 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             }
         }
         list = (ListView) rootView.findViewById(R.id.chat_messageList);
+        imageCancel = (Button) rootView.findViewById(R.id.button_cancel_image);
+        imageCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageView.setImageResource(android.R.color.transparent);
+                imageCancel.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
+                editMessage.setVisibility(View.VISIBLE);
+                editMessage.requestFocus();
+            }
+        });
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -129,6 +141,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         LinearLayout layoutTextView = (LinearLayout) rootView.findViewById(R.id.text_view_layout);
         final EditTextWithImage ownEdit = new EditTextWithImage(DatabaseManager.INSTANCE.getContext());
         editMessage = ownEdit.getEditText();
+        imageView = ownEdit.getImageView();
+        imageView.setVisibility(View.GONE);
+
         editMessage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -140,17 +155,20 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 }
                 if (motionEvent.getX() > editMessage.getWidth() - editMessage.getPaddingRight() - ownEdit.getIntrinsicWidth()) {
                     //button pressed - TODO load image
-                    Intent i = new Intent(Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(i, RESULT_LOAD_IMAGE);
+                    //Intent i = new Intent(Intent.ACTION_PICK,
+                    //        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    //startActivityForResult(i, RESULT_LOAD_IMAGE);
 
-                    //imageView.setVisibility(View.VISIBLE);
-                    //imageView.setImageResource(R.drawable.ic_action_search);
-                    editMessage.setCompoundDrawables(null, null, null, null);
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+                    imageCancel.setVisibility(View.VISIBLE);
+                    imageView.setVisibility(View.VISIBLE);
+                    imageView.setImageBitmap(bitmap);
+                    editMessage.setVisibility(View.GONE);
                 }
                 return false;
             }
         });
+        layoutTextView.addView(imageView, 0, params);
         layoutTextView.addView(editMessage, 0, params);
 
         Button buttonSend = (Button) rootView.findViewById(R.id.button_send);
@@ -247,16 +265,14 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-            BitmapDrawable bitmapDrawable =
-                    new BitmapDrawable(getResources(), BitmapFactory.decodeFile(picturePath));
-            editMessage.setBackground(bitmapDrawable);
 
-            //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            bitmap = BitmapFactory.decodeFile(picturePath);
+            imageView.setImageBitmap(bitmap);
         }
     }
 
     public void send(View view) {
-        if (true) {
+        if (editMessage.getVisibility() != View.GONE) {
             //case message
             String msgText = editMessage.getText().toString();
             if (msgText.isEmpty()) {
@@ -278,9 +294,13 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             // Empty the input field after send button was pressed
             editMessage.setText("");
         } else {
-            // case picture TODO
-            Bitmap bitmap = null;
+            // case picture
             AbstractYasmeActivity activity = (AbstractYasmeActivity) getActivity();
+            imageView.setImageResource(android.R.color.transparent);
+            imageView.setVisibility(View.GONE);
+            imageCancel.setVisibility(View.GONE);
+            editMessage.setVisibility(View.VISIBLE);
+            editMessage.requestFocus();
 
             byte[] pictureToSend = PictureManager.INSTANCE.scaledBitmapToByteArray(bitmap, 500);
             String imageMessage = new String(pictureToSend);
