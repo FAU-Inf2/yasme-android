@@ -22,6 +22,7 @@
     <string name="usr_name_hint">Username</string>
     <string name="empty_chat_list">To start a new chat, tap here or on the contact symbol
         ([img src=ic_action_cc_bcc_light/]) in the action bar</string>
+    <string name="media_found">media file</string>
 
     <!-- Chat -->
     <string name="title_activity_chat">Yasme</string>

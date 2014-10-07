@@ -22,6 +22,7 @@
     <string name="usr_name_hint">Benutzername</string>
     <string name="empty_chat_list">Um einen Chat zu starten, drücke hier oder auf das Kontakte-Symbol
         ([img src=ic_action_cc_bcc_light/]) in der ActionBar</string>
+    <string name="media_found">Mediendatei</string>
 
     <!-- Chat -->
     <string name="title_activity_chat">Yasme</string>
