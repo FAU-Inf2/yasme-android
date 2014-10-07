@@ -96,7 +96,7 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         Message lastMessage = DatabaseManager.INSTANCE.getMessageDAO().
                 getNewestMessageOfChat(chat.getId());
         if (lastMessage != null && !lastMessage.getMessage().isEmpty()) {
-            if (lastMessage.getMimeType().compareTo(context.getResources().getString(R.string.mime_image)) != 0) {
+            if (lastMessage.getMimeType().compareTo(context.getResources().getString(R.string.mime_image)) == 0) {
                 holder.lastMessageView.setText(lastMessage.getSender().getName()
                         + ": " + context.getResources().getString(R.string.media_found));
             } else {
