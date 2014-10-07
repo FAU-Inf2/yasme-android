@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
@@ -133,25 +132,19 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             } else {
                 text = msg.getMessage();
             }
+            imageView.setVisibility(View.GONE);
             textView.setText(text);
         } else if (msg.getMimeType().compareTo(context.getResources().getString(R.string.mime_image)) == 0) {
-            byte[] bytes = msg.getMessage().getBytes();
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            //byte[] bytes = msg.getMessage().getBytes();
+            //Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Bitmap bitmap = PictureManager.INSTANCE.stringToBitMap(msg.getMessage());
             if (bitmap == null) {
                 //error decoding bitmap
                 bitmap = BitmapFactory.decodeResource(context.getResources(), android.R.drawable.ic_delete);
-                //textView.setVisibility(View.GONE);
-                //imageView.setVisibility(View.VISIBLE);
-                textView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
-                //imageView.setImageBitmap(bitmap);
-
                 //textView.setText("Error");
-            } else {
-                //textView.setVisibility(View.GONE);
-                //imageView.setVisibility(View.VISIBLE);
-                //imageView.setImageBitmap(bitmap);
-                textView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
             }
+            imageView.setImageBitmap(bitmap);
+            textView.setVisibility(View.GONE);
         }
 
         String time = getDateOfMessage(msg);

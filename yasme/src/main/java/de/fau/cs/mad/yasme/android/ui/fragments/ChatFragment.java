@@ -153,7 +153,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 if (motionEvent.getAction() != MotionEvent.ACTION_UP) {
                     return false;
                 }
-                if (motionEvent.getX() > editMessage.getWidth() - editMessage.getPaddingRight() - ownEdit.getIntrinsicWidth()) {
+                if (motionEvent.getX() > editMessage.getWidth() - editMessage.getPaddingRight()
+                        - ownEdit.getIntrinsicWidth()) {
                     //button pressed
                     if (true) {
                         Intent i = new Intent(Intent.ACTION_PICK,
@@ -309,8 +310,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             editMessage.setVisibility(View.VISIBLE);
             editMessage.requestFocus();
 
-            byte[] pictureToSend = PictureManager.INSTANCE.scaledBitmapToByteArray(bitmap, 500);
-            String imageMessage = new String(pictureToSend);
+            String imageMessage = PictureManager.INSTANCE.bitMapToString(bitmap);
             new SendMessageTask(chat, activity.getSelfUser(), new GetMessageTask(this.getClass()),
                     SendMessageTask.Mime.IMAGE).execute(imageMessage);
         }

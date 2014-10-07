@@ -53,7 +53,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/ic_delete"
+            android:background="@android:drawable/presence_offline"
             android:id="@+id/button_cancel_image"
             android:gravity="center_horizontal|right"
             android:layout_gravity="right"
