@@ -197,6 +197,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                             dialogInterface.cancel();
                         }
                     });
+                    alert.show();
                 }
                 return false;
             }

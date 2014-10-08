@@ -1,8 +1,10 @@
 package de.fau.cs.mad.yasme.android.ui.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -43,6 +45,7 @@ import de.fau.cs.mad.yasme.android.ui.ChatAdapter;
 /**
  * Created by Stefan Ettl <stefan.ettl@fau.de>
  * Modified by Tim Nisslbeck <hu78sapy@stud.cs.fau.de>
+ * Modified by Robert Meissner <robert.meissner@studium.fau.de>
  */
 
 
@@ -52,10 +55,12 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     private ImageView profilePictureView;
     private TextView initial;
     private OnOwnProfileFragmentInteractionListener mListener;
-    User self;
-    AbstractYasmeActivity activity;
+    private User self;
+    private AbstractYasmeActivity activity;
 
-    private static int RESULT_LOAD_IMAGE = 1;
+    private final static int RESULT_LOAD_IMAGE = 10;
+    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 20;
+    private Uri fileUri;
 
     public OwnProfileFragment() {
         // Required empty public constructor
@@ -103,7 +108,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 Sanitizer sanitizer = new Sanitizer();
                 String oldName = name.getText().toString();
                 String newName = sanitizer.sanitize(oldName);
-                if(!oldName.equals(newName)) {
+                if (!oldName.equals(newName)) {
                     Toast.makeText(getActivity(), getString(R.string.illegal_characters) + ": " + sanitizer.getRegex(), Toast.LENGTH_LONG).show();
                     name.setText(newName);
                 }
@@ -164,9 +169,42 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.own_profile_picture:
-                Intent i = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+                alert.setTitle(getString(R.string.select_image_source_title));
+                alert.setMessage(getString(R.string.select_image_source_message));
+                alert.setNeutralButton(R.string.select_camera, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // create Intent to take a picture and return control to the calling application
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                        // create a file uri to save the image
+                        fileUri = PictureManager.INSTANCE.getOutputMediaFileUri(activity);
+                        if (fileUri == null) {
+                            Log.e(this.getClass().getSimpleName(), "Failed to store picture");
+                            return;
+                        }
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
+
+                        // start the image capture Intent
+                        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                    }
+                });
+                alert.setNeutralButton(R.string.select_gallery, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(intent, RESULT_LOAD_IMAGE);
+                    }
+                });
+                alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                alert.show();
                 break;
         }
     }
@@ -174,7 +212,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_LOAD_IMAGE && null != data) {
+        String picturePath = "";
+        if (requestCode == RESULT_LOAD_IMAGE && null != data && resultCode == activity.RESULT_OK) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -183,37 +222,46 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             cursor.moveToFirst();
 
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
+            picturePath = cursor.getString(columnIndex);
             cursor.close();
-
-            //store own image on device
-            // First decode with inJustDecodeBounds=true to check dimensions
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(picturePath, options);
-
-            // Calculate inSampleSize
-            options.inSampleSize = PictureManager.INSTANCE.calculateInSampleSize(options, 500, 500);
-
-            // Decode bitmap with inSampleSize set
-            options.inJustDecodeBounds = false;
-            Bitmap newProfilePicture = BitmapFactory.decodeFile(picturePath, options);
-
-            String path = "";
-            try {
-                path = PictureManager.INSTANCE.storePicture(self, newProfilePicture);
-            } catch (IOException e) {
-                Log.e(this.getClass().getSimpleName(), e.getMessage());
-                return;
-            }
-            activity.setOwnProfilePicture(path);
-
-            // set picture
-            notifyFragment(new BitmapDrawable(getResources(), newProfilePicture));
-
-            // Upload picture as AsyncTask
-            new UploadProfilePictureTask(newProfilePicture).execute();
         }
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data && resultCode == activity.RESULT_OK) {
+            // Image captured and saved to fileUri specified in the Intent
+            Uri uri = data.getData();
+            picturePath = uri.getPath();
+        }
+        if (picturePath == null || picturePath.isEmpty()) {
+            return;
+        }
+
+        //store own image on device
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(picturePath, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = PictureManager.INSTANCE.calculateInSampleSize(options, 500, 500);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        Bitmap newProfilePicture = BitmapFactory.decodeFile(picturePath, options);
+
+        String path = "";
+        try {
+            path = PictureManager.INSTANCE.storePicture(self, newProfilePicture);
+        } catch (IOException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
+            return;
+        }
+        activity.setOwnProfilePicture(path);
+
+        // set picture
+        notifyFragment(new BitmapDrawable(getResources(), newProfilePicture));
+
+        // Upload picture as AsyncTask
+        new UploadProfilePictureTask(newProfilePicture).execute();
+
     }
 
     @Override
