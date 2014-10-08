@@ -1,10 +1,12 @@
 package de.fau.cs.mad.yasme.android.ui.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -161,43 +163,9 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 }
                 if (motionEvent.getX() > editMessage.getWidth() - editMessage.getPaddingRight()
                         - ownEdit.getIntrinsicWidth()) {
+                    Log.d(this.getClass().getSimpleName(), "picture-button pressed");
                     //button pressed
-                    AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                    alert.setTitle(getString(R.string.select_image_source_title));
-                    alert.setMessage(getString(R.string.select_image_source_message));
-                    alert.setNeutralButton(R.string.select_camera, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            // create Intent to take a picture and return control to the calling application
-                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                            // create a file uri to save the image
-                            fileUri = PictureManager.INSTANCE.getOutputMediaFileUri(mContext);
-                            if (fileUri == null) {
-                                Log.e(this.getClass().getSimpleName(), "Failed to store picture");
-                                return;
-                            }
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
-
-                            // start the image capture Intent
-                            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-                        }
-                    });
-                    alert.setNeutralButton(R.string.select_gallery, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent(Intent.ACTION_PICK,
-                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(intent, RESULT_LOAD_IMAGE);
-                        }
-                    });
-                    alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.cancel();
-                        }
-                    });
-                    alert.show();
+                    showSelectionDialog();
                 }
                 return false;
             }
@@ -262,6 +230,47 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         savedInstanceState.putLong(RESTORE_CHAT_ID, chat.getId());
     }
 
+    private void showSelectionDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle(getString(R.string.select_image_source_title));
+        alert.setMessage(getString(R.string.select_image_source_message));
+        if (mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            alert.setNeutralButton(R.string.select_camera, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // create Intent to take a picture and return control to the calling application
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    // create a file uri to save the image
+                    fileUri = PictureManager.INSTANCE.getOutputMediaFileUri(mContext);
+                    if (fileUri == null) {
+                        Log.e(this.getClass().getSimpleName(), "Failed to create picture URI");
+                        return;
+                    }
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
+
+                    // start the image capture Intent
+                    startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                }
+            });
+        }
+        alert.setPositiveButton(R.string.select_gallery, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, RESULT_LOAD_IMAGE);
+            }
+        });
+        alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        Log.d(this.getClass().getSimpleName(), "show selection dialog");
+        alert.show();
+    }
 
     @Override
     public void notifyFragment(List<Message> messages) {
@@ -309,7 +318,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             }
         }
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data) {
-            if (resultCode == getActivity().RESULT_OK) {
+            getActivity();
+            if (resultCode == Activity.RESULT_OK) {
                 // Image captured and saved to fileUri specified in the Intent
                 Uri uri = data.getData();
                 User user = new User();
@@ -321,7 +331,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                     imageView.setVisibility(View.VISIBLE);
                     imageView.setImageBitmap(bitmap);
                 }
-            } else if (resultCode == getActivity().RESULT_CANCELED) {
+            } else if (resultCode == Activity.RESULT_CANCELED) {
                 // User cancelled the image capture
             } else {
                 // Image capture failed, advise user

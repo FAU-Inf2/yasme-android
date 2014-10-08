@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -172,25 +173,27 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 AlertDialog.Builder alert = new AlertDialog.Builder(activity);
                 alert.setTitle(getString(R.string.select_image_source_title));
                 alert.setMessage(getString(R.string.select_image_source_message));
-                alert.setNeutralButton(R.string.select_camera, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // create Intent to take a picture and return control to the calling application
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                    alert.setNeutralButton(R.string.select_camera, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // create Intent to take a picture and return control to the calling application
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                        // create a file uri to save the image
-                        fileUri = PictureManager.INSTANCE.getOutputMediaFileUri(activity);
-                        if (fileUri == null) {
-                            Log.e(this.getClass().getSimpleName(), "Failed to store picture");
-                            return;
+                            // create a file uri to save the image
+                            fileUri = PictureManager.INSTANCE.getOutputMediaFileUri(activity);
+                            if (fileUri == null) {
+                                Log.e(this.getClass().getSimpleName(), "Failed to store picture");
+                                return;
+                            }
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
+
+                            // start the image capture Intent
+                            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
                         }
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
-
-                        // start the image capture Intent
-                        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-                    }
-                });
-                alert.setNeutralButton(R.string.select_gallery, new DialogInterface.OnClickListener() {
+                    });
+                }
+                alert.setPositiveButton(R.string.select_gallery, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent = new Intent(Intent.ACTION_PICK,
@@ -213,7 +216,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         String picturePath = "";
-        if (requestCode == RESULT_LOAD_IMAGE && null != data && resultCode == activity.RESULT_OK) {
+        if (requestCode == RESULT_LOAD_IMAGE && null != data && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -225,7 +228,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             picturePath = cursor.getString(columnIndex);
             cursor.close();
         }
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data && resultCode == activity.RESULT_OK) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data && resultCode == Activity.RESULT_OK) {
             // Image captured and saved to fileUri specified in the Intent
             Uri uri = data.getData();
             picturePath = uri.getPath();

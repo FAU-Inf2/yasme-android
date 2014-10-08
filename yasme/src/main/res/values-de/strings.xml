@@ -40,7 +40,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="illegal_characters">Nur bestimmte Zeichen erlaubt</string>
     <string name="select_image_source_title">Quelle auswählen</string>
-    <string name="select_image_source_message">Mach ein Foto oder wähle eins aus der Galerie aus</string>
+    <string name="select_image_source_message">Mach ein Foto (wenn dein Handy eine Kamera hat) oder wähle eins aus der Galerie aus</string>
     <string name="select_camera">Kamera</string>
     <string name="select_gallery">Galerie</string>
 
