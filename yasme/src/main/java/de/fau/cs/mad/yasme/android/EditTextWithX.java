@@ -17,7 +17,7 @@ public class EditTextWithX {
 
     public EditTextWithX(Context context) {
         et = new EditText(context);
-        x = context.getResources().getDrawable(android.R.drawable.presence_offline);
+        x = context.getResources().getDrawable(R.drawable.ic_action_cancel);
         x.setBounds(0, 0, x.getIntrinsicWidth(), x.getIntrinsicHeight());
         et.setCompoundDrawables(null, null, et.getText().toString().equals("") ? null : x, null);
         et.setOnTouchListener(new View.OnTouchListener() {
