@@ -1,7 +1,9 @@
 package de.fau.cs.mad.yasme.android.ui.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -38,6 +40,7 @@ import de.fau.cs.mad.yasme.android.controller.Toaster;
 import de.fau.cs.mad.yasme.android.encryption.MessageEncryption;
 import de.fau.cs.mad.yasme.android.entities.Chat;
 import de.fau.cs.mad.yasme.android.entities.Message;
+import de.fau.cs.mad.yasme.android.entities.User;
 import de.fau.cs.mad.yasme.android.storage.DatabaseManager;
 import de.fau.cs.mad.yasme.android.storage.PictureManager;
 import de.fau.cs.mad.yasme.android.ui.AbstractYasmeActivity;
@@ -62,7 +65,10 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     private EditText editMessage;
     private ListView list;
 
-    final int RESULT_LOAD_IMAGE = 1;
+    private static final int RESULT_LOAD_IMAGE = 100;
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 200;
+    private Uri fileUri;
+
     Bitmap bitmap;
 
     public ChatFragment() {
@@ -156,17 +162,41 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 if (motionEvent.getX() > editMessage.getWidth() - editMessage.getPaddingRight()
                         - ownEdit.getIntrinsicWidth()) {
                     //button pressed
-                    if (true) {
-                        Intent i = new Intent(Intent.ACTION_PICK,
-                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(i, RESULT_LOAD_IMAGE);
-                    } else {
-                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-                        imageCancel.setVisibility(View.VISIBLE);
-                        imageView.setVisibility(View.VISIBLE);
-                        imageView.setImageBitmap(bitmap);
-                        editMessage.setVisibility(View.GONE);
-                    }
+                    AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                    alert.setTitle(getString(R.string.select_image_source_title));
+                    alert.setMessage(getString(R.string.select_image_source_message));
+                    alert.setNeutralButton(R.string.select_camera, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // create Intent to take a picture and return control to the calling application
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                            // create a file uri to save the image
+                            fileUri = PictureManager.INSTANCE.getOutputMediaFileUri(mContext);
+                            if (fileUri == null) {
+                                Log.e(this.getClass().getSimpleName(), "Failed to store picture");
+                                return;
+                            }
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
+
+                            // start the image capture Intent
+                            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                        }
+                    });
+                    alert.setNeutralButton(R.string.select_gallery, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Intent.ACTION_PICK,
+                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(intent, RESULT_LOAD_IMAGE);
+                        }
+                    });
+                    alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
                 }
                 return false;
             }
@@ -257,7 +287,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RESULT_LOAD_IMAGE && null != data) {
+        if (requestCode == RESULT_LOAD_IMAGE && null != data && resultCode == getActivity().RESULT_OK) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -276,6 +306,26 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 imageView.setVisibility(View.VISIBLE);
                 imageView.setImageBitmap(bitmap);
             }
+        }
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data) {
+            if (resultCode == getActivity().RESULT_OK) {
+                // Image captured and saved to fileUri specified in the Intent
+                Uri uri = data.getData();
+                User user = new User();
+                user.setProfilePicture(uri.getPath());
+                Bitmap bitmap = PictureManager.INSTANCE.getPicture(user, 150, 150);
+                if (bitmap != null) {
+                    editMessage.setVisibility(View.GONE);
+                    imageCancel.setVisibility(View.VISIBLE);
+                    imageView.setVisibility(View.VISIBLE);
+                    imageView.setImageBitmap(bitmap);
+                }
+            } else if (resultCode == getActivity().RESULT_CANCELED) {
+                // User cancelled the image capture
+            } else {
+                // Image capture failed, advise user
+            }
+
         }
     }
 

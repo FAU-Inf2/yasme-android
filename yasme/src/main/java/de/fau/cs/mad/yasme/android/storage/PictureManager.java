@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Base64;
 
 import java.io.BufferedOutputStream;
@@ -55,7 +56,7 @@ public enum PictureManager {
         // TODO Remove old picture
         // I think it will be replaced automatically
 
-        // Create directory userProfiles
+        // Create directory userPictures
         ContextWrapper cw = new ContextWrapper(mContext);
         File directory = cw.getDir("userPictures", Context.MODE_PRIVATE);
 
@@ -174,5 +175,23 @@ public enum PictureManager {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return null;
         }
+    }
+
+    /**
+     * Create a file Uri for saving an image or video
+     */
+    public static Uri getOutputMediaFileUri(Context mContext) {
+        // Create directory userPictures
+        ContextWrapper cw = new ContextWrapper(mContext);
+        File directory = cw.getDir("capturedPictures", Context.MODE_PRIVATE);
+
+        // Generate file name
+        String filename = "pictureCaptured.jpg";
+
+        // Concatenate directory and filename to path
+        File file = new File(directory, filename);
+
+        // Create a media file name
+        return Uri.fromFile(file);
     }
 }
