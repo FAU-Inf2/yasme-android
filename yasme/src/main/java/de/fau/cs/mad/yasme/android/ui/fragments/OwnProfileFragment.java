@@ -64,6 +64,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 20;
     private final static int PIC_CROP = 30;
     private Uri fileUri;
+    private Uri cropUri;
 
     public OwnProfileFragment() {
         // Required empty public constructor
@@ -228,9 +229,22 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         }
         if (requestCode == PIC_CROP && null != data && resultCode == Activity.RESULT_OK) {
             //get the returned data
-            Bundle extras = data.getExtras();
+            //Bundle extras = data.getExtras();
             //get the cropped bitmap
-            Bitmap newProfilePicture = extras.getParcelable("data");
+            //Bitmap newProfilePicture = extras.getParcelable("data");
+
+            String picturePath = cropUri.getPath();
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(picturePath, options);
+
+            // Calculate inSampleSize
+            options.inSampleSize = PictureManager.INSTANCE.calculateInSampleSize(options, 512, 512);
+
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;
+            Bitmap newProfilePicture = BitmapFactory.decodeFile(picturePath, options);
 
             storeBitmap(newProfilePicture);
         }
@@ -252,6 +266,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             cropIntent.putExtra("outputY", 512);
             //retrieve data on return
             cropIntent.putExtra("data", true);
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri);
             //start the activity - we handle returning in onActivityResult
             startActivityForResult(cropIntent, PIC_CROP);
         } catch (ActivityNotFoundException anfe) {
@@ -271,7 +286,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             options.inJustDecodeBounds = false;
             Bitmap newProfilePicture = BitmapFactory.decodeFile(picturePath, options);
 
-            int size = 10;
+            int size;
             if (newProfilePicture.getHeight() <= newProfilePicture.getWidth()) {
                 size = newProfilePicture.getHeight();
             } else {
