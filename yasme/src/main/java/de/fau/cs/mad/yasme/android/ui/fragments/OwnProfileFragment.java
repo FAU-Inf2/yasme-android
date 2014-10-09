@@ -3,16 +3,17 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -61,6 +62,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
     private final static int RESULT_LOAD_IMAGE = 10;
     private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 20;
+    private final static int PIC_CROP = 30;
     private Uri fileUri;
 
     public OwnProfileFragment() {
@@ -215,44 +217,76 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String picturePath = "";
         if (requestCode == RESULT_LOAD_IMAGE && null != data && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            picturePath = cursor.getString(columnIndex);
-            cursor.close();
+            performCrop(selectedImage);
         }
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data && resultCode == Activity.RESULT_OK) {
             // Image captured and saved to fileUri specified in the Intent
             Uri uri = data.getData();
-            picturePath = uri.getPath();
+            performCrop(uri);
         }
-        if (picturePath == null || picturePath.isEmpty()) {
-            return;
+        if (requestCode == PIC_CROP && null != data && resultCode == Activity.RESULT_OK) {
+            //get the returned data
+            Bundle extras = data.getExtras();
+            //get the cropped bitmap
+            Bitmap newProfilePicture = extras.getParcelable("data");
+
+            storeBitmap(newProfilePicture);
         }
+    }
 
-        //store own image on device
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(picturePath, options);
+    private void performCrop(Uri pictureUri) {
+        try {
+            //call the standard crop action intent (the user device may not support it)
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            //indicate image type and Uri
+            cropIntent.setDataAndType(pictureUri, "image/*");
+            //set crop properties
+            cropIntent.putExtra("crop", "true");
+            //indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            //indicate output X and Y
+            cropIntent.putExtra("outputX", 512);
+            cropIntent.putExtra("outputY", 512);
+            //retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            //start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, PIC_CROP);
+        } catch (ActivityNotFoundException anfe) {
+            //error message
+            Log.d(this.getClass().getSimpleName(), "your device does not support the crop action!");
 
-        // Calculate inSampleSize
-        options.inSampleSize = PictureManager.INSTANCE.calculateInSampleSize(options, 500, 500);
+            String picturePath = pictureUri.getPath();
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(picturePath, options);
 
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        Bitmap newProfilePicture = BitmapFactory.decodeFile(picturePath, options);
+            // Calculate inSampleSize
+            options.inSampleSize = PictureManager.INSTANCE.calculateInSampleSize(options, 512, 512);
 
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;
+            Bitmap newProfilePicture = BitmapFactory.decodeFile(picturePath, options);
+
+            int size = 10;
+            if (newProfilePicture.getHeight() <= newProfilePicture.getWidth()) {
+                size = newProfilePicture.getHeight();
+            } else {
+                size = newProfilePicture.getWidth();
+            }
+            Bitmap squareBitmap = ThumbnailUtils.extractThumbnail(newProfilePicture, size, size);
+
+            storeBitmap(squareBitmap);
+        }
+    }
+
+    private void storeBitmap(Bitmap bitmap) {
         String path = "";
         try {
-            path = PictureManager.INSTANCE.storePicture(self, newProfilePicture);
+            path = PictureManager.INSTANCE.storePicture(self, bitmap);
         } catch (IOException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());
             return;
@@ -260,11 +294,10 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         activity.setOwnProfilePicture(path);
 
         // set picture
-        notifyFragment(new BitmapDrawable(getResources(), newProfilePicture));
+        notifyFragment(new BitmapDrawable(getResources(), bitmap));
 
         // Upload picture as AsyncTask
-        new UploadProfilePictureTask(newProfilePicture).execute();
-
+        new UploadProfilePictureTask(bitmap).execute();
     }
 
     @Override
