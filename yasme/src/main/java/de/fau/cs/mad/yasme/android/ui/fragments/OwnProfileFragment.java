@@ -251,7 +251,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             cropIntent.putExtra("outputX", 512);
             cropIntent.putExtra("outputY", 512);
             //retrieve data on return
-            cropIntent.putExtra("return-data", true);
+            cropIntent.putExtra("data", true);
             //start the activity - we handle returning in onActivityResult
             startActivityForResult(cropIntent, PIC_CROP);
         } catch (ActivityNotFoundException anfe) {
