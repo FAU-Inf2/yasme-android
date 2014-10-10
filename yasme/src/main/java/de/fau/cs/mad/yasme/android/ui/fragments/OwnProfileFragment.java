@@ -228,19 +228,15 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             performCrop(uri);
         }
         if (requestCode == PIC_CROP && null != data && resultCode == Activity.RESULT_OK) {
-            //get the returned data
-            //Bundle extras = data.getExtras();
-            //get the cropped bitmap
-            //Bitmap newProfilePicture = extras.getParcelable("data");
-
             String picturePath = cropUri.getPath();
+
             // First decode with inJustDecodeBounds=true to check dimensions
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeFile(picturePath, options);
 
             // Calculate inSampleSize
-            options.inSampleSize = PictureManager.INSTANCE.calculateInSampleSize(options, 512, 512);
+            options.inSampleSize = PictureManager.INSTANCE.calculateInSampleSize(options, 256, 256);
 
             // Decode bitmap with inSampleSize set
             options.inJustDecodeBounds = false;
