@@ -156,7 +156,7 @@ public enum PictureManager {
     public String bitMapToString(Bitmap bitmap) {
         Bitmap btmp = scaleBitmap(bitmap, 500);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        btmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] b = baos.toByteArray();
         String temp = Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
