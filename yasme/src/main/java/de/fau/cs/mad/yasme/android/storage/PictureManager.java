@@ -154,7 +154,7 @@ public enum PictureManager {
      * @return converting bitmap and return a string
      */
     public String bitMapToString(Bitmap bitmap) {
-        Bitmap btmp = scaleBitmap(bitmap, 500);
+        Bitmap btmp = scaleBitmap(bitmap, 512);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         btmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] b = baos.toByteArray();
