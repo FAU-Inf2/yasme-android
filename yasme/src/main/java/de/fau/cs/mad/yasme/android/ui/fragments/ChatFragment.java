@@ -297,7 +297,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RESULT_LOAD_IMAGE && null != data && resultCode == getActivity().RESULT_OK) {
+        if (requestCode == RESULT_LOAD_IMAGE && null != data && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -321,9 +321,11 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             getActivity();
             if (resultCode == Activity.RESULT_OK) {
                 // Image captured and saved to fileUri specified in the Intent
-                Uri uri = data.getData();
+                if (fileUri == null) {
+                    return;
+                }
                 User user = new User();
-                user.setProfilePicture(uri.getPath());
+                user.setProfilePicture(fileUri.getPath());
                 Bitmap bitmap = PictureManager.INSTANCE.getPicture(user, 150, 150);
                 if (bitmap != null) {
                     editMessage.setVisibility(View.GONE);

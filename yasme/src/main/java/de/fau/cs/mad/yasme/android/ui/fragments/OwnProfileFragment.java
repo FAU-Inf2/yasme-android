@@ -224,8 +224,9 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         }
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data && resultCode == Activity.RESULT_OK) {
             // Image captured and saved to fileUri specified in the Intent
-            Uri uri = data.getData();
-            performCrop(uri);
+            if (fileUri != null) {
+                performCrop(fileUri);
+            }
         }
         if (requestCode == PIC_CROP && null != data && resultCode == Activity.RESULT_OK) {
             String picturePath = cropUri.getPath();
