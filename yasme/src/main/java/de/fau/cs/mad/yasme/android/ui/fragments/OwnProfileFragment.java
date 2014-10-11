@@ -1,13 +1,10 @@
 package de.fau.cs.mad.yasme.android.ui.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -173,6 +170,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.own_profile_picture:
+/*
                 AlertDialog.Builder alert = new AlertDialog.Builder(activity);
                 alert.setTitle(getString(R.string.select_image_source_title));
                 alert.setMessage(getString(R.string.select_image_source_message));
@@ -184,7 +182,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                             // create a file uri to save the image
-                            fileUri = PictureManager.INSTANCE.getOutputMediaFileUri(activity);
+                            fileUri = PictureManager.INSTANCE.getOutputMediaFileUri(
+                                    DatabaseManager.INSTANCE.getContext(), "capturedPicture.jpg");
                             if (fileUri == null) {
                                 Log.e(this.getClass().getSimpleName(), "Failed to store picture");
                                 return;
@@ -199,9 +198,11 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 alert.setPositiveButton(R.string.select_gallery, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+*/
                         Intent intent = new Intent(Intent.ACTION_PICK,
                                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         startActivityForResult(intent, RESULT_LOAD_IMAGE);
+/*
                     }
                 });
                 alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -211,6 +212,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                     }
                 });
                 alert.show();
+*/
                 break;
         }
     }
@@ -222,7 +224,9 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             Uri selectedImage = data.getData();
             performCrop(selectedImage);
         }
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data && resultCode == Activity.RESULT_OK) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE/* && null != data */ && resultCode == Activity.RESULT_OK) {
+            Log.d(this.getClass().getSimpleName(), "retrievedResult from camera");
+
             // Image captured and saved to fileUri specified in the Intent
             if (fileUri != null) {
                 performCrop(fileUri);
@@ -230,6 +234,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         }
         if (requestCode == PIC_CROP && null != data && resultCode == Activity.RESULT_OK) {
             String picturePath = cropUri.getPath();
+            Log.d(this.getClass().getSimpleName(), "retrievedResult from crop");
 
             // First decode with inJustDecodeBounds=true to check dimensions
             final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -248,6 +253,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     }
 
     private void performCrop(Uri pictureUri) {
+        Log.d(this.getClass().getSimpleName(), "perform crop");
         try {
             //call the standard crop action intent (the user device may not support it)
             Intent cropIntent = new Intent("com.android.camera.action.CROP");
@@ -263,10 +269,13 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             cropIntent.putExtra("outputY", 512);
             //retrieve data on return
             cropIntent.putExtra("data", true);
+            cropUri = PictureManager.INSTANCE.getOutputMediaFileUri(activity, "croppedPicture.jpg");
             cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri);
             //start the activity - we handle returning in onActivityResult
             startActivityForResult(cropIntent, PIC_CROP);
         } catch (ActivityNotFoundException anfe) {
+            Log.d(this.getClass().getSimpleName(), "no crop app found");
+
             //error message
             Log.d(this.getClass().getSimpleName(), "your device does not support the crop action!");
 

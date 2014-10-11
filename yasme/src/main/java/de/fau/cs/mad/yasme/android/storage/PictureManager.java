@@ -180,13 +180,10 @@ public enum PictureManager {
     /**
      * Create a file Uri for saving an image or video
      */
-    public static Uri getOutputMediaFileUri(Context mContext) {
+    public static Uri getOutputMediaFileUri(Context mContext, String filename) {
         // Create directory userPictures
         ContextWrapper cw = new ContextWrapper(mContext);
         File directory = cw.getDir("capturedPictures", Context.MODE_PRIVATE);
-
-        // Generate file name
-        String filename = "pictureCaptured.jpg";
 
         // Concatenate directory and filename to path
         File file = new File(directory, filename);

@@ -1,12 +1,9 @@
 package de.fau.cs.mad.yasme.android.ui.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -231,6 +228,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
     }
 
     private void showSelectionDialog() {
+/*
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(getString(R.string.select_image_source_title));
         alert.setMessage(getString(R.string.select_image_source_message));
@@ -242,7 +240,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                     // create a file uri to save the image
-                    fileUri = PictureManager.INSTANCE.getOutputMediaFileUri(mContext);
+                    fileUri = PictureManager.INSTANCE.getOutputMediaFileUri(mContext, "capturedPicture.jpg");
                     if (fileUri == null) {
                         Log.e(this.getClass().getSimpleName(), "Failed to create picture URI");
                         return;
@@ -257,9 +255,11 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         alert.setPositiveButton(R.string.select_gallery, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+*/
                 Intent intent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, RESULT_LOAD_IMAGE);
+/*
             }
         });
         alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -270,6 +270,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         });
         Log.d(this.getClass().getSimpleName(), "show selection dialog");
         alert.show();
+*/
     }
 
     @Override
