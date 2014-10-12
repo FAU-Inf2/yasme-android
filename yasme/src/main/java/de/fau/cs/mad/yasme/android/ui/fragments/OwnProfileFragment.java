@@ -227,7 +227,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PIC_CROP && null != data && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PIC_CROP && /*null != data && */resultCode == Activity.RESULT_OK) {
             String picturePath = cropUri.getPath();
             Log.d(this.getClass().getSimpleName(), "retrievedResult from crop");
 
