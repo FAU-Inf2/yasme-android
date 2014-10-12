@@ -8,8 +8,8 @@ android {
         applicationId "de.fau.cs.mad.yasme.android"
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 2
-        versionName "0.7.5"
+        versionCode 3
+        versionName "0.8"
     }
 
     compileOptions {

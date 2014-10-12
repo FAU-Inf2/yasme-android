@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.fau.cs.mad.yasme.android"
-    android:versionCode="1"
-    android:versionName="0.7">
+    android:versionCode="3"
+    android:versionName="0.8">
 
-    <uses-sdk
+<uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
 
