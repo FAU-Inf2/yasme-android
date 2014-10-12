@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.util.Base64;
 
 import java.io.BufferedOutputStream;
@@ -180,7 +179,7 @@ public enum PictureManager {
     /**
      * Create a file Uri for saving an image or video
      */
-    public static Uri getOutputMediaFileUri(Context mContext, String filename) {
+    public static String getOutputMediaFilePath(Context mContext, String filename) {
         // Create directory userPictures
         ContextWrapper cw = new ContextWrapper(mContext);
         File directory = cw.getDir("capturedPictures", Context.MODE_PRIVATE);
@@ -189,6 +188,6 @@ public enum PictureManager {
         File file = new File(directory, filename);
 
         // Create a media file name
-        return Uri.fromFile(file);
+        return file.getAbsolutePath();
     }
 }
