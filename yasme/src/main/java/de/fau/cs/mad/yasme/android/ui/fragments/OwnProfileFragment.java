@@ -228,7 +228,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PIC_CROP && /*null != data && */resultCode == Activity.RESULT_OK) {
-            String picturePath = cropUri.getPath();
+            String picturePath = path;
             Log.d(this.getClass().getSimpleName(), "retrievedResult from crop");
 
             // First decode with inJustDecodeBounds=true to check dimensions
@@ -244,7 +244,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             Bitmap newProfilePicture = BitmapFactory.decodeFile(picturePath, options);
 
             storeBitmap(newProfilePicture);
-        } else if (null != data && resultCode == Activity.RESULT_OK) {
+        } else if (/*null != data && */resultCode == Activity.RESULT_OK) {
             performCrop(requestCode);
         }
     }
