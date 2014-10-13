@@ -326,7 +326,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 imageView.setImageBitmap(bitmap);
             }
         }
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data && resultCode == Activity.RESULT_OK) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             String path = imageUri.getPath();
 
             User user = new User();
