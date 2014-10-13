@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -145,7 +145,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         });
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout layoutTextView = (LinearLayout) rootView.findViewById(R.id.text_view_layout);
         final EditTextWithImage ownEdit = new EditTextWithImage(DatabaseManager.INSTANCE.getContext());
@@ -153,6 +153,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         imageView = ownEdit.getImageView();
         imageView.setMaxHeight(256);
         imageView.setMaxWidth(256);
+        imageView.setCropToPadding(true);
         imageView.setVisibility(View.GONE);
 
         editMessage.setOnTouchListener(new View.OnTouchListener() {
@@ -320,12 +321,15 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-            bitmap = BitmapFactory.decodeFile(picturePath);
+            User user = new User();
+            user.setProfilePicture(picturePath);
+            bitmap = PictureManager.INSTANCE.getPicture(user, 256, 256);
+
             if (bitmap != null) {
                 editMessage.setVisibility(View.GONE);
                 imageCancel.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.VISIBLE);
-                imageView.setImageBitmap(bitmap);
+                imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 128, 128));
             }
         }
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
@@ -334,13 +338,12 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             User user = new User();
             user.setProfilePicture(path);
             bitmap = PictureManager.INSTANCE.getPicture(user, 256, 256);
-
         }
         if (bitmap != null) {
             editMessage.setVisibility(View.GONE);
             imageCancel.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.VISIBLE);
-            imageView.setImageBitmap(bitmap);
+            imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 128, 128));
         }
     }
 
