@@ -239,7 +239,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
             storeBitmap(bitmap);
         }
-        if (requestCode == RESULT_LOAD_IMAGE) {
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -263,16 +263,15 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         Log.d(this.getClass().getSimpleName(), "perform crop");
 
         try {
-
             //create temp file
-            File file = null;
+            File tempFile = null;
             try {
-                file = PictureManager.getOutputMediaFilePath();
+                tempFile = PictureManager.getOutputMediaFilePath();
             } catch (IOException e) {
                 Log.e(this.getClass().getSimpleName(), "Error during creating the file");
-                throw new ActivityNotFoundException();
+                makeASquare(path);
             }
-            cropUri = Uri.fromFile(file);
+            cropUri = Uri.fromFile(tempFile);
 
             //call the standard crop action intent (the user device may not support it)
             Intent cropIntent = new Intent("com.android.camera.action.CROP");
@@ -284,30 +283,33 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             cropIntent.putExtra("aspectX", 1);
             cropIntent.putExtra("aspectY", 1);
             //indicate output X and Y
-            cropIntent.putExtra("outputX", 512);
-            cropIntent.putExtra("outputY", 512);
+            cropIntent.putExtra("outputX", 256);
+            cropIntent.putExtra("outputY", 256);
             //retrieve data on return
-            cropIntent.putExtra("crop-data", true);
             cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri);
+            cropIntent.putExtra("data", true);
             //start the activity - we handle returning in onActivityResult
             startActivityForResult(cropIntent, PIC_CROP);
 
         } catch (ActivityNotFoundException anfe) {
-
-            User user = new User();
-            user.setProfilePicture(path);
-            Bitmap newProfilePicture = PictureManager.INSTANCE.getPicture(user, 256, 256);
-
-            int size;
-            if (newProfilePicture.getHeight() <= newProfilePicture.getWidth()) {
-                size = newProfilePicture.getHeight();
-            } else {
-                size = newProfilePicture.getWidth();
-            }
-            Bitmap squareBitmap = ThumbnailUtils.extractThumbnail(newProfilePicture, size, size);
-
-            storeBitmap(squareBitmap);
+            makeASquare(path);
         }
+    }
+
+    private void makeASquare(String path) {
+        User user = new User();
+        user.setProfilePicture(path);
+        Bitmap newProfilePicture = PictureManager.INSTANCE.getPicture(user, 256, 256);
+
+        int size;
+        if (newProfilePicture.getHeight() <= newProfilePicture.getWidth()) {
+            size = newProfilePicture.getHeight();
+        } else {
+            size = newProfilePicture.getWidth();
+        }
+        Bitmap squareBitmap = ThumbnailUtils.extractThumbnail(newProfilePicture, size, size);
+
+        storeBitmap(squareBitmap);
     }
 
 
