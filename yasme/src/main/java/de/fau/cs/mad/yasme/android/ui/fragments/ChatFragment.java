@@ -3,7 +3,6 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -70,10 +71,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
 
     private static final int RESULT_LOAD_IMAGE = 100;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 200;
-    private String path;
-    private Uri fileUri;
-
-    Bitmap bitmap;
+    private Uri imageUri;
+    private Bitmap bitmap;
 
     public ChatFragment() {
     }
@@ -243,9 +242,19 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                     // create Intent to take a picture and return control to the calling application
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                    // start the image capture Intent
-                    startActivityForResult(Intent.createChooser(intent, "Select Picture"),
-                            CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                    //create temp file
+                    File file = new File(Environment.getExternalStorageDirectory(),
+                            "tmp_image_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
+                    imageUri = Uri.fromFile(file);
+
+                    try {
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        intent.putExtra("data", true);
+                        // start the image capture Intent
+                        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                    } catch (Exception e) {
+                        Log.e(this.getClass().getSimpleName(), "Error during capturing an image");
+                    }
                 }
             });
         }
@@ -313,55 +322,19 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             }
         }
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data && resultCode == Activity.RESULT_OK) {
-            final ContentResolver cr = getActivity().getContentResolver();
-            final String[] p1 = new String[]{
-                    MediaStore.Images.ImageColumns._ID,
-                    MediaStore.Images.ImageColumns.DATA,
-                    MediaStore.Images.ImageColumns.DATE_TAKEN
-            };
-            Cursor c1 = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, p1, null, null, p1[1] + " DESC");
-            int columnIndex = c1.getColumnIndex(p1[1]);
-            String pathToPic = c1.getString(columnIndex);
-            c1.close();
-
-            if (pathToPic != null && !pathToPic.isEmpty()) {
-                path = pathToPic;
-            } else {
-                return;
-            }
+            String path = imageUri.getPath();
 
             User user = new User();
             user.setProfilePicture(path);
-            Bitmap bitmap = PictureManager.INSTANCE.getPicture(user, 256, 256);
-            if (bitmap != null) {
-                editMessage.setVisibility(View.GONE);
-                imageCancel.setVisibility(View.VISIBLE);
-                imageView.setVisibility(View.VISIBLE);
-                imageView.setImageBitmap(bitmap);
-            }
+            bitmap = PictureManager.INSTANCE.getPicture(user, 256, 256);
+
         }
-    /*
-            if (resultCode == Activity.RESULT_OK) {
-                // Image captured and saved to fileUri specified in the Intent
-                if (fileUri == null) {
-                    return;
-                }
-                User user = new User();
-                user.setProfilePicture(path);
-                Bitmap bitmap = PictureManager.INSTANCE.getPicture(user, 256, 256);
-                if (bitmap != null) {
-                    editMessage.setVisibility(View.GONE);
-                    imageCancel.setVisibility(View.VISIBLE);
-                    imageView.setVisibility(View.VISIBLE);
-                    imageView.setImageBitmap(bitmap);
-                }
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                // User cancelled the image capture
-            } else {
-                // Image capture failed, advise user
-            }
+        if (bitmap != null) {
+            editMessage.setVisibility(View.GONE);
+            imageCancel.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.VISIBLE);
+            imageView.setImageBitmap(bitmap);
         }
-        */
     }
 
     public void send(View view) {

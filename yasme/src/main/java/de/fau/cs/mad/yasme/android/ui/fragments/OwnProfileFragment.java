@@ -3,7 +3,7 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.ContentResolver;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -66,10 +67,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     private final static int RESULT_LOAD_IMAGE = 10;
     private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 20;
     private final static int PIC_CROP = 30;
-    private final static String IMAGE_CAPTURED = "imageCaptured";
-    private String path;
-    private boolean imageCaptured = false;
-    private Uri fileUri;
+    private Uri imageUri;
     private Uri cropUri;
 
     public OwnProfileFragment() {
@@ -188,21 +186,20 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                         public void onClick(DialogInterface dialogInterface, int i) {
                             // create Intent to take a picture and return control to the calling application
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-/*
-                            path = PictureManager.INSTANCE.getOutputMediaFilePath(
-                                    DatabaseManager.INSTANCE.getContext(), "capturedImage");
-                            // create a file uri to save the image
-                            File file = new File(path);
-                            fileUri = Uri.fromFile(file);
-                            if (fileUri == null) {
-                                Log.e(this.getClass().getSimpleName(), "Failed to store picture");
-                                return;
+
+                            //create temp file
+                            File file = new File(Environment.getExternalStorageDirectory(),
+                                    "tmp_image_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
+                            imageUri = Uri.fromFile(file);
+
+                            try {
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                intent.putExtra("data", true);
+                                // start the image capture Intent
+                                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                            } catch (Exception e) {
+                                Log.e(this.getClass().getSimpleName(), "Error during capturing an image");
                             }
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-*/
-                            // start the image capture Intent
-                            startActivityForResult(Intent.createChooser(intent, "Select Picture"),
-                                    CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
                         }
                     });
                 }
@@ -229,23 +226,15 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PIC_CROP && null != data && resultCode == Activity.RESULT_OK) {
-            String picturePath = path;
+        if (requestCode == PIC_CROP && resultCode == Activity.RESULT_OK) {
+            String picturePath = cropUri.getPath();
             Log.d(this.getClass().getSimpleName(), "retrievedResult from crop");
 
-            // First decode with inJustDecodeBounds=true to check dimensions
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(picturePath, options);
+            User user = new User();
+            user.setProfilePicture(picturePath);
+            Bitmap bitmap = PictureManager.INSTANCE.getPicture(user, 256, 256);
 
-            // Calculate inSampleSize
-            options.inSampleSize = PictureManager.INSTANCE.calculateInSampleSize(options, 256, 256);
-
-            // Decode bitmap with inSampleSize set
-            options.inJustDecodeBounds = false;
-            Bitmap newProfilePicture = BitmapFactory.decodeFile(picturePath, options);
-
-            storeBitmap(newProfilePicture);
+            storeBitmap(bitmap);
         }
         if (requestCode == RESULT_LOAD_IMAGE) {
             Uri selectedImage = data.getData();
@@ -257,28 +246,46 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
+            //TODO performCrop(picturePath);
             cursor.close();
 
             Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
             storeBitmap(bitmap);
         }
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data && resultCode == Activity.RESULT_OK) {
-            performCrop(requestCode);
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            String path = imageUri.getPath();
+
+            User user = new User();
+            user.setProfilePicture(path);
+            Bitmap bitmap = PictureManager.INSTANCE.getPicture(user, 256, 256);
+
+            int size;
+            if (bitmap.getHeight() <= bitmap.getWidth()) {
+                size = bitmap.getHeight();
+            } else {
+                size = bitmap.getWidth();
+            }
+            Bitmap squareBitmap = ThumbnailUtils.extractThumbnail(bitmap, size, size);
+
+            storeBitmap(squareBitmap);
+            //TODO performCrop(path);
         }
     }
 
-    private void performCrop(int requestCode) {
+    private void performCrop(String path) {
         Log.d(this.getClass().getSimpleName(), "perform crop");
 
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (false) {
+        try {
+
+            //create temp file
+            File file = new File(Environment.getExternalStorageDirectory(),
+                    "tmp_crop_image_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
+            cropUri = Uri.fromFile(file);
+
                 //call the standard crop action intent (the user device may not support it)
                 Intent cropIntent = new Intent("com.android.camera.action.CROP");
-                // create a file uri to save the image
-                File file = new File(path);
-                fileUri = Uri.fromFile(file);
                 //indicate image type and Uri
-                cropIntent.setDataAndType(fileUri, "image/*");
+            cropIntent.setDataAndType(cropUri, "image/*");
                 //set crop properties
                 cropIntent.putExtra("crop", "true");
                 //indicate aspect of desired crop
@@ -288,44 +295,16 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 cropIntent.putExtra("outputX", 512);
                 cropIntent.putExtra("outputY", 512);
                 //retrieve data on return
-                cropIntent.putExtra("data", true);
-                path = PictureManager.INSTANCE.getOutputMediaFilePath(
-                        DatabaseManager.INSTANCE.getContext(), "cropImage");
-                // create a file uri to save the image
-                File file2 = new File(path);
-                cropUri = Uri.fromFile(file2);
+            cropIntent.putExtra("crop-data", true);
                 cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri);
                 //start the activity - we handle returning in onActivityResult
                 startActivityForResult(cropIntent, PIC_CROP);
-            } else {
-                final ContentResolver cr = getActivity().getContentResolver();
-                final String[] p1 = new String[]{
-                        MediaStore.Images.ImageColumns._ID,
-                        MediaStore.Images.ImageColumns.DATA,
-                        MediaStore.Images.ImageColumns.DATE_TAKEN
-                };
-                Cursor c1 = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, p1, null, null, p1[1] + " DESC");
-                int columnIndex = c1.getColumnIndex(p1[1]);
-                String pathToPic = c1.getString(columnIndex);
-                c1.close();
 
-                if (pathToPic != null && !pathToPic.isEmpty()) {
-                    path = pathToPic;
-                } else {
-                    return;
-                }
+        } catch (ActivityNotFoundException anfe) {
 
-                // First decode with inJustDecodeBounds=true to check dimensions
-                final BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(path, options);
-
-                // Calculate inSampleSize
-                options.inSampleSize = PictureManager.INSTANCE.calculateInSampleSize(options, 512, 512);
-
-                // Decode bitmap with inSampleSize set
-                options.inJustDecodeBounds = false;
-                Bitmap newProfilePicture = BitmapFactory.decodeFile(path, options);
+            User user = new User();
+            user.setProfilePicture(path);
+            Bitmap newProfilePicture = PictureManager.INSTANCE.getPicture(user, 256, 256);
 
                 int size;
                 if (newProfilePicture.getHeight() <= newProfilePicture.getWidth()) {
@@ -338,7 +317,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 storeBitmap(squareBitmap);
             }
         }
-    }
+
 
     private void storeBitmap(Bitmap bitmap) {
         String path = "";
