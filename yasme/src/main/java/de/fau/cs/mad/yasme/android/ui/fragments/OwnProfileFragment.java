@@ -3,6 +3,7 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -200,7 +201,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 */
                             // start the image capture Intent
-                            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                            startActivityForResult(Intent.createChooser(intent, "Select Picture"),
+                                    CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
                         }
                     });
                 }
@@ -281,56 +283,23 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 //start the activity - we handle returning in onActivityResult
                 startActivityForResult(cropIntent, PIC_CROP);
             } else {
-                // Describe the columns you'd like to have returned. Selecting from the Thumbnails location gives you both the Thumbnail Image ID, as well as the original image ID
-                String[] projection = {
-                        MediaStore.Images.Thumbnails._ID,  // The columns we want
-                        MediaStore.Images.Thumbnails.IMAGE_ID,
-                        MediaStore.Images.Thumbnails.KIND,
-                        MediaStore.Images.Thumbnails.DATA};
-                String selection = MediaStore.Images.Thumbnails.KIND + "=" + // Select only mini's
-                        MediaStore.Images.Thumbnails.MINI_KIND;
-
-                String sort = MediaStore.Images.Thumbnails._ID + " DESC";
-
-                //At the moment, this is a bit of a hack, as I'm returning ALL images, and just taking the latest one. There is a better way to narrow this down I think with a WHERE clause which is currently the selection variable
-                Cursor myCursor = getActivity().managedQuery(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, projection, selection, null, sort);
-
-                long imageId = 0l;
-                long thumbnailImageId = 0l;
-                String thumbnailPath = "";
-
-                try {
-                    myCursor.moveToFirst();
-                    imageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.IMAGE_ID));
-                    thumbnailImageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
-                    thumbnailPath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
-                } finally {
-                    myCursor.close();
-                }
-
-                //Create new Cursor to obtain the file Path for the large image
-
-                String[] largeFileProjection = {
+                final ContentResolver cr = getActivity().getContentResolver();
+                final String[] p1 = new String[]{
                         MediaStore.Images.ImageColumns._ID,
-                        MediaStore.Images.ImageColumns.DATA
+                        MediaStore.Images.ImageColumns.DATE_TAKEN
                 };
-
-                String largeFileSort = MediaStore.Images.ImageColumns._ID + " DESC";
-                myCursor = getActivity().managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, largeFileProjection, null, null, largeFileSort);
-                String largeImagePath = "";
-
-                try {
-                    myCursor.moveToFirst();
-
-                    //This will actually give yo uthe file path location of the image.
-                    largeImagePath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATA));
-                } finally {
-                    myCursor.close();
+                Cursor c1 = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, p1, null, null, p1[1] + " DESC");
+                String pathToPic = "";
+                if (c1.moveToFirst()) {
+                    pathToPic = "content://media/external/images/media/" + c1.getInt(0);
                 }
-                // These are the two URI's you'll be interested in. They give you a handle to the actual images
-                Uri uriLargeImage = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, String.valueOf(imageId));
+                c1.close();
 
-                path = uriLargeImage.getPath();
+                if (pathToPic != null && !pathToPic.isEmpty()) {
+                    path = pathToPic;
+                } else {
+                    return;
+                }
 
                 // First decode with inJustDecodeBounds=true to check dimensions
                 final BitmapFactory.Options options = new BitmapFactory.Options();
