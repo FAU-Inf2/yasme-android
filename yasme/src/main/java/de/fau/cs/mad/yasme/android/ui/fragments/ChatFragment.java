@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,6 +26,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -243,8 +243,13 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                     //create temp file
-                    File file = new File(Environment.getExternalStorageDirectory(),
-                            "tmp_image_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
+                    File file = null;
+                    try {
+                        file = PictureManager.getOutputMediaFilePath();
+                    } catch (IOException e) {
+                        Log.e(this.getClass().getSimpleName(), "Error during creating the file");
+                        return;
+                    }
                     imageUri = Uri.fromFile(file);
 
                     try {

@@ -188,8 +188,13 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                             //create temp file
-                            File file = new File(Environment.getExternalStorageDirectory(),
-                                    "tmp_image_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
+                            File file = null;
+                            try {
+                                file = PictureManager.getOutputMediaFilePath();
+                            } catch (IOException e) {
+                                Log.e(this.getClass().getSimpleName(), "Error during creating the file");
+                                return;
+                            }
                             imageUri = Uri.fromFile(file);
 
                             try {

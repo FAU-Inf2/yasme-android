@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Base64;
 
 import java.io.BufferedOutputStream;
@@ -11,6 +12,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.fau.cs.mad.yasme.android.controller.Log;
 import de.fau.cs.mad.yasme.android.entities.User;
@@ -179,15 +182,26 @@ public enum PictureManager {
     /**
      * Create a file Uri for saving an image or video
      */
-    public static String getOutputMediaFilePath(Context mContext, String filename) {
-        // Create directory userPictures
-        ContextWrapper cw = new ContextWrapper(mContext);
-        File directory = cw.getDir("capturedPictures", Context.MODE_PRIVATE);
+    public static File getOutputMediaFilePath() throws IOException {
+        File mediaStorageDir = new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                "Yasme Pictures");
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
 
-        // Concatenate directory and filename to path
-        File file = new File(directory, filename);
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("MyCameraApp", "failed to create directory");
+                return null;
+            }
+        }
 
         // Create a media file name
-        return file.getAbsolutePath();
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                "IMG_" + timeStamp + ".jpg");
+
+        return mediaFile;
     }
 }
