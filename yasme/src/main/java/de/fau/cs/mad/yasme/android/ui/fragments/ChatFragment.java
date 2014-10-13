@@ -7,7 +7,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -236,7 +235,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(getString(R.string.select_image_source_title));
         alert.setMessage(getString(R.string.select_image_source_message));
-        if (mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+/*        if (mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             alert.setNeutralButton(R.string.select_camera, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -248,7 +247,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                             CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
                 }
             });
-        }
+        } */
         alert.setPositiveButton(R.string.select_gallery, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

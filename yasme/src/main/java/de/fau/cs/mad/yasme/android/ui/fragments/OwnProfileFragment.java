@@ -7,7 +7,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -182,7 +181,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 AlertDialog.Builder alert = new AlertDialog.Builder(activity);
                 alert.setTitle(getString(R.string.select_image_source_title));
                 alert.setMessage(getString(R.string.select_image_source_message));
-                if (activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+/*                if (activity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
                     alert.setNeutralButton(R.string.select_camera, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -199,13 +198,13 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                                 return;
                             }
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-*/
+
                             // start the image capture Intent
                             startActivityForResult(Intent.createChooser(intent, "Select Picture"),
                                     CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
                         }
                     });
-                }
+                }*/
                 alert.setPositiveButton(R.string.select_gallery, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -247,7 +246,22 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
             storeBitmap(newProfilePicture);
         }
-        if (null != data && resultCode == Activity.RESULT_OK) {
+        if (requestCode == RESULT_LOAD_IMAGE) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = DatabaseManager.INSTANCE.getContext().getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
+            storeBitmap(bitmap);
+        }
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data && resultCode == Activity.RESULT_OK) {
             performCrop(requestCode);
         }
     }
@@ -255,7 +269,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     private void performCrop(int requestCode) {
         Log.d(this.getClass().getSimpleName(), "perform crop");
 
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE || requestCode == RESULT_LOAD_IMAGE) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (false) {
                 //call the standard crop action intent (the user device may not support it)
                 Intent cropIntent = new Intent("com.android.camera.action.CROP");
