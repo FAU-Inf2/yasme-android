@@ -145,7 +145,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         });
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout layoutTextView = (LinearLayout) rootView.findViewById(R.id.text_view_layout);
         final EditTextWithImage ownEdit = new EditTextWithImage(DatabaseManager.INSTANCE.getContext());
