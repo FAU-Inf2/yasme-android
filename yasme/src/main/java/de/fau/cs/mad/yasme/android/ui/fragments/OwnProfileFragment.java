@@ -10,14 +10,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,9 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetProfilePictureTask;
@@ -71,7 +67,6 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     private final static int PIC_CROP = 30;
     private Uri imageUri;
     private Uri cropUri;
-    private Bitmap bitmap;
 
     public OwnProfileFragment() {
         // Required empty public constructor
@@ -187,11 +182,27 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                     alert.setNeutralButton(R.string.select_camera, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent();
-                            intent.setType("image/*");
-                            intent.setAction(Intent.ACTION_GET_CONTENT);
-                            intent.addCategory(Intent.CATEGORY_OPENABLE);
-                            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                            // create Intent to take a picture and return control to the calling application
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                            //create temp file
+                            File file = null;
+                            try {
+                                file = PictureManager.getOutputMediaFilePath();
+                            } catch (IOException e) {
+                                Log.e(this.getClass().getSimpleName(), "Error during creating the file");
+                                return;
+                            }
+                            imageUri = Uri.fromFile(file);
+
+                            try {
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                intent.putExtra("data", true);
+                                // start the image capture Intent
+                                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                            } catch (Exception e) {
+                                Log.e(this.getClass().getSimpleName(), "Error during capturing an image");
+                            }
                         }
                     });
                 }
@@ -238,48 +249,13 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
 
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
-            //TODO performCrop(picturePath);
             cursor.close();
-
-            Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
-            storeBitmap(bitmap);
+            imageUri = Uri.fromFile(new File(picturePath));
+            performCrop(picturePath);
         }
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            InputStream stream = null;
-            try {
-                // recyle unused bitmaps
-                if (bitmap != null) {
-                    bitmap.recycle();
-                }
-                stream = getActivity().getContentResolver().openInputStream(data.getData());
-                bitmap = BitmapFactory.decodeStream(stream);
-            } catch (FileNotFoundException e) {
-                Log.e(this.getClass().getSimpleName(), "Error FileNotFound");
-                return;
-            } finally {
-                if (stream != null)
-                    try {
-                        stream.close();
-                    } catch (IOException e) {
-                        Log.e(this.getClass().getSimpleName(), "Error IO");
-                        return;
-                    }
-            }
-
-            //User user = new User();
-            //user.setProfilePicture(path);
-            //Bitmap bitmap = PictureManager.INSTANCE.getPicture(user, 256, 256);
-
-            int size;
-            if (bitmap.getHeight() <= bitmap.getWidth()) {
-                size = bitmap.getHeight();
-            } else {
-                size = bitmap.getWidth();
-            }
-            Bitmap squareBitmap = ThumbnailUtils.extractThumbnail(bitmap, size, size);
-
-            storeBitmap(squareBitmap);
-            //TODO performCrop(path);
+            String path = imageUri.getPath();
+            performCrop(path);
         }
     }
 
@@ -289,27 +265,32 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         try {
 
             //create temp file
-            File file = new File(Environment.getExternalStorageDirectory(),
-                    "tmp_crop_image_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
+            File file = null;
+            try {
+                file = PictureManager.getOutputMediaFilePath();
+            } catch (IOException e) {
+                Log.e(this.getClass().getSimpleName(), "Error during creating the file");
+                throw new ActivityNotFoundException();
+            }
             cropUri = Uri.fromFile(file);
 
-                //call the standard crop action intent (the user device may not support it)
-                Intent cropIntent = new Intent("com.android.camera.action.CROP");
-                //indicate image type and Uri
-            cropIntent.setDataAndType(cropUri, "image/*");
-                //set crop properties
-                cropIntent.putExtra("crop", "true");
-                //indicate aspect of desired crop
-                cropIntent.putExtra("aspectX", 1);
-                cropIntent.putExtra("aspectY", 1);
-                //indicate output X and Y
-                cropIntent.putExtra("outputX", 512);
-                cropIntent.putExtra("outputY", 512);
-                //retrieve data on return
+            //call the standard crop action intent (the user device may not support it)
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            //indicate image type and Uri
+            cropIntent.setDataAndType(imageUri, "image/*");
+            //set crop properties
+            cropIntent.putExtra("crop", "true");
+            //indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            //indicate output X and Y
+            cropIntent.putExtra("outputX", 512);
+            cropIntent.putExtra("outputY", 512);
+            //retrieve data on return
             cropIntent.putExtra("crop-data", true);
-                cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri);
-                //start the activity - we handle returning in onActivityResult
-                startActivityForResult(cropIntent, PIC_CROP);
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri);
+            //start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, PIC_CROP);
 
         } catch (ActivityNotFoundException anfe) {
 
@@ -317,17 +298,17 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             user.setProfilePicture(path);
             Bitmap newProfilePicture = PictureManager.INSTANCE.getPicture(user, 256, 256);
 
-                int size;
-                if (newProfilePicture.getHeight() <= newProfilePicture.getWidth()) {
-                    size = newProfilePicture.getHeight();
-                } else {
-                    size = newProfilePicture.getWidth();
-                }
-                Bitmap squareBitmap = ThumbnailUtils.extractThumbnail(newProfilePicture, size, size);
-
-                storeBitmap(squareBitmap);
+            int size;
+            if (newProfilePicture.getHeight() <= newProfilePicture.getWidth()) {
+                size = newProfilePicture.getHeight();
+            } else {
+                size = newProfilePicture.getWidth();
             }
+            Bitmap squareBitmap = ThumbnailUtils.extractThumbnail(newProfilePicture, size, size);
+
+            storeBitmap(squareBitmap);
         }
+    }
 
 
     private void storeBitmap(Bitmap bitmap) {
