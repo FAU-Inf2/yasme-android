@@ -151,6 +151,8 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
         final EditTextWithImage ownEdit = new EditTextWithImage(DatabaseManager.INSTANCE.getContext());
         editMessage = ownEdit.getEditText();
         imageView = ownEdit.getImageView();
+        imageView.setMaxHeight(256);
+        imageView.setMaxWidth(256);
         imageView.setVisibility(View.GONE);
 
         editMessage.setOnTouchListener(new View.OnTouchListener() {
