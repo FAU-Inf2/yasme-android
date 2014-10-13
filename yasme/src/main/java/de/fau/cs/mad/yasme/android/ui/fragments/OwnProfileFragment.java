@@ -251,11 +251,11 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             imageUri = Uri.fromFile(new File(picturePath));
-            performCrop(picturePath);
+            makeASquare(picturePath);
         }
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             String path = imageUri.getPath();
-            performCrop(path);
+            makeASquare(path);
         }
     }
 
