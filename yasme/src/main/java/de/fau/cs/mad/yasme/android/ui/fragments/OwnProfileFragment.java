@@ -31,7 +31,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import de.fau.cs.mad.yasme.android.R;
 import de.fau.cs.mad.yasme.android.asyncTasks.server.GetProfilePictureTask;
@@ -69,6 +71,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     private final static int PIC_CROP = 30;
     private Uri imageUri;
     private Uri cropUri;
+    private Bitmap bitmap;
 
     public OwnProfileFragment() {
         // Required empty public constructor
@@ -184,27 +187,11 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                     alert.setNeutralButton(R.string.select_camera, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            // create Intent to take a picture and return control to the calling application
-                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                            //create temp file
-                            File file = null;
-                            try {
-                                file = PictureManager.getOutputMediaFilePath();
-                            } catch (IOException e) {
-                                Log.e(this.getClass().getSimpleName(), "Error during creating the file");
-                                return;
-                            }
-                            imageUri = Uri.fromFile(file);
-
-                            try {
-                                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                                intent.putExtra("data", true);
-                                // start the image capture Intent
-                                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-                            } catch (Exception e) {
-                                Log.e(this.getClass().getSimpleName(), "Error during capturing an image");
-                            }
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            intent.addCategory(Intent.CATEGORY_OPENABLE);
+                            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
                         }
                     });
                 }
@@ -258,11 +245,30 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             storeBitmap(bitmap);
         }
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            String path = imageUri.getPath();
+            InputStream stream = null;
+            try {
+                // recyle unused bitmaps
+                if (bitmap != null) {
+                    bitmap.recycle();
+                }
+                stream = getActivity().getContentResolver().openInputStream(data.getData());
+                bitmap = BitmapFactory.decodeStream(stream);
+            } catch (FileNotFoundException e) {
+                Log.e(this.getClass().getSimpleName(), "Error FileNotFound");
+                return;
+            } finally {
+                if (stream != null)
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                        Log.e(this.getClass().getSimpleName(), "Error IO");
+                        return;
+                    }
+            }
 
-            User user = new User();
-            user.setProfilePicture(path);
-            Bitmap bitmap = PictureManager.INSTANCE.getPicture(user, 256, 256);
+            //User user = new User();
+            //user.setProfilePicture(path);
+            //Bitmap bitmap = PictureManager.INSTANCE.getPicture(user, 256, 256);
 
             int size;
             if (bitmap.getHeight() <= bitmap.getWidth()) {
