@@ -316,13 +316,12 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
             final ContentResolver cr = getActivity().getContentResolver();
             final String[] p1 = new String[]{
                     MediaStore.Images.ImageColumns._ID,
+                    MediaStore.Images.ImageColumns.DATA,
                     MediaStore.Images.ImageColumns.DATE_TAKEN
             };
             Cursor c1 = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, p1, null, null, p1[1] + " DESC");
-            String pathToPic = "";
-            if (c1.moveToFirst()) {
-                pathToPic = "content://media/external/images/media/" + c1.getInt(0);
-            }
+            int columnIndex = c1.getColumnIndex(p1[1]);
+            String pathToPic = c1.getString(columnIndex);
             c1.close();
 
             if (pathToPic != null && !pathToPic.isEmpty()) {
