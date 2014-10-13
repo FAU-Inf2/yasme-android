@@ -25,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -241,18 +240,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     // create Intent to take a picture and return control to the calling application
-                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-                    path = PictureManager.INSTANCE.getOutputMediaFilePath(
-                            DatabaseManager.INSTANCE.getContext(), "capturedImage");
-                    // create a file uri to save the image
-                    File file = new File(path);
-                    fileUri = Uri.fromFile(file);
-                    if (fileUri == null) {
-                        Log.e(this.getClass().getSimpleName(), "Failed to store picture");
-                        return;
-                    }
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                     // start the image capture Intent
                     startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
@@ -322,7 +310,67 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 imageView.setImageBitmap(bitmap);
             }
         }
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && null != data && resultCode == Activity.RESULT_OK) {
+            // Describe the columns you'd like to have returned. Selecting from the Thumbnails location gives you both the Thumbnail Image ID, as well as the original image ID
+            String[] projection = {
+                    MediaStore.Images.Thumbnails._ID,  // The columns we want
+                    MediaStore.Images.Thumbnails.IMAGE_ID,
+                    MediaStore.Images.Thumbnails.KIND,
+                    MediaStore.Images.Thumbnails.DATA};
+            String selection = MediaStore.Images.Thumbnails.KIND + "=" + // Select only mini's
+                    MediaStore.Images.Thumbnails.MINI_KIND;
+
+            String sort = MediaStore.Images.Thumbnails._ID + " DESC";
+
+            //At the moment, this is a bit of a hack, as I'm returning ALL images, and just taking the latest one. There is a better way to narrow this down I think with a WHERE clause which is currently the selection variable
+            Cursor myCursor = getActivity().managedQuery(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, projection, selection, null, sort);
+
+            long imageId = 0l;
+            long thumbnailImageId = 0l;
+            String thumbnailPath = "";
+
+            try {
+                myCursor.moveToFirst();
+                imageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.IMAGE_ID));
+                thumbnailImageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
+                thumbnailPath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
+            } finally {
+                myCursor.close();
+            }
+
+            //Create new Cursor to obtain the file Path for the large image
+
+            String[] largeFileProjection = {
+                    MediaStore.Images.ImageColumns._ID,
+                    MediaStore.Images.ImageColumns.DATA
+            };
+
+            String largeFileSort = MediaStore.Images.ImageColumns._ID + " DESC";
+            myCursor = getActivity().managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, largeFileProjection, null, null, largeFileSort);
+            String largeImagePath = "";
+
+            try {
+                myCursor.moveToFirst();
+
+                //This will actually give yo uthe file path location of the image.
+                largeImagePath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATA));
+            } finally {
+                myCursor.close();
+            }
+            // These are the two URI's you'll be interested in. They give you a handle to the actual images
+            Uri uriLargeImage = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, String.valueOf(imageId));
+
+            User user = new User();
+            user.setProfilePicture(uriLargeImage.getPath());
+            Bitmap bitmap = PictureManager.INSTANCE.getPicture(user, 256, 256);
+            if (bitmap != null) {
+                editMessage.setVisibility(View.GONE);
+                imageCancel.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.VISIBLE);
+                imageView.setImageBitmap(bitmap);
+            }
+        }
+    /*
             if (resultCode == Activity.RESULT_OK) {
                 // Image captured and saved to fileUri specified in the Intent
                 if (fileUri == null) {
@@ -343,6 +391,7 @@ public class ChatFragment extends Fragment implements NotifiableFragment<List<Me
                 // Image capture failed, advise user
             }
         }
+        */
     }
 
     public void send(View view) {

@@ -3,11 +3,11 @@ package de.fau.cs.mad.yasme.android.ui.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -186,8 +186,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             // create Intent to take a picture and return control to the calling application
-                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+/*
                             path = PictureManager.INSTANCE.getOutputMediaFilePath(
                                     DatabaseManager.INSTANCE.getContext(), "capturedImage");
                             // create a file uri to save the image
@@ -198,7 +198,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                                 return;
                             }
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
+*/
                             // start the image capture Intent
                             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
                         }
@@ -227,7 +227,7 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PIC_CROP && /*null != data && */resultCode == Activity.RESULT_OK) {
+        if (requestCode == PIC_CROP && null != data && resultCode == Activity.RESULT_OK) {
             String picturePath = path;
             Log.d(this.getClass().getSimpleName(), "retrievedResult from crop");
 
@@ -244,7 +244,8 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
             Bitmap newProfilePicture = BitmapFactory.decodeFile(picturePath, options);
 
             storeBitmap(newProfilePicture);
-        } else if (/*null != data && */resultCode == Activity.RESULT_OK) {
+        }
+        if (null != data && resultCode == Activity.RESULT_OK) {
             performCrop(requestCode);
         }
     }
@@ -253,17 +254,12 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
         Log.d(this.getClass().getSimpleName(), "perform crop");
 
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE || requestCode == RESULT_LOAD_IMAGE) {
-            imageCaptured = true;
-            try {
+            if (false) {
                 //call the standard crop action intent (the user device may not support it)
                 Intent cropIntent = new Intent("com.android.camera.action.CROP");
                 // create a file uri to save the image
                 File file = new File(path);
                 fileUri = Uri.fromFile(file);
-                if (fileUri == null) {
-                    Log.e(this.getClass().getSimpleName(), "Failed to store picture");
-                    return;
-                }
                 //indicate image type and Uri
                 cropIntent.setDataAndType(fileUri, "image/*");
                 //set crop properties
@@ -281,18 +277,60 @@ public class OwnProfileFragment extends Fragment implements View.OnClickListener
                 // create a file uri to save the image
                 File file2 = new File(path);
                 cropUri = Uri.fromFile(file2);
-                if (cropUri == null) {
-                    Log.e(this.getClass().getSimpleName(), "Failed to store picture");
-                    return;
-                }
                 cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri);
                 //start the activity - we handle returning in onActivityResult
                 startActivityForResult(cropIntent, PIC_CROP);
-            } catch (ActivityNotFoundException anfe) {
-                Log.d(this.getClass().getSimpleName(), "no crop app found");
+            } else {
+                // Describe the columns you'd like to have returned. Selecting from the Thumbnails location gives you both the Thumbnail Image ID, as well as the original image ID
+                String[] projection = {
+                        MediaStore.Images.Thumbnails._ID,  // The columns we want
+                        MediaStore.Images.Thumbnails.IMAGE_ID,
+                        MediaStore.Images.Thumbnails.KIND,
+                        MediaStore.Images.Thumbnails.DATA};
+                String selection = MediaStore.Images.Thumbnails.KIND + "=" + // Select only mini's
+                        MediaStore.Images.Thumbnails.MINI_KIND;
 
-                //error message
-                Log.d(this.getClass().getSimpleName(), "your device does not support the crop action!");
+                String sort = MediaStore.Images.Thumbnails._ID + " DESC";
+
+                //At the moment, this is a bit of a hack, as I'm returning ALL images, and just taking the latest one. There is a better way to narrow this down I think with a WHERE clause which is currently the selection variable
+                Cursor myCursor = getActivity().managedQuery(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, projection, selection, null, sort);
+
+                long imageId = 0l;
+                long thumbnailImageId = 0l;
+                String thumbnailPath = "";
+
+                try {
+                    myCursor.moveToFirst();
+                    imageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.IMAGE_ID));
+                    thumbnailImageId = myCursor.getLong(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID));
+                    thumbnailPath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
+                } finally {
+                    myCursor.close();
+                }
+
+                //Create new Cursor to obtain the file Path for the large image
+
+                String[] largeFileProjection = {
+                        MediaStore.Images.ImageColumns._ID,
+                        MediaStore.Images.ImageColumns.DATA
+                };
+
+                String largeFileSort = MediaStore.Images.ImageColumns._ID + " DESC";
+                myCursor = getActivity().managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, largeFileProjection, null, null, largeFileSort);
+                String largeImagePath = "";
+
+                try {
+                    myCursor.moveToFirst();
+
+                    //This will actually give yo uthe file path location of the image.
+                    largeImagePath = myCursor.getString(myCursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATA));
+                } finally {
+                    myCursor.close();
+                }
+                // These are the two URI's you'll be interested in. They give you a handle to the actual images
+                Uri uriLargeImage = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, String.valueOf(imageId));
+
+                path = uriLargeImage.getPath();
 
                 // First decode with inJustDecodeBounds=true to check dimensions
                 final BitmapFactory.Options options = new BitmapFactory.Options();
