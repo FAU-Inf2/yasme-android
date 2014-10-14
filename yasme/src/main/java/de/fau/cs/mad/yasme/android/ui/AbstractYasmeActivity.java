@@ -85,11 +85,13 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
         String userMail = storage.getString(USER_MAIL, "");
         String userPw = storage.getString(USER_PW, "password");
 
-        selfUser = new User();
-        selfUser.setId(userId);
-        selfUser.setName(userName);
-        selfUser.setEmail(userMail);
-        selfUser.setPw(userPw);
+        if(selfUser==null) {
+            selfUser = new User();
+            selfUser.setId(userId);
+            selfUser.setName(userName);
+            selfUser.setEmail(userMail);
+            selfUser.setPw(userPw);
+        }
 
         //Initialize databaseManager (once in application)
         if (!DatabaseManager.INSTANCE.isInitialized()) {
@@ -184,7 +186,21 @@ public abstract class AbstractYasmeActivity extends Activity implements Toastabl
     }
 
     public String getSelfName() {
-        if (selfUser == null || selfUser.getName().isEmpty()) {
+        SharedPreferences storage = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE);
+        SharedPreferences settings = getSharedPreferences(SETTINGS_PREFS, MODE_PRIVATE);
+        Long userId = storage.getLong(USER_ID, 0);
+        String userName = storage.getString(USER_NAME, "");
+        String userMail = storage.getString(USER_MAIL, "");
+        String userPw = storage.getString(USER_PW, "password");
+
+        if(selfUser==null) {
+            selfUser = new User();
+            selfUser.setId(userId);
+            selfUser.setName(userName);
+            selfUser.setEmail(userMail);
+            selfUser.setPw(userPw);
+        }
+        if (selfUser.getName().isEmpty()) {
             String name = getSharedPreferences(STORAGE_PREFS, MODE_PRIVATE).getString(USER_NAME, "");
             selfUser.setName(name);
         }

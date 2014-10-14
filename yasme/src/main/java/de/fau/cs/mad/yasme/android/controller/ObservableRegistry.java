@@ -15,7 +15,7 @@ public class ObservableRegistry {
         for (ObservableRegistryEntry entry : entries) {
             if (entry.check(fragmentClass)) {
                 Log.d("ObserverRegistry","Returned existing observable");
-                return (FragmentObservable<T,P>) entry.getObs(); // no idea how to solve this...
+                return (FragmentObservable<T,P>) entry.getObs(); // no idea how to solve this... 
             }
         }
 
